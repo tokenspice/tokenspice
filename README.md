@@ -35,7 +35,7 @@ The rest of this section walks you through how to run your first simulation and 
 rm -rf outdir_csv; ./run_1.py 10 outdir_csv 1>out.txt 2>&1 & 
 ```
 
-3. You can observe the run while it's in action, with the following command. When it's done year 10, press <ctrl-c>.
+3. You can observe the run while it's in action, with the following command. When it's done year 10, press ctrl-c.
 ```
 tail -f out.txt
 ```
