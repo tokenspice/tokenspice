@@ -45,7 +45,7 @@ tail -f out.txt
 rm -rf outdir_png; ./plot_1.py outdir_csv outdir_png
 ```
 
-5. View the images. The following command letes you cycle through viewing all the images in a directory.
+5. View the images. The following command lets you cycle through viewing all the images in a directory.
 ```
 eog outdir_png
 ```
