@@ -7,3 +7,4 @@ _NETWORK = "ganache"
 @pytest.fixture
 def network():
     return _NETWORK
+
