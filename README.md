@@ -118,9 +118,9 @@ cd contracts
 npm run deploy
 ```
 
-Copy over all artifacts from the contracts repo's `artifacts` directory to your tokenspice repo. For example:
+Copy over all artifacts from the contracts repo's `artifacts` directory to your tokenspice. For example:
 ```console
-cp ~/code/contracts/artifacts/*.json ~/code/tokenspice/engine/evm/abi
+cp ~/code/contracts/artifacts/*.json ~/code/tokenspice/engine/evm/
 ```
 
 Now, open the file `contracts/artifacts/address.json` in your editor. Copy the values in the "development" section.
