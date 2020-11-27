@@ -1,7 +1,9 @@
-# TokenSPICE : Token Simulator
+# TokenSPICE-EVM : Token Simulator with Python or EVM agents
 TokenSPICE simulates tokenized ecosystems using an agent-based approach. It can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
 
-It's currently tuned to model the "Web3 Sustainability Loop", a particular system-level design for tokenized ecosystems that draws on the token supply to fund the community over decades [[ref](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e)].  However you can rewire the "netlist" of "agents" to simulate whatever you like.
+Agents may be written in pure Python, or with an EVM-based backend. (The [original](https://github.com/oceanprotocol/tokenspice) TokenSPICE was only pure Python.)
+
+This TokenSPICE is tuned to model [Ocean Market](https://market.oceanprotocol.com). The original TokenSPICE was tuned for the ["Web3 Sustainability Loop"](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. 
 
 TokenSPICE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
 
