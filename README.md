@@ -15,8 +15,7 @@ TokenSPICE was meant to be simple. It definitely makes no claims on "best" for a
 # Flow for experiments
 
 1. Update controllables/uncontrollables/metrics. Change .sol, .py, etc
-   - Debug using pytest for all the new EVM stuff
-   - Debug using unittest for the old stuff. Migrate it to pytest over time.
+   - Debug using pytest for everything. (It imports old unittest stuff)
 
 2. (if needed) recompile & deploy sol code. Leverage what the team already built.
    - HOW: cd ~/code/contracts; npm i; npm run compile; npm run deploy
@@ -79,7 +78,7 @@ conda remove --name tokenspiceenv --all [[remove any old env'ts]]
 conda env create -f environment.yml [[create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv]]
 conda activate tokenspiceenv [[activate env't]]
 cp sample_tokenspice.conf ~/tokenspice.conf [[set up config file]]
-python -m unittest [[test that everything is working]]
+pytest [[test that everything is working]]
 ```
 
 ## Do a first run

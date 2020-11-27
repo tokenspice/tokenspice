@@ -17,7 +17,8 @@ TOOLS:
   Example flow: see bottom
 
   === Running tests === 
-  python -m unittest [[run all tests]]
+  pytest [[run tests]]
+  python -m unittest [[run all non-pytest tests, ie the older ones]]
   python -m unittest util.test [[run all tests in util.test directory]]
   python -m unittest util.test.ConstantsTest [[run all tests in util.test.ConstantsTest class]]
   python -m unittest util.test.ConstantsTest.testINF [[run one test]]
