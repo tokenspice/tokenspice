@@ -1,3 +1,5 @@
+**WARNING: this is WIP code. Pre-alpha blah blah.**
+
 # TokenSPICE-EVM : Token Simulator with Python or EVM agents
 
 TokenSPICE-EVM (TSE) simulates tokenized ecosystems using an agent-based approach.
