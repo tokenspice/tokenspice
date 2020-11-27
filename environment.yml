@@ -5,3 +5,4 @@ dependencies:
   - matplotlib
   - pip:
     - enforce
+    - pytest
