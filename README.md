@@ -112,31 +112,32 @@ git clone https://github.com/oceanprotocol/contracts
 git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
 ```
 
-Then cd into the contracts directory, and deploy it.
+Then, deploy. Here's how:
 ```console
 cd contracts
 npm run deploy
 ```
 
-Copy over all artifacts from the contracts repo's `artifacts` directory to your tokenspice. For example:
+This will compile the .sol and deploy them to ganache chain. Then it will update contracts/artifacts/*.json files. 
+
+## Get TokenSPICE to see the deployed contracts
+
+First, copy over the json files from the previous step, with something like:
 ```console
-cp ~/code/contracts/artifacts/*.json ~/code/tokenspice/engine/evm/
+cp ~/code/contracts/artifacts/*.json ~/code/tokenspice/engine/evm/artifacts/
 ```
 
-Now, open the file `contracts/artifacts/address.json` in your editor. Copy the values in the "development" section.
-
-In a separate window, open the file 'tokenspice/engine/evm/address.json'. Paste the values into the "ganache" section.
-
-The result should look something like:
+Finally, open the `address.json` and change "development" to "ganache". It should have an entry like:
 ```json
-{"ganache": {
+"ganache": {
     "DTFactory": "0xC36D83c8b8E31D7dBe47f7f887BF1C567ff75DD7",
     "BFactory": "0x5FcC..",
-    ..
+    "..."
  }
 }
 ```
 
+Now, for each contract, TokenSPICE knows where to find it on ganache (address.json file) and what its interface is (*.json).
 
 
 ## Test that everything is working
