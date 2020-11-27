@@ -6,7 +6,7 @@
     "Metadata": "0xFD8a7b6297153397B7eb4356C47dbd381d58bFF4",
     "Ocean": "0x8967BCF84170c91B0d24D4302C2376283b0B3a07"
   },
-  "development": {
+  "ganache": {
     "DTFactory": "0xe0aA552A10d7EC8760Fc6c246D391E698a82dDf9",
     "BFactory": "0x9E4c14403d7d9A8A782044E86a93CAE09D7B2ac9",
     "FixedRateExchange": "0xcCB53c9429d32594F404d01fbe9E65ED1DCda8D9",
