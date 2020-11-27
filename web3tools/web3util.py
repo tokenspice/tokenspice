@@ -79,7 +79,7 @@ def fromBase(num_base: int, dec: int) -> float:
 #    return brownie.network.accounts.add(private_key=private_key)
 
 def abi(class_name: str):
-    filename = abi_filename(class_name)
+    filename = abiFilename(class_name)
     with open(filename, 'r') as f:
         return json.loads(f.read())['abi']
 
