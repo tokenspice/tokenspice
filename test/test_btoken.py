@@ -2,8 +2,7 @@ from web3 import Web3
 
 from web3tools import web3util
 
-def test1():
-    network = 'ganache'
+def test1(network):
     web3 = Web3(web3util.get_web3_provider(network))
 
 # def test_ERC20(network,
