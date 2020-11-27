@@ -70,8 +70,8 @@ Uncontrollable Variables (Env & rnd structure & params)
 
 ## Get going from scratch: set up environment
 ```
-git clone https://github.com/oceanprotocol/tokenspice.git
-cd tokenspice
+git clone https://github.com/oceanprotocol/tokenspice-evm.git
+cd tokenspice-evm
 conda deactivate  [[make sure we're not in env't]]
 conda remove --name tokenspiceenv --all [[remove any old env'ts]]
 conda env create -f environment.yml [[create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv]]
