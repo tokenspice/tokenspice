@@ -1,12 +1,9 @@
 from web3 import Web3
 
-#from ocean_lib.models.btoken import BToken
-from ocean_lib.ocean import util
+from web3tools import account
 
 def test1():
     network = 'ganache'
-    import pdb; pdb.set_trace()
-    val_base18 = util.toBase18(3.0)
     #web3 = Web3(util.get_web3_provider(network))
 
 # def test_ERC20(network,

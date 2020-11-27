@@ -7,9 +7,9 @@ import os
 import typing
 from web3 import Web3, WebsocketProvider
 
-from ocean_lib.web3_internal.account import privateKeyToAddress
-from ocean_lib.web3_internal.wallet import Wallet
-from ocean_lib.web3_internal.web3_overrides.http_provider import CustomHTTPProvider
+from account import privateKeyToAddress
+from wallet import Wallet
+from http_provider import CustomHTTPProvider
 
 WEB3_INFURA_PROJECT_ID = '82ee39a2e4b8441b96aa4ae2e94219db'
 
@@ -97,7 +97,7 @@ def abi(filename: str):
         return json.loads(f.read())
     
 #FIXME: maybe deprecate this
-# (or deprecate the similar functionality in ocean_lib/web3_internal/contract_base.py?)
+# (or deprecate the similar functionality in ocean-lib/web3_internal/contract_base.py?)
 GASLIMIT_DEFAULT = 5000000 #FIXME: put in better place
 
 def buildAndSendTx(function,

@@ -4,16 +4,14 @@ import typing
 
 logger = logging.getLogger(__name__)
 
-from ocean_lib.web3_internal.account import Account, privateKeyToAddress
+from account import Account, privateKeyToAddress
 
 class Wallet:
-    """
-    Signs txs and msgs with an account's private key.
-    """
+    """Signs txs and msgs with an account's private key."""
     _last_tx_count = dict()
     MIN_GAS_PRICE = 1000000000
 
-    def __init__(self, web3, private_key:str = None):
+    def __init__(self, web3, private_key:str):
         self._web3 = web3
 
         self._private_key = private_key

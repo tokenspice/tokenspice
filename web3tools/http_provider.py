@@ -1,8 +1,5 @@
 from web3 import HTTPProvider
 
-from ocean_lib.web3_internal.web3_overrides.request import make_post_request
-
-
 class CustomHTTPProvider(HTTPProvider):
     """
     Override requests to control the connection pool to make it blocking.
@@ -22,3 +19,12 @@ class CustomHTTPProvider(HTTPProvider):
                           "Method: %s, Response: %s",
                           self.endpoint_uri, method, response)
         return response
+
+#taken from ocean-lib.web3_internal.web3_overrides.request
+def make_post_request(endpoint_uri, data, *args, **kwargs):
+    kwargs.setdefault('timeout', 10)
+    session = _get_session(endpoint_uri)
+    response = session.post(endpoint_uri, data=data, *args, **kwargs)
+    response.raise_for_status()
+
+    return response.content
