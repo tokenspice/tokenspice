@@ -26,7 +26,7 @@ TokenSPICE was meant to be simple. It definitely makes no claims on "best" for a
 5. Analyze results
 6. Goto 1
 
-# TokenSPICE-EVM Design
+# TokenSPICE Design
 
 ### Top-level agent architecture
 
@@ -72,8 +72,8 @@ Uncontrollable Variables (Env & rnd structure & params)
 
 ## Get going from scratch: set up environment
 ```
-git clone https://github.com/oceanprotocol/tokenspice-evm.git
-cd tokenspice-evm
+git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
+cd tokenspice
 conda deactivate  [[make sure we're not in env't]]
 conda remove --name tokenspiceenv --all [[remove any old env'ts]]
 conda env create -f environment.yml [[create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv]]
