@@ -1,26 +1,28 @@
-#! ./venv/bin/python3
+#!/usr/bin/env python
 
-from brownie._config import CONFIG
 import eth_utils
 import os
 
-from ocean_lib.ocean.util import GANACHE_URL, confFileValue
+from web3tools.web3util import confFileValue
 
-network = 'ganache'
+ganache_url = confFileValue('general', 'GANACHE_URL')
 
-###add 'ganache' as a live network to brownie. We'll use this for deploy.py, quickstarts, debugging
-chainid = '1234'  # arbitrary, just can't be duplicate
-if 'ganache' not in CONFIG.networks:
-    os.system(f'brownie networks add Ethereum ganache host={GANACHE_URL} chainid={chainid}')
+###add 'ganache' as a live network to brownie
+os.system('brownie networks list|grep ganache > /tmp/networks.tmp')
+with open ('/tmp/networks.tmp','r') as myfile:
+    s = str(myfile.readlines())
+    if 'ganache' not in s:
+        chainid = '1234'  # arbitrary, just can't be duplicate
+        os.system(f'brownie networks add Ethereum ganache host={ganache_url} chainid={chainid}')
 
-###the rest of this gets ganache-cli going, populating accounts found in ~/ocean.conf
+###the rest of this gets ganache-cli going, populating accounts found in ~/tokenspice.ini
 
 # grab private keys
-alice_private_key = confFileValue(network, 'TEST_PRIVATE_KEY1')
-bob_private_key = confFileValue(network, 'TEST_PRIVATE_KEY2')
-factory_deployer_private_key = confFileValue(network, 'FACTORY_DEPLOYER_PRIVATE_KEY')
+alice_private_key = confFileValue('ganache', 'TEST_PRIVATE_KEY1')
+bob_private_key = confFileValue('ganache', 'TEST_PRIVATE_KEY2')
+factory_deployer_private_key = confFileValue('ganache', 'FACTORY_DEPLOYER_PRIVATE_KEY')
 
-# launch ganache-cli and give each private account 100 eth. Port must match that of GANACHE_URL
+# launch ganache-cli and give each private account 100 eth. Port must match that of ganache_url
 amount_eth = 100
 amount_wei = eth_utils.to_wei(amount_eth, 'ether')
 os.system(

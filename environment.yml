@@ -6,3 +6,6 @@ dependencies:
   - pip:
     - enforce
     - pytest
+    - pygments
+    - rlp
+    - eth-brownie

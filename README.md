@@ -67,21 +67,77 @@ Uncontrollable Variables (Env & rnd structure & params)
 - These are what's output by SimEngine.py into the CSV, then plotted
 - In the future, we could get fancier by leveraging TheGraph. 
 
-# A. Quickstart
+# A. Setup
 
-## Get going from scratch: set up environment
+## Set up environment
 ```
 git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
 cd tokenspice
-conda deactivate  [[make sure we're not in env't]]
-conda remove --name tokenspiceenv --all [[remove any old env'ts]]
-conda env create -f environment.yml [[create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv]]
-conda activate tokenspiceenv [[activate env't]]
-cp sample_tokenspice.conf ~/tokenspice.conf [[set up config file]]
-pytest [[test that everything is working]]
+
+#make sure we're not in env't; remove old env'ts
+conda deactivate
+conda remove --name tokenspiceenv --all
+
+#create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv
+conda env create -f environment.yml
+
+#activate env't
+conda activate tokenspiceenv
 ```
 
-## Do a first run
+## Get Ganache running
+
+Open a separate terminal and cd into the project directory.
+
+Activate the conda env't:
+```console
+conda activate tokenspiceenv
+```
+
+Then run ganache:
+```console
+./ganache.py
+```
+
+Note: you could theoretically run ganache directly, you'd have to put in a bunch of special arguments and other stuff to make it play well with Brownie. The script above abstracts that away for you.
+
+## Deploy the smart contracts to ganache
+
+Open a separate terminal.
+
+Grab the contracts code (main, or a branch)
+```console
+git clone https://github.com/oceanprotocol/contracts
+# OR
+git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
+```
+
+Then cd into the contracts directory, and deploy it.
+```console
+cd contracts
+npm run deploy
+```
+
+This will have updated the file `artifacts/address.json` in the _contracts_ directory, in values in "development" section.
+
+Now, open up your _tokenspice_'s addresses file, e.g. at `./tokenspice/engine/evm/address.json`. Copy the values from "development" above into the "ganache" section. The result should look something like
+```
+{"ganache": {
+    "DTFactory": "0xC36D83c8b8E31D7dBe47f7f887BF1C567ff75DD7",
+    "BFactory": "0x5FcC..",
+    ..
+ }
+}
+```
+
+
+## Test that everything is working
+
+```console
+pytest
+```
+
+## Do a first simulation run
 
 To orient you, check out the command-line help. This is what's possible.
 ```
@@ -90,7 +146,7 @@ To orient you, check out the command-line help. This is what's possible.
 
 The rest of this section walks you through how to run your first simulation and view results. 
 
-1. Open `~/tokenspice.conf` and set `safety = False`. That way we run faster:) 
+1. Open `~/tokenspice.ini` and set `safety = False`. That way we run faster:) 
 
 2. Kick off a simulation run. The command below will run for 10 simulated years, save run results to `outdir_csv` directory, and send stdout and stderr to `out.txt` file.  
 ```
