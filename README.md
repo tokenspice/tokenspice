@@ -1,16 +1,16 @@
 **WARNING: this is WIP code. Pre-alpha blah blah.**
 
-# TokenSPICE-EVM : Token Simulator with Python or EVM agents
+# TokenSPICE : Token Simulator with Python or EVM agents
 
-TokenSPICE-EVM (TSE) simulates tokenized ecosystems using an agent-based approach.
+TokenSPICE simulates tokenized ecosystems using an agent-based approach.
 
-Agents may be written in pure Python, or with an EVM-based backend. Compare to the [original](https://github.com/oceanprotocol/tokenspice) TokenSPICE, which was only pure Python.
+Agents may be written in pure Python, or with an EVM-based backend. (The [original version](https://github.com/oceanprotocol/tokenspice) was pure Python.)
 
-TSE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
+TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
 
-It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). The original TokenSPICE was tuned for the ["Web3 Sustainability Loop"](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. 
+It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). The original version was tuned for the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. 
 
-TSE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
+TokenSPICE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
 
 # Flow for experiments
 
@@ -39,7 +39,7 @@ TSE was meant to be simple. It definitely makes no claims on "best" for anything
 
 Controllable agents (structure): 
 - What agents: just Pool (incl. Strategies and Pool Controllers).
-- The agent's state is stored on blockchain. Deployment is not in the scope of TSE right now. TSE just sees ABIs.
+- The agent's state is stored on blockchain. Deployment is not in the scope of TokenSPICE right now. TokenSPICE just sees ABIs.
 - PoolAgent.py wraps BPool.sol. Agent's wallet grabs values from BPool.sol
    - current design (.sol) is at oceanprotocol/contracts
    - new design (.sol) is at branch 'feature/1mm-prototype_alex'
