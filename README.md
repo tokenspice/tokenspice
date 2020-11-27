@@ -118,12 +118,17 @@ cd contracts
 npm run deploy
 ```
 
+Copy over all artifacts from the contracts repo's `artifacts` directory to your tokenspice repo. For example:
+```console
+cp ~/code/contracts/artifacts/*.json ~/code/tokenspice/engine/evm/abi
+```
+
 Now, open the file `contracts/artifacts/address.json` in your editor. Copy the values in the "development" section.
 
 In a separate window, open the file 'tokenspice/engine/evm/address.json'. Paste the values into the "ganache" section.
 
 The result should look something like:
-```
+```json
 {"ganache": {
     "DTFactory": "0xC36D83c8b8E31D7dBe47f7f887BF1C567ff75DD7",
     "BFactory": "0x5FcC..",
@@ -132,7 +137,7 @@ The result should look something like:
 }
 ```
 
-Finally, copy over 
+
 
 ## Test that everything is working
 

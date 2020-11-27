@@ -1,0 +1,3343 @@
+{
+  "contractName": "OPFCommunityFeeCollector",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isOwner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "newCollector",
+          "type": "address"
+        },
+        {
+          "name": "OPFOwnerAddress",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "withdrawETH",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "tokenAddress",
+          "type": "address"
+        }
+      ],
+      "name": "withdrawToken",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newCollector",
+          "type": "address"
+        }
+      ],
+      "name": "changeCollector",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.7+commit.6da8b019\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newCollector\",\"type\":\"address\"}],\"name\":\"changeCollector\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"tokenAddress\",\"type\":\"address\"}],\"name\":\"withdrawToken\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"withdrawETH\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"newCollector\",\"type\":\"address\"},{\"name\":\"OPFOwnerAddress\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"}],\"devdoc\":{\"details\":\"Ocean Protocol Foundation Community Fee Collector contract     allows consumers to pay very small fee as part of the exchange of      data tokens with ocean token in order to support the community of       ocean protocol and provide a sustainble development.\",\"methods\":{\"changeCollector(address)\":{\"details\":\"changeCollector     change the current collector address. Only owner can do that.\",\"params\":{\"newCollector\":\"the new collector address \"}},\"constructor\":{\"details\":\"constructor     Called prior contract deployment. set the controller address and     the contract owner address\",\"params\":{\"OPFOwnerAddress\":\"the contract owner address\",\"newCollector\":\"the fee collector address.\"}},\"isOwner()\":{\"details\":\"Returns true if the caller is the current owner.\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"withdrawETH()\":{\"details\":\"withdrawETH     transfers all the accumlated ether the collector address\"},\"withdrawToken(address)\":{\"details\":\"withdrawToken     transfers all the accumlated tokens the collector address\",\"params\":{\"tokenAddress\":\"the token contract address \"}}},\"title\":\"OPFCommunityFeeCollector\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/trentmc/code/contracts/contracts/communityFee/OPFCommunityFeeCollector.sol\":\"OPFCommunityFeeCollector\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/trentmc/code/contracts/contracts/communityFee/OPFCommunityFeeCollector.sol\":{\"keccak256\":\"0xe535cf1fa8e294c3c258f416672bb0500be90b4ba120db19498155dcc8d328be\",\"urls\":[\"bzzr://1861e37ad3bd204ad5bfe974e6b1950dba47a3fb2d9dd20c7af26c456940c00f\"]},\"/home/trentmc/code/contracts/contracts/interfaces/IERC20Template.sol\":{\"keccak256\":\"0x022ebed2ba4949e96a05cc394cf690d8fd3190a4733cebe8cbe930ac25cfde18\",\"urls\":[\"bzzr://2fa3d5cae14f0af7d78f6e1d13bc41854082c03ab2f86462ebb09afda88ee6e9\"]},\"openzeppelin-solidity/contracts/GSN/Context.sol\":{\"keccak256\":\"0x90a3995645af7562d84b9d69363ffa5ae7217714ab61e951bf7bc450f40e4061\",\"urls\":[\"bzzr://51482c01bddf23793bddee43b60ab9578a62948a4f2082def24ea792a553b055\"]},\"openzeppelin-solidity/contracts/ownership/Ownable.sol\":{\"keccak256\":\"0x6fb9d7889769d7cc161225f9ef7a90e468ba9788b253816f8d8b6894d3472c24\",\"urls\":[\"bzzr://ab46c9368bc3abdded5eb85858304518c8a0291060ab42087075d759dbf3925f\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50604051604080610a838339810180604052604081101561003057600080fd5b508051602090910151600061004c64010000000061012d810204565b60008054600160a060020a031916600160a060020a038316908117825560405192935091600080516020610a63833981519152908290a350600160a060020a038216158015906100a45750600160a060020a03811615155b6100f9576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526047815260200180610a1c6047913960600191505060405180910390fd5b60018054600160a060020a031916600160a060020a03841617905561012681640100000000610131810204565b5050610297565b3390565b6101426401000000006101c2810204565b6101ad57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6101bf816401000000006101ef810204565b50565b60008054600160a060020a03166101e064010000000061012d810204565b600160a060020a031614905090565b600160a060020a03811661024e576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260268152602001806109f66026913960400191505060405180910390fd5b60008054604051600160a060020a0380851693921691600080516020610a6383398151915291a360008054600160a060020a031916600160a060020a0392909216919091179055565b610750806102a66000396000f3fe60806040526004361061008d576000357c0100000000000000000000000000000000000000000000000000000000900480638da5cb5b1161006b5780638da5cb5b1461010a5780638f32d59b1461013b578063e086e5ec14610164578063f2fde38b1461016c5761008d565b8063715018a61461008f5780637781127e146100a457806389476069146100d7575b005b34801561009b57600080fd5b5061008d61019f565b3480156100b057600080fd5b5061008d600480360360208110156100c757600080fd5b5035600160a060020a0316610252565b3480156100e357600080fd5b5061008d600480360360208110156100fa57600080fd5b5035600160a060020a0316610325565b34801561011657600080fd5b5061011f6104da565b60408051600160a060020a039092168252519081900360200190f35b34801561014757600080fd5b506101506104e9565b604080519115158252519081900360200190f35b61008d61050d565b34801561017857600080fd5b5061008d6004803603602081101561018f57600080fd5b5035600160a060020a0316610547565b6101a76104e9565b6101fb576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b60008054604051600160a060020a03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a36000805473ffffffffffffffffffffffffffffffffffffffff19169055565b61025a6104e9565b6102ae576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600160a060020a0381166102f65760405160e560020a62461bcd0281526004018080602001828103825260338152602001806106f26033913960400191505060405180910390fd5b6001805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0392909216919091179055565b600160a060020a03811661036d5760405160e560020a62461bcd0281526004018080602001828103825260388152602001806106876038913960400191505060405180910390fd5b600154604080517f70a082310000000000000000000000000000000000000000000000000000000081523060048201529051600160a060020a038085169363a9059cbb9391169184916370a08231916024808301926020929190829003018186803b1580156103db57600080fd5b505afa1580156103ef573d6000803e3d6000fd5b505050506040513d602081101561040557600080fd5b5051604080517c010000000000000000000000000000000000000000000000000000000063ffffffff8616028152600160a060020a03909316600484015260248301919091525160448083019260209291908290030181600087803b15801561046d57600080fd5b505af1158015610481573d6000803e3d6000fd5b505050506040513d602081101561049757600080fd5b50516104d75760405160e560020a62461bcd0281526004018080602001828103825260338152602001806106bf6033913960400191505060405180910390fd5b50565b600054600160a060020a031690565b60008054600160a060020a03166104fe6105ac565b600160a060020a031614905090565b600154604051600160a060020a0390911690303180156108fc02916000818181858888f193505050501580156104d7573d6000803e3d6000fd5b61054f6104e9565b6105a3576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6104d7816105b0565b3390565b600160a060020a0381166105f85760405160e560020a62461bcd0281526004018080602001828103825260268152602001806106616026913960400191505060405180910390fd5b60008054604051600160a060020a03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573734f5046436f6d6d756e697479466565436f6c6c6563746f723a20696e76616c696420746f6b656e20636f6e747261637420616464726573734f5046436f6d6d756e697479466565436f6c6c6563746f723a206661696c656420746f20776974686472617720746f6b656e734f5046436f6d6d756e697479466565436f6c6c6563746f723a20696e76616c696420636f6c6c6563746f722061646472657373a165627a7a72305820c9e992a3701f83fbf4570890a03584f10e22d2756da514cb14d0184aa38be49400294f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573734f5046436f6d6d756e697479466565436f6c6c6563746f723a20636f6c6c6563746f722061646472657373206f72206f776e657220697320696e76616c696420616464726573738be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+  "deployedBytecode": "0x60806040526004361061008d576000357c0100000000000000000000000000000000000000000000000000000000900480638da5cb5b1161006b5780638da5cb5b1461010a5780638f32d59b1461013b578063e086e5ec14610164578063f2fde38b1461016c5761008d565b8063715018a61461008f5780637781127e146100a457806389476069146100d7575b005b34801561009b57600080fd5b5061008d61019f565b3480156100b057600080fd5b5061008d600480360360208110156100c757600080fd5b5035600160a060020a0316610252565b3480156100e357600080fd5b5061008d600480360360208110156100fa57600080fd5b5035600160a060020a0316610325565b34801561011657600080fd5b5061011f6104da565b60408051600160a060020a039092168252519081900360200190f35b34801561014757600080fd5b506101506104e9565b604080519115158252519081900360200190f35b61008d61050d565b34801561017857600080fd5b5061008d6004803603602081101561018f57600080fd5b5035600160a060020a0316610547565b6101a76104e9565b6101fb576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b60008054604051600160a060020a03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a36000805473ffffffffffffffffffffffffffffffffffffffff19169055565b61025a6104e9565b6102ae576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600160a060020a0381166102f65760405160e560020a62461bcd0281526004018080602001828103825260338152602001806106f26033913960400191505060405180910390fd5b6001805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0392909216919091179055565b600160a060020a03811661036d5760405160e560020a62461bcd0281526004018080602001828103825260388152602001806106876038913960400191505060405180910390fd5b600154604080517f70a082310000000000000000000000000000000000000000000000000000000081523060048201529051600160a060020a038085169363a9059cbb9391169184916370a08231916024808301926020929190829003018186803b1580156103db57600080fd5b505afa1580156103ef573d6000803e3d6000fd5b505050506040513d602081101561040557600080fd5b5051604080517c010000000000000000000000000000000000000000000000000000000063ffffffff8616028152600160a060020a03909316600484015260248301919091525160448083019260209291908290030181600087803b15801561046d57600080fd5b505af1158015610481573d6000803e3d6000fd5b505050506040513d602081101561049757600080fd5b50516104d75760405160e560020a62461bcd0281526004018080602001828103825260338152602001806106bf6033913960400191505060405180910390fd5b50565b600054600160a060020a031690565b60008054600160a060020a03166104fe6105ac565b600160a060020a031614905090565b600154604051600160a060020a0390911690303180156108fc02916000818181858888f193505050501580156104d7573d6000803e3d6000fd5b61054f6104e9565b6105a3576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6104d7816105b0565b3390565b600160a060020a0381166105f85760405160e560020a62461bcd0281526004018080602001828103825260268152602001806106616026913960400191505060405180910390fd5b60008054604051600160a060020a03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573734f5046436f6d6d756e697479466565436f6c6c6563746f723a20696e76616c696420746f6b656e20636f6e747261637420616464726573734f5046436f6d6d756e697479466565436f6c6c6563746f723a206661696c656420746f20776974686472617720746f6b656e734f5046436f6d6d756e697479466565436f6c6c6563746f723a20696e76616c696420636f6c6c6563746f722061646472657373a165627a7a72305820c9e992a3701f83fbf4570890a03584f10e22d2756da514cb14d0184aa38be4940029",
+  "sourceMap": "616:2308:8:-;;;973:411;8:9:-1;5:2;;;30:1;27;20:12;5:2;973:411:8;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;973:411:8;;;;;;;698:17:16;718:12;:10;;;;:12;:::i;:::-;740:6;:18;;-1:-1:-1;;;;;;740:18:16;-1:-1:-1;;;;;740:18:16;;;;;;;773:43;;740:18;;-1:-1:-1;740:18:16;-1:-1:-1;;;;;;;;;;;773:43:16;740:6;;773:43;-1:-1:-1;;;;;;1131:26:8;;;;;;:70;;-1:-1:-1;;;;;;1172:29:8;;;;1131:70;1110:189;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1309:9;:24;;-1:-1:-1;;;;;;1309:24:8;-1:-1:-1;;;;;1309:24:8;;;;;1343:34;1361:15;1343:17;;;;:34;:::i;:::-;973:411;;616:2308;;788:96:14;867:10;788:96;:::o;1970:107:16:-;1103:9;:7;;;;:9;:::i;:::-;1095:54;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2042:28;2061:8;2042:18;;;;:28;:::i;:::-;1970:107;:::o;1250:92::-;1290:4;1329:6;;-1:-1:-1;;;;;1329:6:16;1313:12;:10;;;;:12;:::i;:::-;-1:-1:-1;;;;;1313:22:16;;1306:29;;1250:92;:::o;2178:225::-;-1:-1:-1;;;;;2251:22:16;;2243:73;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2352:6;;;2331:38;;-1:-1:-1;;;;;2331:38:16;;;;2352:6;;;-1:-1:-1;;;;;;;;;;;2331:38:16;;2379:6;:17;;-1:-1:-1;;;;;;2379:17:16;-1:-1:-1;;;;;2379:17:16;;;;;;;;;;2178:225::o;616:2308:8:-;;;;;;;",
+  "deployedSourceMap": "616:2308:8:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1684:137:16;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1684:137:16;;;:::i;2636:286:8:-;;8:9:-1;5:2;;;30:1;27;20:12;5:2;2636:286:8;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2636:286:8;-1:-1:-1;;;;;2636:286:8;;:::i;1972:486::-;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1972:486:8;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1972:486:8;-1:-1:-1;;;;;1972:486:8;;:::i;899:77:16:-;;8:9:-1;5:2;;;30:1;27;20:12;5:2;899:77:16;;;:::i;:::-;;;;-1:-1:-1;;;;;899:77:16;;;;;;;;;;;;;;1250:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1250:92:16;;;:::i;:::-;;;;;;;;;;;;;;;;;;1679:120:8;;;:::i;1970:107:16:-;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1970:107:16;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1970:107:16;-1:-1:-1;;;;;1970:107:16;;:::i;1684:137::-;1103:9;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;;;1095:54:16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1782:1;1766:6;;1745:40;;-1:-1:-1;;;;;1766:6:16;;;;1745:40;;1782:1;;1745:40;1812:1;1795:19;;-1:-1:-1;;1795:19:16;;;1684:137::o;2636:286:8:-;1103:9:16;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;;;1095:54:16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;2778:26:8;;2757:124;;;;-1:-1:-1;;;;;2757:124:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2891:9;:24;;-1:-1:-1;;2891:24:8;-1:-1:-1;;;;;2891:24:8;;;;;;;;;;2636:286::o;1972:486::-;-1:-1:-1;;;;;2084:26:8;;2063:129;;;;-1:-1:-1;;;;;2063:129:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2280:9;;2307:53;;;;;;2354:4;2307:53;;;;;;-1:-1:-1;;;;;2225:37:8;;;;;;2280:9;;;2225:37;;2307:38;;:53;;;;;;;;;;;;;;2225:37;2307:53;;;5:2:-1;;;;30:1;27;20:12;5:2;2307:53:8;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2307:53:8;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2307:53:8;2225:149;;;;;;;;;;-1:-1:-1;;;;;2225:149:8;;;;;;;;;;;;;;;;;;;;2307:53;;2225:149;;;;;;;-1:-1:-1;2225:149:8;;;;5:2:-1;;;;30:1;27;20:12;5:2;2225:149:8;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2225:149:8;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2225:149:8;2203:248;;;;-1:-1:-1;;;;;2203:248:8;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1972:486;:::o;899:77:16:-;937:7;963:6;-1:-1:-1;;;;;963:6:16;899:77;:::o;1250:92::-;1290:4;1329:6;;-1:-1:-1;;;;;1329:6:16;1313:12;:10;:12::i;:::-;-1:-1:-1;;;;;1313:22:16;;1306:29;;1250:92;:::o;1679:120:8:-;1751:9;;:41;;-1:-1:-1;;;;;1751:9:8;;;;1778:4;1770:21;1751:41;;;;;:9;:41;:9;:41;1770:21;1751:9;:41;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;1970:107:16;1103:9;:7;:9::i;:::-;1095:54;;;;;-1:-1:-1;;;;;1095:54:16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2042:28;2061:8;2042:18;:28::i;788:96:14:-;867:10;788:96;:::o;2178:225:16:-;-1:-1:-1;;;;;2251:22:16;;2243:73;;;;-1:-1:-1;;;;;2243:73:16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2352:6;;;2331:38;;-1:-1:-1;;;;;2331:38:16;;;;2352:6;;;2331:38;;;2379:6;:17;;-1:-1:-1;;2379:17:16;-1:-1:-1;;;;;2379:17:16;;;;;;;;;;2178:225::o",
+  "source": "pragma solidity ^0.5.7;\n// Copyright BigchainDB GmbH and Ocean Protocol contributors\n// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)\n// Code is Apache-2.0 and docs are CC-BY-4.0\nimport '../interfaces/IERC20Template.sol';\nimport 'openzeppelin-solidity/contracts/ownership/Ownable.sol';\n\n\n/**\n * @title OPFCommunityFeeCollector\n * @dev Ocean Protocol Foundation Community Fee Collector contract\n *      allows consumers to pay very small fee as part of the exchange of \n *      data tokens with ocean token in order to support the community of  \n *      ocean protocol and provide a sustainble development.\n */\ncontract OPFCommunityFeeCollector is Ownable {\n    address payable private collector;\n    /**\n     * @dev constructor\n     *      Called prior contract deployment. set the controller address and\n     *      the contract owner address\n     * @param newCollector the fee collector address.\n     * @param OPFOwnerAddress the contract owner address\n     */\n    constructor(\n        address payable newCollector,\n        address OPFOwnerAddress\n    ) \n        public\n        Ownable()\n    {\n        require(\n            newCollector != address(0)&&\n            OPFOwnerAddress != address(0), \n            'OPFCommunityFeeCollector: collector address or owner is invalid address'\n        );\n        collector = newCollector;\n        transferOwnership(OPFOwnerAddress);\n    }\n    /**\n     * @dev fallback function\n     *      this is a default fallback function in which receives\n     *      the collected ether.\n     */\n    function() external payable {}\n\n    /**\n     * @dev withdrawETH\n     *      transfers all the accumlated ether the collector address\n     */\n    function withdrawETH() \n        external \n        payable\n    {\n        collector.transfer(address(this).balance);\n    }\n\n    /**\n     * @dev withdrawToken\n     *      transfers all the accumlated tokens the collector address\n     * @param tokenAddress the token contract address \n     */\n    function withdrawToken(\n        address tokenAddress\n    ) \n        external\n    {\n        require(\n            tokenAddress != address(0),\n            'OPFCommunityFeeCollector: invalid token contract address'\n        );\n\n        require (\n            IERC20Template(tokenAddress).transfer(\n                collector,\n                IERC20Template(tokenAddress).balanceOf(address(this))\n            ),\n            'OPFCommunityFeeCollector: failed to withdraw tokens'\n        );\n    }\n\n    /**\n     * @dev changeCollector\n     *      change the current collector address. Only owner can do that.\n     * @param newCollector the new collector address \n     */\n    function changeCollector(\n        address payable newCollector\n    ) \n        external \n        onlyOwner \n    {\n        require(\n            newCollector != address(0),\n            'OPFCommunityFeeCollector: invalid collector address'\n        );\n        collector = newCollector;\n    }\n}\n",
+  "sourcePath": "/home/trentmc/code/contracts/contracts/communityFee/OPFCommunityFeeCollector.sol",
+  "ast": {
+    "absolutePath": "/home/trentmc/code/contracts/contracts/communityFee/OPFCommunityFeeCollector.sol",
+    "exportedSymbols": {
+      "OPFCommunityFeeCollector": [
+        4398
+      ]
+    },
+    "id": 4399,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4287,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:8"
+      },
+      {
+        "absolutePath": "/home/trentmc/code/contracts/contracts/interfaces/IERC20Template.sol",
+        "file": "../interfaces/IERC20Template.sol",
+        "id": 4288,
+        "nodeType": "ImportDirective",
+        "scope": 4399,
+        "sourceUnit": 5090,
+        "src": "185:42:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "id": 4289,
+        "nodeType": "ImportDirective",
+        "scope": 4399,
+        "sourceUnit": 6064,
+        "src": "228:63:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 4290,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 6063,
+              "src": "653:7:8",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$6063",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 4291,
+            "nodeType": "InheritanceSpecifier",
+            "src": "653:7:8"
+          }
+        ],
+        "contractDependencies": [
+          5758,
+          6063
+        ],
+        "contractKind": "contract",
+        "documentation": "@title OPFCommunityFeeCollector\n@dev Ocean Protocol Foundation Community Fee Collector contract\n     allows consumers to pay very small fee as part of the exchange of \n     data tokens with ocean token in order to support the community of  \n     ocean protocol and provide a sustainble development.",
+        "fullyImplemented": true,
+        "id": 4398,
+        "linearizedBaseContracts": [
+          4398,
+          6063,
+          5758
+        ],
+        "name": "OPFCommunityFeeCollector",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 4293,
+            "name": "collector",
+            "nodeType": "VariableDeclaration",
+            "scope": 4398,
+            "src": "667:33:8",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address_payable",
+              "typeString": "address payable"
+            },
+            "typeName": {
+              "id": 4292,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "667:15:8",
+              "stateMutability": "payable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              }
+            },
+            "value": null,
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 4325,
+              "nodeType": "Block",
+              "src": "1100:284:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        "id": 4313,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          },
+                          "id": 4307,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "id": 4303,
+                            "name": "newCollector",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4295,
+                            "src": "1131:12:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "!=",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "hexValue": "30",
+                                "id": 4305,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "1155:1:8",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                },
+                                "value": "0"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                }
+                              ],
+                              "id": 4304,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "nodeType": "ElementaryTypeNameExpression",
+                              "src": "1147:7:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_address_$",
+                                "typeString": "type(address)"
+                              },
+                              "typeName": "address"
+                            },
+                            "id": 4306,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1147:10:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          "src": "1131:26:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "&&",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          },
+                          "id": 4312,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "id": 4308,
+                            "name": "OPFOwnerAddress",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4297,
+                            "src": "1172:15:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "!=",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "hexValue": "30",
+                                "id": 4310,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "1199:1:8",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                },
+                                "value": "0"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                }
+                              ],
+                              "id": 4309,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "nodeType": "ElementaryTypeNameExpression",
+                              "src": "1191:7:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_address_$",
+                                "typeString": "type(address)"
+                              },
+                              "typeName": "address"
+                            },
+                            "id": 4311,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1191:10:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          "src": "1172:29:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "src": "1131:70:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f5046436f6d6d756e697479466565436f6c6c6563746f723a20636f6c6c6563746f722061646472657373206f72206f776e657220697320696e76616c69642061646472657373",
+                        "id": 4314,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1216:73:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_616ec9f97cdb82b4049f1345a8abc2201a64cabaaef4905e6b8a77d179c5f2d6",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: collector address or owner is invalid address\""
+                        },
+                        "value": "OPFCommunityFeeCollector: collector address or owner is invalid address"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_616ec9f97cdb82b4049f1345a8abc2201a64cabaaef4905e6b8a77d179c5f2d6",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: collector address or owner is invalid address\""
+                        }
+                      ],
+                      "id": 4302,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6555,
+                        6556
+                      ],
+                      "referencedDeclaration": 6556,
+                      "src": "1110:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 4315,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1110:189:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4316,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1110:189:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4319,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4317,
+                      "name": "collector",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4293,
+                      "src": "1309:9:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 4318,
+                      "name": "newCollector",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4295,
+                      "src": "1321:12:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "src": "1309:24:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "id": 4320,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1309:24:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 4322,
+                        "name": "OPFOwnerAddress",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 4297,
+                        "src": "1361:15:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "id": 4321,
+                      "name": "transferOwnership",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6038,
+                      "src": "1343:17:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
+                        "typeString": "function (address)"
+                      }
+                    },
+                    "id": 4323,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1343:34:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4324,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1343:34:8"
+                }
+              ]
+            },
+            "documentation": "@dev constructor\n     Called prior contract deployment. set the controller address and\n     the contract owner address\n@param newCollector the fee collector address.\n@param OPFOwnerAddress the contract owner address",
+            "id": 4326,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [
+              {
+                "arguments": [],
+                "id": 4300,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 4299,
+                  "name": "Ownable",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 6063,
+                  "src": "1086:7:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_Ownable_$6063_$",
+                    "typeString": "type(contract Ownable)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1086:9:8"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4298,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4295,
+                  "name": "newCollector",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4326,
+                  "src": "994:28:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  },
+                  "typeName": {
+                    "id": 4294,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "994:15:8",
+                    "stateMutability": "payable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4297,
+                  "name": "OPFOwnerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4326,
+                  "src": "1032:23:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4296,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1032:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "984:77:8"
+            },
+            "returnParameters": {
+              "id": 4301,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1100:0:8"
+            },
+            "scope": 4398,
+            "src": "973:411:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4329,
+              "nodeType": "Block",
+              "src": "1562:2:8",
+              "statements": []
+            },
+            "documentation": "@dev fallback function\n     this is a default fallback function in which receives\n     the collected ether.",
+            "id": 4330,
+            "implemented": true,
+            "kind": "fallback",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4327,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1542:2:8"
+            },
+            "returnParameters": {
+              "id": 4328,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1562:0:8"
+            },
+            "scope": 4398,
+            "src": "1534:30:8",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 4342,
+              "nodeType": "Block",
+              "src": "1741:58:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 4337,
+                              "name": "this",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 6594,
+                              "src": "1778:4:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_contract$_OPFCommunityFeeCollector_$4398",
+                                "typeString": "contract OPFCommunityFeeCollector"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_contract$_OPFCommunityFeeCollector_$4398",
+                                "typeString": "contract OPFCommunityFeeCollector"
+                              }
+                            ],
+                            "id": 4336,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "1770:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 4338,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1770:13:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "id": 4339,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "balance",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1770:21:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 4333,
+                        "name": "collector",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 4293,
+                        "src": "1751:9:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      "id": 4335,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "transfer",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "1751:18:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 4340,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1751:41:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4341,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1751:41:8"
+                }
+              ]
+            },
+            "documentation": "@dev withdrawETH\n     transfers all the accumlated ether the collector address",
+            "id": 4343,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawETH",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4331,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1699:2:8"
+            },
+            "returnParameters": {
+              "id": 4332,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1741:0:8"
+            },
+            "scope": 4398,
+            "src": "1679:120:8",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 4375,
+              "nodeType": "Block",
+              "src": "2053:405:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 4353,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 4349,
+                          "name": "tokenAddress",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4345,
+                          "src": "2084:12:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 4351,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "2108:1:8",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 4350,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "2100:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 4352,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "2100:10:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "2084:26:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f5046436f6d6d756e697479466565436f6c6c6563746f723a20696e76616c696420746f6b656e20636f6e74726163742061646472657373",
+                        "id": 4354,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "2124:58:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_96299161c0f4c317613661dd9a3c09a86e2da844da34a8587e90bf981cb919b9",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: invalid token contract address\""
+                        },
+                        "value": "OPFCommunityFeeCollector: invalid token contract address"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_96299161c0f4c317613661dd9a3c09a86e2da844da34a8587e90bf981cb919b9",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: invalid token contract address\""
+                        }
+                      ],
+                      "id": 4348,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6555,
+                        6556
+                      ],
+                      "referencedDeclaration": 6556,
+                      "src": "2063:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 4355,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2063:129:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4356,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2063:129:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 4362,
+                            "name": "collector",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4293,
+                            "src": "2280:9:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "arguments": [
+                                  {
+                                    "argumentTypes": null,
+                                    "id": 4368,
+                                    "name": "this",
+                                    "nodeType": "Identifier",
+                                    "overloadedDeclarations": [],
+                                    "referencedDeclaration": 6594,
+                                    "src": "2354:4:8",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_contract$_OPFCommunityFeeCollector_$4398",
+                                      "typeString": "contract OPFCommunityFeeCollector"
+                                    }
+                                  }
+                                ],
+                                "expression": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_contract$_OPFCommunityFeeCollector_$4398",
+                                      "typeString": "contract OPFCommunityFeeCollector"
+                                    }
+                                  ],
+                                  "id": 4367,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "nodeType": "ElementaryTypeNameExpression",
+                                  "src": "2346:7:8",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_type$_t_address_$",
+                                    "typeString": "type(address)"
+                                  },
+                                  "typeName": "address"
+                                },
+                                "id": 4369,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "kind": "typeConversion",
+                                "lValueRequested": false,
+                                "names": [],
+                                "nodeType": "FunctionCall",
+                                "src": "2346:13:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address_payable",
+                                  "typeString": "address payable"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address_payable",
+                                  "typeString": "address payable"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "arguments": [
+                                  {
+                                    "argumentTypes": null,
+                                    "id": 4364,
+                                    "name": "tokenAddress",
+                                    "nodeType": "Identifier",
+                                    "overloadedDeclarations": [],
+                                    "referencedDeclaration": 4345,
+                                    "src": "2322:12:8",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_address",
+                                      "typeString": "address"
+                                    }
+                                  }
+                                ],
+                                "expression": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_address",
+                                      "typeString": "address"
+                                    }
+                                  ],
+                                  "id": 4363,
+                                  "name": "IERC20Template",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 5089,
+                                  "src": "2307:14:8",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_type$_t_contract$_IERC20Template_$5089_$",
+                                    "typeString": "type(contract IERC20Template)"
+                                  }
+                                },
+                                "id": 4365,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "kind": "typeConversion",
+                                "lValueRequested": false,
+                                "names": [],
+                                "nodeType": "FunctionCall",
+                                "src": "2307:28:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_IERC20Template_$5089",
+                                  "typeString": "contract IERC20Template"
+                                }
+                              },
+                              "id": 4366,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "balanceOf",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 5071,
+                              "src": "2307:38:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
+                                "typeString": "function (address) view external returns (uint256)"
+                              }
+                            },
+                            "id": 4370,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "2307:53:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            },
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 4359,
+                                "name": "tokenAddress",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 4345,
+                                "src": "2240:12:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "id": 4358,
+                              "name": "IERC20Template",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 5089,
+                              "src": "2225:14:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_contract$_IERC20Template_$5089_$",
+                                "typeString": "type(contract IERC20Template)"
+                              }
+                            },
+                            "id": 4360,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "2225:28:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_IERC20Template_$5089",
+                              "typeString": "contract IERC20Template"
+                            }
+                          },
+                          "id": 4361,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "transfer",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 5080,
+                          "src": "2225:37:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
+                            "typeString": "function (address,uint256) external returns (bool)"
+                          }
+                        },
+                        "id": 4371,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "2225:149:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f5046436f6d6d756e697479466565436f6c6c6563746f723a206661696c656420746f20776974686472617720746f6b656e73",
+                        "id": 4372,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "2388:53:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_b132282f5ba4a29f30b106af7588661098ed0503cfccb33f68abb1edfa10480e",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: failed to withdraw tokens\""
+                        },
+                        "value": "OPFCommunityFeeCollector: failed to withdraw tokens"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_b132282f5ba4a29f30b106af7588661098ed0503cfccb33f68abb1edfa10480e",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: failed to withdraw tokens\""
+                        }
+                      ],
+                      "id": 4357,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6555,
+                        6556
+                      ],
+                      "referencedDeclaration": 6556,
+                      "src": "2203:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 4373,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2203:248:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4374,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2203:248:8"
+                }
+              ]
+            },
+            "documentation": "@dev withdrawToken\n     transfers all the accumlated tokens the collector address\n@param tokenAddress the token contract address ",
+            "id": 4376,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawToken",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4346,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4345,
+                  "name": "tokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4376,
+                  "src": "2004:20:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4344,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2004:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1994:36:8"
+            },
+            "returnParameters": {
+              "id": 4347,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2053:0:8"
+            },
+            "scope": 4398,
+            "src": "1972:486:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 4396,
+              "nodeType": "Block",
+              "src": "2747:175:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        "id": 4388,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 4384,
+                          "name": "newCollector",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4378,
+                          "src": "2778:12:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 4386,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "2802:1:8",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 4385,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "2794:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 4387,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "2794:10:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "2778:26:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f5046436f6d6d756e697479466565436f6c6c6563746f723a20696e76616c696420636f6c6c6563746f722061646472657373",
+                        "id": 4389,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "2818:53:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_ccff23dbeddef29f1d56dadd51307fe5ca8848d02e365e74ca46cda6ecdf4fc0",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: invalid collector address\""
+                        },
+                        "value": "OPFCommunityFeeCollector: invalid collector address"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_ccff23dbeddef29f1d56dadd51307fe5ca8848d02e365e74ca46cda6ecdf4fc0",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: invalid collector address\""
+                        }
+                      ],
+                      "id": 4383,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6555,
+                        6556
+                      ],
+                      "referencedDeclaration": 6556,
+                      "src": "2757:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 4390,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2757:124:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4391,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2757:124:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4394,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4392,
+                      "name": "collector",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4293,
+                      "src": "2891:9:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 4393,
+                      "name": "newCollector",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4378,
+                      "src": "2903:12:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "src": "2891:24:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "id": 4395,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2891:24:8"
+                }
+              ]
+            },
+            "documentation": "@dev changeCollector\n     change the current collector address. Only owner can do that.\n@param newCollector the new collector address ",
+            "id": 4397,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 4381,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 4380,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 5996,
+                  "src": "2732:9:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "2732:9:8"
+              }
+            ],
+            "name": "changeCollector",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4379,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4378,
+                  "name": "newCollector",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4397,
+                  "src": "2670:28:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  },
+                  "typeName": {
+                    "id": 4377,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2670:15:8",
+                    "stateMutability": "payable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2660:44:8"
+            },
+            "returnParameters": {
+              "id": 4382,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2747:0:8"
+            },
+            "scope": 4398,
+            "src": "2636:286:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 4399,
+        "src": "616:2308:8"
+      }
+    ],
+    "src": "0:2925:8"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/trentmc/code/contracts/contracts/communityFee/OPFCommunityFeeCollector.sol",
+    "exportedSymbols": {
+      "OPFCommunityFeeCollector": [
+        4398
+      ]
+    },
+    "id": 4399,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4287,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:8"
+      },
+      {
+        "absolutePath": "/home/trentmc/code/contracts/contracts/interfaces/IERC20Template.sol",
+        "file": "../interfaces/IERC20Template.sol",
+        "id": 4288,
+        "nodeType": "ImportDirective",
+        "scope": 4399,
+        "sourceUnit": 5090,
+        "src": "185:42:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "id": 4289,
+        "nodeType": "ImportDirective",
+        "scope": 4399,
+        "sourceUnit": 6064,
+        "src": "228:63:8",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 4290,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 6063,
+              "src": "653:7:8",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$6063",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 4291,
+            "nodeType": "InheritanceSpecifier",
+            "src": "653:7:8"
+          }
+        ],
+        "contractDependencies": [
+          5758,
+          6063
+        ],
+        "contractKind": "contract",
+        "documentation": "@title OPFCommunityFeeCollector\n@dev Ocean Protocol Foundation Community Fee Collector contract\n     allows consumers to pay very small fee as part of the exchange of \n     data tokens with ocean token in order to support the community of  \n     ocean protocol and provide a sustainble development.",
+        "fullyImplemented": true,
+        "id": 4398,
+        "linearizedBaseContracts": [
+          4398,
+          6063,
+          5758
+        ],
+        "name": "OPFCommunityFeeCollector",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 4293,
+            "name": "collector",
+            "nodeType": "VariableDeclaration",
+            "scope": 4398,
+            "src": "667:33:8",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address_payable",
+              "typeString": "address payable"
+            },
+            "typeName": {
+              "id": 4292,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "667:15:8",
+              "stateMutability": "payable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              }
+            },
+            "value": null,
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 4325,
+              "nodeType": "Block",
+              "src": "1100:284:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        "id": 4313,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          },
+                          "id": 4307,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "id": 4303,
+                            "name": "newCollector",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4295,
+                            "src": "1131:12:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "!=",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "hexValue": "30",
+                                "id": 4305,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "1155:1:8",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                },
+                                "value": "0"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                }
+                              ],
+                              "id": 4304,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "nodeType": "ElementaryTypeNameExpression",
+                              "src": "1147:7:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_address_$",
+                                "typeString": "type(address)"
+                              },
+                              "typeName": "address"
+                            },
+                            "id": 4306,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1147:10:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          "src": "1131:26:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "&&",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          },
+                          "id": 4312,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "id": 4308,
+                            "name": "OPFOwnerAddress",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4297,
+                            "src": "1172:15:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address",
+                              "typeString": "address"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "!=",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "hexValue": "30",
+                                "id": 4310,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "1199:1:8",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                },
+                                "value": "0"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                }
+                              ],
+                              "id": 4309,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "nodeType": "ElementaryTypeNameExpression",
+                              "src": "1191:7:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_address_$",
+                                "typeString": "type(address)"
+                              },
+                              "typeName": "address"
+                            },
+                            "id": 4311,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1191:10:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          "src": "1172:29:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "src": "1131:70:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f5046436f6d6d756e697479466565436f6c6c6563746f723a20636f6c6c6563746f722061646472657373206f72206f776e657220697320696e76616c69642061646472657373",
+                        "id": 4314,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1216:73:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_616ec9f97cdb82b4049f1345a8abc2201a64cabaaef4905e6b8a77d179c5f2d6",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: collector address or owner is invalid address\""
+                        },
+                        "value": "OPFCommunityFeeCollector: collector address or owner is invalid address"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_616ec9f97cdb82b4049f1345a8abc2201a64cabaaef4905e6b8a77d179c5f2d6",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: collector address or owner is invalid address\""
+                        }
+                      ],
+                      "id": 4302,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6555,
+                        6556
+                      ],
+                      "referencedDeclaration": 6556,
+                      "src": "1110:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 4315,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1110:189:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4316,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1110:189:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4319,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4317,
+                      "name": "collector",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4293,
+                      "src": "1309:9:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 4318,
+                      "name": "newCollector",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4295,
+                      "src": "1321:12:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "src": "1309:24:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "id": 4320,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1309:24:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "id": 4322,
+                        "name": "OPFOwnerAddress",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 4297,
+                        "src": "1361:15:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "id": 4321,
+                      "name": "transferOwnership",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6038,
+                      "src": "1343:17:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
+                        "typeString": "function (address)"
+                      }
+                    },
+                    "id": 4323,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1343:34:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4324,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1343:34:8"
+                }
+              ]
+            },
+            "documentation": "@dev constructor\n     Called prior contract deployment. set the controller address and\n     the contract owner address\n@param newCollector the fee collector address.\n@param OPFOwnerAddress the contract owner address",
+            "id": 4326,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [
+              {
+                "arguments": [],
+                "id": 4300,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 4299,
+                  "name": "Ownable",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 6063,
+                  "src": "1086:7:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_Ownable_$6063_$",
+                    "typeString": "type(contract Ownable)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1086:9:8"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4298,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4295,
+                  "name": "newCollector",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4326,
+                  "src": "994:28:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  },
+                  "typeName": {
+                    "id": 4294,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "994:15:8",
+                    "stateMutability": "payable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4297,
+                  "name": "OPFOwnerAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4326,
+                  "src": "1032:23:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4296,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1032:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "984:77:8"
+            },
+            "returnParameters": {
+              "id": 4301,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1100:0:8"
+            },
+            "scope": 4398,
+            "src": "973:411:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4329,
+              "nodeType": "Block",
+              "src": "1562:2:8",
+              "statements": []
+            },
+            "documentation": "@dev fallback function\n     this is a default fallback function in which receives\n     the collected ether.",
+            "id": 4330,
+            "implemented": true,
+            "kind": "fallback",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4327,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1542:2:8"
+            },
+            "returnParameters": {
+              "id": 4328,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1562:0:8"
+            },
+            "scope": 4398,
+            "src": "1534:30:8",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 4342,
+              "nodeType": "Block",
+              "src": "1741:58:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 4337,
+                              "name": "this",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 6594,
+                              "src": "1778:4:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_contract$_OPFCommunityFeeCollector_$4398",
+                                "typeString": "contract OPFCommunityFeeCollector"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_contract$_OPFCommunityFeeCollector_$4398",
+                                "typeString": "contract OPFCommunityFeeCollector"
+                              }
+                            ],
+                            "id": 4336,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "1770:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 4338,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1770:13:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "id": 4339,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "balance",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1770:21:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 4333,
+                        "name": "collector",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 4293,
+                        "src": "1751:9:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      "id": 4335,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "transfer",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "1751:18:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 4340,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1751:41:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4341,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1751:41:8"
+                }
+              ]
+            },
+            "documentation": "@dev withdrawETH\n     transfers all the accumlated ether the collector address",
+            "id": 4343,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawETH",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4331,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1699:2:8"
+            },
+            "returnParameters": {
+              "id": 4332,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1741:0:8"
+            },
+            "scope": 4398,
+            "src": "1679:120:8",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 4375,
+              "nodeType": "Block",
+              "src": "2053:405:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 4353,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 4349,
+                          "name": "tokenAddress",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4345,
+                          "src": "2084:12:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 4351,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "2108:1:8",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 4350,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "2100:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 4352,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "2100:10:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "2084:26:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f5046436f6d6d756e697479466565436f6c6c6563746f723a20696e76616c696420746f6b656e20636f6e74726163742061646472657373",
+                        "id": 4354,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "2124:58:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_96299161c0f4c317613661dd9a3c09a86e2da844da34a8587e90bf981cb919b9",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: invalid token contract address\""
+                        },
+                        "value": "OPFCommunityFeeCollector: invalid token contract address"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_96299161c0f4c317613661dd9a3c09a86e2da844da34a8587e90bf981cb919b9",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: invalid token contract address\""
+                        }
+                      ],
+                      "id": 4348,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6555,
+                        6556
+                      ],
+                      "referencedDeclaration": 6556,
+                      "src": "2063:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 4355,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2063:129:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4356,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2063:129:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "id": 4362,
+                            "name": "collector",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4293,
+                            "src": "2280:9:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "arguments": [
+                                  {
+                                    "argumentTypes": null,
+                                    "id": 4368,
+                                    "name": "this",
+                                    "nodeType": "Identifier",
+                                    "overloadedDeclarations": [],
+                                    "referencedDeclaration": 6594,
+                                    "src": "2354:4:8",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_contract$_OPFCommunityFeeCollector_$4398",
+                                      "typeString": "contract OPFCommunityFeeCollector"
+                                    }
+                                  }
+                                ],
+                                "expression": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_contract$_OPFCommunityFeeCollector_$4398",
+                                      "typeString": "contract OPFCommunityFeeCollector"
+                                    }
+                                  ],
+                                  "id": 4367,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "nodeType": "ElementaryTypeNameExpression",
+                                  "src": "2346:7:8",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_type$_t_address_$",
+                                    "typeString": "type(address)"
+                                  },
+                                  "typeName": "address"
+                                },
+                                "id": 4369,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "kind": "typeConversion",
+                                "lValueRequested": false,
+                                "names": [],
+                                "nodeType": "FunctionCall",
+                                "src": "2346:13:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address_payable",
+                                  "typeString": "address payable"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address_payable",
+                                  "typeString": "address payable"
+                                }
+                              ],
+                              "expression": {
+                                "argumentTypes": null,
+                                "arguments": [
+                                  {
+                                    "argumentTypes": null,
+                                    "id": 4364,
+                                    "name": "tokenAddress",
+                                    "nodeType": "Identifier",
+                                    "overloadedDeclarations": [],
+                                    "referencedDeclaration": 4345,
+                                    "src": "2322:12:8",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_address",
+                                      "typeString": "address"
+                                    }
+                                  }
+                                ],
+                                "expression": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_address",
+                                      "typeString": "address"
+                                    }
+                                  ],
+                                  "id": 4363,
+                                  "name": "IERC20Template",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 5089,
+                                  "src": "2307:14:8",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_type$_t_contract$_IERC20Template_$5089_$",
+                                    "typeString": "type(contract IERC20Template)"
+                                  }
+                                },
+                                "id": 4365,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "kind": "typeConversion",
+                                "lValueRequested": false,
+                                "names": [],
+                                "nodeType": "FunctionCall",
+                                "src": "2307:28:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_contract$_IERC20Template_$5089",
+                                  "typeString": "contract IERC20Template"
+                                }
+                              },
+                              "id": 4366,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "balanceOf",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 5071,
+                              "src": "2307:38:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
+                                "typeString": "function (address) view external returns (uint256)"
+                              }
+                            },
+                            "id": 4370,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "2307:53:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            },
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "id": 4359,
+                                "name": "tokenAddress",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 4345,
+                                "src": "2240:12:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "id": 4358,
+                              "name": "IERC20Template",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 5089,
+                              "src": "2225:14:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_contract$_IERC20Template_$5089_$",
+                                "typeString": "type(contract IERC20Template)"
+                              }
+                            },
+                            "id": 4360,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "2225:28:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_IERC20Template_$5089",
+                              "typeString": "contract IERC20Template"
+                            }
+                          },
+                          "id": 4361,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "transfer",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 5080,
+                          "src": "2225:37:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
+                            "typeString": "function (address,uint256) external returns (bool)"
+                          }
+                        },
+                        "id": 4371,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "2225:149:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f5046436f6d6d756e697479466565436f6c6c6563746f723a206661696c656420746f20776974686472617720746f6b656e73",
+                        "id": 4372,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "2388:53:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_b132282f5ba4a29f30b106af7588661098ed0503cfccb33f68abb1edfa10480e",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: failed to withdraw tokens\""
+                        },
+                        "value": "OPFCommunityFeeCollector: failed to withdraw tokens"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_b132282f5ba4a29f30b106af7588661098ed0503cfccb33f68abb1edfa10480e",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: failed to withdraw tokens\""
+                        }
+                      ],
+                      "id": 4357,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6555,
+                        6556
+                      ],
+                      "referencedDeclaration": 6556,
+                      "src": "2203:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 4373,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2203:248:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4374,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2203:248:8"
+                }
+              ]
+            },
+            "documentation": "@dev withdrawToken\n     transfers all the accumlated tokens the collector address\n@param tokenAddress the token contract address ",
+            "id": 4376,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawToken",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4346,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4345,
+                  "name": "tokenAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4376,
+                  "src": "2004:20:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4344,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2004:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1994:36:8"
+            },
+            "returnParameters": {
+              "id": 4347,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2053:0:8"
+            },
+            "scope": 4398,
+            "src": "1972:486:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 4396,
+              "nodeType": "Block",
+              "src": "2747:175:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        },
+                        "id": 4388,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 4384,
+                          "name": "newCollector",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 4378,
+                          "src": "2778:12:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 4386,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "2802:1:8",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 4385,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "2794:7:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": "address"
+                          },
+                          "id": 4387,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "2794:10:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "2778:26:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "4f5046436f6d6d756e697479466565436f6c6c6563746f723a20696e76616c696420636f6c6c6563746f722061646472657373",
+                        "id": 4389,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "2818:53:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_ccff23dbeddef29f1d56dadd51307fe5ca8848d02e365e74ca46cda6ecdf4fc0",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: invalid collector address\""
+                        },
+                        "value": "OPFCommunityFeeCollector: invalid collector address"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_ccff23dbeddef29f1d56dadd51307fe5ca8848d02e365e74ca46cda6ecdf4fc0",
+                          "typeString": "literal_string \"OPFCommunityFeeCollector: invalid collector address\""
+                        }
+                      ],
+                      "id": 4383,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6555,
+                        6556
+                      ],
+                      "referencedDeclaration": 6556,
+                      "src": "2757:7:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 4390,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2757:124:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4391,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2757:124:8"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4394,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4392,
+                      "name": "collector",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4293,
+                      "src": "2891:9:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 4393,
+                      "name": "newCollector",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4378,
+                      "src": "2903:12:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "src": "2891:24:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "id": 4395,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2891:24:8"
+                }
+              ]
+            },
+            "documentation": "@dev changeCollector\n     change the current collector address. Only owner can do that.\n@param newCollector the new collector address ",
+            "id": 4397,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 4381,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 4380,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 5996,
+                  "src": "2732:9:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "2732:9:8"
+              }
+            ],
+            "name": "changeCollector",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4379,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4378,
+                  "name": "newCollector",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 4397,
+                  "src": "2670:28:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  },
+                  "typeName": {
+                    "id": 4377,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2670:15:8",
+                    "stateMutability": "payable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2660:44:8"
+            },
+            "returnParameters": {
+              "id": 4382,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2747:0:8"
+            },
+            "scope": 4398,
+            "src": "2636:286:8",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 4399,
+        "src": "616:2308:8"
+      }
+    ],
+    "src": "0:2925:8"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.7+commit.6da8b019.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-11-27T13:03:35.526Z",
+  "devdoc": {
+    "details": "Ocean Protocol Foundation Community Fee Collector contract     allows consumers to pay very small fee as part of the exchange of      data tokens with ocean token in order to support the community of       ocean protocol and provide a sustainble development.",
+    "methods": {
+      "changeCollector(address)": {
+        "details": "changeCollector     change the current collector address. Only owner can do that.",
+        "params": {
+          "newCollector": "the new collector address "
+        }
+      },
+      "constructor": {
+        "details": "constructor     Called prior contract deployment. set the controller address and     the contract owner address",
+        "params": {
+          "OPFOwnerAddress": "the contract owner address",
+          "newCollector": "the fee collector address."
+        }
+      },
+      "isOwner()": {
+        "details": "Returns true if the caller is the current owner."
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      },
+      "withdrawETH()": {
+        "details": "withdrawETH     transfers all the accumlated ether the collector address"
+      },
+      "withdrawToken(address)": {
+        "details": "withdrawToken     transfers all the accumlated tokens the collector address",
+        "params": {
+          "tokenAddress": "the token contract address "
+        }
+      }
+    },
+    "title": "OPFCommunityFeeCollector"
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
