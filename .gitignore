@@ -1,0 +1,7 @@
+*.pyc
+*~
+.pytest_cache/
+engine/__pycache__/
+engine/test/__pycache__/
+util/__pycache__/
+util/test/__pycache__/
