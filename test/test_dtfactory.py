@@ -1,9 +1,9 @@
 from engine.evm.dtfactory import DTFactory
+from web3tools.wallet import Wallet
 
-def test1():
+def test1(alice_wallet):
     dtfactory = DTFactory()
-
-    #dt = dtfactory.createToken(blog='foo', from_wallet=alice_wallet)
+    dt = dtfactory.createToken(blob='foo', from_wallet=alice_wallet)
 
 # def test_ERC20(network,
 #                alice_wallet, alice_address,

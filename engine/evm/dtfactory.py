@@ -8,6 +8,8 @@ class DTFactory:
         web3 = web3util.get_web3()
         contract_address = web3util.contractAddress(name)
         self.contract = web3.eth.contract(contract_address, abi=abi)
+
+        self.DT_number = 0
         
     @property
     def address(self):
@@ -16,8 +18,12 @@ class DTFactory:
     #============================================================
     #reflect DTFactory Solidity methods
     def createToken(self, blob: str, from_wallet: Wallet) -> str:
-        f = self.contract.functions.createToken(blob)
-        (tx_hash, tx_receipt) = util.buildAndSendTx(f, from_wallet)
+        name = symbol = f'DT{self.DT_number}'
+        self.DT_number += 1
+        cap_base = web3util.toBase18(1000.0)
+        
+        f = self.contract.functions.createToken(blob, name, symbol, cap_base)
+        (tx_hash, tx_receipt) = web3util.buildAndSendTx(f, from_wallet)
 
         warnings.filterwarnings("ignore") #ignore unwarranted warning up next
         rich_logs = getattr(self.contract.events, 'TokenCreated')().processReceipt(tx_receipt)
