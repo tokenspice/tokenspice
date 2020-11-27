@@ -118,9 +118,11 @@ cd contracts
 npm run deploy
 ```
 
-This will have updated the file `artifacts/address.json` in the _contracts_ directory, in values in "development" section.
+Now, open the file `contracts/artifacts/address.json` in your editor. Copy the values in the "development" section.
 
-Now, open up your _tokenspice_'s addresses file, e.g. at `./tokenspice/engine/evm/address.json`. Copy the values from "development" above into the "ganache" section. The result should look something like
+In a separate window, open the file 'tokenspice/engine/evm/address.json'. Paste the values into the "ganache" section.
+
+The result should look something like:
 ```
 {"ganache": {
     "DTFactory": "0xC36D83c8b8E31D7dBe47f7f887BF1C567ff75DD7",
@@ -130,6 +132,7 @@ Now, open up your _tokenspice_'s addresses file, e.g. at `./tokenspice/engine/ev
 }
 ```
 
+Finally, copy over 
 
 ## Test that everything is working
 
