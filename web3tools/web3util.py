@@ -1,4 +1,4 @@
-import brownie
+#import brownie
 import configparser
 
 import eth_account
@@ -74,9 +74,9 @@ def fromBase(num_base: int, dec: int) -> float:
     """returns value in e.g. ETH (taking e.g. wei as input)"""
     return float(num_base / (10**dec))
 
-def brownie_account(private_key):
-    assert brownie.network.is_connected()
-    return brownie.network.accounts.add(private_key=private_key)
+#def brownie_account(private_key):
+#    assert brownie.network.is_connected()
+#    return brownie.network.accounts.add(private_key=private_key)
 
 def abi(class_name: str):
     filename = abi_filename(class_name)
