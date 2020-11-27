@@ -2,7 +2,8 @@ from engine.evm.datatoken import DataTokenTemplate
 
 def test1():
     pass
-    #token = DataTokenTemplate()
+    #dt_address = FIXME
+    #token = DataTokenTemplate(dt_address)
 
 # def test_ERC20(network,
 #                alice_wallet, alice_address,
