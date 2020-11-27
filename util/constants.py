@@ -50,5 +50,3 @@ BITCOIN_NUM_HALF_LIVES = 34
 #=============================================
 #evm stuff
 GASLIMIT_DEFAULT = 5000000 
-ADDRESS_FILE = "./engine/evm/address.json"
-ABI_BASE_PATH = "./engine/evm/"

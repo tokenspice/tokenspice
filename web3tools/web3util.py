@@ -83,21 +83,27 @@ def abi(class_name: str):
     with open(filename, 'r') as f:
         return json.loads(f.read())['abi']
 
-def abi_filename(class_name: str) -> str:
+def abiFilename(class_name: str) -> str:
     """Given e.g. 'BToken', returns './engine/evm/BToken.json' """
-    return os.path.join(constants.ABI_BASE_PATH, class_name) + '.json'
+    base_path = confFileValue('general', 'ARTIFACTS_PATH')
+    return os.path.join(base_path, class_name) + '.json'
 
 def contractAddress(contract_name:str) -> str:
     """Given e.g. 'BToken', returns '0x98dea8...' """
     return contractAddresses()[contract_name]
 
 def contractAddresses():
-    with open(constants.ADDRESS_FILE) as f:
+    filename = contractAddressesFilename()
+    with open(filename) as f:
         addresses = json.load(f)
     network = get_network()
     assert network in addresses, \
         f"Wanted addresses at '{network}', only have them for {list(addresses.keys())}"
     return addresses[network]
+
+def contractAddressesFilename():
+    base_path = confFileValue('general', 'ARTIFACTS_PATH')
+    return os.path.join(base_path, 'address.json')
 
 def get_network():
     return confFileValue('general', 'NETWORK')
