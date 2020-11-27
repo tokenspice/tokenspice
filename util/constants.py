@@ -4,7 +4,7 @@ import configparser, os
 config = configparser.ConfigParser()
 config.read(os.path.expanduser(CONF_FILE_PATH))
 
-SAFETY = config['util'].getboolean('safety')
+SAFETY = config['general'].getboolean('safety')
 assert SAFETY is not None
 
 import logging
@@ -47,5 +47,8 @@ BDB_TREASURY_OCEAN = 1e6  #(not the true number)
 # https://en.bitcoin.it/wiki/Controlled_supply#Projected_Bitcoins_Long_Term
 BITCOIN_NUM_HALF_LIVES = 34
 
-#
+#=============================================
+#evm stuff
 GASLIMIT_DEFAULT = 5000000 
+ADDRESS_FILE = "./engine/evm/address.json"
+ABI_BASE_PATH = "./engine/evm/"

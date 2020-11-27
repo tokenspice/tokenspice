@@ -1,23 +1,17 @@
-from web3 import Web3
-
 from web3tools import web3util
 from web3tools.wallet import Wallet
 
 class BToken:
-    def __init__(self, network:str):
-        self._network = network
-        web3 = Web3(web3util.get_web3_provider(network))
-        abi = self._abi()
+    def __init__(self):
+        name = self.__class__.__name__
+        abi = web3util.abi(name)
+        web3 = web3util.get_web3()
+        contract_address = web3util.contractAddress(name)
         self.contract = web3.eth.contract(contract_address, abi=abi)
         
     @property
     def address(self):
         return self.contract.address
-    
-    def _abi(self):
-        class_name = type(self).__name__ 
-        filename = web3util.confFileValue(self._network, class_name)
-        return web3util.abi(filename=f'./engine/evm/{class_name}.json')['abi']
         
     #============================================================
     #reflect BToken Solidity methods

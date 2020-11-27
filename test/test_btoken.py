@@ -1,7 +1,7 @@
 from engine.evm.btoken import BToken
 
-def test1(network):
-    token = BToken(network)
+def test1():
+    token = BToken()
 
 # def test_ERC20(network,
 #                alice_wallet, alice_address,

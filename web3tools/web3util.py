@@ -7,15 +7,19 @@ import os
 import typing
 from web3 import Web3, WebsocketProvider
 
-from util.constants import GASLIMIT_DEFAULT
+from util import constants
 from web3tools.account import privateKeyToAddress
 from web3tools.wallet import Wallet
 from web3tools.http_provider import CustomHTTPProvider
 
-def get_infura_url(infura_id, network):
+def get_infura_url(infura_id):
+    network = get_network()
     return f"wss://{network}.infura.io/ws/v3/{infura_id}"
 
-def get_web3_provider(network_url):
+def get_web3():
+    return Web3(get_web3_provider())
+
+def get_web3_provider():
     """
     Return the suitable web3 provider based on the network_url
 
@@ -34,8 +38,10 @@ def get_web3_provider(network_url):
         - the issue is described here: https://github.com/ethereum/web3.py/issues/549
         - and the fix is here: https://web3py.readthedocs.io/en/latest/middleware.html#geth-style-proof-of-authority
     """
+    network_url = get_network()
+    
     if network_url == 'ganache':
-        network_url = GANACHE_URL
+        network_url = confFileValue('general', 'GANACHE_URL')
 
     if network_url.startswith('http'):
         provider = CustomHTTPProvider(network_url)
@@ -72,27 +78,46 @@ def brownie_account(private_key):
     assert brownie.network.is_connected()
     return brownie.network.accounts.add(private_key=private_key)
 
-
-def confFileValue(network: str, key: str) -> str:
-    conf = configparser.ConfigParser()
-    path = os.path.expanduser(CONF_FILE_PATH)
-    conf.read(path)
-    return conf[network][key]
-
-def abi(filename: str):
+def abi(class_name: str):
+    filename = abi_filename(class_name)
     with open(filename, 'r') as f:
-        return json.loads(f.read())
+        return json.loads(f.read())['abi']
 
+def abi_filename(class_name: str) -> str:
+    """Given e.g. 'BToken', returns './engine/evm/BToken.json' """
+    return os.path.join(constants.ABI_BASE_PATH, class_name) + '.json'
+
+def contractAddress(contract_name:str) -> str:
+    """Given e.g. 'BToken', returns '0x98dea8...' """
+    return contractAddresses()[contract_name]
+
+def contractAddresses():
+    with open(constants.ADDRESS_FILE) as f:
+        addresses = json.load(f)
+    network = get_network()
+    assert network in addresses, \
+        f"Wanted addresses at '{network}', only have them for {list(addresses.keys())}"
+    return addresses[network]
+
+def get_network():
+    return confFileValue('general', 'NETWORK')
+
+def confFileValue(section: str, key: str) -> str:
+    conf = configparser.ConfigParser()
+    path = os.path.expanduser(constants.CONF_FILE_PATH)
+    conf.read(path)
+    return conf[section][key]
+                                 
 def buildAndSendTx(function,
                    from_wallet: Wallet,
-                   gaslimit: int = GASLIMIT_DEFAULT,
+                   gaslimit: int = constants.GASLIMIT_DEFAULT,
                    num_wei: int = 0):
     assert isinstance(from_wallet.address, str)
     assert isinstance(from_wallet.private_key, str)
 
     web3 = from_wallet.web3
     nonce = web3.eth.getTransactionCount(from_wallet.address)
-    network =  web3_to_network(web3)
+    network = get_network()
     gas_price = int(confFileValue(network, 'GAS_PRICE'))
     tx_params = {
         "from": from_wallet.address,
@@ -112,12 +137,4 @@ def buildAndSendTx(function,
         raise Exception("The tx failed. tx_receipt: {tx_receipt}")
     return (tx_hash, tx_receipt)
 
-def web3_to_network(web3):
-    s = str(web3.provider)
-    if '127.0.0.1' in s:
-        return 'ganache'
-    for n in ['rinkeby', 'ropsten', 'kovan']:
-        if n in s:
-            return n
-    return 'mainnet'
     
