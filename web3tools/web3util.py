@@ -1,4 +1,3 @@
-#import brownie
 import configparser
 
 import eth_account
@@ -74,22 +73,21 @@ def fromBase(num_base: int, dec: int) -> float:
     """returns value in e.g. ETH (taking e.g. wei as input)"""
     return float(num_base / (10**dec))
 
-#def brownie_account(private_key):
-#    assert brownie.network.is_connected()
-#    return brownie.network.accounts.add(private_key=private_key)
-
 def abi(class_name: str):
     filename = abiFilename(class_name)
     with open(filename, 'r') as f:
         return json.loads(f.read())['abi']
 
 def abiFilename(class_name: str) -> str:
-    """Given e.g. 'BToken', returns './engine/evm/BToken.json' """
+    """Given e.g. 'DTFactory', returns './engine/evm/DTFactory.json' """
     base_path = confFileValue('general', 'ARTIFACTS_PATH')
-    return os.path.join(base_path, class_name) + '.json'
+    path = os.path.join(base_path, class_name) + '.json'
+    abspath = os.path.abspath(path)
+    return abspath
 
 def contractAddress(contract_name:str) -> str:
-    """Given e.g. 'BToken', returns '0x98dea8...' """
+    """Given e.g. 'DTFactory', returns '0x98dea8...' """
+    a = contractAddresses()
     return contractAddresses()[contract_name]
 
 def contractAddresses():
@@ -97,6 +95,8 @@ def contractAddresses():
     with open(filename) as f:
         addresses = json.load(f)
     network = get_network()
+    if network == 'ganache' and network not in addresses:
+        network = 'development'
     assert network in addresses, \
         f"Wanted addresses at '{network}', only have them for {list(addresses.keys())}"
     return addresses[network]

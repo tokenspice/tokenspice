@@ -42,7 +42,7 @@ Controllable agents (structure):
 - PoolAgent.py wraps BPool.sol. Agent's wallet grabs values from BPool.sol
    - current design (.sol) is at oceanprotocol/contracts
    - new design (.sol) is at branch 'feature/1mm-prototype_alex'
-   - how can PoolAgent see it? brownie-centric: start w brownie, and use just some code ocean.py/ocean_lib/models/bpool.py
+   - how can PoolAgent see it? draw on btoken.py etc.
 
 Controllable variables:
 - Global design vars. E.g. schedule for token distribution.
@@ -99,7 +99,7 @@ Then run ganache:
 ./ganache.py
 ```
 
-Note: you could theoretically run ganache directly, you'd have to put in a bunch of special arguments and other stuff to make it play well with Brownie. The script above abstracts that away for you.
+Note: you could run ganache directly, but then you have to add many special arguments. The script above does that for you.
 
 ## Deploy the smart contracts to ganache
 
