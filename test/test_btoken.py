@@ -1,10 +1,7 @@
-from web3 import Web3
-
-from web3tools import web3util
 from engine.evm.btoken import BToken
 
 def test1(network):
-    web3 = Web3(web3util.get_web3_provider(network))
+    token = BToken(network)
 
 # def test_ERC20(network,
 #                alice_wallet, alice_address,

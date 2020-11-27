@@ -1,6 +1,8 @@
+CONF_FILE_PATH = './tokenspice.ini'
+
 import configparser, os
 config = configparser.ConfigParser()
-config.read(os.path.expanduser('~/tokenspice.conf'))
+config.read(os.path.expanduser(CONF_FILE_PATH))
 
 SAFETY = config['util'].getboolean('safety')
 assert SAFETY is not None
@@ -44,3 +46,6 @@ BDB_TREASURY_OCEAN = 1e6  #(not the true number)
 #Number of half-lives that bitcoin stops after.
 # https://en.bitcoin.it/wiki/Controlled_supply#Projected_Bitcoins_Long_Term
 BITCOIN_NUM_HALF_LIVES = 34
+
+#
+GASLIMIT_DEFAULT = 5000000 

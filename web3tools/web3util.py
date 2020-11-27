@@ -7,15 +7,10 @@ import os
 import typing
 from web3 import Web3, WebsocketProvider
 
+from util.constants import GASLIMIT_DEFAULT
 from web3tools.account import privateKeyToAddress
 from web3tools.wallet import Wallet
 from web3tools.http_provider import CustomHTTPProvider
-
-WEB3_INFURA_PROJECT_ID = '82ee39a2e4b8441b96aa4ae2e94219db'
-
-GANACHE_URL = 'http://127.0.0.1:8545'
-
-SUPPORTED_NETWORK_NAMES = {'rinkeby', 'kovan', 'ganache', 'mainnet', 'ropsten'}
 
 def get_infura_url(infura_id, network):
     return f"wss://{network}.infura.io/ws/v3/{infura_id}"
@@ -38,9 +33,6 @@ def get_web3_provider(network_url):
         Web3 py has an issue when making some requests to `rinkeby`
         - the issue is described here: https://github.com/ethereum/web3.py/issues/549
         - and the fix is here: https://web3py.readthedocs.io/en/latest/middleware.html#geth-style-proof-of-authority
-
-    :param network_url:
-    :return:
     """
     if network_url == 'ganache':
         network_url = GANACHE_URL
@@ -80,8 +72,6 @@ def brownie_account(private_key):
     assert brownie.network.is_connected()
     return brownie.network.accounts.add(private_key=private_key)
 
-#FIXME: maybe deprecate this
-CONF_FILE_PATH = '~/ocean.conf'
 
 def confFileValue(network: str, key: str) -> str:
     conf = configparser.ConfigParser()
@@ -89,16 +79,9 @@ def confFileValue(network: str, key: str) -> str:
     conf.read(path)
     return conf[network][key]
 
-#FIXME: maybe deprecate this
-# (or deprecate the similar but more complex version in contract_handler)
-
 def abi(filename: str):
     with open(filename, 'r') as f:
         return json.loads(f.read())
-    
-#FIXME: maybe deprecate this
-# (or deprecate the similar functionality in ocean-lib/web3_internal/contract_base.py?)
-GASLIMIT_DEFAULT = 5000000 #FIXME: put in better place
 
 def buildAndSendTx(function,
                    from_wallet: Wallet,

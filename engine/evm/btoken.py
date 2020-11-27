@@ -1,12 +1,12 @@
-
+from web3 import Web3
 
 from web3tools import web3util
-from ocean_lib.web3_internal.wallet import Wallet
-
+from web3tools.wallet import Wallet
 
 class BToken:
-    def __init__(self, web3, contract_address: str):
-        self.web3 = web3
+    def __init__(self, network:str):
+        self._network = network
+        web3 = Web3(web3util.get_web3_provider(network))
         abi = self._abi()
         self.contract = web3.eth.contract(contract_address, abi=abi)
         
@@ -15,7 +15,9 @@ class BToken:
         return self.contract.address
     
     def _abi(self):
-        return web3util.abi(filename='./abi/BToken.abi')
+        class_name = type(self).__name__ 
+        filename = web3util.confFileValue(self._network, class_name)
+        return web3util.abi(filename=f'./engine/evm/{class_name}.json')['abi']
         
     #============================================================
     #reflect BToken Solidity methods
