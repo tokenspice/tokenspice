@@ -127,7 +127,7 @@ First, copy over the json files from the previous step, with something like:
 cp ~/code/contracts/artifacts/*.json ~/code/tokenspice/engine/evm/artifacts/
 ```
 
-Finally, open the `address.json` and change "development" to "ganache". It should have an entry like:
+Finally, open `./tokenspice/engine/evm/artifacts/address.json` and change "development" to "ganache". It should have an entry like:
 ```json
 "ganache": {
     "DTFactory": "0xC36D83c8b8E31D7dBe47f7f887BF1C567ff75DD7",
@@ -139,6 +139,12 @@ Finally, open the `address.json` and change "development" to "ganache". It shoul
 
 Now, for each contract, TokenSPICE knows where to find it on ganache (address.json file) and what its interface is (*.json).
 
+
+## Test one EVM-based test
+
+```console
+pytest test/test_btoken.py
+```
 
 ## Test that everything is working
 
