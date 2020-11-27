@@ -3296,7 +3296,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-27T13:03:35.526Z",
+  "updatedAt": "2020-11-27T16:04:11.308Z",
   "devdoc": {
     "details": "Ocean Protocol Foundation Community Fee Collector contract     allows consumers to pay very small fee as part of the exchange of      data tokens with ocean token in order to support the community of       ocean protocol and provide a sustainble development.",
     "methods": {

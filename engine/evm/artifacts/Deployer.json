@@ -781,7 +781,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-27T13:03:35.535Z",
+  "updatedAt": "2020-11-27T16:04:11.318Z",
   "devdoc": {
     "author": "Ocean Protocol Team",
     "details": "Contract Deployer     This contract allowes factory contract      to deploy new contract instances using     the same library pattern in solidity.     the logic it self is deployed only once, but     executed in the context of the new storage      contract (new contract instance)",

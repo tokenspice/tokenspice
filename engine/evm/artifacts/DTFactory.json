@@ -4538,7 +4538,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-27T13:03:35.496Z",
+  "updatedAt": "2020-11-27T16:04:11.274Z",
   "devdoc": {
     "author": "Ocean Protocol Team",
     "details": "Implementation of Ocean DataTokens Factory *      DTFactory deploys DataToken proxy contracts.     New DataToken proxy contracts are links to the template contract's bytecode.     Proxy contract functionality is based on Ocean Protocol custom implementation of ERC1167 standard.",
