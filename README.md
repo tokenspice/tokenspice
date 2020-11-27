@@ -1,11 +1,70 @@
 # TokenSPICE-EVM : Token Simulator with Python or EVM agents
-TokenSPICE simulates tokenized ecosystems using an agent-based approach. It can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
 
-Agents may be written in pure Python, or with an EVM-based backend. (The [original](https://github.com/oceanprotocol/tokenspice) TokenSPICE was only pure Python.)
+TokenSPICE-EVM (TSE) simulates tokenized ecosystems using an agent-based approach.
 
-This TokenSPICE is tuned to model [Ocean Market](https://market.oceanprotocol.com). The original TokenSPICE was tuned for the ["Web3 Sustainability Loop"](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. 
+Agents may be written in pure Python, or with an EVM-based backend. Compare to the [original](https://github.com/oceanprotocol/tokenspice) TokenSPICE, which was only pure Python.
 
-TokenSPICE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
+TSE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
+
+It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). The original TokenSPICE was tuned for the ["Web3 Sustainability Loop"](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. 
+
+TSE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
+
+# Flow for experiments
+
+1. Update controllables/uncontrollables/metrics. Change .sol, .py, etc
+   - Debug using pytest for all the new EVM stuff
+   - Debug using unittest for the old stuff. Migrate it to pytest over time.
+
+2. (if needed) recompile & deploy sol code. Leverage what the team already built.
+   - HOW: cd ~/code/contracts; npm i; npm run compile; npm run deploy
+   - Then, deployed contract addresses are at: ./artifacts/address.json; ABIs in that dir too
+3. TokenSPICE "run_1" or "run_n", output csvs
+4. TokenSPICE "plot_1" or "plot_n", output pngs
+5. Analyze results
+6. Goto 1
+
+# TokenSPICE-EVM Design
+
+### Top-level agent architecture
+
+- All agents inherit BaseAgent
+- Controllable agents use EVM.
+- Uncontrollable agents use pure Python. But each has EOA.
+   - Therefore the core dynamics are still on-chain
+       
+### Controllables
+
+Controllable agents (structure): 
+- What agents: just Pool (incl. Strategies and Pool Controllers).
+- The agent's state is stored on blockchain. Deployment is not in the scope of TSE right now. TSE just sees ABIs.
+- PoolAgent.py wraps BPool.sol. Agent's wallet grabs values from BPool.sol
+   - current design (.sol) is at oceanprotocol/contracts
+   - new design (.sol) is at branch 'feature/1mm-prototype_alex'
+   - how can PoolAgent see it? brownie-centric: start w brownie, and use just some code ocean.py/ocean_lib/models/bpool.py
+
+Controllable variables:
+- Global design vars. E.g. schedule for token distribution.
+- Design vars within controllable agents
+       
+### Uncontrollables 
+
+Uncontrollable Agents:
+- Uncontrollable agents use pure Python. But each has an Externally Owned Address (EOA) to interact w EVM. Implemented inside Wallet.
+- What agents: 
+   - Status quo design: Publisher, Dataconsumer, Stakerspeculator
+   - New design 1: Publisher, Dataconsumer, Staker, Speculator
+
+Uncontrollable Variables (Env & rnd structure & params)
+- Global rndvars & envvars. 
+- Rndvars and envvars within controllable agents
+- Rndvars and envvars within uncontrollable agents
+- Ranges for envvars, and parameters for rndvar pdfs, are in constants.py, etc.
+
+
+### Metrics
+- These are what's output by SimEngine.py into the CSV, then plotted
+- In the future, we could get fancier by leveraging TheGraph. 
 
 # A. Quickstart
 
@@ -113,34 +172,17 @@ If you make changes here, it's a great idea to write unit tests to make sure you
 
 Before making changes, we recommend having a better understanding of how the system works. Which brings us to...
 
-## Understand how it works
+# Models
 
-Here's a starting point for understanding how TokenSPICE works. 
+## Status quo model
 
-Here's the block diagram as presented for broader public consumption. While it says Ocean, the system-level design is really quite general (Web3 Sustainability Loop).
+<img src="images/model-status-quo.png" width="100%">
 
-<img src="images/block-diagram-simpler-for-public.png" width="70%">
+## New model 1
 
-That diagram glossed over some details. Here is a more accurate block diagram. 
+<img src="images/model-new1.png" width="100%">
 
-<img src="images/block-diagram-actual.png" width="70%">
-
-The plots show many key performance indicators (KPIs) and other variables changing over time. Here's how they affect each other.
-
-<img src="images/variables-being-modeled.png" width="100%">
-
-We have slightly fancier models for growth rate and for token supply schedule. The details are [here](images/model-growth-rate.png) and [here](images/model-supply-schedule.png), respectively.
-
-Model scope and limitations:
-- TokenSPICE is currently modeling the Web3 Sustainability Loop, or equivalently, Ocean's system level design. 
-- It does not attempt to model Ocean Market dynamics or the Balancer AMM at any level of fidelity. 
-- Nor does it model staking in Ocean Market or elsewhere. Staking can have a big positive impact on token price.
-
-To learn more:
-- "The Web3 Sustainability Loop" blog post [[ref](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e)] is a good first external reference
-- Then, "Ocean Token Model" blog post [[ref](https://blog.oceanprotocol.com/ocean-token-model-3e4e7af210f9)] adds a bit more fidelity.
-- The Ocean Whitepaper [[ref](https://oceanprotocol.com/tech-whitepaper.pdf)] has more fidelity yet.
-- Finally, we encourage taking a look at the code here! A good starting point is to see `SimEngine`'s loop, which calls `SimState`'s update, which calls each `Agent`'s update.
+[Gslides](https://docs.google.com/presentation/d/14BB50dkGXTcPjlbrZilQ3WYnFLDetgfMS1BKGuMX8Q0/edit#slide=id.p1)
 
 # A Final Word, or Two
 
