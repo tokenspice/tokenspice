@@ -1,7 +1,7 @@
 from web3tools import web3util
 from web3tools.wallet import Wallet
 
-class BToken:
+class DataTokenTemplate:
     def __init__(self):
         name = self.__class__.__name__
         abi = web3util.abi(name)
@@ -37,3 +37,20 @@ class BToken:
     def allowance_base(self, src_address:str, dst_address: str) -> int:
         f = self.contract.functions.allowance(src_address, dst_address)
         return f.call()
+    
+    #============================================================
+    #new methods for Datatoken
+    def download(self, *args, **kwargs):
+        raise NotImplementedError()
+    
+    def blob(self) -> str:
+        return self.contract.functions.blob().call()
+
+    def mint(self, account: str, value_base: int, from_wallet: Wallet):
+        f = self.contract.functions.mint(account, value_base)
+        return web3util.buildAndSendTx(f, from_wallet)        
+    
+    def setMinter(self, minter: str, from_wallet: Wallet):
+        f = self.contract.functions.setMinter(minter)
+        return web3util.buildAndSendTx(f, from_wallet)
+

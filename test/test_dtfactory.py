@@ -1,7 +1,9 @@
-from engine.evm.btoken import BToken
+from engine.evm.dtfactory import DTFactory
 
 def test1():
-    token = BToken()
+    dtfactory = DTFactory()
+
+    #dt = dtfactory.createToken(blog='foo', from_wallet=alice_wallet)
 
 # def test_ERC20(network,
 #                alice_wallet, alice_address,
