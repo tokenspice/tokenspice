@@ -4,7 +4,7 @@ import typing
 
 logger = logging.getLogger(__name__)
 
-from account import Account, privateKeyToAddress
+from web3tools.account import Account, privateKeyToAddress
 
 class Wallet:
     """Signs txs and msgs with an account's private key."""

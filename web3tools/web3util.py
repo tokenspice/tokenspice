@@ -7,9 +7,9 @@ import os
 import typing
 from web3 import Web3, WebsocketProvider
 
-from account import privateKeyToAddress
-from wallet import Wallet
-from http_provider import CustomHTTPProvider
+from web3tools.account import privateKeyToAddress
+from web3tools.wallet import Wallet
+from web3tools.http_provider import CustomHTTPProvider
 
 WEB3_INFURA_PROJECT_ID = '82ee39a2e4b8441b96aa4ae2e94219db'
 
