@@ -35,5 +35,4 @@ class BToken:
 
     def allowance_base(self, src_address:str, dst_address: str) -> int:
         f = self.contract.functions.allowance(src_address, dst_address)
-        return f.call()
-    
+        return f.call() 

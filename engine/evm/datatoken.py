@@ -15,12 +15,14 @@ class Datatoken(BToken):
     
     def blob(self) -> str:
         return self.contract.functions.blob().call()
-
+    
     def mint(self, account: str, value_base: int, from_wallet: Wallet):
         f = self.contract.functions.mint(account, value_base)
-        return web3util.buildAndSendTx(f, from_wallet)        
+        return web3util.buildAndSendTx(f, from_wallet)
     
     def setMinter(self, minter: str, from_wallet: Wallet):
         f = self.contract.functions.setMinter(minter)
         return web3util.buildAndSendTx(f, from_wallet)
 
+
+    

@@ -1,6 +1,8 @@
 import pytest
 from web3 import Web3
 
+from engine.evm import btoken, dtfactory
+
 from web3tools import web3util, account, wallet
 
 @pytest.fixture
@@ -93,16 +95,13 @@ def make_info(name, private_key_name):
     return info
 
 # def _deployAndMintToken(symbol: str, to_address: str) -> btoken.BToken:
-#     p = _BROWNIE_PROJECT
-#     private_key = util.confFileValue(_NETWORK, 'FACTORY_DEPLOYER_PRIVATE_KEY')
-#     account = brownieAccount(private_key)
-#     token = p.DataTokenTemplate.deploy(
-#         symbol, symbol, account.address, HUGEINT, '',
-#         {'from': account})
+#     private_key = web3util.confFileValue(network, 'FACTORY_DEPLOYER_PRIVATE_KEY')
+#     from_wallet = wallet.Wallet(private_key=private_key)
+#     token_address = dtfactory.DTFactory().createToken(blob='foo', from_wallet=alice_wallet)
+#     token = BToken(token_address)
+#     token.mint(to_address, util.toBase18(1000.0), from_wallet=from_wallet)
     
-#     token.mint(to_address, util.toBase18(1000.0), {'from': account})
-    
-#     return btoken.BToken(web3, token.address)
+#     return token
 
 def _dtfactory_address():
     return web3util.contractAddress('DTFactory')
