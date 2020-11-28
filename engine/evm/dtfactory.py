@@ -1,3 +1,5 @@
+import warnings
+
 from web3tools import web3util
 from web3tools.wallet import Wallet
 

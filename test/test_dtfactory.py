@@ -9,7 +9,7 @@ def test1(alice_wallet):
 #                alice_wallet, alice_address,
 #                bob_wallet, bob_address,
 #                OCEAN_address):
-#     web3 = Web3(util.get_web3_provider(network))
+#     web3 = web3util.get_web3()
 #     token = BToken(web3, OCEAN_address)
 
 #     assert token.symbol() == 'OCEAN'
