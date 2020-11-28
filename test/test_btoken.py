@@ -1,14 +1,5 @@
 from engine.evm import btoken, datatoken, dtfactory
 from web3tools import web3util
-
-def test_OCEAN(OCEAN_address):
-    token = btoken.BToken(OCEAN_address)
-    assert token.decimals() == 18
-
-    #For ganache the symbol is 'DTT', not 'OCEAN'.
-    # This is an artifact of how 'contracts' repo deploys.
-    # Details: contracts/migrations/2_deploy_contracts.js
-    assert token.symbol() == 'DTT'
     
 def test_ERC20(alice_wallet, alice_address,
                bob_wallet, bob_address):
@@ -21,6 +12,7 @@ def test_ERC20(alice_wallet, alice_address,
 
     #now that we've created & minted the token, we can use it with BToken interface
     token = btoken.BToken(dt_address)
+    assert token.address == dt_address
     assert token.decimals() == 18
     assert token.balanceOf_base(alice_address) == web3util.toBase18(100.0)
     assert token.balanceOf_base(bob_address) == 0
@@ -39,3 +31,11 @@ def test_ERC20(alice_wallet, alice_address,
     token.transfer(alice_address, alice_TOK, from_wallet=bob_wallet)
     assert token.balanceOf_base(alice_address) == alice_TOK
     assert token.balanceOf_base(bob_address) == bob_TOK
+
+def test_OCEAN(OCEAN_address):
+    token = btoken.BToken(OCEAN_address)
+
+    #For ganache the symbol is 'DTT', not 'OCEAN'.
+    # This is an artifact of how 'contracts' repo deploys.
+    # Details: contracts/migrations/2_deploy_contracts.js
+    assert token.symbol() == 'DTT'

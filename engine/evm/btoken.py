@@ -24,13 +24,13 @@ class BToken:
         func = self.contract.functions.balanceOf(address)
         return func.call()
 
+    def transfer(self, dst_address: str, amt_base: int, from_wallet: Wallet):
+        f = self.contract.functions.transfer(dst_address, amt_base)
+        return web3util.buildAndSendTx(f, from_wallet)
+
     def approve(self, spender_address: str, amt_base: int,
                 from_wallet: Wallet):
         f = self.contract.functions.approve(spender_address, amt_base)
-        return web3util.buildAndSendTx(f, from_wallet)
-
-    def transfer(self, dst_address: str, amt_base: int, from_wallet: Wallet):
-        f = self.contract.functions.transfer(dst_address, amt_base)
         return web3util.buildAndSendTx(f, from_wallet)
 
     def allowance_base(self, src_address:str, dst_address: str) -> int:
