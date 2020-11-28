@@ -1,10 +1,9 @@
 from web3tools import web3util
 from web3tools.wallet import Wallet
 
-class DataTokenTemplate:
+class Datatoken:
     def __init__(self, contract_address):
-        name = self.__class__.__name__
-        abi = web3util.abi(name)
+        abi = web3util.abi('DataTokenTemplate')
         web3 = web3util.get_web3()
         self.contract = web3.eth.contract(contract_address, abi=abi)
         
