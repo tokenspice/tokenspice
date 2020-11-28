@@ -1,15 +1,21 @@
-from engine.evm.datatoken import DataTokenTemplate
+from engine.evm.datatoken import Datatoken
+from engine.evm.dtfactory import DTFactory
+from web3tools import web3util
 
 def test1():
     pass
-    #dt_address = FIXME
-    #token = DataTokenTemplate(dt_address)
 
-# def test_ERC20(network,
-#                alice_wallet, alice_address,
+# def test_ERC20(alice_wallet):
+#     dtfactory = DTFactory()
+#     dt_address = dtfactory.createToken(blob='foo_blob', from_wallet=alice_wallet)
+#     dt = Datatoken(dt_address)
+#     assert isinstance(dt, Datatoken)
+
+
+# def test_ERC20(alice_wallet, alice_address,
 #                bob_wallet, bob_address,
 #                OCEAN_address):
-#     web3 = Web3(util.get_web3_provider(network))
+
 #     token = BToken(web3, OCEAN_address)
 
 #     assert token.symbol() == 'OCEAN'

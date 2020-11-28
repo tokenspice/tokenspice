@@ -1,0 +1,31 @@
+from engine.evm.btoken import BToken
+from web3tools import web3util
+
+def test_ERC20(alice_wallet, alice_address,
+               bob_wallet, bob_address,
+               OCEAN_address):
+    token = BToken(OCEAN_address)
+
+    #For ganache the symbol is 'DTT', not 'OCEAN'.
+    # This is an artifact of how 'contracts' repo deploys.
+    # Details: contracts/migrations/2_deploy_contracts.js
+    assert token.symbol() == 'DTT'
+    
+    assert token.decimals() == 18
+    # assert token.balanceOf_base(alice_address) > web3util.toBase18(10.0)
+    # assert token.balanceOf_base(bob_address) > web3util.toBase18(10.0)
+
+    # assert token.allowance_base(alice_address, bob_address) == 0
+    # token.approve(bob_address, int(1e18), from_wallet=alice_wallet)
+    # assert token.allowance_base(alice_address, bob_address) == int(1e18)
+
+    # #alice sends all her OCEAN to Bob, then Bob sends it back
+    # alice_OCEAN = token.balanceOf_base(alice_address)
+    # bob_OCEAN = token.balanceOf_base(bob_address)
+    # token.transfer(bob_address, alice_OCEAN, from_wallet=alice_wallet)
+    # assert token.balanceOf_base(alice_address) == 0
+    # assert token.balanceOf_base(bob_address) == (alice_OCEAN+bob_OCEAN)
+    
+    # token.transfer(alice_address, alice_OCEAN, from_wallet=bob_wallet)
+    # assert token.balanceOf_base(alice_address) == alice_OCEAN
+    # assert token.balanceOf_base(bob_address) == bob_OCEAN

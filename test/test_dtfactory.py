@@ -1,6 +1,5 @@
 from engine.evm.datatoken import Datatoken
 from engine.evm.dtfactory import DTFactory
-from web3tools.wallet import Wallet
 
 def test1(alice_wallet):
     dtfactory = DTFactory()
