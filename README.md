@@ -12,20 +12,172 @@ It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). 
 
 TokenSPICE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
 
-# Flow for experiments
+# Initial Setup
 
-1. Update controllables/uncontrollables/metrics. Change .sol, .py, etc
-   - Debug using pytest for everything. (It imports old unittest stuff)
+## Set up environment
 
-2. (if needed) recompile & deploy sol code. Leverage what the team already built.
-   - HOW: cd ~/code/contracts; npm i; npm run compile; npm run deploy
-   - Then, deployed contract addresses are at: ./artifacts/address.json; ABIs in that dir too
-3. TokenSPICE "run_1" or "run_n", output csvs
-4. TokenSPICE "plot_1" or "plot_n", output pngs
-5. Analyze results
-6. Goto 1
+Open a new terminal and:
+```console
+git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
+cd tokenspice
+
+#make sure we're not in env't; remove old env'ts
+conda deactivate
+conda remove --name tokenspiceenv --all
+
+#create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv
+conda env create -f environment.yml
+
+#activate env't
+conda activate tokenspiceenv
+```
+
+## Get Ganache running
+
+Open a new terminal and:
+```console
+cd tokenspice
+
+#active env't
+conda activate tokenspiceenv
+
+#run ganache
+./ganache.py
+```
+
+Note: you could run ganache directly, but then you have to add many special arguments. The script above does that for you.
+
+## Deploy the smart contracts to ganache
+
+Open a separate terminal.
+
+
+```console
+#Grab the contracts code from main, *OR* (see below)
+git clone https://github.com/oceanprotocol/contracts
+
+#OR grab from a branch. Here's Alex's V4 prototype branch
+git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
+```
+
+Then, deploy. In that same terminal:
+```console
+cd contracts
+
+#one-time install
+npm i
+
+#compile .sol, deploy to ganache, update contracts/artifacts/*.json
+npm run deploy
+```
+
+Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/artifacts`.
+* Now, TokenSPICE knows where to find each contract on ganache (address.json file)
+* And, it knows what each contract's interface is (*.json files).
+
+
+## Test one EVM-based test
+
+```console
+pytest test/test_btoken.py
+```
+
+## Test that everything is working
+
+```console
+pytest
+```
+
+# Updating Env't
+
+You don't need this info at the beginning, but it's good to know about as you make changes.
+
+To change dependencies, first update `environment.yml`. Then:
+```console
+#make sure env't is active
+conda activate tokenspiceenv
+
+#main update. The 'prune' part gets rid of unused pkgs
+conda env update --name tokenspiceenv --file environment.yml --prune
+```
+
+Leave environment:
+```console
+conda deactivate
+```
+
+Delete environment:
+```console
+conda remove --name tokenspiceenv --all
+```
+
+# C. Do Simulations, Make Changes
+
+## Do Once, At Session Start
+
+**Start chain.** Open a new terminal and:
+```console
+cd ~/code/tokenspice
+conda activate tokenspiceenv
+./ganache
+```
+
+**Deploy contracts.** Open a new terminal and:
+```console
+cd ~/code/contracts
+npm run deploy
+```
+
+## Do >=1 Times in a Session
+
+**Update simulation code.** Open a new terminal. In it:
+```console
+cd ~/code/tokenspice
+conda activate tokenspiceenv
+./emacs <path/foo.py>
+# then change foo.py in editor
+```
+
+**Run tests.** In the same terminal as before:
+```console
+pytest <tests/test_foo.py>
+pytest
+```
+
+**Commit changes.**
+```console
+git add <changed filename>
+git status -s [[check status]]
+git commit -m <my commit message>
+git push
+
+#or
+
+git status -s [[check status]]
+git commit -am <my commit message>
+git push
+```
+
+**Change sim settings as needed.**
+- To run faster: open `tokenspice.ini` and set `safety = False`. 
+
+**Run simulation.** Here, we run a 10-year sim, storing to `outdir_csv`. Observe the results while running. See `help.py` for more options.
+```console
+rm -rf outdir_csv; ./run_1.py 10 outdir_csv 1>out.txt 2>&1 &
+tail -f out.txt
+
+Create plots from run results, and store them in `outdir_png`. Then view the images.
+```console
+rm -rf outdir_png; ./plot_1.py outdir_csv outdir_png
+eog outdir_png
+#finally, maybe import pngs into GSlides 
+```
+
+Then repeat previous steps as desired.
 
 # TokenSPICE Design
+
+# Architecture, Controllables, Uncontrollables, Metrics
 
 ### Top-level agent architecture
 
@@ -67,144 +219,8 @@ Uncontrollable Variables (Env & rnd structure & params)
 - These are what's output by SimEngine.py into the CSV, then plotted
 - In the future, we could get fancier by leveraging TheGraph. 
 
-# A. Setup
 
-## Set up environment
-```
-git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
-cd tokenspice
-
-#make sure we're not in env't; remove old env'ts
-conda deactivate
-conda remove --name tokenspiceenv --all
-
-#create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv
-conda env create -f environment.yml
-
-#activate env't
-conda activate tokenspiceenv
-```
-
-## Get Ganache running
-
-Open a separate terminal and cd into the project directory.
-
-Activate the conda env't:
-```console
-conda activate tokenspiceenv
-```
-
-Then run ganache:
-```console
-./ganache.py
-```
-
-Note: you could run ganache directly, but then you have to add many special arguments. The script above does that for you.
-
-## Deploy the smart contracts to ganache
-
-Open a separate terminal.
-
-Grab the contracts code (main, or a branch)
-```console
-git clone https://github.com/oceanprotocol/contracts
-# OR
-git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
-```
-
-Then, deploy. Here's how:
-```console
-cd contracts
-npm i
-npm run deploy
-```
-
-This will compile the .sol and deploy them to ganache chain. Then it will update contracts/artifacts/*.json files. 
-
-Open `tokenspice.ini' and set ARTIFACTS_PATH = `<contracts_dir>/artifacts'.
-
-Now, for each contract, TokenSPICE knows where to find it on ganache (address.json file) and what its interface is (*.json).
-
-
-## Test one EVM-based test
-
-```console
-pytest test/test_btoken.py
-```
-
-## Test that everything is working
-
-```console
-pytest
-```
-
-## Do a first simulation run
-
-To orient you, check out the command-line help. This is what's possible.
-```
-./help.py 
-```
-
-The rest of this section walks you through how to run your first simulation and view results. 
-
-1. Open `~/tokenspice.ini` and set `safety = False`. That way we run faster:) 
-
-2. Kick off a simulation run. The command below will run for 10 simulated years, save run results to `outdir_csv` directory, and send stdout and stderr to `out.txt` file.  
-```
-rm -rf outdir_csv; ./run_1.py 10 outdir_csv 1>out.txt 2>&1 & 
-```
-
-3. You can observe the run while it's in action, with the following command. When it's done year 10, press ctrl-c.
-```
-tail -f out.txt
-```
- 
-4. Create plots from the run results. The command below grabs results from `outdir_csv` directory, then creates & stores image files `outdir_png` directory.
-```
-rm -rf outdir_png; ./plot_1.py outdir_csv outdir_png
-```
-
-5. View the images. The following command lets you cycle through viewing all the images in a directory.
-```
-eog outdir_png
-```
-
-Congratulations! You've just gone through a full simulation run & viewing of results.
-
-Note that the results will have small numbers. That's on purpose: the parameters are initially set with super-conservative values. It's up to you to change them and play with them:) More on that in section C.
-
-# B. Coming Back, Winding Down, etc.
-
-So you know, here are the mechanics to have new sessions, wind down, etc. You don't need to repeat them right now. But keep them in your back pocket for when you return.
-
-## New session, change some code
-```
-cd tokenspice
-git pull [[sync repo]]
-conda activate tokenspiceenv  [[activate env't]]
-conda env update --name tokenspiceenv --file environment.yml --prune [[update the env't, get rid of unused pkgs]]
-[[change file(s)]]
-git add <changed filename>
-git status -s [[check status]]
-git commit -m "<my commit message>"
-git push
-```
-
-## Wind down
-```
-conda deactivate  [[leave env't]]
-```
-
-## To fully remove environment
-```
-conda remove --name tokenspiceenv --all
-```
-
-# C. Diving Deeper
-
-OK, let's play around more! We can change parameters or structure. Let's start with parameters.
-
-## Play with different parameters
+## Changing Sim Parameters
 
 The parameters are initially set with super-conservative values. Not reflective of reality. 
 
@@ -216,11 +232,9 @@ Here's where to change parameters:
 
 So, try playing with different parameter values and see what the results are. 
 
-Just follow the same flow as part A. You can use different output directories for each setting if you like. Or simply store the resulting images into a slide deck as you go (that's a workflow I like).
+## Changing Sim Structures
 
-## Play with different structures
-
-Up until now, we've only played with parameters. But TokenSPICE is allows for change in the structure too. 
+TokenSPICE allows for change in the structure too. 
 
 The file `engine/SimState.py` is the "netlist" that wires up "agents". Each agent "does its thing" on each time step. The main result is that the agent may update its wallet (holds USD and OCEAN), or another internal state variable of the agent.
 
@@ -230,13 +244,15 @@ If you make changes here, it's a great idea to write unit tests to make sure you
 
 Before making changes, we recommend having a better understanding of how the system works. Which brings us to...
 
-# Models
+## TokenSPICE Models
 
-## Status quo model
+These are the models for simulating Ocean Market.
+
+### Status quo model
 
 <img src="images/model-status-quo.png" width="100%">
 
-## New model 1
+### New model 1
 
 <img src="images/model-new1.png" width="100%">
 
