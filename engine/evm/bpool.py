@@ -24,13 +24,13 @@ class BPool(BToken):
         
         s += [f"  numTokens = {self.getNumTokens()}"]
         cur_addrs = self.getCurrentTokens()
-        cur_symbols = [BToken(self.web3, addr).symbol()
+        cur_symbols = [BToken(addr).symbol()
                        for addr in cur_addrs]
         s += [f"  currentTokens (as symbols) = {', '.join(cur_symbols)}"]
 
         if self.isFinalized():
             final_addrs = self.getFinalTokens()
-            final_symbols = [BToken(self.web3, addr).symbol()
+            final_symbols = [BToken(addr).symbol()
                              for addr in final_addrs]
             s += [f"  finalTokens (as symbols) = {final_symbols}"]
             
@@ -50,7 +50,7 @@ class BPool(BToken):
         s += [f"  balances (fromBase):"]
         for addr, symbol in zip(cur_addrs, cur_symbols):
             balance_base = self.getBalance_base(addr)
-            dec = BToken(self.web3, addr).decimals()
+            dec = BToken(addr).decimals()
             balance = web3util.fromBase(balance_base, dec)
             s += [f"    {symbol}: {balance}"]
 
