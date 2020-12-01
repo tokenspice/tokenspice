@@ -1,27 +1,29 @@
-def test1():
-    pass
+import pytest
 
-# def test_notokens_basic(OCEAN_address, network, alice_wallet, alice_address):
-#     pool = _deployBPool(network, alice_wallet)
+from engine.evm import bfactory, bpool, btoken, datatoken, dtfactory
+from web3tools import web3util
+from web3tools.web3util import toBase18
+from web3tools.wallet import Wallet
 
-#     assert not pool.isPublicSwap()
-#     assert not pool.isFinalized()
-#     assert not pool.isBound(OCEAN_address)
-#     assert pool.getNumTokens() == 0
-#     assert pool.getCurrentTokens() == []
-#     with pytest.raises(Exception):
-#         pool.getFinalTokens() #pool's not finalized
-#     assert pool.getSwapFee_base() == toBase18(1e-6)
-#     assert pool.getController() == alice_address
-#     assert str(pool)
+def test_notokens_basic(OCEAN_address, alice_wallet, alice_address):
+    pool = _deployBPool(alice_wallet)
+
+    assert not pool.isPublicSwap()
+    assert not pool.isFinalized()
+    assert not pool.isBound(OCEAN_address)
+    assert pool.getNumTokens() == 0
+    assert pool.getCurrentTokens() == []
+    with pytest.raises(Exception):
+        pool.getFinalTokens() #pool's not finalized
+    assert pool.getSwapFee_base() == toBase18(1e-6)
+    assert pool.getController() == alice_address
+    assert str(pool)
     
-#     with pytest.raises(Exception): 
-#         pool.finalize() #can't finalize if no tokens
+    with pytest.raises(Exception): 
+        pool.finalize() #can't finalize if no tokens
 
-# def _deployBPool(network: str, from_wallet: Wallet) -> SPool:
-#     web3 = from_wallet.web3
-#     factory_address = util.confFileValue(network, 'BFACTORY_ADDRESS')
-#     factory = BFactory(web3, factory_address)
-#     pool_address = factory.newBPool(from_wallet=from_wallet)
-#     pool = BPool(web3, pool_address)
-#     return pool
+def _deployBPool(from_wallet: Wallet) -> bpool.BPool:
+    f = bfactory.BFactory()
+    p_address = f.newBPool(from_wallet=from_wallet)
+    p = bpool.BPool(p_address)
+    return p

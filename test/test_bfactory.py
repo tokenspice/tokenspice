@@ -1,5 +1,4 @@
-from engine.evm import bfactory, bpool, btoken, datatoken, dtfactory
-from web3tools import web3util
+from engine.evm import bfactory, bpool
 
 def test1(alice_wallet):
     f = bfactory.BFactory()
