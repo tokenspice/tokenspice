@@ -135,7 +135,7 @@ npm run deploy
 cd ~/code/tokenspice
 conda activate tokenspiceenv
 ./emacs <path/foo.py>
-# then change foo.py in editor
+#then change foo.py in editor
 ```
 
 **Run tests.** In the same terminal as before:
