@@ -49,4 +49,4 @@ BITCOIN_NUM_HALF_LIVES = 34
 
 #=============================================
 #evm stuff
-GASLIMIT_DEFAULT = 5000000 
+GASLIMIT_DEFAULT = 5000000
