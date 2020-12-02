@@ -76,11 +76,10 @@ def make_info(name, private_key_name):
         pass
     info = _Info()
     network =  web3util.get_network()
-    _web3 = web3util.get_web3()
     info.private_key = web3util.confFileValue(network, private_key_name)
     info.address = account.privateKeyToAddress(info.private_key)
     info.account = account.Account(private_key=info.private_key)
-    info.wallet = wallet.Wallet(web3=_web3, private_key=info.private_key)
+    info.wallet = wallet.Wallet(private_key=info.private_key)
 
     info.T1 = _deployAndMintToken('TOK1', info.address)
     info.T2 = _deployAndMintToken('TOK2', info.address)    
@@ -90,8 +89,7 @@ def make_info(name, private_key_name):
 def _deployAndMintToken(symbol: str, to_address: str) -> datatoken.Datatoken:
     network = web3util.get_network()
     private_key = web3util.confFileValue(network, 'TEST_PRIVATE_KEY1')
-    _web3 = web3util.get_web3()
-    from_wallet = wallet.Wallet(web3=_web3, private_key=private_key)
+    from_wallet = wallet.Wallet(private_key=private_key)
     factory = dtfactory.DTFactory()
     amount_base = web3util.toBase18(1000.0)
     dt_address = factory.createToken(

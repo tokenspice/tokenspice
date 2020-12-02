@@ -13,8 +13,12 @@ def get_infura_url(infura_id):
     network = get_network()
     return f"wss://{network}.infura.io/ws/v3/{infura_id}"
 
+_WEB3 = None
 def get_web3():
-    return Web3(get_web3_provider())
+    global _WEB3
+    if _WEB3 is None:
+        _WEB3 = Web3(get_web3_provider())
+    return _WEB3
 
 def get_web3_provider():
     assert get_network() == 'ganache', 'current implementation is ganache-only'
@@ -87,7 +91,7 @@ def buildAndSendTx(function,
     assert isinstance(from_wallet.address, str)
     assert isinstance(from_wallet.private_key, str)
 
-    web3 = from_wallet.web3
+    web3 = get_web3()
     nonce = web3.eth.getTransactionCount(from_wallet.address)
     network = get_network()
     gas_price = int(confFileValue(network, 'GAS_PRICE'))
