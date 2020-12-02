@@ -7,7 +7,7 @@ import typing
 from web3 import Web3
 from util import constants
 from web3tools.account import privateKeyToAddress
-from web3tools.wallet import Wallet
+from web3tools.web3wallet import Web3Wallet
 
 def get_infura_url(infura_id):
     network = get_network()
@@ -85,7 +85,7 @@ def confFileValue(section: str, key: str) -> str:
     return conf[section][key]
                                  
 def buildAndSendTx(function,
-                   from_wallet: Wallet,
+                   from_wallet: Web3Wallet,
                    gaslimit: int = constants.GASLIMIT_DEFAULT,
                    num_wei: int = 0):
     assert isinstance(from_wallet.address, str)

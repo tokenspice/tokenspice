@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 from web3tools.account import Account, privateKeyToAddress
 
-class Wallet:
+class Web3Wallet:
     """Signs txs and msgs with an account's private key."""
     _last_tx_count = dict()
     MIN_GAS_PRICE = 1000000000

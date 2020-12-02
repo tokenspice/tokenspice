@@ -1,7 +1,7 @@
 import typing
 
 from web3tools import web3util
-from web3tools.wallet import Wallet
+from web3tools.web3wallet import Web3Wallet
 from .btoken import BToken
 
 class BPool(BToken):
@@ -130,18 +130,18 @@ class BPool(BToken):
 
     #==== Controller Functions
 
-    def setSwapFee(self, swapFee_base: int, from_wallet: Wallet):
+    def setSwapFee(self, swapFee_base: int, from_wallet: Web3Wallet):
         """
         Caller must be controller. Pool must NOT be finalized.
         """
         func = self.f.setSwapFee(swapFee_base)
         return web3util.buildAndSendTx(func, from_wallet)
         
-    def setController(self, manager_address: str, from_wallet: Wallet):
+    def setController(self, manager_address: str, from_wallet: Web3Wallet):
         func = self.f.setController(manager_address)
         return web3util.buildAndSendTx(func, from_wallet)
 
-    def setPublicSwap(self, public: bool, from_wallet: Wallet):
+    def setPublicSwap(self, public: bool, from_wallet: Web3Wallet):
         """
         Makes `isPublicSwap` return `_publicSwap`. Requires caller to be 
         controller and pool not to be finalized. Finalized pools always have 
@@ -150,7 +150,7 @@ class BPool(BToken):
         func = self.f.setPublicSwap(public)
         return web3util.buildAndSendTx(func, from_wallet)
         
-    def finalize(self, from_wallet: Wallet):
+    def finalize(self, from_wallet: Web3Wallet):
         """
         This makes the pool **finalized**. This is a one-way transition. `bind`,
         `rebind`, `unbind`, `setSwapFee` and `setPublicSwap` will all throw 
@@ -161,7 +161,7 @@ class BPool(BToken):
         return web3util.buildAndSendTx(func, from_wallet)
     
     def bind(self, token_address: str, balance_base: int, weight_base: int,
-             from_wallet: Wallet):
+             from_wallet: Web3Wallet):
         """
         Binds the token with address `token`. Tokens will be pushed/pulled from 
         caller to adjust match new balance. Token must not already be bound. 
@@ -181,7 +181,7 @@ class BPool(BToken):
         return web3util.buildAndSendTx(func, from_wallet)
 
     def rebind(self, token_address: str, balance_base: int, weight_base: int,
-               from_wallet: Wallet):
+               from_wallet: Web3Wallet):
         """
         Changes the parameters of an already-bound token. Performs the same 
         validation on the parameters.
@@ -189,7 +189,7 @@ class BPool(BToken):
         func = self.f.rebind(token_address, balance_base, weight_base)
         web3util.buildAndSendTx(func, from_wallet)
         
-    def unbind(self, token_address: str, from_wallet: Wallet):
+    def unbind(self, token_address: str, from_wallet: Web3Wallet):
         """
         Unbinds a token, clearing all of its parameters. Exit fee is charged
         and the remaining balance is sent to caller.
@@ -197,7 +197,7 @@ class BPool(BToken):
         func = self.f.unbind(token_address)
         return web3util.buildAndSendTx(func, from_wallet)
     
-    def gulp(self, token_address: str, from_wallet: Wallet):
+    def gulp(self, token_address: str, from_wallet: Web3Wallet):
         """
         This syncs the internal `balance` of `token` within a pool with the 
         actual `balance` registered on the ERC20 contract. This is useful to 
@@ -231,7 +231,7 @@ class BPool(BToken):
             self,
             poolAmountOut_base: int,
             maxAmountsIn_base: typing.List[int],
-            from_wallet: Wallet):
+            from_wallet: Web3Wallet):
         """
         Join the pool, getting `poolAmountOut` pool tokens. This will pull some
         of each of the currently trading tokens in the pool, meaning you must 
@@ -245,7 +245,7 @@ class BPool(BToken):
             self,
             poolAmountIn_base: int,
             minAmountsOut_base : typing.List[int],
-            from_wallet: Wallet):
+            from_wallet: Web3Wallet):
         """
         Exit the pool, paying `poolAmountIn` pool tokens and getting some of 
         each of the currently trading tokens in return. These values are 
@@ -261,7 +261,7 @@ class BPool(BToken):
             tokenOut_address: str,
             minAmountOut_base: int,
             maxPrice_base: int,
-            from_wallet: Wallet):
+            from_wallet: Web3Wallet):
         """
         Trades an exact `tokenAmountIn` of `tokenIn` taken from the caller by 
         the pool, in exchange for at least `minAmountOut` of `tokenOut` given 
@@ -287,7 +287,7 @@ class BPool(BToken):
             tokenOut_address: str,
             tokenAmountOut_base: int,
             maxPrice_base: int,
-            from_wallet: Wallet):
+            from_wallet: Web3Wallet):
         func = self.f.swapExactAmountOut(
             tokenIn_address, maxAmountIn_base, tokenOut_address,
             tokenAmountOut_base, maxPrice_base)
@@ -298,7 +298,7 @@ class BPool(BToken):
             tokenIn_address: str,
             tokenAmountIn_base: int,
             minPoolAmountOut_base: int,
-            from_wallet: Wallet):
+            from_wallet: Web3Wallet):
         """
         Pay `tokenAmountIn` of token `tokenIn` to join the pool, getting
         `poolAmountOut` of the pool shares.
@@ -312,7 +312,7 @@ class BPool(BToken):
             tokenIn_address: str,
             poolAmountOut_base: int,
             maxAmountIn_base: int,
-            from_wallet: Wallet):
+            from_wallet: Web3Wallet):
         """
         Specify `poolAmountOut` pool shares that you want to get, and a token
         `tokenIn` to pay with. This costs `maxAmountIn` tokens (these went 
@@ -327,7 +327,7 @@ class BPool(BToken):
             tokenOut_address: str,
             poolAmountIn_base: int,
             minAmountOut_base: int,
-            from_wallet: Wallet):
+            from_wallet: Web3Wallet):
         """
         Pay `poolAmountIn` pool shares into the pool, getting `tokenAmountOut` 
         of the given token `tokenOut` out of the pool.
@@ -341,7 +341,7 @@ class BPool(BToken):
             tokenOut_address: str,
             tokenAmountOut_base: int,
             maxPoolAmountIn_base: int,
-            from_wallet: Wallet):
+            from_wallet: Web3Wallet):
         """
         Specify `tokenAmountOut` of token `tokenOut` that you want to get out
         of the pool. This costs `poolAmountIn` pool shares (these went into 
@@ -361,16 +361,16 @@ class BPool(BToken):
     def allowance_base(self, src_address: str, dst_address: str) -> int:
         return self.f.allowance(src_address, dst_address).call()
     
-    def approve(self, dst_address: str, amt_base: int, from_wallet: Wallet):
+    def approve(self, dst_address: str, amt_base: int, from_wallet: Web3Wallet):
         func = self.f.approve(dst_address, amt_base)
         return web3util.buildAndSendTx(func, from_wallet)
 
-    def transfer(self, dst_address: str, amt_base: int, from_wallet: Wallet):
+    def transfer(self, dst_address: str, amt_base: int, from_wallet: Web3Wallet):
         func = self.f.transfer(dst_address, amt_base)
         return web3util.buildAndSendTx(func, from_wallet)
         
     def transferFrom(self, src_address: str, dst_address: str, amt_base: int,
-                     from_wallet: Wallet):
+                     from_wallet: Web3Wallet):
         func = self.f.transferFrom(dst_address, src_address, amt_base)
         return web3util.buildAndSendTx(func, from_wallet)
 

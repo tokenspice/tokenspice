@@ -6,15 +6,15 @@ import math
 
 from engine.BaseAgent import BaseAgent
 from engine.evm import bfactory, bpool, btoken, datatoken, dtfactory
-from web3tools import web3util, wallet
+from web3tools import web3util
+from web3tools.web3wallet import Web3Wallet
 from util.constants import S_PER_MONTH, S_PER_YEAR
 
 @enforce.runtime_validation
 class PublisherAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
-        _web3 = web3util.get_web3()
         private_key = web3.eth.Account.create().privateKey
-        self.web3_wallet = wallet.Wallet(web3=_web3, private_key=private_key)
+        self.web3_wallet = Web3Wallet(private_key=private_key)
 
         #reconcile with engine.wallet
         # FIXME
@@ -46,9 +46,8 @@ class PublisherAgent(BaseAgent):
 @enforce.runtime_validation
 class PoolAgent(BaseAgent):
     def __init__(self, name: str, pool:bpool.BPool):
-        f = bfactory.BFactory()
-        p_address = f.newBPool(from_wallet=from_wallet)
-        p = bpool.BPool(p_address)
+        #FIXME
+        pass
     
 @enforce.runtime_validation
 class RouterAgent(BaseAgent):

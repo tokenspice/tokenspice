@@ -1,7 +1,7 @@
 import warnings
 
 from web3tools import web3util
-from web3tools.wallet import Wallet
+from web3tools.web3wallet import Web3Wallet
 
 class BFactory:
     def __init__(self):
@@ -17,7 +17,7 @@ class BFactory:
         
     #============================================================
     #reflect BFactory Solidity methods
-    def newBPool(self, from_wallet: Wallet) -> str:
+    def newBPool(self, from_wallet: Web3Wallet) -> str:
         print("BPool.newSPool(). Begin.")
         f = self.contract.functions.newBPool()
         (tx_hash, tx_receipt) = web3util.buildAndSendTx(f, from_wallet)

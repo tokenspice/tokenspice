@@ -1,7 +1,7 @@
 import warnings
 
 from web3tools import web3util
-from web3tools.wallet import Wallet
+from web3tools.web3wallet import Web3Wallet
 
 class DTFactory:
     def __init__(self):
@@ -18,7 +18,7 @@ class DTFactory:
     #============================================================
     #reflect DTFactory Solidity methods
     def createToken(self, blob:str, name:str, symbol:str, cap_base:int,
-                    from_wallet: Wallet) -> str:        
+                    from_wallet: Web3Wallet) -> str:        
         f = self.contract.functions.createToken(blob, name, symbol, cap_base)
         (tx_hash, tx_receipt) = web3util.buildAndSendTx(f, from_wallet)
 

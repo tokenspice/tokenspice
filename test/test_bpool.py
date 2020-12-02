@@ -1,7 +1,7 @@
 import pytest
 
 from engine.evm import bfactory, bpool, btoken, datatoken, dtfactory
-from web3tools import web3util, wallet
+from web3tools import web3util, web3wallet
 from web3tools.web3util import toBase18, fromBase18
 
 HUGEINT = 2**255
@@ -266,7 +266,7 @@ def test_spot_price(T1, T2, alice_wallet):
 
 
 def _spotPrices(T1: btoken.BToken, T2: btoken.BToken,
-                wallet: wallet.Wallet, 
+                wallet: web3wallet.Web3Wallet, 
                 bal1:float, bal2:float, w1:float, w2:float):
     pool = _createPoolWith2Tokens(T1,T2,wallet, bal1, bal2, w1, w2)
     a1, a2 = T1.address, T2.address
@@ -416,7 +416,7 @@ def test_calcPoolInGivenSingleOut_base(alice_wallet):
     assert round(fromBase18(x),3) == 0.005
 
 def _createPoolWith2Tokens(T1: btoken.BToken, T2: btoken.BToken,
-                           wallet: wallet.Wallet, 
+                           wallet: web3wallet.Web3Wallet, 
                            bal1:float, bal2:float, w1:float, w2:float):
     pool = _deployBPool(wallet)
     
@@ -428,7 +428,7 @@ def _createPoolWith2Tokens(T1: btoken.BToken, T2: btoken.BToken,
 
     return pool
 
-def _deployBPool(from_wallet: wallet.Wallet) -> bpool.BPool:
+def _deployBPool(from_wallet: web3wallet.Web3Wallet) -> bpool.BPool:
     f = bfactory.BFactory()
     p_address = f.newBPool(from_wallet=from_wallet)
     p = bpool.BPool(p_address)
