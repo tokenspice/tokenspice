@@ -140,7 +140,19 @@ conda activate tokenspiceenv
 
 **Run tests.** In the same terminal as before:
 ```console
-pytest <tests/test_foo.py>
+#run a single pytest-based test
+pytest tests/test_foo.py::test_foobar
+
+#run a single pytest-based test file
+pytest tests/test_foo.py
+
+#run all tests in tests/ directory
+pytest tests/
+
+#run all tests in engine/ directory (unittest-based)
+pytest engine/
+
+#run all tests (unittest- and pytest- based)
 pytest
 ```
 

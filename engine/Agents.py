@@ -4,9 +4,52 @@ log = logging.getLogger('agents')
 import enforce
 import math
 
-from engine.BaseAgent import BaseAgent   
+from engine.BaseAgent import BaseAgent
+from engine.evm import bfactory, bpool, btoken, datatoken, dtfactory
+from web3tools import web3util, wallet
 from util.constants import S_PER_MONTH, S_PER_YEAR
 
+@enforce.runtime_validation
+class PublisherAgent(BaseAgent):
+    def __init__(self, name: str, USD: float, OCEAN: float):
+        _web3 = web3util.get_web3()
+        private_key = web3.eth.Account.create().privateKey
+        self.web3_wallet = wallet.Wallet(web3=_web3, private_key=private_key)
+
+        #reconcile with engine.wallet
+        # FIXME
+        
+        self.pools = []
+        
+    def takeStep(self, state) -> None:
+        create_new_pool = False #FIXME: have fancier way to choose
+        
+        if create_new_pool:
+            #create new dt
+            amount = web3util.toBase18(1000.0)
+            dt_factory = dtfactory.DTFactory()
+            dt_address = dt_factory.createToken(
+                '', 'DT', 'DT', amount, self.web3_wallet)
+            dt = datatoken.Datatoken(dt_address)            
+
+            #new pool
+            pool_factory = bfactory.BFactory()
+            pool_address = pool_factory.newBPool(from_wallet=self.web3_wallet)
+            pool = bpool.BPool(pool_address)
+
+            #bind tokens, add liquidity, etc. 
+            # FIXME. How: see test_2tokens_basic
+
+            #
+            self.pools.append(pool)
+        
+@enforce.runtime_validation
+class PoolAgent(BaseAgent):
+    def __init__(self, name: str, pool:bpool.BPool):
+        f = bfactory.BFactory()
+        p_address = f.newBPool(from_wallet=from_wallet)
+        p = bpool.BPool(p_address)
+    
 @enforce.runtime_validation
 class RouterAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float,
