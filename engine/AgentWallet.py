@@ -22,48 +22,43 @@ class AgentWallet:
         self._web3wallet = web3wallet.randomWeb3Wallet()
 
         #Give the new wallet ETH to pay gas fees (but don't track otherwise)
-        self._web3wallet.fundFromAbove(toBase18(0.1)) #magic number
+        self._web3wallet.fundFromAbove(toBase18(0.01)) #magic number
         
         #amount held
         globaltokens.mintUSD(address=self._web3wallet.address,
                              value_base=toBase18(USD)) #lump in ETH too
         globaltokens.mintOCEAN(address=self._web3wallet.address,
                                value_base=toBase18(OCEAN))
+        #self._cached_USD = None #for speed
+        #self._cached_OCEAN = None # ""
 
         #amount 
         self._total_USD_in:float = USD
         self._total_OCEAN_in:float = OCEAN
         
     @property
-    def address(self):
+    def _address(self):
          return self._web3wallet.address
-
-    @property
-    def private_key(self):
-        return self._web3wallet.private_key
 
     #===================================================================    
     def USD(self) -> float:
         return fromBase18(self._USD_base())
 
     def _USD_base(self) -> int:
-        return globaltokens.USDtoken().balanceOf_base(self.address)
+        return globaltokens.USDtoken().balanceOf_base(self._address)
         
     def depositUSD(self, amount: float) -> None:
         assert amount >= 0.0
-        globaltokens.mintUSD(self.address, toBase18(amount))
+        globaltokens.mintUSD(self._address, toBase18(amount))
         self._total_USD_in += amount
         
     def withdrawUSD(self, amt: float) -> None:
-        class BurnAgent:
-            def __init__(self):
-                self.address = constants.BURN_ADDRESS
-        burn_agent = BurnAgent()
-        self.transferUSD(burn_agent, amt)
+        self.transferUSD(_BURN_WALLET, amt)
 
-    def transferUSD(self, dst_agent, amt: float) -> None:
-        assert not isinstance(dst_agent, str) #it's an Agent
-        dst_address = dst_agent.address
+    def transferUSD(self, dst_wallet, amt: float) -> None:
+        assert isinstance(dst_wallet, AgentWallet) or \
+            isinstance(dst_wallet, BurnWallet)
+        dst_address = dst_wallet._address
         
         amt_base = toBase18(amt)
         assert amt_base >= 0
@@ -93,23 +88,20 @@ class AgentWallet:
         return fromBase18(self._OCEAN_base())
 
     def _OCEAN_base(self) -> int:
-        return globaltokens.OCEANtoken().balanceOf_base(self.address)
+        return globaltokens.OCEANtoken().balanceOf_base(self._address)
         
     def depositOCEAN(self, amount: float) -> None:
         assert amount >= 0.0
-        globaltokens.mintOCEAN(self.address, toBase18(amount))
+        globaltokens.mintOCEAN(self._address, toBase18(amount))
         self._total_OCEAN_in += amount
         
     def withdrawOCEAN(self, amt: float) -> None:
-        class BurnAgent:
-            def __init__(self):
-                self.address = constants.BURN_ADDRESS
-        burn_agent = BurnAgent()
-        self.transferOCEAN(burn_agent, amt)
+        self.transferOCEAN(_BURN_WALLET, amt)
 
-    def transferOCEAN(self, dst_agent, amt: float) -> None:
-        assert not isinstance(dst_agent, str) #it's an Agent
-        dst_address = dst_agent.address
+    def transferOCEAN(self, dst_wallet, amt: float) -> None:
+        assert isinstance(dst_wallet, AgentWallet) or \
+            isinstance(dst_wallet, BurnWallet)
+        dst_address = dst_wallet._address
         
         amt_base = toBase18(amt)
         assert amt_base >= 0
@@ -133,6 +125,7 @@ class AgentWallet:
 
     def totalOCEANin(self) -> float:
         return self._total_OCEAN_in
+    
 
     #===================================================================
     def __str__(self) -> str:
@@ -144,3 +137,8 @@ class AgentWallet:
         s += ['; total_OCEAN_in=%.6f' % self.totalOCEANin()]
         s += [" /AgentWallet}"]
         return "".join(s)
+
+class BurnWallet:
+    def __init__(self):
+        self._address = constants.BURN_ADDRESS
+_BURN_WALLET = BurnWallet()

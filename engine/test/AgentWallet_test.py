@@ -86,3 +86,22 @@ class AgentWalletTest(unittest.TestCase):
         w.withdrawOCEAN(2.4000000000000004) #
         self.assertEqual(w.USD(), 0.0)
         self.assertEqual(w.OCEAN(), 0.0)
+
+    def test_transferUSD(self):
+        w1 = AgentWallet(USD=10.0)
+        w2 = AgentWallet(USD=1.0)
+        
+        w1.transferUSD(w2, 2.0)
+        
+        self.assertEqual(w1.USD(), 10.0-2.0)
+        self.assertEqual(w2.USD(), 1.0+2.0)
+        
+    def test_transferOCEAN(self):
+        w1 = AgentWallet(OCEAN=10.0)
+        w2 = AgentWallet(OCEAN=1.0)
+        
+        w1.transferOCEAN(w2, 2.0)
+        
+        self.assertEqual(w1.OCEAN(), 10.0-2.0)
+        self.assertEqual(w2.OCEAN(), 1.0+2.0)
+        
