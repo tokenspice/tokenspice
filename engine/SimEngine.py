@@ -55,7 +55,7 @@ class SimEngine(object):
         log.debug("=============================================")
         log.debug("Tick=%d: begin" % (self.state.tick))
         
-        if (self.elapsedSeconds() % S_PER_MIN) == 0:
+        if (self.elapsedSeconds() % S_PER_DAY) == 0:
             str_data, csv_data = self.createLogData()
             log.info(str_data)
             self.logToCsv(csv_data)
@@ -85,8 +85,8 @@ class SimEngine(object):
         es = float(self.elapsedSeconds())
         emi, eh, ed, emo, ey = es/S_PER_MIN, es/S_PER_HOUR, es/S_PER_DAY, \
                                es/S_PER_MONTH,es/S_PER_YEAR
-        s += [" (%.1f min,%.1f h,%.3f d,%.1f mo)" % \
-              (emi, eh, ed, emo)] 
+        s += [" (%.1f h, %.1f d, %.1f mo)" % \
+              (eh, ed, emo)] 
         dataheader += ["Second", "Min", "Hour", "Day", "Month", "Year"]
         datarow += [es, emi, eh, ed, emo, ey]
         

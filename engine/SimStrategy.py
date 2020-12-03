@@ -20,7 +20,7 @@ class SimStrategy(StrMixin):
           New agents are added randomly over time.
         """
         #seconds per tick
-        self.time_step: int = S_PER_MIN
+        self.time_step: int = S_PER_HOUR
         
         #number of ticks between saves
         self.save_interval: int = 1
