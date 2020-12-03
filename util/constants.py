@@ -19,8 +19,9 @@ if not SAFETY:
         return f
     enforce.runtime_validation = noop
 
-#conveniently set infinity
+#big numbers
 INF = math.inf
+HUGEINT = 2**255 #biggest int that can be passed into contracts
  
 #number of seconds in an hour, etc.
 S_PER_MIN   = 60
@@ -50,3 +51,4 @@ BITCOIN_NUM_HALF_LIVES = 34
 #=============================================
 #evm stuff
 GASLIMIT_DEFAULT = 5000000
+BURN_ADDRESS = '0x000000000000000000000000000000000000dEaD'

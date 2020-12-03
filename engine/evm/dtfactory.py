@@ -1,7 +1,6 @@
 import warnings
 
-from web3tools import web3util
-from web3tools.web3wallet import Web3Wallet
+from web3tools import web3util, web3wallet
 
 class DTFactory:
     def __init__(self):
@@ -18,9 +17,9 @@ class DTFactory:
     #============================================================
     #reflect DTFactory Solidity methods
     def createToken(self, blob:str, name:str, symbol:str, cap_base:int,
-                    from_wallet: Web3Wallet) -> str:        
+                    from_wallet: web3wallet.Web3Wallet) -> str:        
         f = self.contract.functions.createToken(blob, name, symbol, cap_base)
-        (tx_hash, tx_receipt) = web3util.buildAndSendTx(f, from_wallet)
+        (tx_hash, tx_receipt) = web3wallet.buildAndSendTx(f, from_wallet)
 
         warnings.filterwarnings("ignore") #ignore unwarranted warning up next
         rich_logs = getattr(self.contract.events, 'TokenCreated')().processReceipt(tx_receipt)

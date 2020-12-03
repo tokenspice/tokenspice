@@ -7,18 +7,14 @@ import math
 from engine.BaseAgent import BaseAgent
 from engine.evm import bfactory, bpool, btoken, datatoken, dtfactory
 from web3tools import web3util
+from web3tools.web3util import fromBase18, toBase18
 from web3tools.web3wallet import Web3Wallet
 from util.constants import S_PER_MONTH, S_PER_YEAR
 
 @enforce.runtime_validation
 class PublisherAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
-        private_key = web3.eth.Account.create().privateKey
-        self.web3_wallet = Web3Wallet(private_key=private_key)
-
-        #reconcile with engine.wallet
-        # FIXME
-        
+        super().__init__(name, USD, OCEAN) 
         self.pools = []
         
     def takeStep(self, state) -> None:
@@ -26,7 +22,7 @@ class PublisherAgent(BaseAgent):
         
         if create_new_pool:
             #create new dt
-            amount = web3util.toBase18(1000.0)
+            amount = toBase18(1000.0) #magic number
             dt_factory = dtfactory.DTFactory()
             dt_address = dt_factory.createToken(
                 '', 'DT', 'DT', amount, self.web3_wallet)
@@ -110,16 +106,17 @@ class RouterAgent(BaseAgent):
 @enforce.runtime_validation
 class OCEANBurnerAgent(BaseAgent):
     def takeStep(self, state):
-        if self.USD() > 0:
+        if self.USD() > 0.0:
             #OCEAN price will go up as we buy. Reflect it here.
             nloops = 10
-            spend_per_loop = self.USD() / float(nloops)
+            USD_spend_per_loop = self.USD() / float(nloops)
             for i in range(nloops):
                 price = state.OCEANprice() #a func of supply
-                OCEAN = spend_per_loop / price
+                OCEAN = USD_spend_per_loop / price
                 state._total_OCEAN_burned += OCEAN
-                state._total_OCEAN_burned_USD += spend_per_loop
-            self._wallet._USD = 0.0 #we've spent the USD!
+                state._total_OCEAN_burned_USD += USD_spend_per_loop
+
+            self._wallet.withdrawUSD(self.USD()) #we've spent the USD!
                     
 @enforce.runtime_validation
 class GrantGivingAgent(BaseAgent):

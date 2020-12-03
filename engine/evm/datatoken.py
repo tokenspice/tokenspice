@@ -1,6 +1,5 @@
 from engine.evm.btoken import BToken
-from web3tools import web3util
-from web3tools.web3wallet import Web3Wallet
+from web3tools import web3util, web3wallet
 
 class Datatoken(BToken):
     def __init__(self, contract_address):
@@ -16,13 +15,14 @@ class Datatoken(BToken):
     def blob(self) -> str:
         return self.contract.functions.blob().call()
     
-    def mint(self, account: str, value_base: int, from_wallet: Web3Wallet):
+    def mint(self, account: str, value_base: int,
+             from_wallet: web3wallet.Web3Wallet):
         f = self.contract.functions.mint(account, value_base)
-        return web3util.buildAndSendTx(f, from_wallet)
+        return web3wallet.buildAndSendTx(f, from_wallet)
     
-    def setMinter(self, minter: str, from_wallet: Web3Wallet):
+    def setMinter(self, minter: str, from_wallet: web3wallet.Web3Wallet):
         f = self.contract.functions.setMinter(minter)
-        return web3util.buildAndSendTx(f, from_wallet)
+        return web3wallet.buildAndSendTx(f, from_wallet)
 
 
     

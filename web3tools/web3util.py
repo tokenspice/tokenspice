@@ -7,7 +7,6 @@ import typing
 from web3 import Web3
 from util import constants
 from web3tools.account import privateKeyToAddress
-from web3tools.web3wallet import Web3Wallet
 
 def get_infura_url(infura_id):
     network = get_network()
@@ -83,34 +82,3 @@ def confFileValue(section: str, key: str) -> str:
     path = os.path.expanduser(constants.CONF_FILE_PATH)
     conf.read(path)
     return conf[section][key]
-                                 
-def buildAndSendTx(function,
-                   from_wallet: Web3Wallet,
-                   gaslimit: int = constants.GASLIMIT_DEFAULT,
-                   num_wei: int = 0):
-    assert isinstance(from_wallet.address, str)
-    assert isinstance(from_wallet.private_key, str)
-
-    web3 = get_web3()
-    nonce = web3.eth.getTransactionCount(from_wallet.address)
-    network = get_network()
-    gas_price = int(confFileValue(network, 'GAS_PRICE'))
-    tx_params = {
-        "from": from_wallet.address,
-        "value": num_wei,
-        "nonce": nonce,
-        "gas": gaslimit,
-        "gasPrice": gas_price,
-    }
-
-    tx = function.buildTransaction(tx_params)
-    signed_tx = web3.eth.account.sign_transaction(
-        tx, private_key=from_wallet.private_key)
-    tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
-
-    tx_receipt = web3.eth.waitForTransactionReceipt(tx_hash)
-    if tx_receipt['status'] == 0:  # did tx fail?
-        raise Exception("The tx failed. tx_receipt: {tx_receipt}")
-    return (tx_hash, tx_receipt)
-
-    

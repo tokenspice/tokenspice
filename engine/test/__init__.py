@@ -7,7 +7,7 @@ from engine.test.MinterAgents_test import MinterAgentsTest
 from engine.test.SimEngine_test import SimEngineTest
 from engine.test.SimState_test import SimStateTest
 from engine.test.SimStrategy_test import SimStrategyTest
-from engine.test.Wallet_test import WalletTest
+from engine.test.AgentWallet_test import AgentWalletTest
 
 TestClasses = [
     AgentsTest,
@@ -17,7 +17,7 @@ TestClasses = [
     SimEngineTest, 
     SimStateTest,
     SimStrategyTest,
-    WalletTest,
+    AgentWalletTest,
 ]
 
 def unittest_suite():

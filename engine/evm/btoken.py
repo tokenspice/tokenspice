@@ -1,5 +1,4 @@
-from web3tools import web3util
-from web3tools.web3wallet import Web3Wallet
+from web3tools import web3util, web3wallet
 
 class BToken:
     def __init__(self, contract_address):
@@ -24,14 +23,15 @@ class BToken:
         func = self.contract.functions.balanceOf(address)
         return func.call()
 
-    def transfer(self, dst_address: str, amt_base: int, from_wallet: Web3Wallet):
+    def transfer(self, dst_address: str, amt_base: int,
+                 from_wallet: web3wallet.Web3Wallet):
         f = self.contract.functions.transfer(dst_address, amt_base)
-        return web3util.buildAndSendTx(f, from_wallet)
+        return web3wallet.buildAndSendTx(f, from_wallet)
 
     def approve(self, spender_address: str, amt_base: int,
-                from_wallet: Web3Wallet):
+                from_wallet: web3wallet.Web3Wallet):
         f = self.contract.functions.approve(spender_address, amt_base)
-        return web3util.buildAndSendTx(f, from_wallet)
+        return web3wallet.buildAndSendTx(f, from_wallet)
 
     def allowance_base(self, src_address:str, dst_address: str) -> int:
         f = self.contract.functions.allowance(src_address, dst_address)

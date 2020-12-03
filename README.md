@@ -119,7 +119,7 @@ conda remove --name tokenspiceenv --all
 ```console
 cd ~/code/tokenspice
 conda activate tokenspiceenv
-./ganache
+./ganache.py
 ```
 
 **Deploy contracts.** Open a new terminal and:

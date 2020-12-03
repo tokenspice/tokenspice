@@ -5,29 +5,29 @@ log = logging.getLogger('wallet')
 import enforce
 import unittest
 
-from engine.Wallet import *
+from engine.AgentWallet import *
 
 @enforce.runtime_validation
-class WalletTest(unittest.TestCase):
+class AgentWalletTest(unittest.TestCase):
 
     def testStr(self):
-        w = Wallet()        
-        self.assertTrue("Wallet" in str(w))
+        w = AgentWallet()        
+        self.assertTrue("AgentWallet" in str(w))
         
     def testInitiallyEmpty(self):
-        w = Wallet()
+        w = AgentWallet()
         
         self.assertEqual(w.USD(), 0.0)
         self.assertEqual(w.OCEAN(), 0.0)
         
     def testInitiallyFilled(self):
-        w = Wallet(USD=1.2, OCEAN=3.4)
+        w = AgentWallet(USD=1.2, OCEAN=3.4)
         
         self.assertEqual(w.USD(), 1.2)
         self.assertEqual(w.OCEAN(), 3.4)
         
     def testUSD(self):
-        w = Wallet()
+        w = AgentWallet()
 
         w.depositUSD(13.25)
         self.assertEqual(w.USD(), 13.25)
@@ -54,7 +54,7 @@ class WalletTest(unittest.TestCase):
             w.withdrawUSD(1000.0)
         
     def testOCEAN(self):
-        w = Wallet()
+        w = AgentWallet()
 
         w.depositOCEAN(13.25)
         self.assertEqual(w.OCEAN(), 13.25)
@@ -81,7 +81,7 @@ class WalletTest(unittest.TestCase):
             w.withdrawOCEAN(1000.0)
             
     def testFloatingPointRoundoff(self):
-        w = Wallet(USD=2.4, OCEAN=2.4)
+        w = AgentWallet(USD=2.4, OCEAN=2.4)
         w.withdrawUSD(2.4000000000000004) #should not get ValueError
         w.withdrawOCEAN(2.4000000000000004) #
         self.assertEqual(w.USD(), 0.0)
