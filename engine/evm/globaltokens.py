@@ -9,14 +9,22 @@ _MINTERS = {} # symbol : _Minter
 def mintUSD(address:str, value_base:int):
     return _minter('USD').mint(address, value_base)
 
+_USD_TOKEN = None
 def USDtoken():
-    return _minter('USD').token()
+    global _USD_TOKEN
+    if _USD_TOKEN is None:
+        _USD_TOKEN = _minter('USD').token()
+    return _USD_TOKEN
 
 def mintOCEAN(address:str, value_base:int):
     return _minter('OCEAN').mint(address, value_base)
 
+_OCEAN_TOKEN = None
 def OCEANtoken():
-    return _minter('OCEAN').token()
+    global _OCEAN_TOKEN
+    if _OCEAN_TOKEN is None:
+        _OCEAN_TOKEN = _minter('OCEAN').token()
+    return _OCEAN_TOKEN
 
 #===================================================================
 def _minter(symbol:str):
