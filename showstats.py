@@ -11,13 +11,15 @@ if __name__== '__main__':
     
     #set help message
     help = """
-Usage: showstats FILENAME NUM_SHOW SORT_BY 
+Usage: showstats.py FILENAME NUM_SHOW SORT_BY 
 
  FILENAME -- string -- stats filename (including path)
  NUM_SHOW -- int -- only show the top 'NUM_SHOW' functions 
  SORT_BY -- string -- one of 'cumulative', 'time'
   cumulative -- cumulative time a function. To understand what functions take the most time
   time -- time spent within a function. To undrestand what functions were looping a lot, and taking a lot of time.
+
+Example: ./showstats.py outdir_csv/stats 20 cumulative
  """
 
     #got the right number of args?  If not, output help
@@ -55,16 +57,15 @@ Usage: showstats FILENAME NUM_SHOW SORT_BY
     import pstats
     p = pstats.Stats(filename)
 
-    #
     print('=' * 80)
-    print('=' * 80)
-
     if sort_by == 'cumulative':
         print('Highest-impact by cumulative time in a function')
+        print('=' * 80)
         p.sort_stats('cumulative').print_stats(num_show) #python3.6. Diff't for 3.7
 
     elif sort_by == 'time':
         print('Highest-impact by functions looping a lot _and_ taking time')
+        print('=' * 80)
         p.sort_stats('time').print_stats(num_show) #python3.6. Diff't for 3.7
 
     else:
