@@ -58,6 +58,7 @@ class AgentWallet:
         self.transferUSD(constants.BURN_ADDRESS, amt)
 
     def transferUSD(self, dst_address:str, amt: float) -> None:
+        assert len(dst_address) == 42 and dst_address[:2] == '0x'
         amt_base = toBase18(amt)
         assert amt_base >= 0
         if amt_base == 0:
