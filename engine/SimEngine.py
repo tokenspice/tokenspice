@@ -5,7 +5,7 @@ import enforce
 import os
 
 from util import valuation
-from util.constants import S_PER_DAY, S_PER_MONTH, S_PER_YEAR
+from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 from util.strutil import prettyBigNum
 import engine.SimState as SimState
 from engine.SimStrategy import SimStrategy
@@ -55,7 +55,7 @@ class SimEngine(object):
         log.debug("=============================================")
         log.debug("Tick=%d: begin" % (self.state.tick))
         
-        if (self.elapsedSeconds() % S_PER_MONTH) == 0:
+        if (self.elapsedSeconds() % S_PER_MIN) == 0:
             str_data, csv_data = self.createLogData()
             log.info(str_data)
             self.logToCsv(csv_data)
@@ -83,10 +83,12 @@ class SimEngine(object):
         datarow += [state.tick]
 
         es = float(self.elapsedSeconds())
-        em, ey = es/S_PER_MONTH, es/S_PER_YEAR
-        s += [" (%.1f mo,%s y)" % (em, prettyBigNum(ey,F))] #don't print es
-        dataheader += ["Second", "Month", "Year"]
-        datarow += [es, em, ey]
+        emi, eh, ed, emo, ey = es/S_PER_MIN, es/S_PER_HOUR, es/S_PER_DAY, \
+                               es/S_PER_MONTH,es/S_PER_YEAR
+        s += [" (%.1f min,%.1f h,%.1f d,%.1f mo)" % \
+              (emi, eh, ed, emo)] 
+        dataheader += ["Second", "Min", "Hour", "Day", "Month", "Year"]
+        datarow += [es, emi, eh, ed, emo, ey]
         
         am = state.getAgent("marketplaces1")
         #s += ["; # mkts=%s" % prettyBigNum(am._n_marketplaces,F)]
