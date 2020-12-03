@@ -29,8 +29,8 @@ class AgentWallet:
                              value_base=toBase18(USD)) #lump in ETH too
         globaltokens.mintOCEAN(address=self._web3wallet.address,
                                value_base=toBase18(OCEAN))
-        #self._cached_USD = None #for speed
-        #self._cached_OCEAN = None # ""
+        self._cached_USD_base = None #for speed
+        self._cached_OCEAN_base = None # ""
 
         #amount 
         self._total_USD_in:float = USD
@@ -45,12 +45,15 @@ class AgentWallet:
         return fromBase18(self._USD_base())
 
     def _USD_base(self) -> int:
-        return globaltokens.USDtoken().balanceOf_base(self._address)
+        if self._cached_USD_base is None:
+            self._cached_USD_base = globaltokens.USDtoken().balanceOf_base(self._address)
+        return self._cached_USD_base            
         
     def depositUSD(self, amount: float) -> None:
         assert amount >= 0.0
         globaltokens.mintUSD(self._address, toBase18(amount))
         self._total_USD_in += amount
+        self._cached_USD_base = None #reset due to write action
         
     def withdrawUSD(self, amt: float) -> None:
         self.transferUSD(_BURN_WALLET, amt)
@@ -79,21 +82,27 @@ class AgentWallet:
 
         globaltokens.USDtoken().transfer(
             dst_address, amt_base, self._web3wallet)
+        
+        self._cached_USD_base = None #reset due to write action
+        dst_wallet._cached_USD_base = None #""
 
     def totalUSDin(self) -> float:
         return self._total_USD_in
 
-    #===================================================================    
+    #===================================================================   
     def OCEAN(self) -> float:
         return fromBase18(self._OCEAN_base())
 
     def _OCEAN_base(self) -> int:
-        return globaltokens.OCEANtoken().balanceOf_base(self._address)
+        if self._cached_OCEAN_base is None:
+            self._cached_OCEAN_base = globaltokens.OCEANtoken().balanceOf_base(self._address)
+        return self._cached_OCEAN_base            
         
     def depositOCEAN(self, amount: float) -> None:
         assert amount >= 0.0
         globaltokens.mintOCEAN(self._address, toBase18(amount))
         self._total_OCEAN_in += amount
+        self._cached_OCEAN_base = None #reset due to write action
         
     def withdrawOCEAN(self, amt: float) -> None:
         self.transferOCEAN(_BURN_WALLET, amt)
@@ -122,10 +131,13 @@ class AgentWallet:
 
         globaltokens.OCEANtoken().transfer(
             dst_address, amt_base, self._web3wallet)
+        
+        self._cached_OCEAN_base = None #reset due to write action
+        dst_wallet._cached_OCEAN_base = None #""
 
     def totalOCEANin(self) -> float:
         return self._total_OCEAN_in
-    
+        
 
     #===================================================================
     def __str__(self) -> str:
