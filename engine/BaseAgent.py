@@ -19,10 +19,6 @@ class BaseAgent(ABC, StrMixin):
         self.name = name
         self._wallet = AgentWallet.AgentWallet(USD, OCEAN)
 
-    @property
-    def address(self) -> str:
-        return self._wallet.address
-
     #=======================================================================
     @abstractmethod
     def takeStep(self, state): #this is where the Agent does *work*
