@@ -56,6 +56,8 @@ Usage: run_1 MAX_DAYS OUTPUT_DIR [DO_PROFILE]
     from engine.SimEngine import SimEngine
     from engine.SimStrategy import SimStrategy
     from util import constants
+    print(f'SAFETY = {constants.SAFETY}')
+    print('')
     
     ss = SimStrategy()
     ss.setMaxTicks(max_days * constants.S_PER_DAY / ss.time_step + 1)
