@@ -44,6 +44,15 @@ class SimState(object):
         #Instantiate and connnect agent instances. "Wire up the circuit"
         new_agents = set()
 
+        new_agents.add(Agents.PublisherAgent(
+            name = "publisher1", USD=0.0, OCEAN=0.0)) #magic number
+        
+        new_agents.add(Agents.StakerspeculatorAgent(
+            name = "stakerspeculator1", USD=0.0, OCEAN=0.0)) #magic number
+        
+        new_agents.add(Agents.DataconsumerAgent(
+            name = "dataconsumer1", USD=0.0, OCEAN=0.0)) #magic number
+
         new_agents.add(Agents.MarketplacesAgent(
             name = "marketplaces1", USD=0.0, OCEAN=0.0,
             toll_agent_name = "opc_address",
