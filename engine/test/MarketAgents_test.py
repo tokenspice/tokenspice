@@ -10,10 +10,11 @@ from engine.MarketAgents import *
 
 @enforce.runtime_validation
 class MarketAgentsTest(unittest.TestCase):
-    def testPoolAgent(self):
-        pass
     
     def testPublisherAgent(self):
+        pass
+    
+    def testPoolAgent(self):
         pass
     
     def testStakerspeculatorAgent(self):
