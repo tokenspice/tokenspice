@@ -9,11 +9,6 @@ INFO = logging.INFO
 DEBUG = logging.DEBUG
 WARNING = logging.WARNING
 
-# from util.constants import SAFETY
-# if SAFETY:
-#     print("Need to set SAFETY=False in util.constants (for speed). Exiting.")
-#     sys.exit(0)
-
 enforce.config({'enabled': False})  # Turn off runtime type-checking, for speed
 
 if __name__== '__main__':            
