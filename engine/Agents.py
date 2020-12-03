@@ -10,7 +10,7 @@ from web3tools import web3util
 from web3tools.web3util import fromBase18, toBase18
 from web3tools.web3wallet import Web3Wallet
 from util.constants import S_PER_MONTH, S_PER_YEAR
-
+    
 @enforce.runtime_validation
 class PublisherAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):

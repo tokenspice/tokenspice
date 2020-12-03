@@ -55,10 +55,16 @@ class AgentWallet:
         self._total_USD_in += amount
         
     def withdrawUSD(self, amt: float) -> None:
-        self.transferUSD(constants.BURN_ADDRESS, amt)
+        class BurnAgent:
+            def __init__(self):
+                self.address = constants.BURN_ADDRESS
+        burn_agent = BurnAgent()
+        self.transferUSD(burn_agent, amt)
 
-    def transferUSD(self, dst_address:str, amt: float) -> None:
-        assert len(dst_address) == 42 and dst_address[:2] == '0x'
+    def transferUSD(self, dst_agent, amt: float) -> None:
+        assert not isinstance(dst_agent, str) #it's an Agent
+        dst_address = dst_agent.address
+        
         amt_base = toBase18(amt)
         assert amt_base >= 0
         if amt_base == 0:
@@ -82,7 +88,7 @@ class AgentWallet:
     def totalUSDin(self) -> float:
         return self._total_USD_in
 
-    #===================================================================
+    #===================================================================    
     def OCEAN(self) -> float:
         return fromBase18(self._OCEAN_base())
 
@@ -95,9 +101,16 @@ class AgentWallet:
         self._total_OCEAN_in += amount
         
     def withdrawOCEAN(self, amt: float) -> None:
-        self.transferOCEAN(constants.BURN_ADDRESS, amt)
+        class BurnAgent:
+            def __init__(self):
+                self.address = constants.BURN_ADDRESS
+        burn_agent = BurnAgent()
+        self.transferOCEAN(burn_agent, amt)
 
-    def transferOCEAN(self, dst_address:str, amt: float) -> None:
+    def transferOCEAN(self, dst_agent, amt: float) -> None:
+        assert not isinstance(dst_agent, str) #it's an Agent
+        dst_address = dst_agent.address
+        
         amt_base = toBase18(amt)
         assert amt_base >= 0
         if amt_base == 0:

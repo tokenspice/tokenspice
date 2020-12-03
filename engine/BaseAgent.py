@@ -40,7 +40,7 @@ class BaseAgent(ABC, StrMixin):
         if SAFETY:
             assert isinstance(receiving_agent, BaseAgent) or (receiving_agent is None)
         if receiving_agent is not None:
-            self._wallet.transferUSD(receiving_agent.address, amount)
+            self._wallet.transferUSD(receiving_agent, amount)
         else:
             self._wallet.withdrawUSD(amount)
         
@@ -56,7 +56,7 @@ class BaseAgent(ABC, StrMixin):
         if SAFETY:
             assert isinstance(receiving_agent, BaseAgent) or (receiving_agent is None)
         if receiving_agent is not None:
-            self._wallet.transferOCEAN(receiving_agent.address, amount)
+            self._wallet.transferOCEAN(receiving_agent, amount)
         else:
             self._wallet.withdrawOCEAN(amount)
             
