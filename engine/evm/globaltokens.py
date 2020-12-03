@@ -6,16 +6,6 @@ from engine.evm import datatoken, dtfactory
 
 _MINTERS = {} # symbol : _Minter
 
-def mintUSD(address:str, value_base:int):
-    return _minter('USD').mint(address, value_base)
-
-_USD_TOKEN = None
-def USDtoken():
-    global _USD_TOKEN
-    if _USD_TOKEN is None:
-        _USD_TOKEN = _minter('USD').token()
-    return _USD_TOKEN
-
 def mintOCEAN(address:str, value_base:int):
     return _minter('OCEAN').mint(address, value_base)
 

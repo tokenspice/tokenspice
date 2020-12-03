@@ -1,21 +1,7 @@
 from engine.evm import globaltokens, datatoken
 from web3tools import web3util, web3wallet
 
-def test_USD():
-    wallet = web3wallet.randomWeb3Wallet()
-
-    USD_base = web3util.toBase18(2.0)
-    globaltokens.mintUSD(address=wallet.address, value_base=USD_base) 
-    USD_token = globaltokens.USDtoken()
-    assert isinstance(USD_token, datatoken.Datatoken)
-    assert USD_token.symbol() == 'USD'
-    assert USD_token.balanceOf_base(wallet.address) == USD_base
-    
-    globaltokens.mintUSD(address=wallet.address, value_base=USD_base) 
-    assert USD_token.balanceOf_base(wallet.address) == USD_base * 2
-
 def test_OCEAN():
-    #s/USD/OCEAN/g
     wallet = web3wallet.randomWeb3Wallet()
     
     OCEAN_base = web3util.toBase18(3.0)
