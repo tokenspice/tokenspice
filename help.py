@@ -14,6 +14,7 @@ TOOLS:
   === Generate results and plot ===
   ./run_1.py [[Do 1 run. Input conf file. Output rundir w/ csv and dbs.]]
   ./plot_1.py [[Plot results from 1 run. Input csv. Output pngs.]]
+  ./showstats.py [[Show performance statistics for a run]]
   Example flow: see bottom
 
   === Running tests === 
