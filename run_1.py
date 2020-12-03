@@ -19,9 +19,9 @@ if __name__== '__main__':
     
     #set help message
     help = """
-Usage: run_1 MAX_YEARS OUTPUT_DIR 
+Usage: run_1 MAX_DAYS OUTPUT_DIR 
 
- MAX_YEARS -- int -- # years to simulate
+ MAX_DAYS -- float -- # days to simulate
  OUTPUT_DIR -- string -- output directory for csv file & state db files.
  """
 
@@ -35,10 +35,10 @@ Usage: run_1 MAX_YEARS OUTPUT_DIR
         sys.exit(0)
     
     #extract inputs
-    max_years = eval(sys.argv[1])
+    max_days = eval(sys.argv[1])
     output_dir = sys.argv[2]
 
-    print("Arguments: MAX_YEARS=%s, OUTPUT_DIR=%s\n" % (max_years, output_dir))
+    print("Arguments: MAX_DAYS=%s, OUTPUT_DIR=%s\n" % (max_days, output_dir))
 
     #handle corner cases
     if os.path.exists(output_dir):
@@ -53,10 +53,10 @@ Usage: run_1 MAX_YEARS OUTPUT_DIR
     from util import constants
     
     ss = SimStrategy()
-    ss.setMaxTicks(max_years * constants.S_PER_YEAR / ss.time_step + 10)
+    ss.setMaxTicks(max_days * constants.S_PER_DAY / ss.time_step + 1)
     
     assert hasattr(ss, 'save_interval')
-    ss.save_interval = constants.S_PER_MONTH
+    ss.save_interval = constants.S_PER_DAY
                 
     #go
     master = SimEngine(ss, output_dir)

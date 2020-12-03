@@ -85,7 +85,7 @@ class SimEngine(object):
         es = float(self.elapsedSeconds())
         emi, eh, ed, emo, ey = es/S_PER_MIN, es/S_PER_HOUR, es/S_PER_DAY, \
                                es/S_PER_MONTH,es/S_PER_YEAR
-        s += [" (%.1f min,%.1f h,%.1f d,%.1f mo)" % \
+        s += [" (%.1f min,%.1f h,%.3f d,%.1f mo)" % \
               (emi, eh, ed, emo)] 
         dataheader += ["Second", "Min", "Hour", "Day", "Month", "Year"]
         datarow += [es, emi, eh, ed, emo, ey]
