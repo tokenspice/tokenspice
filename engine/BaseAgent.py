@@ -6,7 +6,7 @@ import enforce
 import typing
 
 from engine import BaseAgent, AgentWallet
-from engine.evm import globaltokens
+from web3engine import globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
 from web3tools.web3util import toBase18

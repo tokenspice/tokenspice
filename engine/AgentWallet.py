@@ -4,7 +4,7 @@ log = logging.getLogger('wallet')
 import enforce
 import typing
 
-from engine.evm import globaltokens
+from web3engine import globaltokens
 from util import constants 
 from util.strutil import asCurrency
 from web3tools import web3util, web3wallet

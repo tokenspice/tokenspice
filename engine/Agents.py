@@ -5,7 +5,7 @@ import enforce
 import math
 
 from engine.BaseAgent import BaseAgent
-from engine.evm import bfactory, bpool, btoken, datatoken, dtfactory
+from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
 from web3tools import web3util
 from web3tools.web3util import fromBase18, toBase18
 from web3tools.web3wallet import Web3Wallet

@@ -48,7 +48,7 @@ def abi(class_name: str):
         return json.loads(f.read())['abi']
 
 def abiFilename(class_name: str) -> str:
-    """Given e.g. 'DTFactory', returns './engine/evm/DTFactory.json' """
+    """Given e.g. 'DTFactory', returns './web3engine/DTFactory.json' """
     base_path = confFileValue('general', 'ARTIFACTS_PATH')
     path = os.path.join(base_path, class_name) + '.json'
     abspath = os.path.abspath(path)

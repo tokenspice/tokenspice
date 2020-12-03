@@ -1,4 +1,4 @@
-from engine.evm import globaltokens, datatoken
+from web3engine import globaltokens, datatoken
 from web3tools import web3util, web3wallet
 
 def test_OCEAN():

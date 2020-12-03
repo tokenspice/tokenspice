@@ -1,4 +1,4 @@
-from engine.evm import datatoken, dtfactory
+from web3engine import datatoken, dtfactory
 from web3tools import web3util
 
 def test_ERC20(alice_wallet, alice_address,
