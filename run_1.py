@@ -73,5 +73,5 @@ Usage: run_1 MAX_DAYS OUTPUT_DIR [DO_PROFILE]
         import cProfile
         stats_filename = os.path.join(output_dir, 'stats')
         cProfile.run('master.run()', stats_filename)
-        print(f'Output stats file: {stats_filename}. Use showstats.py to see')
+        print(f'Output stats file: {stats_filename}. To see: ./showstats.py outdir_csv/stats 20 cumulative')
     print(f'Output directory: {output_dir}')
