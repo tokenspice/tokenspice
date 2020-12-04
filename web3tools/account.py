@@ -33,7 +33,7 @@ class Account:
         return "\n".join(s)
     
 def randomPrivateKey():
-    return web3.eth.Account.create().privateKey
+    return web3.eth.Account.create().key
 
 def privateKeyToAddress(private_key: str) -> str:
     return eth_account.Account().from_key(private_key).address
