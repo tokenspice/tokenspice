@@ -4,11 +4,10 @@ log = logging.getLogger('marketagents')
 import enforce
 import random
 
-from engine.BaseAgent import BaseAgent
-from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
-from web3tools.web3util import toBase18
+from engine import BaseAgent, PoolAgent
+from web3engine import bfactory, bpool, datatoken, dtfactory
             
-class PublisherAgent(BaseAgent):
+class PublisherAgent(BaseAgent.BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         
@@ -41,7 +40,7 @@ class PublisherAgent(BaseAgent):
         # FIXME. How: see test_2tokens_basic. Be sure that self.OCEAN() is ok.
 
         #create agent and return
-        agent = PoolAgent(agent_name, pool)
+        agent = PoolAgent.PoolAgent(agent_name, pool)
         state.addAgent(agent)
         return agent.name
         
