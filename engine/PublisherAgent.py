@@ -6,6 +6,7 @@ import random
 
 from engine import BaseAgent, PoolAgent
 from web3engine import bfactory, bpool, datatoken, dtfactory
+from web3tools import web3util
             
 class PublisherAgent(BaseAgent.BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
@@ -26,7 +27,7 @@ class PublisherAgent(BaseAgent.BaseAgent):
         
         #create new dt
         wallet = self._wallet._web3wallet
-        amt = toBase18(1000.0) #magic number
+        amt = web3util.toBase18(1000.0) #magic number
         dt_factory = dtfactory.DTFactory()
         dt_address = dt_factory.createToken('', dt_name, dt_name, amt, wallet)
         dt = datatoken.Datatoken(dt_address)            
