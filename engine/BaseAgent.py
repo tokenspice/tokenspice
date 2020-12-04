@@ -19,6 +19,10 @@ class BaseAgent(ABC, StrMixin):
         self.name = name
         self._wallet = AgentWallet.AgentWallet(USD, OCEAN)
 
+        #postconditions
+        assert self.USD() == USD
+        assert self.OCEAN() == OCEAN
+
     #=======================================================================
     @abstractmethod
     def takeStep(self, state): #this is where the Agent does *work*
