@@ -18,7 +18,7 @@ def test_createNewPoolAgent():
                     if isinstance(agent, PoolAgent.PoolAgent)}
     state = MockState()
     
-    pub_agent = PublisherAgent.PublisherAgent("pub1", USD=0.0, OCEAN=0.0)
+    pub_agent = PublisherAgent.PublisherAgent("pub1", USD=0.0, OCEAN=10.0)
     state.addAgent(pub_agent)
     
     pool_agent_name = pub_agent._createNewPoolAgent(state)

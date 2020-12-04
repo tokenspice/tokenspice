@@ -5,8 +5,9 @@ import enforce
 import random
 
 from engine import BaseAgent, PoolAgent
-from web3engine import bfactory, bpool, datatoken, dtfactory
-from web3tools import web3util
+from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
+from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
+from web3tools.web3util import toBase18
             
 class PublisherAgent(BaseAgent.BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
@@ -20,28 +21,53 @@ class PublisherAgent(BaseAgent.BaseAgent):
         return (random.random() < 0.1) #FIXME HACK #magic number
 
     def _createNewPoolAgent(self, state) -> str:
+        assert self.OCEAN() > 0.0, "should not call if no OCEAN"
+        wallet = self._wallet._web3wallet
+        OCEAN = globaltokens.OCEANtoken()
+        
         #name
         pool_i = len(state.poolAgents())
         dt_name = f'DT{pool_i}'
-        agent_name = f'pool{pool_i}'
+        pool_agent_name = f'pool{pool_i}'
         
-        #create new dt
-        wallet = self._wallet._web3wallet
-        amt = web3util.toBase18(1000.0) #magic number
-        dt_factory = dtfactory.DTFactory()
-        dt_address = dt_factory.createToken('', dt_name, dt_name, amt, wallet)
-        dt = datatoken.Datatoken(dt_address)            
+        #new DT
+        DT = self._createDatatoken(dt_name, mint_amt=1000.0) #magic number
 
         #new pool
-        pool_factory = bfactory.BFactory()
-        pool_address = pool_factory.newBPool(from_wallet=wallet)
+        pool_address = bfactory.BFactory().newBPool(from_wallet=wallet)
         pool = bpool.BPool(pool_address)
 
-        #bind tokens, add liquidity, etc. 
-        # FIXME. How: see test_2tokens_basic. Be sure that self.OCEAN() is ok.
+        #bind tokens & add initial liquidity
 
-        #create agent and return
-        agent = PoolAgent.PoolAgent(agent_name, pool)
-        state.addAgent(agent)
-        return agent.name
+        OCEAN_bind_amt = self.OCEAN() #magic number: use all the OCEAN
+        DT_bind_amt = 20.0 #magic number
+                
+        DT.approve(pool.address, toBase18(DT_bind_amt), from_wallet=wallet)
+        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt),from_wallet=wallet)
+        
+        pool.bind(DT.address, toBase18(DT_bind_amt),
+                  toBase18(POOL_WEIGHT_DT), from_wallet=wallet)
+        pool.bind(OCEAN.address, toBase18(OCEAN_bind_amt),
+                  toBase18(POOL_WEIGHT_OCEAN), from_wallet=wallet)
+        
+        pool.finalize(from_wallet=wallet)
+
+        #create agent
+        pool_agent = PoolAgent.PoolAgent(pool_agent_name, pool)
+        state.addAgent(pool_agent)
+        
+        return pool_agent.name
+
+    def _createDatatoken(self,dt_name:str,mint_amt:float)-> datatoken.Datatoken:
+        """Create datatoken contract and mint DTs to self."""
+        wallet = self._wallet._web3wallet
+        DT_address = dtfactory.DTFactory().createToken(
+            '', dt_name, dt_name, toBase18(mint_amt), from_wallet=wallet)
+        DT = datatoken.Datatoken(DT_address)
+        DT.mint(wallet.address, toBase18(mint_amt), from_wallet=wallet)
+        return DT
+
+
+        
+        
         
