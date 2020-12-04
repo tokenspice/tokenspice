@@ -91,7 +91,7 @@ class MinterAgentsTest(unittest.TestCase):
             s_between_mints = S_PER_DAY
         else:
             ss.time_step = 100 * S_PER_DAY
-            s_between_mints = S_PER_YEAR
+            s_between_mints = 100 * S_PER_YEAR
 
         state = SimState.SimState(ss)
         
