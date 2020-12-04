@@ -152,7 +152,7 @@ class SimState(object):
     def publisherAgents(self):
         return self._agentsOfClass(PublisherAgent)
 
-    def stakerSpeculatorAgents(self):
+    def stakerspeculatorAgents(self):
         return self._agentsOfClass(StakerspeculatorAgent)
 
     def dataconsumerAgents(self):

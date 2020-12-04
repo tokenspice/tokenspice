@@ -10,7 +10,7 @@ from web3tools.web3util import toBase18
             
 
 @enforce.runtime_validation
-class StakerspeculatorAgent(BaseAgent):
+class DataconsumerAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         #FIXME

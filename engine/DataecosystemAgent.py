@@ -5,7 +5,9 @@ import enforce
 import random
 
 from engine.BaseAgent import BaseAgent
-from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
+from engine.PublisherAgent import PublisherAgent
+from engine.StakerspeculatorAgent import StakerspeculatorAgent
+from engine.DataconsumerAgent import DataconsumerAgent
 from web3tools.web3util import toBase18
                     
 @enforce.runtime_validation
@@ -13,19 +15,47 @@ class DataecosystemAgent(BaseAgent):
     """Will operate as a high-fidelity replacement for MarketplacesAgents,
     when it's ready."""
     def __init__(self, name: str, USD: float, OCEAN: float):
-        super().__init__(name, USD, OCEAN)
-        #FIXME
-        
+        super().__init__(name, USD, OCEAN)        
         
     def takeStep(self, state):
-        #FIXME
-        pass
+        if self._doCreatePublisherAgent(state):
+            self._createPublisherAgent(state)
+            
+        if self._doCreateStakerspeculatorAgent(state):
+            self._createStakerspeculatorAgent(state)
+            
+        if self._doCreateDataconsumerAgent(state):
+            self._createDataconsumerAgent(state)
 
-        # new_agents.add(Agents.PublisherAgent(
-        #     name = "publisher1", USD=0.0, OCEAN=0.0)) #magic number
-        
-        # new_agents.add(Agents.StakerspeculatorAgent(
-        #     name = "stakerspeculator1", USD=0.0, OCEAN=0.0)) #magic number
-        
-        # new_agents.add(Agents.DataconsumerAgent(
-        #     name = "dataconsumer1", USD=0.0, OCEAN=0.0)) #magic number
+    def _doCreatePublisherAgent(self, state) -> bool:
+        #magic number: rule - only create if no agents so far
+        return (not state.publisherAgents()) 
+            
+    def _createPublisherAgent(self, state) -> PublisherAgent:
+        name = 'foo' #FIXME
+        USD = 0.0 #FIXME magic number
+        OCEAN = 0.0 #FIXME magic number
+        new_agent = PublisherAgent(name=name, USD=USD, OCEAN=OCEAN)
+        new_agents.add(new_agent)
+
+    def _doCreateStakerspeculatorAgent(self, state) -> bool:
+        #magic number: rule - only create if no agents so far
+        return (not state.stakerspeculatorAgents())  
+            
+    def _createStakerspeculatorAgent(self, state) -> StakerspeculatorAgent:
+        name = 'foo' #FIXME
+        USD = 0.0 #FIXME magic number
+        OCEAN = 0.0 #FIXME magic number
+        new_agent = StakerspeculatorAgent(name=name, USD=USD, OCEAN=OCEAN)
+        new_agents.add(new_agent)
+
+    def _doCreateDataconsumerAgent(self, state) -> bool:
+        #magic number: rule - only create if no agents so far
+        return (not state.dataconumerAgents()) 
+            
+    def _createDataconsumerAgent(self, state) -> DataconsumerAgent:
+        name = 'foo' #FIXME
+        USD = 0.0 #FIXME magic number
+        OCEAN = 0.0 #FIXME magic number
+        new_agent = DataconsumerAgent(name=name, USD=USD, OCEAN=OCEAN)
+        new_agents.add(new_agent)

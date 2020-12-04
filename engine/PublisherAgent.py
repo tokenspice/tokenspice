@@ -14,13 +14,13 @@ class PublisherAgent(BaseAgent.BaseAgent):
         super().__init__(name, USD, OCEAN)
         
     def takeStep(self, state) -> None:
-        if self._doCreateNewPool():
-            agent_name = self._createNewPoolAgent(state)
+        if self._doCreatePool():
+            agent_name = self._createPoolAgent(state)
 
-    def _doCreateNewPool(self) -> bool:
+    def _doCreatePool(self) -> bool:
         return (random.random() < 0.1) #FIXME HACK #magic number
 
-    def _createNewPoolAgent(self, state) -> str:
+    def _createPoolAgent(self, state) -> str:
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"
         wallet = self._wallet._web3wallet
         OCEAN = globaltokens.OCEANtoken()
