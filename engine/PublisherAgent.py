@@ -2,7 +2,6 @@ import logging
 log = logging.getLogger('marketagents')
 
 import enforce
-import random
 
 from engine import BaseAgent, PoolAgent
 from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
@@ -18,7 +17,7 @@ class PublisherAgent(BaseAgent.BaseAgent):
             agent_name = self._createPoolAgent(state)
 
     def _doCreatePool(self) -> bool:
-        return (random.random() < 0.1) #FIXME HACK #magic number
+        return (self.OCEAN() > 200.0) #magic number
 
     def _createPoolAgent(self, state) -> str:
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"

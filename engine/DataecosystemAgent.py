@@ -34,7 +34,7 @@ class DataecosystemAgent(BaseAgent):
     def _createPublisherAgent(self, state) -> PublisherAgent:
         name = 'foo' #FIXME
         USD = 0.0 #FIXME magic number
-        OCEAN = 0.0 #FIXME magic number
+        OCEAN = 1000.0 #FIXME magic number
         new_agent = PublisherAgent(name=name, USD=USD, OCEAN=OCEAN)
         new_agents.add(new_agent)
 
@@ -45,7 +45,7 @@ class DataecosystemAgent(BaseAgent):
     def _createStakerspeculatorAgent(self, state) -> StakerspeculatorAgent:
         name = 'foo' #FIXME
         USD = 0.0 #FIXME magic number
-        OCEAN = 0.0 #FIXME magic number
+        OCEAN = 1000.0 #FIXME magic number
         new_agent = StakerspeculatorAgent(name=name, USD=USD, OCEAN=OCEAN)
         new_agents.add(new_agent)
 
@@ -56,6 +56,6 @@ class DataecosystemAgent(BaseAgent):
     def _createDataconsumerAgent(self, state) -> DataconsumerAgent:
         name = 'foo' #FIXME
         USD = 0.0 #FIXME magic number
-        OCEAN = 0.0 #FIXME magic number
+        OCEAN = 1000.0 #FIXME magic number
         new_agent = DataconsumerAgent(name=name, USD=USD, OCEAN=OCEAN)
         new_agents.add(new_agent)

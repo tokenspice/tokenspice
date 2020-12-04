@@ -3,10 +3,8 @@ from engine.PublisherAgent import PublisherAgent
 
 def test_doCreatePool():
     agent = PublisherAgent("agent1", USD=0.0, OCEAN=0.0)
-    vals = set()
-    for i in range(10000):
-        vals.add(agent._doCreatePool())
-    assert vals == {True, False}
+    c = agent._doCreatePool()
+    assert c in [False, True]
     
 def test_createPoolAgent():
     class MockState:
