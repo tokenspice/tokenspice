@@ -38,7 +38,6 @@ class PublisherAgent(BaseAgent.BaseAgent):
         pool = bpool.BPool(pool_address)
 
         #bind tokens & add initial liquidity
-
         OCEAN_bind_amt = self.OCEAN() #magic number: use all the OCEAN
         DT_bind_amt = 20.0 #magic number
                 
