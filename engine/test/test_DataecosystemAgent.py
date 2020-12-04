@@ -8,3 +8,12 @@ def test_createStakerspeculatorAgent():
 
 def test_createDataconsumerAgent():
     pass
+
+def test_doCreatePublisherAgent():
+    pass
+    
+def test_doCreateStakerspeculatorAgent():
+    pass
+
+def test_doCreateDataconsumerAgent():
+    pass
