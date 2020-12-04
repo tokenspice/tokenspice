@@ -4,7 +4,7 @@ log = logging.getLogger('wallet')
 import enforce
 import typing
 
-from web3engine import globaltokens
+from web3engine import bpool, globaltokens
 from util import constants 
 from util.strutil import asCurrency
 from web3tools import web3util, web3wallet
@@ -41,6 +41,11 @@ class AgentWallet:
     @property
     def _address(self):
          return self._web3wallet.address
+     
+    #===================================================================
+    def BPT(self, pool:bpool.BPool) -> float:
+        BPT_base = pool.balanceOf_base(self._address)
+        return fromBase18(BPT_base)
 
     #===================================================================    
     def USD(self) -> float:

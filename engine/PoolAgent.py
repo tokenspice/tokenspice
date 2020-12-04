@@ -12,7 +12,11 @@ from web3tools.web3util import toBase18
 class PoolAgent(BaseAgent):    
     def __init__(self, name: str, pool:bpool.BPool):
         super().__init__(name, USD=0.0, OCEAN=0.0)
-        self.pool = pool
+        self._bpool:bpool.BPool = pool
+
+    @property
+    def pool(self) -> bpool.BPool:
+        return self._bpool
         
     def takeStep(self, state):
         pass

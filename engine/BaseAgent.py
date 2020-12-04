@@ -6,7 +6,7 @@ import enforce
 import typing
 
 from engine import BaseAgent, AgentWallet
-from web3engine import globaltokens
+from web3engine import bpool, globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
 from web3tools.web3util import toBase18
@@ -27,6 +27,10 @@ class BaseAgent(ABC, StrMixin):
     @abstractmethod
     def takeStep(self, state): #this is where the Agent does *work*
         pass
+
+    #=======================================================================
+    def BPT(self, pool:bpool.BPool) -> float:
+        return self._wallet.BPT(pool) 
 
     #=======================================================================
     def USD(self) -> float:

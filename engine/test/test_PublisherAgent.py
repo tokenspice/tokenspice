@@ -1,5 +1,12 @@
 from engine.PoolAgent import PoolAgent
 from engine.PublisherAgent import PublisherAgent
+from engine.AgentDict import AgentDict
+
+class MockState:
+    def __init__(self):
+        self.agents = AgentDict({})
+    def addAgent(self, agent):
+        self.agents[agent.name] = agent
 
 def test_doCreatePool():
     agent = PublisherAgent("agent1", USD=0.0, OCEAN=0.0)
@@ -7,25 +14,37 @@ def test_doCreatePool():
     assert c in [False, True]
     
 def test_createPoolAgent():
-    class MockState:
-        def __init__(self):
-            self.agents = {}
-        def addAgent(self, agent):
-            self.agents[agent.name] = agent
-        def poolAgents(self):
-            return {agent for agent in self.agents
-                    if isinstance(agent, PoolAgent)}
     state = MockState()
+    assert len(state.agents) == 0
     
-    pub_agent = PublisherAgent("pub1", USD=0.0, OCEAN=10.0)
+    pub_agent = PublisherAgent("pub1", USD=0.0, OCEAN=1000.0) 
     state.addAgent(pub_agent)
+    assert len(state.agents) == 1
+    assert len(state.agents.filterToPool()) == 0
     
     pool_agent_name = pub_agent._createPoolAgent(state)
-    
     assert len(state.agents) == 2
     pool_agent = state.agents[pool_agent_name]
     assert isinstance(pool_agent, PoolAgent)
+    assert len(state.agents.filterToPool()) == 1
     
-
 def test_sellStake():
-    pass
+    state = MockState()
+    pub_agent = PublisherAgent("pub1", USD=0.0, OCEAN=1000.0)
+    state.addAgent(pub_agent)
+    assert len(state.agents.filterByNonzeroStake(pub_agent)) == 0
+    assert pub_agent._doSellStake(state) == False
+    
+    pool_agent_name = pub_agent._createPoolAgent(state)
+    assert len(state.agents.filterByNonzeroStake(pub_agent)) == 1
+    sell_stake = max([pub_agent._doSellStake(state)
+                      for i in range(100)])
+    assert sell_stake == True
+
+    pool_agent = state.agents[pool_agent_name]
+    BPT_before = pub_agent.BPT(pool_agent.pool)
+    pub_agent._sellStake(state)
+    BPT_after = pub_agent.BPT(pool_agent.pool)
+    assert BPT_after == (1.0 - 0.10) * BPT_before 
+    
+    

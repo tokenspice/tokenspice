@@ -149,6 +149,9 @@ pytest tests/test_foo.py
 #run all tests in engine/ directory
 pytest engine/
 
+#run all tests except web3engine/ (slow)
+pytest --ignore=web3engine
+
 #run all tests (unittest- and pytest- based)
 pytest
 ```

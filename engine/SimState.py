@@ -3,10 +3,10 @@ log = logging.getLogger('simstate')
 
 import enforce
 
-from engine import Agents, BaseAgent, Kpis, MinterAgents, SimStrategy
+from engine import Agents, AgentDict, BaseAgent, Kpis, MinterAgents, SimStrategy
 from util import mathutil, valuation
 from util.mathutil import Range
-from util.constants import * 
+from util.constants import *
 
 @enforce.runtime_validation
 class SimState(object):
@@ -25,7 +25,7 @@ class SimState(object):
         self._marketplace_tick_previous_add = 0
             
         #main storage of agents. Fill this below
-        self.agents = {} #agent_name : Agent instance
+        self.agents = AgentDict.AgentDict() #agent_name : Agent instance
 
         #<<Note many magic numbers below, for simplicity>>
         #note: KPIs class also has some magic number
@@ -144,23 +144,6 @@ class SimState(object):
     def addAgent(self, agent):
         assert agent.name not in self.agents, "have an agent with this name" 
         self.agents[agent.name] = self.agents
-
-    #==============================================================   
-    def poolAgents(self):
-        return self._agentsOfClass(PoolAgent)
-
-    def publisherAgents(self):
-        return self._agentsOfClass(PublisherAgent)
-
-    def stakerspeculatorAgents(self):
-        return self._agentsOfClass(StakerspeculatorAgent)
-
-    def dataconsumerAgents(self):
-        return self._agentsOfClass(DataconsumerAgent)
-    
-    def _agentsOfClass(self, _class):
-        return {agent for agent in self.agents
-                if isinstance(agent, _class)}
 
     #==============================================================      
     def marketplacePercentTollToOcean(self) -> float:
