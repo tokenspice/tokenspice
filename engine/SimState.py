@@ -44,15 +44,7 @@ class SimState(object):
         #Instantiate and connnect agent instances. "Wire up the circuit"
         new_agents = set()
 
-        new_agents.add(Agents.PublisherAgent(
-            name = "publisher1", USD=0.0, OCEAN=0.0)) #magic number
-        
-        new_agents.add(Agents.StakerspeculatorAgent(
-            name = "stakerspeculator1", USD=0.0, OCEAN=0.0)) #magic number
-        
-        new_agents.add(Agents.DataconsumerAgent(
-            name = "dataconsumer1", USD=0.0, OCEAN=0.0)) #magic number
-
+        #FIXME: replace MarketplacesAgent with DataecosystemAgent, when ready
         new_agents.add(Agents.MarketplacesAgent(
             name = "marketplaces1", USD=0.0, OCEAN=0.0,
             toll_agent_name = "opc_address",
@@ -139,6 +131,7 @@ class SimState(object):
         #update global state values: other
         self._speculation_valuation *= (1.0 + self._percent_increase_speculation_valuation_per_s * self.ss.time_step)
 
+    #==============================================================   
     def getAgent(self, name: str):
         return self.agents[name]
         
@@ -146,8 +139,29 @@ class SimState(object):
         return set(self.agents.values())
 
     def numAgents(self) -> int:
-        return len(self.agents)    
+        return len(self.agents)
+
+    def addAgent(self, agent):
+        assert agent.name not in self.agents, "have an agent with this name" 
+        self.agents[agent.name] = self.agents
+
+    #==============================================================   
+    def poolAgents(self):
+        return self._agentsOfClass(PoolAgent)
+
+    def publisherAgents(self):
+        return self._agentsOfClass(PublisherAgent)
+
+    def stakerSpeculatorAgents(self):
+        return self._agentsOfClass(StakerspeculatorAgent)
+
+    def dataconsumerAgents(self):
+        return self._agentsOfClass(DataconsumerAgent)
     
+    def _agentsOfClass(self, _class):
+        return {agent for agent in self.agents
+                if isinstance(agent, _class)}
+
     #==============================================================      
     def marketplacePercentTollToOcean(self) -> float:
         return self._marketplace_percent_toll_to_ocean
