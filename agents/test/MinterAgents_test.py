@@ -96,10 +96,10 @@ class MinterAgentsTest(unittest.TestCase):
 
         state = SimState.SimState(ss)
         
-        class SimpleAgent(BaseAgent):
+        class SimpleAgent2(BaseAgent):
             def takeStep(self, state):
                 pass
-        state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
+        state.agents["a1"] = a1 = SimpleAgent2("a1", 0.0, 0.0)
 
         #base            
         minter = OCEANFuncMinterAgent(
