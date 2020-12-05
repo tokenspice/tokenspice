@@ -1,3 +1,5 @@
+import enforce
+
 from agents.PoolAgent import PoolAgent
 from agents.PublisherAgent import PublisherAgent
 from agents.AgentDict import AgentDict
@@ -8,11 +10,13 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 
+@enforce.runtime_validation
 def test_doCreatePool():
     agent = PublisherAgent("agent1", USD=0.0, OCEAN=0.0)
     c = agent._doCreatePool()
     assert c in [False, True]
     
+@enforce.runtime_validation
 def test_createPoolAgent():
     state = MockState()
     assert len(state.agents) == 0
@@ -28,6 +32,7 @@ def test_createPoolAgent():
     assert isinstance(pool_agent, PoolAgent)
     assert len(state.agents.filterToPool()) == 1
     
+@enforce.runtime_validation
 def test_sellStake():
     state = MockState()
     pub_agent = PublisherAgent("pub1", USD=0.0, OCEAN=1000.0)

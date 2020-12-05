@@ -2,7 +2,7 @@ from agents.AgentDict import AgentDict
 
 import enforce
 
-
+@enforce.runtime_validation
 def test1():
     class BaseAgent:
         def __init__(self, name):
@@ -27,6 +27,7 @@ def test1():
     bah_d = d.filterByClass(BahAgent)
     assert sorted(bah_d.keys()) == []
 
+@enforce.runtime_validation
 def test2():
     class FooAgent:
         def __init__(self, name):
