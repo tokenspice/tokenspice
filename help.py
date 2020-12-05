@@ -18,15 +18,10 @@ TOOLS:
   Example flow: see bottom
 
   === Running tests === 
-  pytest [[run all tests -- unittest- and pytest- based]]
+  pytest [[run all tests]]
   pytest engine/ [[run all tests in engine/ directory]]
   pytest tests/test_foo.py [[run a single pytest-based test file]]
   pytest tests/test_foo.py::test_foobar [[run a single pytest-based test]]
-  python -m unittest [[run all non-pytest tests, ie the older ones]]
-  python -m unittest util.test [[run all tests in util.test directory]]
-  python -m unittest util.test.ConstantsTest [[run all tests in util.test.ConstantsTest class]]
-  python -m unittest util.test.ConstantsTest.testINF [[run one test]]
-  -Add "-v" to command line to make all loglevels DEBUG
 
   === Config files, with params to change === 
   -System parameters: ~/tokenspice.conf

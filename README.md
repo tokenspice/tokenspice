@@ -152,7 +152,7 @@ pytest engine/
 #run all tests except web3engine/ (slow)
 pytest --ignore=web3engine
 
-#run all tests (unittest- and pytest- based)
+#run all tests 
 pytest
 ```
 
