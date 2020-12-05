@@ -1,9 +1,9 @@
 import enforce
 
-from engine.PublisherAgent import PublisherAgent
-from engine.PoolAgent import PoolAgent
-from engine.StakerspeculatorAgent import StakerspeculatorAgent
-from engine.DataconsumerAgent import DataconsumerAgent
+from agents.PublisherAgent import PublisherAgent
+from agents.PoolAgent import PoolAgent
+from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.DataconsumerAgent import DataconsumerAgent
 
 @enforce.runtime_validation
 class AgentDict(dict):

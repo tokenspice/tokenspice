@@ -4,12 +4,13 @@ log = logging.getLogger('marketagents')
 import enforce
 import random
 
-from engine.BaseAgent import BaseAgent
+from agents.BaseAgent import BaseAgent
 from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
 from web3tools.web3util import toBase18
-                    
+            
+
 @enforce.runtime_validation
-class StakerspeculatorAgent(BaseAgent):
+class DataconsumerAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         #FIXME
@@ -17,4 +18,3 @@ class StakerspeculatorAgent(BaseAgent):
     def takeStep(self, state):
         #FIXME
         pass
-        

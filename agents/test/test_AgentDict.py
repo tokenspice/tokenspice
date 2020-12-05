@@ -1,4 +1,4 @@
-from engine.AgentDict import AgentDict
+from agents.AgentDict import AgentDict
 
 import enforce
 

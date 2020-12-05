@@ -3,7 +3,8 @@ log = logging.getLogger('simstate')
 
 import enforce
 
-from engine import Agents, AgentDict, BaseAgent, Kpis, MinterAgents, SimStrategy
+from agents import Agents, AgentDict, BaseAgent, MinterAgents
+from engine import Kpis, SimStrategy
 from util import mathutil, valuation
 from util.mathutil import Range
 from util.constants import *

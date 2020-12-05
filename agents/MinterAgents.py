@@ -4,7 +4,7 @@ log = logging.getLogger('minteragents')
 import enforce
 import math
 
-from engine.BaseAgent import BaseAgent    
+from agents.BaseAgent import BaseAgent    
 from util.constants import S_PER_YEAR, BITCOIN_NUM_HALF_LIVES
 
 #====================================================================

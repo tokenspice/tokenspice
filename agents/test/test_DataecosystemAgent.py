@@ -1,4 +1,4 @@
-from engine.DataecosystemAgent import DataecosystemAgent
+from agents.DataecosystemAgent import DataecosystemAgent
 
 def test_createPublisherAgent():
     agent = DataecosystemAgent("agent1", USD=0.0, OCEAN=0.0)

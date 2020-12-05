@@ -4,7 +4,7 @@ log = logging.getLogger('marketagents')
 import enforce
 import random
 
-from engine.BaseAgent import BaseAgent
+from agents.BaseAgent import BaseAgent
 from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
 from web3tools.web3util import toBase18
             

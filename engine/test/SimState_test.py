@@ -6,7 +6,8 @@ import enforce
 from enforce.exceptions import RuntimeTypeError
 import unittest
 
-from engine import MinterAgents, SimState, SimStrategy
+from agents import MinterAgents
+from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY
 
 @enforce.runtime_validation

@@ -4,8 +4,8 @@ log = logging.getLogger('marketagents')
 import enforce
 import random
 
-from engine.BaseAgent import BaseAgent
-from engine.PoolAgent import PoolAgent
+from agents.BaseAgent import BaseAgent
+from agents.PoolAgent import PoolAgent
 from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18

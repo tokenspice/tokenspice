@@ -1,6 +1,6 @@
-from engine.PoolAgent import PoolAgent
-from engine.PublisherAgent import PublisherAgent
-from engine.AgentDict import AgentDict
+from agents.PoolAgent import PoolAgent
+from agents.PublisherAgent import PublisherAgent
+from agents.AgentDict import AgentDict
 
 class MockState:
     def __init__(self):

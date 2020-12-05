@@ -4,10 +4,10 @@ log = logging.getLogger('marketagents')
 import enforce
 import random
 
-from engine.BaseAgent import BaseAgent
-from engine.PublisherAgent import PublisherAgent
-from engine.StakerspeculatorAgent import StakerspeculatorAgent
-from engine.DataconsumerAgent import DataconsumerAgent
+from agents.BaseAgent import BaseAgent
+from agents.PublisherAgent import PublisherAgent
+from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.DataconsumerAgent import DataconsumerAgent
 from web3tools.web3util import toBase18
                     
 @enforce.runtime_validation

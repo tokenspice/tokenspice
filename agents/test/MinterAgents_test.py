@@ -5,8 +5,9 @@ log = logging.getLogger('minteragents')
 import enforce
 import unittest
 
-from engine import BaseAgent, SimState, SimStrategy
-from engine.MinterAgents import *
+from agents import BaseAgent
+from engine import SimState, SimStrategy
+from agents.MinterAgents import *
 from util.constants import BITCOIN_NUM_HALF_LIVES, \
     S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 

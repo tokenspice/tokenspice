@@ -5,7 +5,7 @@ log = logging.getLogger('wallet')
 import enforce
 import unittest
 
-from engine.AgentWallet import *
+from agents.AgentWallet import *
 
 @enforce.runtime_validation
 class AgentWalletTest(unittest.TestCase):

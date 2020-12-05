@@ -5,7 +5,7 @@ log = logging.getLogger('baseagent')
 import enforce
 import unittest
 
-from engine.BaseAgent import *
+from agents.BaseAgent import *
 
 @enforce.runtime_validation
 class MyTestAgent(BaseAgent):

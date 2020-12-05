@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 import enforce
 import typing
 
-from engine import BaseAgent, AgentWallet
+from agents import BaseAgent, AgentWallet
 from web3engine import bpool, globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin

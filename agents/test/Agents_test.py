@@ -5,8 +5,9 @@ log = logging.getLogger('agents')
 import enforce
 import unittest
 
-from engine import BaseAgent, SimState, SimStrategy
-from engine.Agents import *
+from agents import BaseAgent
+from agents.Agents import *
+from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY, S_PER_WEEK, S_PER_MONTH
 
 @enforce.runtime_validation
