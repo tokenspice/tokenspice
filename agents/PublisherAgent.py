@@ -80,14 +80,10 @@ class PublisherAgent(BaseAgent):
         pool_agents = state.agents.filterByNonzeroStake(self)
         pool_name = random.choice(list(pool_agents))
         pool_agent = pool_agents[pool_name]
-        self._sellStakeOfPool(pool_agent)
-
-    def _sellStakeOfPool(self, pool_agent:PoolAgent):
+        
         BPT = self.BPT(pool_agent.pool)
         assert BPT > 0.0
         BPT_sell = 0.10 * BPT #magic number -- sell 10% of current stake
-        pool_agent.pool.exitPool(
-            poolAmountIn_base=toBase18(BPT_sell), 
-            minAmountsOut_base=[toBase18(0.0),toBase18(0.0)],
-            from_wallet=self._wallet._web3wallet)
+        pool_agent.sellStake(BPT_sell, self)
+        
         

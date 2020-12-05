@@ -19,4 +19,13 @@ class PoolAgent(BaseAgent):
         return self._bpool
         
     def takeStep(self, state):
+        #it's a smart contract robot, it doesn't initiate anything itself
         pass
+
+    def sellStake(self, BPT_sell:float, agent):
+        """'agent' sells BPT back into this pool"""
+        self.pool.exitPool(
+            poolAmountIn_base=toBase18(BPT_sell), 
+            minAmountsOut_base=[toBase18(0.0),toBase18(0.0)],
+            from_wallet=agent._wallet._web3wallet)
+        
