@@ -1,10 +1,10 @@
-**WARNING: this is WIP code. Pre-alpha blah blah.**
+**WARNING: this is WIP code. Pre-alpha yada yada. Keep your expectations low. But maybe parts are useful to some:)**
 
 # TokenSPICE : Token Simulator with Python or EVM agents
 
 TokenSPICE simulates tokenized ecosystems using an agent-based approach.
 
-Agents may be written in pure Python, or with an EVM-based backend. (The [original version](https://github.com/oceanprotocol/tokenspice) was pure Python.)
+Agents may be written in pure Python, or with an EVM-based backend. (The [original version](https://github.com/oceanprotocol/tokenspice) was pure Python. I may merge this repo into that one at some point.)
 
 TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
 
