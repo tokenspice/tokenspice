@@ -4,7 +4,7 @@ log = logging.getLogger('wallet')
 import enforce
 import typing
 
-from web3engine import bpool, globaltokens
+from web3engine import bpool, datatoken, globaltokens
 from util import constants 
 from util.strutil import asCurrency
 from web3tools import web3util, web3wallet
@@ -20,8 +20,11 @@ class AgentWallet:
     USD is stored as a variable internally. OCEAN & DTs are on EVM.
     """
 
-    def __init__(self, USD:float=0.0, OCEAN:float=0.0):
-        self._web3wallet = web3wallet.randomWeb3Wallet()
+    def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
+        if private_key is None:
+            self._web3wallet = web3wallet.randomWeb3Wallet()
+        else:
+            self._web3wallet = web3wallet.Web3Wallet(private_key)
 
         #Give the new wallet ETH to pay gas fees (but don't track otherwise)
         self._web3wallet.fundFromAbove(toBase18(0.01)) #magic number
@@ -42,12 +45,8 @@ class AgentWallet:
     def _address(self):
          return self._web3wallet.address
      
-    #===================================================================
-    def BPT(self, pool:bpool.BPool) -> float:
-        BPT_base = pool.balanceOf_base(self._address)
-        return fromBase18(BPT_base)
-
-    #===================================================================    
+    #=================================================================== 
+    #USD-related   
     def USD(self) -> float:
         return self._USD
         
@@ -78,7 +77,8 @@ class AgentWallet:
     def totalUSDin(self) -> float:
         return self._total_USD_in
 
-    #===================================================================   
+    #===================================================================  
+    #OCEAN-related 
     def OCEAN(self) -> float:
         return fromBase18(self._OCEAN_base())
 
@@ -130,6 +130,41 @@ class AgentWallet:
     def totalOCEANin(self) -> float:
         return self._total_OCEAN_in
         
+    #===================================================================
+    #ETH-related. Not much here because we use it little, just for gas
+    def ETH(self) -> float:
+        return fromBase18(self._ETH_base())
+
+    def _ETH_base(self) -> int: #i.e. num wei
+        return self._web3wallet.ETH_base()
+    
+    #===================================================================
+    #datatoken and pool-related
+    def DT(self, dt:datatoken.Datatoken) -> float:
+        return fromBase18(self._DT_base(dt))
+
+    def _DT_base(self, dt:datatoken.Datatoken) -> int: 
+        return dt.balanceOf_base(self._address)
+    
+    def BPT(self, pool:bpool.BPool) -> float:
+        return fromBase18(self._BPT_base(pool))
+    
+    def _BPT_base(self, pool:bpool.BPool) -> int:
+        return pool.balanceOf_base(self._address)
+                
+    def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
+        pool.joinswapExternAmountIn(
+            tokenIn_address=globaltokens.OCEAN_address,
+            tokenAmountIn_base=toBase18(OCEAN_stake),
+            minPoolAmountOut_base=toBase18(0.0),
+            from_wallet=self._web3wallet)
+        
+    def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
+        pool.exitswapPoolAmountIn(
+            tokenOut_address=globaltokens.OCEAN_address,
+            poolAmountIn_base=BPT_unstake,
+            minAmountOut_base=toBase18(0.0),
+            from_wallet=self._web3wallet)
 
     #===================================================================
     def __str__(self) -> str:
@@ -142,7 +177,12 @@ class AgentWallet:
         s += [" /AgentWallet}"]
         return "".join(s)
 
+#========================================================================
+#burn-related
 class BurnWallet:
+    """This is a wallet-level interface to send funds-to-burn to.
+    This is *not* a burner wallet, that's a completely different concept.
+    """
     def __init__(self):
         self._address = constants.BURN_ADDRESS
 _BURN_WALLET = BurnWallet()

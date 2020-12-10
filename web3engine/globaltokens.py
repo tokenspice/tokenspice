@@ -9,8 +9,12 @@ _MINTERS = {} # symbol : _Minter
 def mintOCEAN(address:str, value_base:int):
     return _minter('OCEAN').mint(address, value_base)
 
+@property
+def OCEAN_address() -> str:
+    return OCEANtoken().address
+
 _OCEAN_TOKEN = None
-def OCEANtoken():
+def OCEANtoken() -> datatoken.Datatoken:
     global _OCEAN_TOKEN
     if _OCEAN_TOKEN is None:
         _OCEAN_TOKEN = _minter('OCEAN').token()

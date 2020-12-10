@@ -6,7 +6,7 @@ import enforce
 import typing
 
 from agents import BaseAgent, AgentWallet
-from web3engine import bpool, globaltokens
+from web3engine import bpool, datatoken, globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
 from web3tools.web3util import toBase18
@@ -29,10 +29,7 @@ class BaseAgent(ABC, StrMixin):
         pass
 
     #=======================================================================
-    def BPT(self, pool:bpool.BPool) -> float:
-        return self._wallet.BPT(pool) 
-
-    #=======================================================================
+    #USD-related
     def USD(self) -> float:
         return self._wallet.USD() 
     
@@ -49,6 +46,7 @@ class BaseAgent(ABC, StrMixin):
             self._wallet.withdrawUSD(amount)
         
     #=======================================================================
+    #OCEAN-related
     def OCEAN(self) -> float:
         return self._wallet.OCEAN() 
 
@@ -64,3 +62,17 @@ class BaseAgent(ABC, StrMixin):
         else:
             self._wallet.withdrawOCEAN(amount)
             
+    #=======================================================================
+    #datatoken and pool-related
+    def DT(self, dt:datatoken.Datatoken) -> float:
+        return self._wallet.DT(dt)
+    
+    def BPT(self, pool:bpool.BPool) -> float:
+        return self._wallet.BPT(pool)
+
+    def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
+        self._wallet.stakeOCEAN(OCEAN_unstake, pool)
+
+    def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
+        self._wallet.unstakeOCEAN(BPT_unstake, pool)
+                            

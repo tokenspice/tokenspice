@@ -76,7 +76,7 @@ def make_info(name, private_key_name):
     class _Info:
         pass
     info = _Info()
-    network =  web3util.get_network()
+    network = web3util.get_network()
     info.private_key = web3util.confFileValue(network, private_key_name)
     info.address = account.privateKeyToAddress(info.private_key)
     info.account = account.Account(private_key=info.private_key)

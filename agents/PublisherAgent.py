@@ -6,26 +6,40 @@ import random
 
 from agents.BaseAgent import BaseAgent
 from agents.PoolAgent import PoolAgent
+from util import constants
 from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18
         
-@enforce.runtime_validation    
+@enforce.runtime_validation
 class PublisherAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         
+        self._s_since_create = 0
+        self._s_between_create = 7 * constants.S_PER_DAY #magic number
+        
+        self._s_since_unstake = 0
+        self._s_between_unstake = 3 * constants.S_PER_DAY #magic number
+        
     def takeStep(self, state) -> None:
+        self._s_since_create += state.ss.time_step
+        self._s_since_unstake += state.ss.time_step
+        
         if self._doCreatePool():
-            agent_name = self._createPoolAgent(state)
+            self._s_since_create = 0
+            self._createPoolAgent(state)
 
-        if self._doSellStake(state):
-            self._sellStake(state)
+        if self._doUnstakeOCEAN(state):
+            self._s_since_unstake = 0
+            self._unstakeOCEAN(state)
 
     def _doCreatePool(self) -> bool:
-        return (self.OCEAN() > 200.0) #magic number
+        if self.OCEAN() < 200.0: #magic number
+            return False
+        return self._s_since_create >= self._s_between_creates
 
-    def _createPoolAgent(self, state) -> str:
+    def _createPoolAgent(self, state) -> PoolAgent:        
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"
         wallet = self._wallet._web3wallet
         OCEAN = globaltokens.OCEANtoken()
@@ -60,7 +74,20 @@ class PublisherAgent(BaseAgent):
         pool_agent = PoolAgent(pool_agent_name, pool)
         state.addAgent(pool_agent)
         
-        return pool_agent.name
+        return pool_agent
+
+    def _doUnstakeOCEAN(self, state) -> bool:
+        if not state.agents.filterByNonzeroStake(self):
+            return False
+        return self._s_since_unstake >= self._s_between_unstake
+
+    def _unstakeOCEAN(self, state):
+        """Choose what pool to unstake and by how much. Then do the action."""
+        pool_agents = state.agents.filterByNonzeroStake(self)
+        pool_agent = random.choice(list(pool_agents.values()))
+        BPT = self.BPT(pool_agent.pool)
+        BPT_unstake = 0.10 * BPT #magic number
+        self.unstakeOCEAN(BPT_unstake, pool_agent.pool)
 
     def _createDatatoken(self,dt_name:str,mint_amt:float)-> datatoken.Datatoken:
         """Create datatoken contract and mint DTs to self."""
@@ -70,20 +97,3 @@ class PublisherAgent(BaseAgent):
         DT = datatoken.Datatoken(DT_address)
         DT.mint(wallet.address, toBase18(mint_amt), from_wallet=wallet)
         return DT
-
-    def _doSellStake(self, state) -> bool:
-        if not state.agents.filterByNonzeroStake(self):
-            return False
-        return (random.random() < 0.1) #magic number. FIXME - be more timebased
-
-    def _sellStake(self, state):
-        pool_agents = state.agents.filterByNonzeroStake(self)
-        pool_name = random.choice(list(pool_agents))
-        pool_agent = pool_agents[pool_name]
-        
-        BPT = self.BPT(pool_agent.pool)
-        assert BPT > 0.0
-        BPT_sell = 0.10 * BPT #magic number -- sell 10% of current stake
-        pool_agent.sellStake(BPT_sell, self)
-        
-        
