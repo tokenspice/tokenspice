@@ -2,13 +2,13 @@
 
 # TokenSPICE : Token Simulator with Python or EVM agents
 
-TokenSPICE simulates tokenized ecosystems using an agent-based approach.
-
-Agents may be written in pure Python, or with an EVM-based backend. (The [original version](https://github.com/oceanprotocol/tokenspice) was pure Python. I may merge this repo into that one at some point.)
-
 TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
 
-It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). The original version was tuned for the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. 
+TokenSPICE simulates tokenized ecosystems using an agent-based approach.
+
+Each “agent” is a class. Has a wallet, and does work to earn $. One models the system by wiring up agents, and tracking metrics (kpis). Agents may be written in pure Python, or with an EVM-based backend. (The [original version](https://github.com/oceanprotocol/tokenspice) was pure Python. I may merge this repo into the original at some point.)
+
+It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). The original version was tuned for the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. Simply fork it and get going.
 
 TokenSPICE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
 
@@ -197,7 +197,14 @@ Then repeat previous steps as desired.
 - Controllable agents use EVM.
 - Uncontrollable agents use pure Python. But each has EOA.
    - Therefore the core dynamics are still on-chain
-       
+
+### AgentWallet connects Python agents to web3 behavior
+
+- Each Agent has an AgentWallet.
+- AgentWallet is the main bridge between higher-level Python and EVM.
+- Each AgentWallet holds a Web3Wallet.
+- The Web3Wallet holds a private key and creates TXs.
+
 ### Controllables
 
 Controllable agents (structure): 
@@ -256,9 +263,9 @@ If you make changes here, it's a great idea to write unit tests to make sure you
 
 Before making changes, we recommend having a better understanding of how the system works. Which brings us to...
 
-## TokenSPICE Models
+## Schematics
 
-These are the models for simulating Ocean Market.
+Schematics to simulate Ocean Market. We've kept them in the context of system-level design (Web3 Sustainability Loop).
 
 ### Status quo model
 
@@ -269,6 +276,32 @@ These are the models for simulating Ocean Market.
 <img src="images/model-new1.png" width="100%">
 
 [Gslides](https://docs.google.com/presentation/d/14BB50dkGXTcPjlbrZilQ3WYnFLDetgfMS1BKGuMX8Q0/edit#slide=id.p1)
+
+# Backlog
+
+Work is currently geared towards verifying Ocean V4, which updates Ocean smart contracts for better IDOs through one-sided market makers and more.
+
+Here's progress on that front. (Last updated 2020-12-10).
+
+**Done so far:**
+- Wrote Ocean Market V4 smart contracts
+- Drew schematics for V3 & V4
+- Adapted TokenSPICE code
+  - Run EVM end-to-end via ganache
+  - Lets third-parties deploy to ganache, then uses at their ABIs
+  - ABIs are wrapped as classes, which are inside agents.
+  - Already include: Ocean datatokens, Ocean datatoken factory, Ocean friendly fork of Balancer AMM, Balancer AMM factory, etc. Have Unit tests for all.
+  - Started writing Python-level agent behaviors
+
+**Still to do:**
+- Finish writing Python-level agent behaviors for new agents
+- Wire new agents into system-level design 
+- Replicate Ocean V3 market dynamics: run simulations and tune as needed
+- Observe Ocean V4 market dynamics: point at Ocean V4 contracts and run!
+- Iterate on Ocean V4 sim and on design until satisfied
+
+And many future things beyond:)
+
 
 # A Final Word, or Two
 
