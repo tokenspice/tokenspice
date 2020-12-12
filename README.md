@@ -1,4 +1,4 @@
-**WARNING: this is WIP code. Pre-alpha yada yada. Keep your expectations low. But maybe parts are useful to some:)**
+**WARNING: this is WIP code. Prototype, not fully functional, etc. Keep your expectations low. But maybe parts are useful to some:)**
 
 # TokenSPICE : Token Simulator with Python or EVM agents
 
