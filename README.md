@@ -1,6 +1,6 @@
 **WARNING: this is WIP code. Prototype, not fully functional, etc. Keep your expectations low. But maybe parts are useful to some:)**
 
-# TokenSPICE : Token Simulator with Python or EVM agents
+# TokenSPICE : Token Simulator with EVM
 
 TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
 
