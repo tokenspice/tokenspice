@@ -68,13 +68,17 @@ def _make_info(private_key_name:str):
     info.pool = _createPool(DT=info.DT, web3_w=info.web3wallet)
     return info
 
+_CACHED_DT = None
 @enforce.runtime_validation
 def _createDT(web3_w:web3wallet.Web3Wallet):
-    DT_address = dtfactory.DTFactory().createToken(
-        'foo', 'DT1', 'DT1', toBase18(_DT_INIT),from_wallet=web3_w)
-    DT = datatoken.Datatoken(DT_address)
-    DT.mint(web3_w.address, toBase18(_DT_INIT), from_wallet=web3_w)
-    return DT
+    global _CACHED_DT
+    if _CACHED_DT is None:
+        DT_address = dtfactory.DTFactory().createToken(
+            'foo', 'DT1', 'DT1', toBase18(_DT_INIT),from_wallet=web3_w)
+        DT = datatoken.Datatoken(DT_address)
+        DT.mint(web3_w.address, toBase18(_DT_INIT), from_wallet=web3_w)
+        _CACHED_DT = DT
+    return _CACHED_DT
 
 @enforce.runtime_validation
 def _createPool(DT:datatoken.Datatoken, web3_w:web3wallet.Web3Wallet):
