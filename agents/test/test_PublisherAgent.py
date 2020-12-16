@@ -34,7 +34,7 @@ def test_createPoolAgent():
     assert isinstance(pool_agent2, PoolAgent)
     
 @enforce.runtime_validation
-def test_unstakeOCEAN():
+def test_unstakeOCEANsomewhere():
     state = MockState()
     pub_agent = PublisherAgent("pub1", USD=0.0, OCEAN=1000.0)
     
