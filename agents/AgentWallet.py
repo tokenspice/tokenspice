@@ -153,11 +153,15 @@ class AgentWallet:
         return pool.balanceOf_base(self._address)
                 
     def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
+        OCEAN = globaltokens.OCEANtoken()
+        OCEAN.approve(pool.address, toBase18(OCEAN_stake),
+                      from_wallet=self._web3wallet)
         pool.joinswapExternAmountIn(
-            tokenIn_address=globaltokens.OCEAN_address,
+            tokenIn_address=globaltokens.OCEAN_address(),
             tokenAmountIn_base=toBase18(OCEAN_stake),
             minPoolAmountOut_base=toBase18(0.0),
             from_wallet=self._web3wallet)
+        self._cached_OCEAN_base = None #reset due to write action
         
     def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
         pool.exitswapPoolAmountIn(
@@ -165,6 +169,7 @@ class AgentWallet:
             poolAmountIn_base=toBase18(BPT_unstake),
             minAmountOut_base=toBase18(0.0),
             from_wallet=self._web3wallet)
+        self._cached_OCEAN_base = None #reset due to write action
 
     #===================================================================
     def __str__(self) -> str:
@@ -172,6 +177,7 @@ class AgentWallet:
         s += ["AgentWallet={\n"]
         s += ['USD=%s' % asCurrency(self.USD())]
         s += ['; OCEAN=%.6f' % self.OCEAN()]
+        s += ['; DT=(not shown), BPT=(not shown)']
         s += ['; total_USD_in=%s' % asCurrency(self.totalUSDin())]
         s += ['; total_OCEAN_in=%.6f' % self.totalOCEANin()]
         s += [" /AgentWallet}"]
