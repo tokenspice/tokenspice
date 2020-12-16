@@ -2,7 +2,7 @@
 import enforce
 import pytest
 
-from agents import AgentWallet
+from agents import AgentWallet, BaseAgent
 from web3tools import web3util, web3wallet
 from web3tools.web3util import toBase18
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
@@ -21,6 +21,15 @@ _DT_STAKE = 20.0
 @pytest.fixture
 def alice_private_key() -> str:
     return _alice_info().private_key
+
+@pytest.fixture
+def alice_agent() -> str:
+    class MockAgent(BaseAgent.BaseAgent):
+        def takeStep(self, state):
+            pass
+    agent = MockAgent("agent1",USD=0.0,OCEAN=0.0)
+    agent._wallet = _alice_info().agent_wallet
+    return agent
 
 @pytest.fixture
 def alice_agent_wallet() -> AgentWallet.AgentWallet:

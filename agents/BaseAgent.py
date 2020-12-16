@@ -71,7 +71,7 @@ class BaseAgent(ABC, StrMixin):
         return self._wallet.BPT(pool)
 
     def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
-        self._wallet.stakeOCEAN(OCEAN_unstake, pool)
+        self._wallet.stakeOCEAN(OCEAN_stake, pool)
 
     def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
         self._wallet.unstakeOCEAN(BPT_unstake, pool)
