@@ -172,9 +172,11 @@ def test_BPT(alice_agent_wallet:AgentWallet, alice_pool:bpool.BPool):
 def test_stakeOCEAN():
     raise NotImplementedError()
 
-@pytest.mark.skip(reason="TODO FIXME")
-def test_unstakeOCEAN():
-    raise NotImplementedError()
+def test_unstakeOCEAN(alice_agent_wallet, alice_pool):
+    BPT_before:float = alice_agent_wallet.BPT(alice_pool)
+    alice_agent_wallet.unstakeOCEAN(BPT_unstake=20.0, pool=alice_pool)
+    BPT_after:float = alice_agent_wallet.BPT(alice_pool)
+    assert BPT_after == (BPT_before - 20.0)
 
     
 #===================================================================

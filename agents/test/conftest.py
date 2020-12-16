@@ -12,8 +12,6 @@ from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
 # 1. starts with an init OCEAN
 # 2. creates a DT, and mints an init amount
 # 3. creates a DT-OCEAN pool, and adds init liquidity
-#
-#bob:
 
 _OCEAN_INIT = 1000.0
 _OCEAN_STAKE = 200.0
