@@ -1,6 +1,9 @@
+import enforce
+
 from web3engine.btoken import BToken
 from web3tools import web3util, web3wallet
 
+@enforce.runtime_validation
 class Datatoken(BToken):
     def __init__(self, contract_address):
         abi = web3util.abi('DataTokenTemplate')

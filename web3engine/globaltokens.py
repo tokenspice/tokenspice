@@ -1,3 +1,4 @@
+import enforce
 import web3
 
 from util import constants
@@ -6,14 +7,16 @@ from web3engine import datatoken, dtfactory
 
 _MINTERS = {} # symbol : _Minter
 
+@enforce.runtime_validation
 def mintOCEAN(address:str, value_base:int):
     return _minter('OCEAN').mint(address, value_base)
 
-@property
+@enforce.runtime_validation
 def OCEAN_address() -> str:
     return OCEANtoken().address
 
 _OCEAN_TOKEN = None
+@enforce.runtime_validation
 def OCEANtoken() -> datatoken.Datatoken:
     global _OCEAN_TOKEN
     if _OCEAN_TOKEN is None:
@@ -21,12 +24,14 @@ def OCEANtoken() -> datatoken.Datatoken:
     return _OCEAN_TOKEN
 
 #===================================================================
+@enforce.runtime_validation
 def _minter(symbol:str):
     global _MINTERS
     if symbol not in _MINTERS:
         _MINTERS[symbol] = _Minter(symbol)
     return _MINTERS[symbol]
 
+@enforce.runtime_validation
 class _Minter:
     def __init__(self, symbol:str):
         #A random wallet won't have ETH for gas fees. So, use

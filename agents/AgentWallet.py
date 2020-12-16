@@ -161,8 +161,8 @@ class AgentWallet:
         
     def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
         pool.exitswapPoolAmountIn(
-            tokenOut_address=globaltokens.OCEAN_address,
-            poolAmountIn_base=BPT_unstake,
+            tokenOut_address=globaltokens.OCEAN_address(),
+            poolAmountIn_base=toBase18(BPT_unstake),
             minAmountOut_base=toBase18(0.0),
             from_wallet=self._web3wallet)
 

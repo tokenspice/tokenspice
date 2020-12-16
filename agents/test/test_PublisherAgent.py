@@ -33,7 +33,6 @@ def test_createPoolAgent():
     pool_agent2 = state.agents[pool_agent.name]
     assert isinstance(pool_agent2, PoolAgent)
     
-@pytest.mark.skip(reason="TODO FIXME")
 @enforce.runtime_validation
 def test_unstakeOCEAN():
     state = MockState()
@@ -51,7 +50,7 @@ def test_unstakeOCEAN():
     assert pub_agent._doUnstakeOCEAN(state) == True
 
     BPT_before = pub_agent.BPT(pool_agent.pool)
-    pub_agent._unstakeOCEAN(state)
+    pub_agent._unstakeOCEANsomewhere(state)
     BPT_after = pub_agent.BPT(pool_agent.pool)
     assert BPT_after == (1.0 - 0.10) * BPT_before 
     

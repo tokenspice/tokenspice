@@ -81,7 +81,7 @@ class PublisherAgent(BaseAgent):
             return False
         return self._s_since_unstake >= self._s_between_unstake
 
-    def _unstakeOCEAN(self, state):
+    def _unstakeOCEANsomewhere(self, state):
         """Choose what pool to unstake and by how much. Then do the action."""
         pool_agents = state.agents.filterByNonzeroStake(self)
         pool_agent = random.choice(list(pool_agents.values()))
