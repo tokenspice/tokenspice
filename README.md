@@ -21,15 +21,9 @@ Open a new terminal and:
 git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
 cd tokenspice
 
-#make sure we're not in env't; remove old env'ts
-conda deactivate
-conda remove --name tokenspiceenv --all
+#activate your environment and install the dependencies
+pip install -r requirements.txt
 
-#create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv
-conda env create -f environment.yml
-
-#activate env't
-conda activate tokenspiceenv
 ```
 
 ## Get Ganache running
@@ -37,9 +31,6 @@ conda activate tokenspiceenv
 Open a new terminal and:
 ```console
 cd tokenspice
-
-#active env't
-conda activate tokenspiceenv
 
 #run ganache
 ./ganache.py
