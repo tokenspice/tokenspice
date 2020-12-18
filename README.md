@@ -1,5 +1,10 @@
 **WARNING: this is WIP code. Prototype, not fully functional, etc. Keep your expectations low. But maybe parts are useful to some:)**
 
+# Notes by Longtail Financial
+This is a fork of OceanProtocol's Tokenspice2. This fork is streamlined for linux based environment development. We replaced the conda environment management with a requirements.txt file for pip. Additionally, we are migrating from enforce to mypy for static type validation. Currently all references to enforce have been commented out. 
+
+Longtail Financial is happy to provide community contributions to this software as it fits with the mission statement of LTF, seeding and optimizing the longtail economy. 
+
 # TokenSPICE v0.2: Token Simulator with EVM
 
 TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
