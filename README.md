@@ -32,6 +32,9 @@ Open a new terminal and:
 ```console
 cd tokenspice
 
+#make sure ganache is installed
+npm install -g ganache-cli
+
 #run ganache
 ./ganache.py
 ```
@@ -46,9 +49,6 @@ Open a separate terminal.
 ```console
 #Grab the contracts code from main, *OR* (see below)
 git clone https://github.com/oceanprotocol/contracts
-
-#OR grab from a branch. Here's Alex's V4 prototype branch
-git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
 ```
 
 Then, deploy. In that same terminal:
@@ -79,29 +79,6 @@ pytest test/test_btoken.py
 pytest
 ```
 
-# Updating Env't
-
-You don't need this info at the beginning, but it's good to know about as you make changes.
-
-To change dependencies, first update `environment.yml`. Then:
-```console
-#make sure env't is active
-conda activate tokenspiceenv
-
-#main update. The 'prune' part gets rid of unused pkgs
-conda env update --name tokenspiceenv --file environment.yml --prune
-```
-
-Leave environment:
-```console
-conda deactivate
-```
-
-Delete environment:
-```console
-conda remove --name tokenspiceenv --all
-```
-
 # C. Do Simulations, Make Changes
 
 ## Do Once, At Session Start
@@ -109,7 +86,7 @@ conda remove --name tokenspiceenv --all
 **Start chain.** Open a new terminal and:
 ```console
 cd ~/code/tokenspice
-conda activate tokenspiceenv
+#activate virtual environment
 ./ganache.py
 ```
 
@@ -124,9 +101,9 @@ npm run deploy
 **Update simulation code.** Open a new terminal. In it:
 ```console
 cd ~/code/tokenspice
-conda activate tokenspiceenv
-./emacs <path/foo.py>
-#then change foo.py in editor
+#activate virtualenvironment
+./nvim <path/run_x.py>
+#then change run_x.py in editor
 ```
 
 **Run tests.** In the same terminal as before:
