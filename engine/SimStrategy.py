@@ -2,14 +2,14 @@
 import logging
 log = logging.getLogger('simstrategy')
 
-import enforce
+# import enforce
 import typing
 
 from util.constants import *
 from util.mathutil import Range
 from util.strutil import StrMixin
     
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class SimStrategy(StrMixin):
     
     def __init__(self):
@@ -65,7 +65,7 @@ class SimStrategy(StrMixin):
     def setMaxTicks(self, n: int):
         self.max_ticks = n
 
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class Schedule(StrMixin):
     def __init__(self, interval: int, n_actions: int):
         if SAFETY:

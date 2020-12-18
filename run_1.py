@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 
-import enforce
+# import enforce
 import logging
 import os
 import sys
@@ -9,7 +9,7 @@ INFO = logging.INFO
 DEBUG = logging.DEBUG
 WARNING = logging.WARNING
 
-enforce.config({'enabled': False})  # Turn off runtime type-checking, for speed
+# enforce.config({'enabled': False})  # Turn off runtime type-checking, for speed
 
 if __name__== '__main__':            
     #set up logging

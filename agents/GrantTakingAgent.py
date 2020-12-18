@@ -1,12 +1,12 @@
 import logging
 log = logging.getLogger('agents')
 
-import enforce
+# import enforce
 import math
 
 from agents.BaseAgent import BaseAgent
         
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class GrantTakingAgent(BaseAgent):    
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)

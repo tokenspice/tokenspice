@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('marketagents')
 
-import enforce
+# import enforce
 import random
 
 from agents.BaseAgent import BaseAgent
@@ -9,7 +9,7 @@ from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
 from web3tools.web3util import toBase18
 from util import constants
                     
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class StakerspeculatorAgent(BaseAgent):
     """Speculates by staking and unstaking"""
     
