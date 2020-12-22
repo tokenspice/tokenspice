@@ -1,10 +1,8 @@
 import logging
 log = logging.getLogger('strutil')
 
-import enforce
 import inspect
 
-@enforce.runtime_validation
 class StrMixin(object):
     
     def __str__(self) -> str:
@@ -12,7 +10,7 @@ class StrMixin(object):
 
         newline = False
         if hasattr(self, '__STR_GIVES_NEWLINE__'):
-            newline = self.__STR_GIVES_NEWLINE__
+            newline = self.__STR_GIVES_NEWLINE__ # type: ignore[attr-defined]
         
         s = []
         s += ["%s={" % class_name]
@@ -48,7 +46,6 @@ class StrMixin(object):
         s += ["/%s}" % class_name]
         return "".join(s)
     
-@enforce.runtime_validation
 def dictStr(d : dict, newline=False) -> str:
     if not d:
         return "{}"
