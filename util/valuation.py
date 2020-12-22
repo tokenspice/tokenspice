@@ -25,15 +25,6 @@ def firmValuationPE(annual_revenue: float, p_e_ratio: float) -> float:
     """
     return annual_revenue * p_e_ratio
 
-def firmValuationPE(annual_revenue: float, p_e_ratio: float) -> float:
-    """
-    Valuation by price-to-sales (P/S) ratio.
-    Valuation is simply a multiple of sales. 
-    Datapoint: most blockchain co's are 30x-50x sales, as are high-flying 
-    startups like Zoom.
-    """
-    return annual_revenue * p_e_ratio
-
 def OCEANprice(firm_valuation: float, OCEAN_supply: float) -> float:
     """Return price of OCEAN token, in USD"""
     assert OCEAN_supply > 0
