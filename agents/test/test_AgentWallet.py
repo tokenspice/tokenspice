@@ -165,16 +165,30 @@ def test_DT(alice_agent_wallet:AgentWallet, alice_DT:datatoken.Datatoken):
     alice_DT_amt:float = alice_agent_wallet.DT(alice_DT)
     assert alice_DT_amt == (_DT_INIT - _DT_STAKE)
 
+@enforce.runtime_validation
 def test_BPT(alice_agent_wallet:AgentWallet, alice_pool:bpool.BPool):
     assert alice_agent_wallet.BPT(alice_pool) == 100.0
     
-@pytest.mark.skip(reason="TODO FIXME")
-def test_stakeOCEAN():
-    raise NotImplementedError()
+@enforce.runtime_validation
+def test_stakeOCEAN(alice_agent_wallet, alice_pool):
+    BPT_before:float = alice_agent_wallet.BPT(alice_pool)
+    OCEAN_before:float = alice_agent_wallet.OCEAN()
+    
+    alice_agent_wallet.stakeOCEAN(OCEAN_stake=20.0, pool=alice_pool)
+    
+    OCEAN_after:float = alice_agent_wallet.OCEAN()
+    BPT_after:float = alice_agent_wallet.BPT(alice_pool)
+    assert OCEAN_after == (OCEAN_before - 20.0)
+    assert BPT_after > BPT_before
 
-@pytest.mark.skip(reason="TODO FIXME")
-def test_unstakeOCEAN():
-    raise NotImplementedError()
+@enforce.runtime_validation
+def test_unstakeOCEAN(alice_agent_wallet, alice_pool):
+    BPT_before:float = alice_agent_wallet.BPT(alice_pool)
+    
+    alice_agent_wallet.unstakeOCEAN(BPT_unstake=20.0, pool=alice_pool)
+    
+    BPT_after:float = alice_agent_wallet.BPT(alice_pool)
+    assert BPT_after == (BPT_before - 20.0)
 
     
 #===================================================================

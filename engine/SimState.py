@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('simstate')
 
-import enforce
+# import enforce
 
 from agents import MinterAgents
 from agents.AgentDict import AgentDict
@@ -15,7 +15,7 @@ from util import mathutil, valuation
 from util.mathutil import Range
 from util.constants import *
 
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class SimState(object):
     
     def __init__(self, ss: SimStrategy.SimStrategy):

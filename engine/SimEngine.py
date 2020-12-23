@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('master')
 
-import enforce
+# import enforce
 import os
 
 from util import valuation
@@ -10,7 +10,7 @@ from util.strutil import prettyBigNum
 import engine.SimState as SimState
 from engine.SimStrategy import SimStrategy
 
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class SimEngine(object):
     """
     @description

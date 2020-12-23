@@ -1,5 +1,10 @@
 **WARNING: this is WIP code. Prototype, not fully functional, etc. Keep your expectations low. But maybe parts are useful to some:)**
 
+# Notes by Longtail Financial
+This is a fork of OceanProtocol's Tokenspice2. This fork is streamlined for linux based environment development. We replaced the conda environment management with a requirements.txt file for pip. Additionally, we are migrating from enforce to mypy for static type validation. Currently all references to enforce have been commented out. 
+
+Longtail Financial is happy to provide community contributions to this software as it fits with the mission statement of LTF, seeding and optimizing the longtail economy. 
+
 # TokenSPICE v0.2: Token Simulator with EVM
 
 TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
@@ -21,15 +26,9 @@ Open a new terminal and:
 git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
 cd tokenspice
 
-#make sure we're not in env't; remove old env'ts
-conda deactivate
-conda remove --name tokenspiceenv --all
+#activate your environment and install the dependencies
+pip install -r requirements.txt
 
-#create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv
-conda env create -f environment.yml
-
-#activate env't
-conda activate tokenspiceenv
 ```
 
 ## Get Ganache running
@@ -38,8 +37,8 @@ Open a new terminal and:
 ```console
 cd tokenspice
 
-#active env't
-conda activate tokenspiceenv
+#make sure ganache is installed
+npm install -g ganache-cli
 
 #run ganache
 ./ganache.py
@@ -55,9 +54,6 @@ Open a separate terminal.
 ```console
 #Grab the contracts code from main, *OR* (see below)
 git clone https://github.com/oceanprotocol/contracts
-
-#OR grab from a branch. Here's Alex's V4 prototype branch
-git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
 ```
 
 Then, deploy. In that same terminal:
@@ -79,36 +75,13 @@ Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/ar
 ## Test one EVM-based test
 
 ```console
-pytest test/test_btoken.py
+pytest web3engine/test/test_btoken.py
 ```
 
 ## Test that everything is working
 
 ```console
 pytest
-```
-
-# Updating Env't
-
-You don't need this info at the beginning, but it's good to know about as you make changes.
-
-To change dependencies, first update `environment.yml`. Then:
-```console
-#make sure env't is active
-conda activate tokenspiceenv
-
-#main update. The 'prune' part gets rid of unused pkgs
-conda env update --name tokenspiceenv --file environment.yml --prune
-```
-
-Leave environment:
-```console
-conda deactivate
-```
-
-Delete environment:
-```console
-conda remove --name tokenspiceenv --all
 ```
 
 # C. Do Simulations, Make Changes
@@ -118,7 +91,7 @@ conda remove --name tokenspiceenv --all
 **Start chain.** Open a new terminal and:
 ```console
 cd ~/code/tokenspice
-conda activate tokenspiceenv
+#activate virtual environment
 ./ganache.py
 ```
 
@@ -133,9 +106,9 @@ npm run deploy
 **Update simulation code.** Open a new terminal. In it:
 ```console
 cd ~/code/tokenspice
-conda activate tokenspiceenv
-./emacs <path/foo.py>
-#then change foo.py in editor
+#activate virtualenvironment
+./nvim <path/run_x.py>
+#then change run_x.py in editor
 ```
 
 **Run tests.** In the same terminal as before:

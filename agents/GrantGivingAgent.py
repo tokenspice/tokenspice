@@ -1,11 +1,11 @@
 import logging
 log = logging.getLogger('agents')
 
-import enforce
+# import enforce
 
 from agents.BaseAgent import BaseAgent
                         
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class GrantGivingAgent(BaseAgent):
     """
     Disburses funds at a fixed # evenly-spaced intervals.

@@ -1,0 +1,13 @@
+numpy
+matplotlib
+enforce
+pytest
+web3
+deprecated
+pycryptodomex
+tqdm
+pytz
+eth-account
+eth-keys
+eth-utils
+

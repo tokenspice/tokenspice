@@ -1,5 +1,7 @@
+# import enforce
 from web3tools import web3util, web3wallet
 
+# @enforce.runtime_validation
 class BToken:
     def __init__(self, contract_address):
         name = self.__class__.__name__

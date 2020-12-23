@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('marketagents')
 
-import enforce
+# import enforce
 import random
 
 from agents.BaseAgent import BaseAgent
@@ -11,7 +11,7 @@ from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18
         
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class PublisherAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
@@ -81,7 +81,7 @@ class PublisherAgent(BaseAgent):
             return False
         return self._s_since_unstake >= self._s_between_unstake
 
-    def _unstakeOCEAN(self, state):
+    def _unstakeOCEANsomewhere(self, state):
         """Choose what pool to unstake and by how much. Then do the action."""
         pool_agents = state.agents.filterByNonzeroStake(self)
         pool_agent = random.choice(list(pool_agents.values()))

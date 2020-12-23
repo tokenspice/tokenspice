@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('marketagents')
 
-import enforce
+# import enforce
 import random
 
 from agents.BaseAgent import BaseAgent
@@ -9,7 +9,7 @@ from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
 from web3tools.web3util import toBase18
 from util import constants
                     
-@enforce.runtime_validation
+# @enforce.runtime_validation
 class StakerspeculatorAgent(BaseAgent):
     """Speculates by staking and unstaking"""
     
@@ -37,15 +37,15 @@ class StakerspeculatorAgent(BaseAgent):
         pool_agents = state.agents.filterToPool().values()
         assert pool_agents, "need pools to be able to speculate"
         
-        pool_agent = random.choice(pool_agents)
-        BPT = self.BPT(pool_agent.pool)
+        pool = random.choice(list(pool_agents)).pool
+        BPT = self.BPT(pool)
         
         if BPT > 0.0 and random.random() < 0.50: #magic number
             BPT_sell = 0.10 * BPT #magic number
-            self.unstakeOCEAN(BPT_sell, pool_agent.pool)
+            self.unstakeOCEAN(BPT_sell, pool)
             
         else:
-            OCEAN = 0.10 * self.OCEAN() #magic number
-            pool_agent.stakeOCEAN(OCEAN_stake, pool_agent.pool)
+            OCEAN_stake = 0.10 * self.OCEAN() #magic number
+            self.stakeOCEAN(OCEAN_stake, pool)
         
             
