@@ -1,4 +1,3 @@
-import enforce
 import pytest
 
 from agents.PoolAgent import PoolAgent
@@ -11,13 +10,11 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 
-@enforce.runtime_validation
 def test_doCreatePool():
     agent = PublisherAgent("agent1", USD=0.0, OCEAN=0.0)
     c = agent._doCreatePool()
     assert c in [False, True]
     
-@enforce.runtime_validation
 def test_createPoolAgent():
     state = MockState()
     assert len(state.agents) == 0
@@ -33,7 +30,6 @@ def test_createPoolAgent():
     pool_agent2 = state.agents[pool_agent.name]
     assert isinstance(pool_agent2, PoolAgent)
     
-@enforce.runtime_validation
 def test_unstakeOCEANsomewhere():
     state = MockState()
     pub_agent = PublisherAgent("pub1", USD=0.0, OCEAN=1000.0)

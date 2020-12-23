@@ -1,4 +1,3 @@
-import enforce
 import math
 import pytest
 
@@ -6,25 +5,21 @@ from agents.MarketplacesAgent import MarketplacesAgent
 from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY, S_PER_YEAR
 
-@enforce.runtime_validation
 def test1_basic():
     a = MarketplacesAgent("mkts", 0.0, 0.0, "toll", 10.0, 0.1, 1)
     assert a.numMarketplaces() == 10.0
     assert a.revenuePerMarketplacePerSecond() == 0.1
 
-@enforce.runtime_validation
 def test2_growthRatePerTick_000():
     a = MarketplacesAgent("mkts", 0.0, 0.0, "toll", 10.0, 0.1, S_PER_YEAR)
     assert a._growthRatePerTick(0.0) == 0.0
     assert a._growthRatePerTick(0.25) == 0.25
 
-@enforce.runtime_validation
 def test3_growthRatePerTick_025():
     a = MarketplacesAgent("mkts", 0.0, 0.0, "toll", 10.0, 0.1, S_PER_DAY)
     assert a._growthRatePerTick(0.0) == 0.0
     assert a._growthRatePerTick(0.25) == _annualToDailyGrowthRate(0.25)
 
-@enforce.runtime_validation
 def test4_takeStep():
     class DummyTollAgent:
         def __init__(self):
@@ -78,7 +73,6 @@ def test4_takeStep():
     assert pytest.approx(a._revenue_per_marketplace_per_s) == \
         2.0*math.pow(1.0+g,1+1+10)
 
-@enforce.runtime_validation
 def _annualToDailyGrowthRate(annual_growth_rate: float) -> float:
     return math.pow(1.0 + annual_growth_rate, 1/365.0) - 1.0
 

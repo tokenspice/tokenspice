@@ -1,11 +1,9 @@
-import enforce
 
 from agents.BaseAgent import BaseAgent
 from agents.RouterAgent import RouterAgent
 from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY, S_PER_MONTH
 
-@enforce.runtime_validation
 def test1():
     #getting "tickOneMonthAgo" is tricky, so test it well
     ss = SimStrategy.SimStrategy()

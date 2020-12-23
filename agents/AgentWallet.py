@@ -1,7 +1,6 @@
 import logging
 log = logging.getLogger('wallet')
 
-# import enforce
 import typing
 
 from web3engine import bpool, datatoken, globaltokens
@@ -10,7 +9,6 @@ from util.strutil import asCurrency
 from web3tools import web3util, web3wallet
 from web3tools.web3util import fromBase18, toBase18
 
-# @enforce.runtime_validation
 class AgentWallet:
     """An AgentWallet holds balances of USD, OCEAN, and DTs for a given Agent.
     It also serves as a thin-layer conversion interface between
@@ -35,7 +33,7 @@ class AgentWallet:
         #OCEAN
         globaltokens.mintOCEAN(address=self._web3wallet.address,
                                value_base=toBase18(OCEAN))
-        self._cached_OCEAN_base = None #for speed
+        self._cached_OCEAN_base: typing.Union[int,None] = None #for speed
 
         #amount 
         self._total_USD_in:float = USD
@@ -69,8 +67,7 @@ class AgentWallet:
         self._USD -= amt
 
     def transferUSD(self, dst_wallet, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWallet) or \
-            isinstance(dst_wallet, BurnWallet)
+        assert isinstance(dst_wallet, AgentWallet)
         self.withdrawUSD(amt)
         dst_wallet.depositUSD(amt)
 
@@ -121,8 +118,7 @@ class AgentWallet:
         globaltokens.OCEANtoken().transfer(
             dst_address, amt_base, self._web3wallet)
         
-        if isinstance(dst_wallet, AgentWallet):
-            dst_wallet._total_OCEAN_in += amt
+        dst_wallet._total_OCEAN_in += amt
         
         self._cached_OCEAN_base = None #reset due to write action
         dst_wallet._cached_OCEAN_base = None #""
@@ -191,4 +187,7 @@ class BurnWallet:
     """
     def __init__(self):
         self._address = constants.BURN_ADDRESS
+        self._total_OCEAN_in:float = 0.0
+        self._cached_OCEAN_base: typing.Union[int,None] = None #for speed
+
 _BURN_WALLET = BurnWallet()

@@ -1,15 +1,12 @@
-import enforce
 import pytest
 
 from agents.BaseAgent import *
 from agents.test.conftest import _DT_INIT, _DT_STAKE 
 
-@enforce.runtime_validation
 class MyTestAgent(BaseAgent):
     def takeStep(self, state):
         pass
 
-@enforce.runtime_validation
 def testInit():
     agent = MyTestAgent("agent1", USD=1.1, OCEAN=1.2)
     assert agent.name == "agent1"
@@ -17,7 +14,6 @@ def testInit():
     assert agent.OCEAN() == 1.2
     assert "MyTestAgent" in str(agent)
 
-@enforce.runtime_validation
 def testReceiveAndSend():
     #agents are of arbitary classes
     agent = MyTestAgent("agent1", USD=0.0, OCEAN=3.30)
@@ -51,15 +47,12 @@ def testReceiveAndSend():
     
 #===================================================================
 #datatoken and pool-related
-@enforce.runtime_validation
 def test_DT(alice_agent, alice_DT:datatoken.Datatoken):    
     assert alice_agent.DT(alice_DT) == (_DT_INIT - _DT_STAKE)
 
-@enforce.runtime_validation
 def test_BPT(alice_agent, alice_pool:bpool.BPool):    
     assert alice_agent.BPT(alice_pool) == 100.0
 
-@enforce.runtime_validation
 def test_stakeOCEAN(alice_agent, alice_pool):    
     BPT_before:float = alice_agent.BPT(alice_pool)
     OCEAN_before:float = alice_agent.OCEAN()
@@ -71,7 +64,6 @@ def test_stakeOCEAN(alice_agent, alice_pool):
     assert OCEAN_after == (OCEAN_before - 20.0)
     assert BPT_after > BPT_before
 
-@enforce.runtime_validation
 def test_unstakeOCEAN(alice_agent, alice_pool):
     BPT_before:float = alice_agent.BPT(alice_pool)
     

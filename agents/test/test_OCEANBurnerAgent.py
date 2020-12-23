@@ -1,10 +1,8 @@
-import enforce
 import pytest
 
 from agents import BaseAgent, OCEANBurnerAgent
 from engine import SimState, SimStrategy
 
-@enforce.runtime_validation
 def test_fixedOCEANprice():
     class DummySimState:
         def __init__(self):
@@ -28,7 +26,6 @@ def test_fixedOCEANprice():
     assert state._total_OCEAN_burned_USD == 30.0
     assert state._total_OCEAN_burned == 15.0
 
-@enforce.runtime_validation
 def test_changingOCEANprice():
     class DummySimState:
         def __init__(self):

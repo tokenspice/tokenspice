@@ -2,16 +2,14 @@ import logging
 log = logging.getLogger('baseagent')
 
 from abc import ABC, abstractmethod
-# import enforce
 import typing
 
-from agents import BaseAgent, AgentWallet
+from agents import AgentWallet
 from web3engine import bpool, datatoken, globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
 from web3tools.web3util import toBase18
 
-# @enforce.runtime_validation
 class BaseAgent(ABC, StrMixin):
     """This can be a data buyer, publisher, etc. Sub-classes implement each."""
        
@@ -31,10 +29,10 @@ class BaseAgent(ABC, StrMixin):
     #=======================================================================
     #USD-related
     def USD(self) -> float:
-        return self._wallet.USD() 
+        return self._wallet.USD()
     
     def receiveUSD(self, amount: float) -> None:
-        self._wallet.depositUSD(amount) 
+        self._wallet.depositUSD(amount)
 
     def _transferUSD(self, receiving_agent, amount: float) -> None:
         """set receiver to None to model spending, without modeling receiver"""

@@ -1,5 +1,4 @@
 
-import enforce
 import pytest
 
 from agents import AgentWallet, BaseAgent
@@ -47,11 +46,9 @@ def alice_DT() -> datatoken.Datatoken:
 def alice_pool():
     return _alice_info().pool
 
-@enforce.runtime_validation
 def _alice_info():
     return _make_info(private_key_name='TEST_PRIVATE_KEY1')
 
-@enforce.runtime_validation
 def _make_info(private_key_name:str):
     
     class _Info:
@@ -69,7 +66,6 @@ def _make_info(private_key_name:str):
     return info
 
 _CACHED_DT = None
-@enforce.runtime_validation
 def _createDT(web3_w:web3wallet.Web3Wallet):
     global _CACHED_DT
     if _CACHED_DT is None:
@@ -80,7 +76,6 @@ def _createDT(web3_w:web3wallet.Web3Wallet):
         _CACHED_DT = DT
     return _CACHED_DT
 
-@enforce.runtime_validation
 def _createPool(DT:datatoken.Datatoken, web3_w:web3wallet.Web3Wallet):
     OCEAN = globaltokens.OCEANtoken()
     

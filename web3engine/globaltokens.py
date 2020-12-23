@@ -16,7 +16,7 @@ def OCEAN_address() -> str:
     return OCEANtoken().address
 
 _OCEAN_TOKEN = None
-# @enforce.runtime_validation
+
 def OCEANtoken() -> datatoken.Datatoken:
     global _OCEAN_TOKEN
     if _OCEAN_TOKEN is None:

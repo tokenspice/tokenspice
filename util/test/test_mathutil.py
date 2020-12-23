@@ -1,11 +1,8 @@
-import enforce
-from enforce.exceptions import RuntimeTypeError
 import numpy
 import pytest
         
 from util.mathutil import *
 
-@enforce.runtime_validation
 def isNumber():
     for x in [-2, 0, 2, 20000,
               -2.1, -2.0, 0.0, 2.0, 2.1, 2e6]:
@@ -14,7 +11,6 @@ def isNumber():
     for x in [[], [1,2], {}, {1:2, 2:3}, None, "", "foo"]:
         assert not isNumber(x)
 
-@enforce.runtime_validation
 def testIntInStr():        
     assert intInStr("123") == 123
     assert intInStr("sdds12") == 12
@@ -30,7 +26,6 @@ def testIntInStr():
         with pytest.raises(RuntimeTypeError):
             intInStr(v)
 
-@enforce.runtime_validation
 def testRange():
     r = Range(2.2)
     p = r.drawRandomPoint()
@@ -55,7 +50,6 @@ def testRange():
     with pytest.raises(RuntimeTypeError): Range("foo")
     with pytest.raises(RuntimeTypeError): Range(3.0, "foo")
 
-@enforce.runtime_validation
 def testRangeStr():
     r = Range(2.2)
     s = str(r)
@@ -64,7 +58,6 @@ def testRangeStr():
     assert "2.2" in s
     assert "Range}" in s
 
-@enforce.runtime_validation
 def testRandunif():
     for i in range(20):
         #happy path
@@ -94,7 +87,6 @@ def testRandunif():
     with pytest.raises(RuntimeTypeError): randunif(0, 3.0)
     with pytest.raises(RuntimeTypeError): randunif(3.0, "foo")
 
-@enforce.runtime_validation
 def test_round_sig():
     assert round_sig(123456, 1) == 100000
     assert round_sig(123456, 2) == 120000

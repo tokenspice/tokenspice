@@ -1,11 +1,8 @@
-import enforce
-from enforce.exceptions import RuntimeTypeError
 
 from agents import MinterAgents
 from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY
 
-@enforce.runtime_validation
 def testBasicInit():
     ss = SimStrategy.SimStrategy()
     state = SimState.SimState(ss)
@@ -14,13 +11,11 @@ def testBasicInit():
 
     assert state.numAgents() > 0
 
-@enforce.runtime_validation
 def testGetAgent():
     ss = SimStrategy.SimStrategy()
     state = SimState.SimState(ss)
     assert id(state.getAgent("ocean_dao")) == id(state.agents["ocean_dao"])
 
-@enforce.runtime_validation
 def testMoneyFlow1():
     ss = SimStrategy.SimStrategy()
     state = SimState.SimState(ss)
@@ -41,7 +36,6 @@ def testMoneyFlow1():
     state.getAgent("opc_workers").takeStep(state)
     assert state.getAgent("opc_workers").USD() == 0.0
 
-@enforce.runtime_validation
 def testMoneyFlow2():
     ss = SimStrategy.SimStrategy()
     state = SimState.SimState(ss)

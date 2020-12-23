@@ -1,9 +1,7 @@
-import enforce
 
 from agents import BaseAgent, GrantTakingAgent
 from engine import SimState, SimStrategy
 
-@enforce.runtime_validation
 def test1():
     class DummySimState:
         def __init__(self):

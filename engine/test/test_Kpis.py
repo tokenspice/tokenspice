@@ -1,18 +1,15 @@
-import enforce
 import pytest
 
 from engine.Kpis import KPIs
 from engine.SimStrategy import SimStrategy
 from util.constants import S_PER_DAY
     
-@enforce.runtime_validation
 class BaseDummyMarketplacesAgent:
     def numMarketplaces(self) -> float:
         return 0.0
     def revenuePerMarketplacePerSecond(self) -> float:
         return 0.0
 
-@enforce.runtime_validation
 class BaseDummySimState:
     def __init__(self):
         self._marketplaces1_agent = None
@@ -33,26 +30,21 @@ class BaseDummySimState:
     def totalOCEANburnedUSD(self) -> float:
         return 0.0
 
-@enforce.runtime_validation
 def testRatio_happypath():
     _testRatio(monthly_RND=10.0, monthly_sales=20.0, target=0.5)
 
-@enforce.runtime_validation
 def testRatio_zero_RND():
     _testRatio(monthly_RND=0.0, monthly_sales=20.0, target=0.0)
 
-@enforce.runtime_validation
 def testRatio_do_not_rail_to_less_than_1():
     _testRatio(monthly_RND=1000.0, monthly_sales=20.0, target=50.0)
 
-@enforce.runtime_validation
 def _testRatio(monthly_RND, monthly_sales, target):
     kpis = KPIs(time_step=1)
     kpis.grantTakersMonthlyRevenueNow = lambda : monthly_RND
     kpis.oceanMonthlyRevenueNow = lambda : monthly_sales
     assert kpis.mktsRNDToSalesRatio() == target
 
-@enforce.runtime_validation
 def testGrantTakersRevenue():        
     class DummySimState(BaseDummySimState):
         def __init__(self, ss):
@@ -101,7 +93,6 @@ def testGrantTakersRevenue():
         kpis.takeStep(state)
     assert pytest.approx(kpis.grantTakersMonthlyRevenueNow()) == 3e3
 
-@enforce.runtime_validation
 def test_mktsRevenueAndValuation():
     class DummyMarketplacesAgent(BaseDummyMarketplacesAgent):
         def numMarketplaces(self) -> float:
@@ -176,7 +167,6 @@ def test_mktsRevenueAndValuation():
     #valuations
     assert kpis.valuationPS(30.0) == (120.0 * 30.0)
 
-@enforce.runtime_validation
 def test_mintAndBurn():
     class DummyMarketplacesAgent(BaseDummyMarketplacesAgent):
         def numMarketplaces(self) -> float:
