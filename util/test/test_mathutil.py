@@ -27,7 +27,7 @@ def testIntInStr():
 
     with pytest.raises(ValueError): intInStr("")
     for v in [32, None, {}, []]:
-        with pytest.raises(RuntimeTypeError):
+        with pytest.raises(TypeError):
             intInStr(v)
 
 @enforce_types
@@ -51,9 +51,9 @@ def testRange():
 
     with pytest.raises(AssertionError): Range(3.0, 1.0)
 
-    with pytest.raises(RuntimeTypeError): Range(3)
-    with pytest.raises(RuntimeTypeError): Range("foo")
-    with pytest.raises(RuntimeTypeError): Range(3.0, "foo")
+    with pytest.raises(TypeError): Range(3)
+    with pytest.raises(TypeError): Range("foo")
+    with pytest.raises(TypeError): Range(3.0, "foo")
 
 @enforce_types
 def testRangeStr():
@@ -90,9 +90,9 @@ def testRandunif():
     #exceptions
     with pytest.raises(AssertionError): p = randunif(0.0, -1.0)
 
-    with pytest.raises(RuntimeTypeError): randunif(0.0, 3)
-    with pytest.raises(RuntimeTypeError): randunif(0, 3.0)
-    with pytest.raises(RuntimeTypeError): randunif(3.0, "foo")
+    with pytest.raises(TypeError): randunif(0.0, 3)
+    with pytest.raises(TypeError): randunif(0, 3.0)
+    with pytest.raises(TypeError): randunif(3.0, "foo")
 
 @enforce_types
 def test_round_sig():
