@@ -1,5 +1,5 @@
 from enforce_typing import enforce_types
-from enforce.exceptions import RuntimeTypeError
+
 import numpy
 import pytest
         

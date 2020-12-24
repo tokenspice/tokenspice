@@ -1,5 +1,4 @@
 from enforce_typing import enforce_types
-from enforce.exceptions import RuntimeTypeError
 
 from agents import MinterAgents
 from engine import SimState, SimStrategy
