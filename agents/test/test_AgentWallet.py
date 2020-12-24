@@ -3,7 +3,7 @@ import pytest
 
 from agents.AgentWallet import *
 from agents.test.conftest import _DT_INIT, _DT_STAKE 
-from web3engine import bfactory, bpool, dtfactory, datatoken
+from web3engine import bfactory, bpool, datatoken
 
 #=======================================================================
 #__init__ related
