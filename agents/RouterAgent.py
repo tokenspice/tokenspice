@@ -2,6 +2,7 @@ import logging
 log = logging.getLogger('agents')
 
 from enforce_typing import enforce_types # type: ignore[import]
+from typing import List
 import math
 
 from agents.BaseAgent import BaseAgent
@@ -19,8 +20,8 @@ class RouterAgent(BaseAgent):
         self._receiving_agents = receiving_agents
 
         #track amounts over time
-        self._USD_per_tick = [] #the next tick will record what's in self
-        self._OCEAN_per_tick = [] # ""
+        self._USD_per_tick: List[float] = [] #the next tick will record what's in self
+        self._OCEAN_per_tick: List[float] = [] # ""
         
     def takeStep(self, state) -> None:
         #record what we had up until this point

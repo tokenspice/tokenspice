@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from enforce_typing import enforce_types # type: ignore[import]
 import typing
 
-from agents import BaseAgent, AgentWallet
+from agents import AgentWallet
 from web3engine import bpool, datatoken, globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
