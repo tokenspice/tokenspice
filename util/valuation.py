@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('valuation')
 
-import enforce
+import enforce_typing
 import typing
 
 from util.strutil import asCurrency 

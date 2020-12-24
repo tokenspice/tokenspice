@@ -1,4 +1,4 @@
-import enforce
+from enforce_typing import enforce_types
 import pytest
 
 from agents.AgentDict import AgentDict
@@ -18,7 +18,7 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
         
-@enforce.runtime_validation
+@enforce_types
 def test_doSpeculateAction(alice_pool):
     state = MockState()
     
@@ -38,7 +38,7 @@ def test_doSpeculateAction(alice_pool):
     
     assert agent._doSpeculateAction(state) 
 
-@enforce.runtime_validation
+@enforce_types
 def test_speculateAction_nopools(alice_pool):
     state = MockState()
     
@@ -47,7 +47,7 @@ def test_speculateAction_nopools(alice_pool):
     with pytest.raises(AssertionError):
         agent._speculateAction(state) #error because no pools
 
-@enforce.runtime_validation
+@enforce_types
 def test_speculateAction_withpools(alice_pool):
     state = MockState()
     state.agents["pool1"] = PoolAgent("pool1", alice_pool)
@@ -60,7 +60,7 @@ def test_speculateAction_withpools(alice_pool):
     assert agent.OCEAN() < 1000.0
     assert agent.BPT(alice_pool) > 0.0
 
-@enforce.runtime_validation
+@enforce_types
 def test_take_step(alice_pool):
     state = MockState()
     state.agents["pool1"] = PoolAgent("pool1", alice_pool)

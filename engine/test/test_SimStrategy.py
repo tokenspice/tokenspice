@@ -1,17 +1,17 @@
-import enforce
+from enforce_typing import enforce_types
 from enforce.exceptions import RuntimeTypeError
 import pytest
 import sys
 
 from engine.SimStrategy import *
 
-@enforce.runtime_validation
+@enforce_types
 def testBasic():
     ss = SimStrategy()
     assert ss.save_interval >= 1
     assert ss.max_ticks > 0
 
-@enforce.runtime_validation
+@enforce_types
 def testAnnualMktsGrowthRate():
     ss = SimStrategy()
     assert hasattr(ss, 'growth_rate_if_0_sales')
@@ -28,18 +28,18 @@ def testAnnualMktsGrowthRate():
         (-0.25 + 0.75/2.0 + 0.75/4.0)
     assert ss.annualMktsGrowthRate(1e6) == 0.5
 
-@enforce.runtime_validation
+@enforce_types
 def testSetMaxTicks():
     ss = SimStrategy()
     ss.setMaxTicks(14)
     assert ss.max_ticks == 14
 
-@enforce.runtime_validation
+@enforce_types
 def testStr():
     ss = SimStrategy()
     assert "SimStrategy" in str(ss)
 
-@enforce.runtime_validation
+@enforce_types
 def testSchedule():
     s = Schedule(30, 5)
     assert s.interval == 30

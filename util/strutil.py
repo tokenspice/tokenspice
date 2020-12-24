@@ -1,10 +1,10 @@
 import logging
 log = logging.getLogger('strutil')
 
-import enforce
+from enforce_typing import enforce_types
 import inspect
 
-@enforce.runtime_validation
+@enforce_types
 class StrMixin(object):
     
     def __str__(self) -> str:
@@ -48,7 +48,7 @@ class StrMixin(object):
         s += ["/%s}" % class_name]
         return "".join(s)
     
-@enforce.runtime_validation
+@enforce_types
 def dictStr(d : dict, newline=False) -> str:
     if not d:
         return "{}"

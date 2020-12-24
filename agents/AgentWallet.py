@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('wallet')
 
-import enforce
+from enforce_typing import enforce_types
 import typing
 
 from web3engine import bpool, datatoken, globaltokens
@@ -10,7 +10,7 @@ from util.strutil import asCurrency
 from web3tools import web3util, web3wallet
 from web3tools.web3util import fromBase18, toBase18
 
-@enforce.runtime_validation
+@enforce_types
 class AgentWallet:
     """An AgentWallet holds balances of USD, OCEAN, and DTs for a given Agent.
     It also serves as a thin-layer conversion interface between

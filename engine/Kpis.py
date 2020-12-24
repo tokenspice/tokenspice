@@ -1,12 +1,12 @@
 import logging
 log = logging.getLogger('kpis')
 
-import enforce
+from enforce_typing import enforce_types
 
 from util import valuation
 from util.constants import * 
 
-@enforce.runtime_validation
+@enforce_types
 class KPIs:
     def __init__(self, time_step: int):
         self._time_step = time_step #seconds per tick
@@ -197,7 +197,7 @@ class KPIs:
         g = rev2 / rev1 - 1.0
         return g
         
-    @enforce.runtime_validation
+    @enforce_types
     def valuationPS(self, p_s_ratio: float) -> float:
         """Use Price/Sales ratio to compute valuation."""
         annual_revenue = self.oceanAnnualRevenueNow()

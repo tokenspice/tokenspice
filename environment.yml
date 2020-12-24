@@ -4,7 +4,7 @@ dependencies:
   - numpy
   - matplotlib
   - pip:
-    - enforce
+    - enforce-typing
     - pytest
     - web3
     - deprecated

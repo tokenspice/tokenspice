@@ -1,7 +1,7 @@
-import enforce
+from enforce_typing import enforce_types
 from web3tools import web3util, web3wallet
 
-@enforce.runtime_validation
+@enforce_types
 class BToken:
     def __init__(self, contract_address):
         name = self.__class__.__name__

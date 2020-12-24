@@ -1,11 +1,11 @@
-import enforce
+from enforce_typing import enforce_types
 
 from agents.BaseAgent import BaseAgent
 from agents.GrantGivingAgent import GrantGivingAgent
 from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY
 
-@enforce.runtime_validation
+@enforce_types
 def test1():
     ss = SimStrategy.SimStrategy()
     assert hasattr(ss, 'time_step')

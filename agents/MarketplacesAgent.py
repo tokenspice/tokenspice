@@ -1,14 +1,14 @@
 import logging
 log = logging.getLogger('agents')
 
-import enforce
+from enforce_typing import enforce_types
 import math
 
 from agents.BaseAgent import BaseAgent
 from util.constants import S_PER_YEAR
     
 
-@enforce.runtime_validation
+@enforce_types
 class MarketplacesAgent(BaseAgent):
     def __init__(self,
                  name: str, USD: float, OCEAN: float,

@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('marketagents')
 
-import enforce
+from enforce_typing import enforce_types
 import random
 
 from agents.BaseAgent import BaseAgent
@@ -11,7 +11,7 @@ from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18
         
-@enforce.runtime_validation
+@enforce_types
 class PublisherAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)

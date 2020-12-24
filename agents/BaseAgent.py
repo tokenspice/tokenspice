@@ -2,7 +2,7 @@ import logging
 log = logging.getLogger('baseagent')
 
 from abc import ABC, abstractmethod
-import enforce
+from enforce_typing import enforce_types
 import typing
 
 from agents import BaseAgent, AgentWallet
@@ -11,7 +11,7 @@ from util.constants import SAFETY
 from util.strutil import StrMixin
 from web3tools.web3util import toBase18
 
-@enforce.runtime_validation
+@enforce_types
 class BaseAgent(ABC, StrMixin):
     """This can be a data buyer, publisher, etc. Sub-classes implement each."""
        

@@ -1,11 +1,11 @@
 import logging
 log = logging.getLogger('agents')
 
-import enforce
+from enforce_typing import enforce_types
 
 from agents.BaseAgent import BaseAgent
 
-@enforce.runtime_validation
+@enforce_types
 class OCEANBurnerAgent(BaseAgent):
     def takeStep(self, state):
         if self.USD() > 0.0:

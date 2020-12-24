@@ -1,10 +1,10 @@
-import enforce
+from enforce_typing import enforce_types
 import typing
 
 from web3tools import web3util, web3wallet
 from .btoken import BToken
 
-@enforce.runtime_validation
+@enforce_types
 class BPool(BToken):
     def __init__(self, contract_address):
         super().__init__(contract_address)

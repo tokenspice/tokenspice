@@ -1,4 +1,4 @@
-import enforce
+from enforce_typing import enforce_types
 
 from agents import BaseAgent
 from engine import SimState, SimStrategy
@@ -8,7 +8,7 @@ from util.constants import BITCOIN_NUM_HALF_LIVES, \
 
 #comment out some unused agents for now, simply for faster unit tests
 
-# @enforce.runtime_validation
+# @enforce_types
 # def testOCEANLinearMinterAgent():
 #     ss = SimStrategy.SimStrategy()
 #     assert hasattr(ss, 'time_step')
@@ -57,20 +57,20 @@ from util.constants import BITCOIN_NUM_HALF_LIVES, \
 #     assert a1.OCEAN() == 20.0
 #     assert state._total_OCEAN_minted == 20.0
 
-# @enforce.runtime_validation
+# @enforce_types
 # def test_funcMinter_exp():
 #     func = ExpFunc(H=4.0)
 #     _test_funcMinter(func)
 
 
-@enforce.runtime_validation
+@enforce_types
 def test_funcMinter_rampedExp():
     func = RampedExpFunc(H=4.0,
                          T0=0.0, T1=0.5, T2=1.0, T3=2.0,
                          M1=0.10, M2=0.25, M3=0.50)
     _test_funcMinter(func)
 
-@enforce.runtime_validation
+@enforce_types
 def _test_funcMinter(func):
     #Simulate with realistic conditions: half-life, OCEAN to mint,
     #  target num half-lives (34, like Bitcoin).

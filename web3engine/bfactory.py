@@ -1,9 +1,9 @@
-import enforce
+from enforce_typing import enforce_types
 import warnings
 
 from web3tools import web3util, web3wallet
 
-@enforce.runtime_validation
+@enforce_types
 class BFactory:
     def __init__(self):
         name = self.__class__.__name__

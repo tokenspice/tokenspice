@@ -1,11 +1,11 @@
-import enforce
+from enforce_typing import enforce_types
 
 from agents.PublisherAgent import PublisherAgent
 from agents.PoolAgent import PoolAgent
 from agents.StakerspeculatorAgent import StakerspeculatorAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 
-@enforce.runtime_validation
+@enforce_types
 class AgentDict(dict):
     """Dict of Agent"""
     

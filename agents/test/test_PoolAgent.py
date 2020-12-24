@@ -1,4 +1,4 @@
-import enforce
+from enforce_typing import enforce_types
 
 from agents import PoolAgent
 from web3engine import bpool, datatoken, globaltokens
@@ -6,7 +6,7 @@ from web3engine import bpool, datatoken, globaltokens
 class MockState:
     pass
         
-@enforce.runtime_validation
+@enforce_types
 def test_conftest(alice_pool:bpool.BPool, alice_DT:datatoken.Datatoken):
     #are alice_pool's datatokens the same as alice_DT?
     OCEAN_address = globaltokens.OCEAN_address()
@@ -14,7 +14,7 @@ def test_conftest(alice_pool:bpool.BPool, alice_DT:datatoken.Datatoken):
                              if a != OCEAN_address][0]
     assert alice_pool_DT_address == alice_DT.address
     
-@enforce.runtime_validation
+@enforce_types
 def test1(alice_pool, alice_DT):    
     alice_pool_agent = PoolAgent.PoolAgent("pool_agent", alice_pool)
     assert alice_pool_agent.pool.address == alice_pool.address

@@ -12,12 +12,12 @@ log = logging.getLogger('constants')
 
 import math
 
-import enforce
+from  enforce_typing import enforce_types
 if not SAFETY:
     # do nothing, just return the original function
     def noop(f):
         return f
-    enforce.runtime_validation = noop
+    enforce_types = noop
 
 #big numbers
 INF = math.inf
