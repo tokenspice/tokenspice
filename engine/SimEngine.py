@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('master')
 
-from enforce_typing import enforce_types
+from enforce_typing import enforce_types # type: ignore[import]
 import os
 
 from util import valuation

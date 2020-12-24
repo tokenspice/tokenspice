@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('agents')
 
-from enforce_typing import enforce_types
+from enforce_typing import enforce_types # type: ignore[import]
 
 from agents.BaseAgent import BaseAgent
                         

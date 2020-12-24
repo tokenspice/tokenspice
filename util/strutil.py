@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('strutil')
 
-from enforce_typing import enforce_types
+from enforce_typing import enforce_types # type: ignore[import]
 import inspect
 
 @enforce_types
@@ -12,7 +12,7 @@ class StrMixin(object):
 
         newline = False
         if hasattr(self, '__STR_GIVES_NEWLINE__'):
-            newline = self.__STR_GIVES_NEWLINE__
+            newline = self.__STR_GIVES_NEWLINE__ # type: ignore [attr-defined]
         
         s = []
         s += ["%s={" % class_name]

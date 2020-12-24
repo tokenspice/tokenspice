@@ -1,9 +1,9 @@
 import logging
 log = logging.getLogger('mathutil')
 
-from enforce_typing import enforce_types
+from enforce_typing import enforce_types # type: ignore[import]
 from math import log10, floor
-import numpy
+import numpy # type: ignore[import]
 import random
 import re
 import typing

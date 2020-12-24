@@ -1,4 +1,4 @@
-from enforce_typing import enforce_types
+from enforce_typing import enforce_types # type: ignore[import]
 import pytest
 
 from agents import BaseAgent, OCEANBurnerAgent

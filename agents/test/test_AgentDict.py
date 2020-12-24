@@ -1,6 +1,6 @@
 from agents.AgentDict import AgentDict
 
-from enforce_typing import enforce_types
+from enforce_typing import enforce_types # type: ignore[import]
 
 @enforce_types
 def test1():

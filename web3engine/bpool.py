@@ -1,4 +1,4 @@
-from enforce_typing import enforce_types
+from enforce_typing import enforce_types # type: ignore[import]
 import typing
 
 from web3tools import web3util, web3wallet
