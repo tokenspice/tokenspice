@@ -1,3 +1,7 @@
+# Local drivers
+driver.py
+spirit_driver.py
+
 *.pyc
 *~
 .pytest_cache/
@@ -8,3 +12,5 @@ util/test/__pycache__/
 results/
 tags
 .ipynb_checkpoints
+example_makefile
+.vim/
