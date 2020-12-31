@@ -2,26 +2,32 @@ import logging
 log = logging.getLogger('baseagent')
 
 from abc import ABC, abstractmethod
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 import typing
 
-from agents import BaseAgent, AgentWallet
+from agents import AgentWallet
 from web3engine import bpool, datatoken, globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
 from web3tools.web3util import toBase18
 
-@enforce.runtime_validation
+@enforce_types
 class BaseAgent(ABC, StrMixin):
     """This can be a data buyer, publisher, etc. Sub-classes implement each."""
        
-    def __init__(self, name: str, USD: float, OCEAN: float):
+    def __init__(self, name: str, USD: float, OCEAN: float, private_key: bool=None):
         self.name = name
-        self._wallet = AgentWallet.AgentWallet(USD, OCEAN)
+        self._wallet = AgentWallet.AgentWallet(USD, OCEAN, private_key=private_key)
 
         #postconditions
-        assert self.USD() == USD
-        assert self.OCEAN() == OCEAN
+        if private_key == None:
+            assert self.USD() == USD
+            assert self.OCEAN() == OCEAN
+        else:
+            # TODO
+            # This is kind of weak - we should test for sum of current and previous
+            assert self.USD() >= USD
+            assert self.OCEAN() >= OCEAN
 
     #=======================================================================
     @abstractmethod

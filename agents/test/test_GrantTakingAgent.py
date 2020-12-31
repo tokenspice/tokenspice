@@ -1,9 +1,9 @@
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 
 from agents import BaseAgent, GrantTakingAgent
 from engine import SimState, SimStrategy
 
-@enforce.runtime_validation
+@enforce_types
 def test1():
     class DummySimState:
         def __init__(self):

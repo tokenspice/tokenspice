@@ -1,9 +1,9 @@
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 
 from web3engine.btoken import BToken
 from web3tools import web3util, web3wallet
 
-@enforce.runtime_validation
+@enforce_types
 class Datatoken(BToken):
     def __init__(self, contract_address):
         abi = web3util.abi('DataTokenTemplate')

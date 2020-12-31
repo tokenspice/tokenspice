@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('marketagents')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 import random
 
 from agents.BaseAgent import BaseAgent
@@ -11,7 +11,7 @@ from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18
         
-@enforce.runtime_validation
+@enforce_types
 class PublisherAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
@@ -32,12 +32,12 @@ class PublisherAgent(BaseAgent):
 
         if self._doUnstakeOCEAN(state):
             self._s_since_unstake = 0
-            self._unstakeOCEAN(state)
+            self._unstakeOCEANsomewhere(state)
 
     def _doCreatePool(self) -> bool:
         if self.OCEAN() < 200.0: #magic number
             return False
-        return self._s_since_create >= self._s_between_creates
+        return self._s_since_create >= self._s_between_create
 
     def _createPoolAgent(self, state) -> PoolAgent:        
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"

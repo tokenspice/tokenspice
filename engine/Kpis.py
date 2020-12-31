@@ -1,27 +1,26 @@
 import logging
 log = logging.getLogger('kpis')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
+from typing import List
 
 from util import valuation
 from util.constants import * 
 
-@enforce.runtime_validation
+@enforce_types
 class KPIs:
     def __init__(self, time_step: int):
         self._time_step = time_step #seconds per tick
         
         #for these, append a new value with each tick
-        self._granttakers_revenue_per_tick__per_tick = []
-        
-        self._revenue_per_marketplace_per_s__per_tick = []
-        self._n_marketplaces__per_tick = []
-        self._marketplace_percent_toll_to_ocean__per_tick = []
-        
-        self._total_OCEAN_minted__per_tick = []
-        self._total_OCEAN_burned__per_tick = []
-        self._total_OCEAN_minted_USD__per_tick = []
-        self._total_OCEAN_burned_USD__per_tick = []
+        self._granttakers_revenue_per_tick__per_tick: List[float] = []
+        self._revenue_per_marketplace_per_s__per_tick: List[float] = []
+        self._n_marketplaces__per_tick: List[int] = []
+        self._marketplace_percent_toll_to_ocean__per_tick: List[float] = []
+        self._total_OCEAN_minted__per_tick: List[float] = []
+        self._total_OCEAN_burned__per_tick: List[float] = []
+        self._total_OCEAN_minted_USD__per_tick: List[float] = []
+        self._total_OCEAN_burned_USD__per_tick: List[float] = []
 
     def takeStep(self, state):        
         self._granttakers_revenue_per_tick__per_tick.append(
@@ -197,7 +196,7 @@ class KPIs:
         g = rev2 / rev1 - 1.0
         return g
         
-    @enforce.runtime_validation
+    @enforce_types
     def valuationPS(self, p_s_ratio: float) -> float:
         """Use Price/Sales ratio to compute valuation."""
         annual_revenue = self.oceanAnnualRevenueNow()

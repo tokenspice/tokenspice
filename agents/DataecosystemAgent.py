@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('marketagents')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 import random
 
 from agents.BaseAgent import BaseAgent
@@ -10,7 +10,7 @@ from agents.StakerspeculatorAgent import StakerspeculatorAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 from web3tools.web3util import toBase18
                     
-@enforce.runtime_validation
+@enforce_types
 class DataecosystemAgent(BaseAgent):
     """Will operate as a high-fidelity replacement for MarketplacesAgents,
     when it's ready."""

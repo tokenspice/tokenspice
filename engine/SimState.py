@@ -1,9 +1,11 @@
 import logging
 log = logging.getLogger('simstate')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
+from typing import Set
 
 from agents import MinterAgents
+from agents.BaseAgent import BaseAgent
 from agents.AgentDict import AgentDict
 from agents.GrantGivingAgent import GrantGivingAgent
 from agents.GrantTakingAgent import GrantTakingAgent
@@ -15,7 +17,7 @@ from util import mathutil, valuation
 from util.mathutil import Range
 from util.constants import *
 
-@enforce.runtime_validation
+@enforce_types
 class SimState(object):
     
     def __init__(self, ss: SimStrategy.SimStrategy):
@@ -49,7 +51,7 @@ class SimState(object):
         self._percent_increase_speculation_valuation_per_s = 0.10 / S_PER_YEAR # ""
 
         #Instantiate and connnect agent instances. "Wire up the circuit"
-        new_agents = set()
+        new_agents: Set[BaseAgent] = set()
 
         #FIXME: replace MarketplacesAgent with DataecosystemAgent, when ready
         new_agents.add(MarketplacesAgent(

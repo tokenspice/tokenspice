@@ -1,6 +1,7 @@
 #!/usr/bin/env python 
 
-import enforce
+# from enforce_typing import enforce_types # type: ignore[import]
+from enforce_typing import enforce_types # type: ignore[import]
 import logging
 import os
 import sys
@@ -9,7 +10,8 @@ INFO = logging.INFO
 DEBUG = logging.DEBUG
 WARNING = logging.WARNING
 
-enforce.config({'enabled': False})  # Turn off runtime type-checking, for speed
+# Removing enforce. enforce_typing should be much faster so we don't need the safety toggle.
+# enforce.config({'enabled': False})  # Turn off runtime type-checking, for speed
 
 if __name__== '__main__':            
     #set up logging

@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('master')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 import os
 
 from util import valuation
@@ -10,7 +10,7 @@ from util.strutil import prettyBigNum
 import engine.SimState as SimState
 from engine.SimStrategy import SimStrategy
 
-@enforce.runtime_validation
+@enforce_types
 class SimEngine(object):
     """
     @description

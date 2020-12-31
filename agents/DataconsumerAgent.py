@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('marketagents')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 import random
 
 from agents.BaseAgent import BaseAgent
@@ -9,7 +9,7 @@ from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
 from web3tools.web3util import toBase18
             
 
-@enforce.runtime_validation
+@enforce_types
 class DataconsumerAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)

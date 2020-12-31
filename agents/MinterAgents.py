@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('minteragents')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 import math
 
 from agents.BaseAgent import BaseAgent    
@@ -15,7 +15,7 @@ Mints OCEAN according to a schedule, then send to receiving agent.
 Minting schedule is linear (flat): same # OCEAN tokens each time, n times.
 """
 
-@enforce.runtime_validation
+@enforce_types
 class OCEANLinearMinterAgent(BaseAgent):
     def __init__(self, name: str, 
                  receiving_agent_name: str,
@@ -67,7 +67,7 @@ class OCEANLinearMinterAgent(BaseAgent):
 #====================================================================
 # Minting funcs: Exponential, exponential with ratchet 
 
-@enforce.runtime_validation
+@enforce_types
 class ExpFunc:
     """
     F(H,t) = 1 - (0.5*t/H). i.e. like Bitcoin.
@@ -89,7 +89,7 @@ class ExpFunc:
         num_half_lives = t / self._H
         return num_half_lives <= BITCOIN_NUM_HALF_LIVES
     
-@enforce.runtime_validation
+@enforce_types
 class RampedExpFunc:
     """
     Bitcoin follows the following formula for supply of tokens
@@ -209,7 +209,7 @@ class RampedExpFunc:
         H = self._H
         return 1.0 - math.pow(0.5,t/H)
     
-@enforce.runtime_validation
+@enforce_types
 class OCEANFuncMinterAgent(BaseAgent):
     def __init__(self, name: str, 
                  receiving_agent_name: str,

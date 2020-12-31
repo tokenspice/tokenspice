@@ -1,4 +1,4 @@
-from enforce.exceptions import RuntimeTypeError
+
 import random
 
 from util import mathutil

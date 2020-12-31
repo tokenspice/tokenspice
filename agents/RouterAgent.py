@@ -1,13 +1,14 @@
 import logging
 log = logging.getLogger('agents')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
+from typing import List
 import math
 
 from agents.BaseAgent import BaseAgent
 from util.constants import S_PER_MONTH
     
-@enforce.runtime_validation
+@enforce_types
 class RouterAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float,
                  receiving_agents : dict):
@@ -19,8 +20,8 @@ class RouterAgent(BaseAgent):
         self._receiving_agents = receiving_agents
 
         #track amounts over time
-        self._USD_per_tick = [] #the next tick will record what's in self
-        self._OCEAN_per_tick = [] # ""
+        self._USD_per_tick: List[float] = [] #the next tick will record what's in self
+        self._OCEAN_per_tick: List[float] = [] # ""
         
     def takeStep(self, state) -> None:
         #record what we had up until this point

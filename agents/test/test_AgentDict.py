@@ -1,8 +1,8 @@
 from agents.AgentDict import AgentDict
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 
-@enforce.runtime_validation
+@enforce_types
 def test1():
     class BaseAgent:
         def __init__(self, name):
@@ -27,7 +27,7 @@ def test1():
     bah_d = d.filterByClass(BahAgent)
     assert sorted(bah_d.keys()) == []
 
-@enforce.runtime_validation
+@enforce_types
 def test2():
     class FooAgent:
         def __init__(self, name):

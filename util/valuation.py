@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('valuation')
 
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 import typing
 
 from util.strutil import asCurrency 
@@ -22,15 +22,6 @@ def firmValuationPE(annual_revenue: float, p_e_ratio: float) -> float:
     sales minus costs.
     Some people prefer P/E over P/S as it captures profitability. However, 
     companies plowing extra money into growth will have poor P/E. Eg Amazon.
-    """
-    return annual_revenue * p_e_ratio
-
-def firmValuationPE(annual_revenue: float, p_e_ratio: float) -> float:
-    """
-    Valuation by price-to-sales (P/S) ratio.
-    Valuation is simply a multiple of sales. 
-    Datapoint: most blockchain co's are 30x-50x sales, as are high-flying 
-    startups like Zoom.
     """
     return annual_revenue * p_e_ratio
 

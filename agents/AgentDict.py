@@ -1,13 +1,18 @@
-import enforce
+from enforce_typing import enforce_types # type: ignore[import]
 
 from agents.PublisherAgent import PublisherAgent
 from agents.PoolAgent import PoolAgent
 from agents.StakerspeculatorAgent import StakerspeculatorAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 
-@enforce.runtime_validation
+@enforce_types
 class AgentDict(dict):
     """Dict of Agent"""
+    def __init__(self,*arg,**kw):
+        """
+        Extend the dict object to get the best of both worlds (object/dict)
+        """
+        super(AgentDict, self).__init__(*arg, **kw)
     
     def filterByNonzeroStake(self, agent):
         """Which pools has 'agent' staked on?"""
