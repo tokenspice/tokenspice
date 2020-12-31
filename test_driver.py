@@ -113,7 +113,7 @@ class AgentTEST:
 private_key_name: str='TEST_PRIVATE_KEY1'
 network: str = web3util.confFileValue('general', 'NETWORK')
 alice = AgentTEST(agent_name=private_key_name, network_name=network, _OCEAN_INIT=_OCEAN_INIT)
-alice_datatoken = alice.create_datatoken(blob="", name="Alice Coin", symbol="ALC", cap_base=1000.0, use_cache=False)
+alice_datatoken = alice.create_datatoken(blob="", name="Alice Coin", symbol="ALC", cap_base=_DT_INIT, use_cache=False)
 alice_pool = alice_pool = alice.create_pool(
     datatoken=alice_datatoken,
     _DT_STAKE=_DT_STAKE,
@@ -124,5 +124,6 @@ alice_pool = alice_pool = alice.create_pool(
 
 # test DT
 alice_DT_amt: float = alice.wallet.DT(alice_datatoken)
+print(alice_DT_amt, _DT_INIT, _DT_STAKE)
 
-assert alice_DT == (_DT_INIT - _DT_STAKE)
+assert alice_DT_amt == (_DT_INIT - _DT_STAKE)
