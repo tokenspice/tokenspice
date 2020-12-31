@@ -51,34 +51,36 @@ def alice_pool():
 def _alice_info():
     return _make_info(private_key_name='TEST_PRIVATE_KEY1')
 
+_CACHED_INFO = None
 @enforce_types
 def _make_info(private_key_name:str):
-    
-    class _Info:
-        pass
-    info = _Info()
-    
-    network = web3util.get_network()
-    info.private_key = web3util.confFileValue(network, private_key_name)
-    info.agent_wallet = AgentWallet.AgentWallet(
-        OCEAN=_OCEAN_INIT,private_key=info.private_key)
-    info.web3wallet = info.agent_wallet._web3wallet
+    global _CACHED_INFO
+    if _CACHED_INFO is None:
+        class _Info:
+            pass
+        info = _Info()
+        
+        network = web3util.get_network()
+        info.private_key = web3util.confFileValue(network, private_key_name)
+        info.agent_wallet = AgentWallet.AgentWallet(
+            OCEAN=_OCEAN_INIT,private_key=info.private_key)
+        info.web3wallet = info.agent_wallet._web3wallet
 
-    info.DT = _createDT(info.web3wallet)
-    info.pool = _createPool(DT=info.DT, web3_w=info.web3wallet)
-    return info
+        info.DT = _createDT(info.web3wallet)
+        info.pool = _createPool(DT=info.DT, web3_w=info.web3wallet)
+        _CACHED_INFO = info
+        return _CACHED_INFO
+    return _CACHED_INFO
 
-_CACHED_DT = None
+# Eureka I got it. We should cache the whole info object, not just the datatoken. I
+# have a feeling that that will solve the issues we are facing. 
 @enforce_types
 def _createDT(web3_w:web3wallet.Web3Wallet):
-    global _CACHED_DT
-    if _CACHED_DT is None:
-        DT_address = dtfactory.DTFactory().createToken(
-            'foo', 'DT1', 'DT1', toBase18(_DT_INIT),from_wallet=web3_w)
-        DT = datatoken.Datatoken(DT_address)
-        DT.mint(web3_w.address, toBase18(_DT_INIT), from_wallet=web3_w)
-        _CACHED_DT = DT
-    return _CACHED_DT
+    DT_address = dtfactory.DTFactory().createToken(
+        'foo', 'DT1', 'DT1', toBase18(_DT_INIT),from_wallet=web3_w)
+    DT = datatoken.Datatoken(DT_address)
+    DT.mint(web3_w.address, toBase18(_DT_INIT), from_wallet=web3_w)
+    return DT
 
 @enforce_types
 def _createPool(DT:datatoken.Datatoken, web3_w:web3wallet.Web3Wallet):
