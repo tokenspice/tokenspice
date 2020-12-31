@@ -52,12 +52,12 @@ def test_speculateAction_withpools(alice_pool):
     state = MockState()
     state.agents["pool1"] = PoolAgent("pool1", alice_pool)
     
-    agent = StakerspeculatorAgent("agent1",USD=0.0,OCEAN=1000.0)
-    assert agent.OCEAN() == 1000.0
+    agent = StakerspeculatorAgent("agent1",USD=0.0,OCEAN=500.0)
+    assert agent.OCEAN() == 500.0
     assert agent.BPT(alice_pool) == 0.0
 
     agent._speculateAction(state)
-    assert agent.OCEAN() < 1000.0
+    assert agent.OCEAN() < 500.0
     assert agent.BPT(alice_pool) > 0.0
 
 @enforce_types
@@ -65,7 +65,7 @@ def test_take_step(alice_pool):
     state = MockState()
     state.agents["pool1"] = PoolAgent("pool1", alice_pool)
     
-    agent = StakerspeculatorAgent("agent1",USD=0.0,OCEAN=1000.0)
+    agent = StakerspeculatorAgent("agent1",USD=0.0,OCEAN=500.0)
 
     num_speculates = num_loops = 0
     while num_speculates < 5 and num_loops < 10000:
