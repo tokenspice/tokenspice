@@ -49,20 +49,23 @@ def testReceiveAndSend():
     assert pytest.approx(agent.OCEAN()) == (5.11 - 0.10)
     assert pytest.approx(agent2.OCEAN()) == (3.30 + 0.10)
     
+
 #===================================================================
-#datatoken and pool-related
+# datatoken and pool-related
+# These are native to the baseagent
 @enforce_types
-def test_DT(alice_agent, alice_DT:datatoken.Datatoken):    
-    assert alice_agent.DT(alice_DT) == (_DT_INIT - _DT_STAKE)
+def test_DT(alice_agent: BaseAgent, alice_agent_DT: datatoken.Datatoken):    
+    alice_DT_amt: float = alice_agent._wallet.DT(alice_agent_DT)
+    assert alice_DT_amt == (_DT_INIT - _DT_STAKE)
 
 @enforce_types
-def test_BPT(alice_agent, alice_pool:bpool.BPool):    
-    assert alice_agent.BPT(alice_pool) == 100.0
+def test_BPT(alice_agent: BaseAgent, alice_agent_pool: bpool.BPool):    
+    assert alice_agent.BPT(alice_agent_pool) == 100.0
 
 @enforce_types
-def test_stakeOCEAN(alice_agent, alice_pool):    
-    BPT_before:float = alice_agent.BPT(alice_pool)
+def test_stakeOCEAN(alice_agent: BaseAgent, alice_pool):    
     OCEAN_before:float = alice_agent.OCEAN()
+    BPT_before:float = alice_agent.BPT(alice_pool)
     
     alice_agent.stakeOCEAN(OCEAN_stake=20.0, pool=alice_pool)
     
@@ -79,3 +82,5 @@ def test_unstakeOCEAN(alice_agent, alice_pool):
     
     BPT_after:float = alice_agent.BPT(alice_pool)
     assert BPT_after == (BPT_before - 20.0)
+    
+
