@@ -15,7 +15,7 @@ from web3tools.web3util import toBase18
 class BaseAgent(ABC, StrMixin):
     """This can be a data buyer, publisher, etc. Sub-classes implement each."""
        
-    def __init__(self, name: str, USD: float, OCEAN: float, private_key: bool=None):
+    def __init__(self, name: str, USD: float, OCEAN: float, private_key: str=None):
         self.name = name
         self._wallet = AgentWallet.AgentWallet(USD, OCEAN, private_key=private_key)
 
