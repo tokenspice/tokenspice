@@ -1,6 +1,6 @@
 **WARNING: this is WIP code. Prototype, not fully functional, etc. Keep your expectations low. But maybe parts are useful to some:)**
 
-# TokenSPICE v0.2: Token Simulator with EVM
+# 🐠 TokenSPICE v0.2: Token Simulator with EVM
 
 TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
 
@@ -311,7 +311,7 @@ And many future things beyond:)
 
 # License
 
-Copyright ((C)) 2020 Ocean Protocol Foundation
+Copyright ((C)) 2021 Ocean Protocol Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
