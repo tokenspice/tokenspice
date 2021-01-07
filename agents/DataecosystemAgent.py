@@ -3,9 +3,11 @@ log = logging.getLogger('marketagents')
 
 from enforce_typing import enforce_types # type: ignore[import]
 import random
+import names
 
 from agents.BaseAgent import BaseAgent
 from agents.PublisherAgent import PublisherAgent
+from agents.EWPublisherAgent import EWPublisherAgent
 from agents.StakerspeculatorAgent import StakerspeculatorAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 from web3tools.web3util import toBase18
@@ -32,30 +34,30 @@ class DataecosystemAgent(BaseAgent):
         return (not state.publisherAgents()) 
             
     def _createPublisherAgent(self, state) -> PublisherAgent:
-        name = 'foo' #FIXME
+        name = "Publisher " + names.get_first_name()
         USD = 0.0 #FIXME magic number
         OCEAN = 1000.0 #FIXME magic number
         new_agent = PublisherAgent(name=name, USD=USD, OCEAN=OCEAN)
-        new_agents.add(new_agent)
+        state.new_agents.add(new_agent)
 
     def _doCreateStakerspeculatorAgent(self, state) -> bool:
         #magic number: rule - only create if no agents so far
         return (not state.stakerspeculatorAgents())  
             
     def _createStakerspeculatorAgent(self, state) -> StakerspeculatorAgent:
-        name = 'foo' #FIXME
+        name = "Staker " + names.get_first_name()
         USD = 0.0 #FIXME magic number
         OCEAN = 1000.0 #FIXME magic number
         new_agent = StakerspeculatorAgent(name=name, USD=USD, OCEAN=OCEAN)
-        new_agents.add(new_agent)
+        state.new_agents.add(new_agent)
 
     def _doCreateDataconsumerAgent(self, state) -> bool:
         #magic number: rule - only create if no agents so far
         return (not state.dataconumerAgents()) 
             
     def _createDataconsumerAgent(self, state) -> DataconsumerAgent:
-        name = 'foo' #FIXME
+        name = "Dataconsumer " + names.get_first_name()
         USD = 0.0 #FIXME magic number
         OCEAN = 1000.0 #FIXME magic number
         new_agent = DataconsumerAgent(name=name, USD=USD, OCEAN=OCEAN)
-        new_agents.add(new_agent)
+        state.new_agents.add(new_agent)

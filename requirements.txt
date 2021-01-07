@@ -10,3 +10,4 @@ pytz
 eth-account
 eth-keys
 eth-utils
+names
