@@ -38,7 +38,7 @@ class DataecosystemAgent(BaseAgent):
         USD = 0.0 #FIXME magic number
         OCEAN = 1000.0 #FIXME magic number
         new_agent = PublisherAgent(name=name, USD=USD, OCEAN=OCEAN)
-        state.new_agents.add(new_agent)
+        state.agents[name] = new_agent
 
     def _doCreateStakerspeculatorAgent(self, state) -> bool:
         #magic number: rule - only create if no agents so far
@@ -49,7 +49,7 @@ class DataecosystemAgent(BaseAgent):
         USD = 0.0 #FIXME magic number
         OCEAN = 1000.0 #FIXME magic number
         new_agent = StakerspeculatorAgent(name=name, USD=USD, OCEAN=OCEAN)
-        state.new_agents.add(new_agent)
+        state.agents[name] = new_agent
 
     def _doCreateDataconsumerAgent(self, state) -> bool:
         #magic number: rule - only create if no agents so far
@@ -60,4 +60,15 @@ class DataecosystemAgent(BaseAgent):
         USD = 0.0 #FIXME magic number
         OCEAN = 1000.0 #FIXME magic number
         new_agent = DataconsumerAgent(name=name, USD=USD, OCEAN=OCEAN)
-        state.new_agents.add(new_agent)
+        state.agents[name] = new_agent
+
+    def _doCreateEWPublisherAgent(self, state) -> bool:
+        #magic number: rule - only create if no agents so far
+        return (not state.ewpublisherAgents()) 
+            
+    def _createEWPublisherAgent(self, state) -> EWPublisherAgent:
+        name = "Energy Web Publisher " + names.get_first_name()
+        USD = 0.0 #FIXME magic number
+        OCEAN = 1000.0 #FIXME magic number
+        new_agent = EWPublisherAgent(name=name, USD=USD, OCEAN=OCEAN)
+        state.agents[name] = new_agent

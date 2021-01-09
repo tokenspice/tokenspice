@@ -90,10 +90,10 @@ class SimEngine(object):
         dataheader += ["Second", "Min", "Hour", "Day", "Month", "Year"]
         datarow += [es, emi, eh, ed, emo, ey]
         
-        am = state.getAgent("marketplaces1")
-        #s += ["; # mkts=%s" % prettyBigNum(am._n_marketplaces,F)]
-        dataheader += ["Num_mkts"]
-        datarow += [am._n_marketplaces]
+        # am = state.getAgent("marketplaces1")
+        # #s += ["; # mkts=%s" % prettyBigNum(am._n_marketplaces,F)]
+        # dataheader += ["Num_mkts"]
+        # datarow += [am._n_marketplaces]
 
         onemkt_rev_mo = kpis.onemktMonthlyRevenueNow()
         onemkt_rev_yr = kpis.onemktAnnualRevenueNow()

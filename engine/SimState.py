@@ -10,8 +10,10 @@ from agents.AgentDict import AgentDict
 from agents.GrantGivingAgent import GrantGivingAgent
 from agents.GrantTakingAgent import GrantTakingAgent
 from agents.MarketplacesAgent import MarketplacesAgent
+from agents.DataecosystemAgent import DataecosystemAgent
 from agents.OCEANBurnerAgent import OCEANBurnerAgent
 from agents.RouterAgent import RouterAgent
+# from agents.EWPublisherAgent import EWPublisherAgent
 from engine import Kpis, SimStrategy
 from util import mathutil, valuation
 from util.mathutil import Range
@@ -54,13 +56,17 @@ class SimState(object):
         new_agents: Set[BaseAgent] = set()
 
         #FIXME: replace MarketplacesAgent with DataecosystemAgent, when ready
-        new_agents.add(MarketplacesAgent(
-            name = "marketplaces1", USD=0.0, OCEAN=0.0,
-            toll_agent_name = "opc_address",
-            n_marketplaces = float(ss.init_n_marketplaces),
-            revenue_per_marketplace_per_s = 2e3 / S_PER_MONTH, #magic number
-            time_step = self.ss.time_step,
-            ))
+        # new_agents.add(MarketplacesAgent(
+            # name = "marketplaces1", USD=0.0, OCEAN=0.0,
+            # toll_agent_name = "opc_address",
+            # n_marketplaces = float(ss.init_n_marketplaces),
+            # revenue_per_marketplace_per_s = 2e3 / S_PER_MONTH, #magic number
+            # time_step = self.ss.time_step,
+            # ))
+
+        new_agents.add(DataecosystemAgent(
+            name = "dataecosystem1", USD=0.0, OCEAN=0.0,
+        ))
 
         new_agents.add(RouterAgent(
             name = "opc_address", USD=0.0, OCEAN=0.0,
@@ -153,6 +159,10 @@ class SimState(object):
     def addAgent(self, agent):
         assert agent.name not in self.agents, "have an agent with this name" 
         self.agents[agent.name] = self.agents
+
+    def publisherAgents(self):
+        return {name:agent for name,agent in self.agents.items() 
+                if name.startswith('Publisher')}
 
     #==============================================================      
     def marketplacePercentTollToOcean(self) -> float:
