@@ -18,6 +18,10 @@ TokenSPICE was meant to be simple. It definitely makes no claims on "best" for a
 
 Open a new terminal and:
 ```console
+#ensure brownie's *not* installed. It causes problems
+pip uninstall eth-brownie
+
+#clone repo
 git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
 cd tokenspice
 
