@@ -52,7 +52,6 @@ def testReceiveAndSend():
 
 #===================================================================
 # datatoken and pool-related
-# These are native to the baseagent
 @enforce_types
 def test_DT(alice_agent: BaseAgent, alice_agent_DT: datatoken.Datatoken):    
     alice_DT_amt: float = alice_agent._wallet.DT(alice_agent_DT)
