@@ -20,48 +20,48 @@ _DT_STAKE = 20.0
 
 @pytest.fixture
 def alice_private_key() -> str:
-    return _alice_wallet().private_key
+    return _alice_info().private_key
 
 @pytest.fixture
 def alice_agent_wallet() -> AgentWallet.AgentWallet:
-    return _alice_wallet().agent_wallet
+    return _alice_info().agent_wallet
 
 @pytest.fixture
 def alice_web3wallet() -> web3wallet.Web3Wallet:
-    return _alice_wallet().wallet
+    return _alice_info().wallet
 
 @pytest.fixture
 def alice_DT() -> datatoken.Datatoken:
-    return _alice_wallet().DT
+    return _alice_info().DT
 
 @pytest.fixture
 def alice_pool():
-    return _alice_wallet().pool
+    return _alice_info().pool
 
 @enforce_types
-def _alice_wallet(cache=True):
-    return _make_wallet(private_key_name='TEST_PRIVATE_KEY1', cache=cache)
+def _alice_info(cache=True):
+    return _make_info(private_key_name='TEST_PRIVATE_KEY1', cache=cache)
 
-_CACHED_WALLET = None
+_CACHED_INFO = None
 @enforce_types
-def _make_wallet(private_key_name:str, cache: bool):
-    global _CACHED_WALLET
-    if _CACHED_WALLET is None and cache:
-        class _Wallet:
+def _make_info(private_key_name:str, cache: bool):
+    global _CACHED_INFO
+    if _CACHED_INFO is None and cache:
+        class _Info:
             pass
-        wallet = _Wallet()
+        info = _Info()
         
         network = web3util.get_network()
-        wallet.private_key = web3util.confFileValue(network, private_key_name)
-        wallet.agent_wallet = AgentWallet.AgentWallet(
-            OCEAN=_OCEAN_INIT,private_key=wallet.private_key)
-        wallet.web3wallet = wallet.agent_wallet._web3wallet
+        info.private_key = web3util.confFileValue(network, private_key_name)
+        info.agent_wallet = AgentWallet.AgentWallet(
+            OCEAN=_OCEAN_INIT,private_key=info.private_key)
+        info.web3wallet = info.agent_wallet._web3wallet
 
-        wallet.DT = _createDT(wallet.web3wallet)
-        wallet.pool = _createPool(DT=wallet.DT, web3_w=wallet.web3wallet)
-        _CACHED_WALLET = wallet
-        return _CACHED_WALLET
-    return _CACHED_WALLET
+        info.DT = _createDT(info.web3wallet)
+        info.pool = _createPool(DT=info.DT, web3_w=info.web3wallet)
+        _CACHED_INFO = info
+        return _CACHED_INFO
+    return _CACHED_INFO
 
 @enforce_types
 def _createDT(web3_w:web3wallet.Web3Wallet)-> datatoken.Datatoken:
