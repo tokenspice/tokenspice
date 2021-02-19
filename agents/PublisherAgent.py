@@ -1,6 +1,3 @@
-import logging
-log = logging.getLogger('marketagents')
-
 from enforce_typing import enforce_types # type: ignore[import]
 import random
 
@@ -73,6 +70,7 @@ class PublisherAgent(BaseAgent):
         #create agent
         pool_agent = PoolAgent(pool_agent_name, pool)
         state.addAgent(pool_agent)
+        self._wallet.resetCachedInfo()
         
         return pool_agent
 
@@ -96,4 +94,5 @@ class PublisherAgent(BaseAgent):
             '', dt_name, dt_name, toBase18(mint_amt), from_wallet=wallet)
         DT = datatoken.Datatoken(DT_address)
         DT.mint(wallet.address, toBase18(mint_amt), from_wallet=wallet)
+        self._wallet.resetCachedInfo()
         return DT
