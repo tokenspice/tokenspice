@@ -83,12 +83,14 @@ Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/ar
 ## Test one EVM-based test
 
 ```console
+conda activate tokenspiceenv
 pytest web3engine/test/test_btoken.py 
 ```
 
 ## Test that everything is working
 
 ```console
+conda activate tokenspiceenv
 pytest
 ```
 
