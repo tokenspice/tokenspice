@@ -94,5 +94,5 @@ class PublisherAgent(BaseAgent):
             '', dt_name, dt_name, toBase18(mint_amt), from_wallet=wallet)
         DT = datatoken.Datatoken(DT_address)
         DT.mint(wallet.address, toBase18(mint_amt), from_wallet=wallet)
-         self._wallet.resetCachedInfo()
-         return DT
+        self._wallet.resetCachedInfo()
+        return DT
