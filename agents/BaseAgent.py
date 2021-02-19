@@ -15,19 +15,13 @@ from web3tools.web3util import toBase18
 class BaseAgent(ABC, StrMixin):
     """This can be a data buyer, publisher, etc. Sub-classes implement each."""
        
-    def __init__(self, name: str, USD: float, OCEAN: float, private_key: bool=None):
+    def __init__(self, name: str, USD: float, OCEAN: float):
         self.name = name
-        self._wallet = AgentWallet.AgentWallet(USD, OCEAN, private_key=private_key)
+        self._wallet = AgentWallet.AgentWallet(USD, OCEAN)
 
         #postconditions
-        if private_key == None:
-            assert self.USD() == USD
-            assert self.OCEAN() == OCEAN
-        else:
-            # TODO
-            # This is kind of weak - we should test for sum of current and previous
-            assert self.USD() >= USD
-            assert self.OCEAN() >= OCEAN
+        assert self.USD() == USD
+        assert self.OCEAN() == OCEAN
 
     #=======================================================================
     @abstractmethod

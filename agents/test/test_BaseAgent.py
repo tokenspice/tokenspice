@@ -53,13 +53,13 @@ def testReceiveAndSend():
 #===================================================================
 # datatoken and pool-related
 @enforce_types
-def test_DT(alice_agent: BaseAgent, alice_agent_DT: datatoken.Datatoken):    
-    alice_DT_amt: float = alice_agent._wallet.DT(alice_agent_DT)
+def test_DT(alice_agent: BaseAgent, alice_DT: datatoken.Datatoken):    
+    alice_DT_amt: float = alice_agent._wallet.DT(alice_DT)
     assert alice_DT_amt == (_DT_INIT - _DT_STAKE)
 
 @enforce_types
-def test_BPT(alice_agent: BaseAgent, alice_agent_pool: bpool.BPool):    
-    assert alice_agent.BPT(alice_agent_pool) == 100.0
+def test_BPT(alice_agent: BaseAgent, alice_pool: bpool.BPool):    
+    assert alice_agent.BPT(alice_pool) == 100.0
 
 @enforce_types
 def test_stakeOCEAN(alice_agent: BaseAgent, alice_pool):    
