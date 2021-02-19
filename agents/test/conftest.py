@@ -63,8 +63,6 @@ def _make_wallet(private_key_name:str, cache: bool):
         return _CACHED_WALLET
     return _CACHED_WALLET
 
-# Eureka I got it. We should cache the whole wallet object, not just the datatoken. I
-# have a feeling that that will solve the issues we are facing. 
 @enforce_types
 def _createDT(web3_w:web3wallet.Web3Wallet)-> datatoken.Datatoken:
     DT_address = dtfactory.DTFactory().createToken(
