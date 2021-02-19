@@ -18,6 +18,10 @@ TokenSPICE was meant to be simple. It definitely makes no claims on "best" for a
 
 Open a new terminal and:
 ```console
+#ensure brownie's *not* installed. It causes problems
+pip uninstall eth-brownie
+
+#clone repo
 git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
 cd tokenspice
 
@@ -79,12 +83,14 @@ Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/ar
 ## Test one EVM-based test
 
 ```console
-pytest test/test_btoken.py
+conda activate tokenspiceenv
+pytest web3engine/test/test_btoken.py 
 ```
 
 ## Test that everything is working
 
 ```console
+conda activate tokenspiceenv
 pytest
 ```
 

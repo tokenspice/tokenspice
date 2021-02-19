@@ -1,6 +1,7 @@
 name: tokenspiceenv
 dependencies:
-  - pip==9.0.1
+  - python=3.8
+  - pip
   - numpy
   - matplotlib
   - pip:
