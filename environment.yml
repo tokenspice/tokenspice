@@ -6,6 +6,7 @@ dependencies:
   - matplotlib
   - pip:
     - enforce-typing
+    - mypy
     - pytest
     - web3
     - deprecated
