@@ -6,61 +6,59 @@ from agents.MinterAgents import *
 from util.constants import BITCOIN_NUM_HALF_LIVES, \
     S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 
-#comment out some unused agents for now, simply for faster unit tests
+@enforce_types
+def testOCEANLinearMinterAgent():
+    ss = SimStrategy.SimStrategy()
+    assert hasattr(ss, 'time_step')
+    ss.time_step = 2
 
-# @enforce_types
-# def testOCEANLinearMinterAgent():
-#     ss = SimStrategy.SimStrategy()
-#     assert hasattr(ss, 'time_step')
-#     ss.time_step = 2
+    state = SimState.SimState(ss)
 
-#     state = SimState.SimState(ss)
+    class SimpleAgent(BaseAgent):
+        def takeStep(self, state):
+            pass
+    state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
 
-#     class SimpleAgent(BaseAgent):
-#         def takeStep(self, state):
-#             pass
-#     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
+    #default
+    minter = OCEANLinearMinterAgent(
+        "minter", 
+        receiving_agent_name="a1",
+        total_OCEAN_to_mint=20.0,
+        s_between_mints=4, n_mints=2) 
+    assert minter.USD() == 0.0
+    assert minter.OCEAN() == 0.0
+    assert state._total_OCEAN_minted == 0.0
 
-#     #default
-#     minter = OCEANLinearMinterAgent(
-#         "minter", 
-#         receiving_agent_name="a1",
-#         total_OCEAN_to_mint=20.0,
-#         s_between_mints=4, n_mints=2) 
-#     assert minter.USD() == 0.0
-#     assert minter.OCEAN() == 0.0
-#     assert state._total_OCEAN_minted == 0.0
+    minter.takeStep(state); state.tick += 1 #tick=1 (2 s elapsed), 1st mint
+    assert minter.OCEAN() == 0.0
+    assert a1.OCEAN() == 10.0
+    assert state._total_OCEAN_minted == 10.0
 
-#     minter.takeStep(state); state.tick += 1 #tick=1 (2 s elapsed), 1st mint
-#     assert minter.OCEAN() == 0.0
-#     assert a1.OCEAN() == 10.0
-#     assert state._total_OCEAN_minted == 10.0
+    minter.takeStep(state); state.tick += 1 #tick=2 (4 s elapsed), noop
+    assert minter.OCEAN() == 0.0
+    assert a1.OCEAN() == 10.0
+    assert state._total_OCEAN_minted == 10.0
 
-#     minter.takeStep(state); state.tick += 1 #tick=2 (4 s elapsed), noop
-#     assert minter.OCEAN() == 0.0
-#     assert a1.OCEAN() == 10.0
-#     assert state._total_OCEAN_minted == 10.0
+    minter.takeStep(state); state.tick += 1 #tick=3 (6 s elapsed), 2nd mint
+    assert minter.OCEAN() == 0.0
+    assert a1.OCEAN() == 20.0
+    assert state._total_OCEAN_minted == 20.0
 
-#     minter.takeStep(state); state.tick += 1 #tick=3 (6 s elapsed), 2nd mint
-#     assert minter.OCEAN() == 0.0
-#     assert a1.OCEAN() == 20.0
-#     assert state._total_OCEAN_minted == 20.0
+    minter.takeStep(state); state.tick += 1 #tick=4 (8 s elapsed), noop
+    assert minter.OCEAN() == 0.0
+    assert a1.OCEAN() == 20.0
+    assert state._total_OCEAN_minted == 20.0
 
-#     minter.takeStep(state); state.tick += 1 #tick=4 (8 s elapsed), noop
-#     assert minter.OCEAN() == 0.0
-#     assert a1.OCEAN() == 20.0
-#     assert state._total_OCEAN_minted == 20.0
+    for i in range(10):
+        minter.takeStep(state); state.tick += 1 #tick=14 (28 s elapsed), noop
+    assert minter.OCEAN() == 0.0
+    assert a1.OCEAN() == 20.0
+    assert state._total_OCEAN_minted == 20.0
 
-#     for i in range(10):
-#         minter.takeStep(state); state.tick += 1 #tick=14 (28 s elapsed), noop
-#     assert minter.OCEAN() == 0.0
-#     assert a1.OCEAN() == 20.0
-#     assert state._total_OCEAN_minted == 20.0
-
-# @enforce_types
-# def test_funcMinter_exp():
-#     func = ExpFunc(H=4.0)
-#     _test_funcMinter(func)
+@enforce_types
+def test_funcMinter_exp():
+    func = ExpFunc(H=4.0)
+    _test_funcMinter(func)
 
 
 @enforce_types
