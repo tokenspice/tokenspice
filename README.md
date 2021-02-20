@@ -310,10 +310,10 @@ Here's progress on that front. (Last updated 2020-12-10).
   - Started writing Python-level agent behaviors
 
 **Still to do:**
-- Finish + verify Ocean V3 agents #28
-- Finish + verify Ocean V3 agents #29
-- Be able to specify a netlist and run, without having to fork #30
-- And many future things beyond:) See [issues](https://github.com/oceanprotocol/tokenspice2/issues)
+- Be able to specify a netlist and run, without having to fork [#30](https://github.com/oceanprotocol/tokenspice2/issues/30)
+- Finish + verify Ocean V3 agents [#28](https://github.com/oceanprotocol/tokenspice2/issues/28)
+- Finish + verify Ocean V4 agents [#29](https://github.com/oceanprotocol/tokenspice2/issues/29)
+- And more. See [issues](https://github.com/oceanprotocol/tokenspice2/issues)
 
 
 # A Final Word, or Two
