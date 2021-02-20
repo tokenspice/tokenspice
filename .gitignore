@@ -1,7 +1,4 @@
 # Local drivers
-driver.py
-spirit_driver.py
-
 *.pyc
 *~
 .pytest_cache/
