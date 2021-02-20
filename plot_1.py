@@ -7,6 +7,7 @@ import numpy
 import os
 from pylab import figure, axes, pie, title, show
 import sys
+from typing import Any
 
 from util.constants import * #S_PER_YEAR etc
 
@@ -93,8 +94,8 @@ Usage: plot_1 INPUT_DIR
     #====================================
     #do work
     import csv
-    header = None
-    values = []
+    header: Any = None
+    values: Any = []
     with open(full_input_filename, newline='') as csvfile:
         csvreader = csv.reader(csvfile, delimiter=',')
         for row in csvreader: #row = ['Tick', 'Second', ..] or [1.0, 100.0, ..]

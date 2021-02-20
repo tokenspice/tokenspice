@@ -29,7 +29,7 @@ def alice_private_key() -> str:
     return _alice_info().private_key
 
 @pytest.fixture
-def alice_agent() -> str:
+def alice_agent():
     class MockAgent(BaseAgent.BaseAgent):
         def takeStep(self, state):
             pass

@@ -6,7 +6,7 @@ import pytest
 from util.mathutil import *
 
 @enforce_types
-def isNumber():
+def testIsNumber():
     for x in [-2, 0, 2, 20000,
               -2.1, -2.0, 0.0, 2.0, 2.1, 2e6]:
         assert isNumber(x)
