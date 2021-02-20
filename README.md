@@ -310,13 +310,10 @@ Here's progress on that front. (Last updated 2020-12-10).
   - Started writing Python-level agent behaviors
 
 **Still to do:**
-- Finish writing Python-level agent behaviors for new agents
-- Wire new agents into system-level design 
-- Replicate Ocean V3 market dynamics: run simulations and tune as needed
-- Observe Ocean V4 market dynamics: point at Ocean V4 contracts and run!
-- Iterate on Ocean V4 sim and on design until satisfied
-
-And many future things beyond:)
+- Finish + verify Ocean V3 agents #28
+- Finish + verify Ocean V3 agents #29
+- Be able to specify a netlist and run, without having to fork #30
+- And many future things beyond:) See [issues](https://github.com/oceanprotocol/tokenspice2/issues)
 
 
 # A Final Word, or Two
