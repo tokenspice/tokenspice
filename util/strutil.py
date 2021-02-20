@@ -5,14 +5,13 @@ from enforce_typing import enforce_types
 import inspect
 
 @enforce_types
-class StrMixin(object):
-    
+class StrMixin(object):    
     def __str__(self) -> str:
         class_name = self.__class__.__name__
 
         newline = False
         if hasattr(self, '__STR_GIVES_NEWLINE__'):
-            newline = self.__STR_GIVES_NEWLINE__  [attr-defined]
+            newline = self.__STR_GIVES_NEWLINE__ 
         
         s = []
         s += ["%s={" % class_name]

@@ -30,11 +30,6 @@ def test_gotSomeETHforGas():
     assert w.ETH() > 0.0    
 
 @enforce_types
-def testStr():
-    w = AgentWallet()        
-    assert "AgentWallet" in str(w)
-
-@enforce_types
 def testInitiallyEmpty():
     w = AgentWallet()
 

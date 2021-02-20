@@ -1,6 +1,6 @@
 from enforce_typing import enforce_types
 
-from agents import BaseAgent
+from agents.BaseAgent import BaseAgent
 from engine import SimState, SimStrategy
 from agents.MinterAgents import *
 from util.constants import BITCOIN_NUM_HALF_LIVES, \

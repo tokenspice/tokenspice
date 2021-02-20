@@ -11,16 +11,15 @@ class DataconsumerAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         
-    def takeStep(self, state):
         self._s_since_buy = 0
         self._s_between_buys = 3 * constants.S_PER_DAY #magic number
         
     def takeStep(self, state) -> None:
         self._s_since_buy += state.ss.time_step
         
-        if self._doBuy():
+        if self._doBuy(state):
             self._s_since_buy = 0
-            self._buyAndConsume(state)
+            self._buy(state)
 
     def _doBuy(self, state):
         cand_pool_agents = self._candPoolAgents(state)

@@ -1,11 +1,12 @@
 import json
 import os
+from typing import Dict
 
 from web3 import Web3
 from web3.contract import ConciseContract
 
-from ocean_lib.web3_internal.web3_provider import Web3Provider
-
+##uncomment when we want proper support. See github.com/oceanprotocol/ocean.py
+#from ocean_lib.web3_internal.web3_provider import Web3Provider
 
 class ContractHandler(object):
     """
@@ -16,7 +17,7 @@ class ContractHandler(object):
         concise_contract = ContractHandler.get_concise_contract('DTFactory')
 
     """
-    _contracts = dict()
+    _contracts: Dict[str, str] = dict()
     artifacts_path = None
 
     @staticmethod
@@ -87,29 +88,30 @@ class ContractHandler(object):
             return (name, address) in ContractHandler._contracts
         return name in ContractHandler._contracts
 
-    @staticmethod
-    def _load(contract_name, address=None):
-        """Retrieve the contract instance for `contract_name` that represent the smart
-        contract in the ethereum network.
+    ##uncomment when we want proper support. See github.com/oceanprotocol/ocean.py
+    # @staticmethod
+    # def _load(contract_name, address=None):
+    #     """Retrieve the contract instance for `contract_name` that represent the smart
+    #     contract in the ethereum network.
 
-        :param contract_name: str name of the solidity smart contract.
-        :param address: hex str -- address of smart contract
-        :return: web3.eth.Contract instance
-        """
-        assert ContractHandler.artifacts_path is not None, 'artifacts_path should be already set.'
-        contract_definition = ContractHandler.read_abi_from_file(
-            contract_name, ContractHandler.artifacts_path)
+    #     :param contract_name: str name of the solidity smart contract.
+    #     :param address: hex str -- address of smart contract
+    #     :return: web3.eth.Contract instance
+    #     """
+    #     assert ContractHandler.artifacts_path is not None, 'artifacts_path should be already set.'
+    #     contract_definition = ContractHandler.read_abi_from_file(
+    #         contract_name, ContractHandler.artifacts_path)
 
-        if not address and 'address' in contract_definition:
-            address = contract_definition.get('address')
-            assert address, 'Cannot find contract address in the abi file.'
-            address = Web3.toChecksumAddress(address)
+    #     if not address and 'address' in contract_definition:
+    #         address = contract_definition.get('address')
+    #         assert address, 'Cannot find contract address in the abi file.'
+    #         address = Web3.toChecksumAddress(address)
 
-        abi = contract_definition['abi']
-        bytecode = contract_definition['bytecode']
-        contract = Web3Provider.get_web3().eth.contract(address=address, abi=abi, bytecode=bytecode)
-        ContractHandler._set(contract_name, contract)
-        return ContractHandler._contracts[(contract_name, address)]
+    #     abi = contract_definition['abi']
+    #     bytecode = contract_definition['bytecode']
+    #     contract = Web3Provider.get_web3().eth.contract(address=address, abi=abi, bytecode=bytecode)
+    #     ContractHandler._set(contract_name, contract)
+    #     return ContractHandler._contracts[(contract_name, address)]
 
     @staticmethod
     def read_abi_from_file(contract_name, abi_path):
