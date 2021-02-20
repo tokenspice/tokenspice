@@ -1,6 +1,3 @@
-import logging
-log = logging.getLogger('marketagents')
-
 from enforce_typing import enforce_types # type: ignore[import]
 import random
 

@@ -40,6 +40,9 @@ class AgentWallet:
         #amount 
         self._total_USD_in:float = USD
         self._total_OCEAN_in:float = OCEAN
+
+    def resetCachedInfo(self):
+        self._cached_OCEAN_base = None
         
     @property
     def _address(self):
@@ -90,7 +93,7 @@ class AgentWallet:
         assert amt >= 0.0
         globaltokens.mintOCEAN(self._address, toBase18(amt))
         self._total_OCEAN_in += amt
-        self._cached_OCEAN_base = None #reset due to write action
+        self.resetCachedInfo()
         
     def withdrawOCEAN(self, amt: float) -> None:
         self.transferOCEAN(_BURN_WALLET, amt)
@@ -121,9 +124,8 @@ class AgentWallet:
             dst_address, amt_base, self._web3wallet)
         
         dst_wallet._total_OCEAN_in += amt
-        
-        self._cached_OCEAN_base = None #reset due to write action
-        dst_wallet._cached_OCEAN_base = None #""
+        self.resetCachedInfo()
+        dst_wallet.resetCachedInfo()        
 
     def totalOCEANin(self) -> float:
         return self._total_OCEAN_in
@@ -159,7 +161,7 @@ class AgentWallet:
             tokenAmountIn_base=toBase18(OCEAN_stake),
             minPoolAmountOut_base=toBase18(0.0),
             from_wallet=self._web3wallet)
-        self._cached_OCEAN_base = None #reset due to write action
+        self.resetCachedInfo()
         
     def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
         pool.exitswapPoolAmountIn(
@@ -167,7 +169,7 @@ class AgentWallet:
             poolAmountIn_base=toBase18(BPT_unstake),
             minAmountOut_base=toBase18(0.0),
             from_wallet=self._web3wallet)
-        self._cached_OCEAN_base = None #reset due to write action
+        self.resetCachedInfo()
 
     #===================================================================
     def __str__(self) -> str:
@@ -190,6 +192,8 @@ class BurnWallet:
     def __init__(self):
         self._address = constants.BURN_ADDRESS
         self._total_OCEAN_in:float = 0.0
-        self._cached_OCEAN_base: typing.Union[int,None] = None #for speed
+        
+    def resetCachedInfo(self):
+        pass
 
 _BURN_WALLET = BurnWallet()
