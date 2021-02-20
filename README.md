@@ -99,7 +99,7 @@ pytest
 TokenSPICE uses the `enforce_types` library for dynamic type-checking. You can also run static type-checking with the `mypy` library:
 
 ```console
-mypy ./
+mypy --config-file mypy.ini ./
 ```
 
 # Updating Env't
