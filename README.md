@@ -94,13 +94,15 @@ conda activate tokenspiceenv
 pytest
 ```
 
-## Static type-checking
+## Linting
 
-TokenSPICE uses the `enforce_types` library for dynamic type-checking. You can also run static type-checking with the `mypy` library:
+Run linting, aka static type-checking by:
 
 ```console
 mypy --config-file mypy.ini ./
 ```
+
+Note: TokenSPICE also uses the `enforce_types` library for *dynamic* type-checking. 
 
 # Updating Env't
 
