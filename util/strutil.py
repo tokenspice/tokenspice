@@ -11,7 +11,7 @@ class StrMixin(object):
 
         newline = False
         if hasattr(self, '__STR_GIVES_NEWLINE__'):
-            newline = self.__STR_GIVES_NEWLINE__ 
+            newline = self.__STR_GIVES_NEWLINE__ #type: ignore
         
         s = []
         s += ["%s={" % class_name]
