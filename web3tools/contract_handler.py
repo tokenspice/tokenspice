@@ -1,16 +1,10 @@
-#  Copyright 2018 Ocean Protocol Foundation
-#  SPDX-License-Identifier: Apache-2.0
-
 import json
-import logging
 import os
 
 from web3 import Web3
 from web3.contract import ConciseContract
 
 from ocean_lib.web3_internal.web3_provider import Web3Provider
-
-logger = logging.getLogger(__name__)
 
 
 class ContractHandler(object):
