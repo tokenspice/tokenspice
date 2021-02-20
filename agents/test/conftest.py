@@ -1,5 +1,5 @@
 
-from enforce_typing import enforce_types # type: ignore[import]
+from enforce_typing import enforce_types
 import pytest
 
 from agents import AgentWallet, BaseAgent

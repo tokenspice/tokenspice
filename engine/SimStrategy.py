@@ -2,7 +2,7 @@
 import logging
 log = logging.getLogger('simstrategy')
 
-from enforce_typing import enforce_types # type: ignore[import]
+from enforce_typing import enforce_types
 import typing
 
 from util.constants import *

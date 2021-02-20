@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('wallet')
 
-from enforce_typing import enforce_types # type: ignore[import]
+from enforce_typing import enforce_types
 import typing
 
 from web3engine import bpool, datatoken, globaltokens

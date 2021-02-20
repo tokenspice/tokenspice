@@ -1,4 +1,4 @@
-from enforce_typing import enforce_types # type: ignore[import]
+from enforce_typing import enforce_types
 import math
 import pytest
 

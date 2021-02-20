@@ -3,9 +3,9 @@
 #  Copyright 2018 Ocean Protocol Foundation
 #  SPDX-License-Identifier: Apache-2.0
 
-import eth_account # type: ignore[import]
+import eth_account
 import eth_utils
-import eth_keys # type: ignore[import]
+import eth_keys
 import logging
 import os
 import web3

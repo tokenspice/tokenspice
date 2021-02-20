@@ -1,4 +1,4 @@
-from enforce_typing import enforce_types # type: ignore[import]
+from enforce_typing import enforce_types
 import web3
 
 from util import constants

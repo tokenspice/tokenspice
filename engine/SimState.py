@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger('simstate')
 
-from enforce_typing import enforce_types # type: ignore[import]
+from enforce_typing import enforce_types
 from typing import Set
 
 from agents import MinterAgents

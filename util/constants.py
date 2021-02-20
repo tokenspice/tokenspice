@@ -12,7 +12,7 @@ log = logging.getLogger('constants')
 
 import math
 
-from  enforce_typing import enforce_types # type: ignore[import]
+from  enforce_typing import enforce_types
 if not SAFETY:
     # do nothing, just return the original function
     def noop(f):

@@ -1,6 +1,6 @@
 import configparser
 
-import eth_account # type: ignore[import]
+import eth_account
 import json
 import os
 import typing
