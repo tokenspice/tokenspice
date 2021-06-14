@@ -12,6 +12,8 @@ It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). 
 
 TokenSPICE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
 
+[Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a)
+
 # Initial Setup
 
 ## Set up environment
