@@ -12,9 +12,17 @@ It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). 
 
 TokenSPICE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
 
-[Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a)
+[Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a).
 
-# Initial Setup
+# Contents
+
+- [🏗 Initial Setup](#-initial-setup)
+- [🐟 Updating Envt](#updating-envt)
+- [🏄 Do Simulations, Make Changes](#-do-simulations-make-changes)
+- [🦑 TokenSPICE Design](#-tokenspice-design)
+- [🏛 License](#-license)
+
+# 🏗 Initial Setup
 
 ## Set up environment
 
@@ -106,7 +114,7 @@ mypy --config-file mypy.ini ./
 
 Note: TokenSPICE also uses the `enforce_types` library for *dynamic* type-checking. 
 
-# Updating Env't
+# 🐟 Updating Envt
 
 You don't need this info at the beginning, but it's good to know about as you make changes.
 
@@ -129,7 +137,7 @@ Delete environment:
 conda remove --name tokenspiceenv --all
 ```
 
-# C. Do Simulations, Make Changes
+# 🏄 Do Simulations, Make Changes
 
 ## Do Once, At Session Start
 
