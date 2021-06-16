@@ -362,7 +362,7 @@ TokenSPICE 2 and other EVM agent-based simulators have these benefits:
   - Local optimization - wiggle controllable params to optimize for objectives & constraints
   - Global optimization - “”, with affordances to not get stuck
   - Synthesis - “” but wiggle code structure itself in addition to parameters
-- Variation-aware synthesis - all of the above at once. This isn’t easy! But it’s possible. Example: use MOJITO (http://trent.st/mojito/), but use TokenSPICE 2 (not SPICE) and Solidity building blocks (not circuit ones) 
+  - Variation-aware synthesis - all of the above at once. This isn’t easy! But it’s possible. Example: use MOJITO (http://trent.st/mojito/), but use TokenSPICE 2 (not SPICE) and Solidity building blocks (not circuit ones) 
 - Mental model is general enough to extend to Vyper, LLL, and direct EVM bytecode. Can extend to non-EVM blockchain, and multi-chain scenarios. Can extend to work with hierarchical building blocks. 
 - Can also do real-time analysis / optimization / etc against live chains: grab the latest chain’s snapshot into ganache, run a local analysis / optimization etc for a few seconds or minutes, then do transaction(s) on the live chain. This can lead to trading systems, failure monitoring, more.
 
