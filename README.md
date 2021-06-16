@@ -315,7 +315,7 @@ Ocean V4.0 makes Ocean more flexible. Ocean V4.1 is "Better Staking / IDOs". Our
 
 ### Context
 
-* TE for Ocean V3 [[slides](http://trent.st/content/20201209%20TE%20for%20Ocean%20Protocol%20V3.pdf)] [[video](https://www.youtube.com/watch?v=ztnIf9gCsNI&ab_channel=TokenEngineering)], TE Community Workshop, Dec 9, 2020
+* TE for Ocean V3 [[slides](http://trent.st/content/20201209%20TE%20for%20Ocean%20Protocol%20V3.pdf)] [[video](https://www.youtube.com/watch?v=ztnIf9gCsNI&ab_channel=TokenEngineering)] [[Gslides](https://docs.google.com/presentation/d/1DmC6wfyl7ZMjuB-h3Zbfy--xFuYSt3tGACpgfJH9ZFk/edit)], TE Community Workshop, Dec 9, 2020
 * TE for Ocean V4.1 [[slides](http://trent.st/content/20210521%20Ocean%20Market%20Balancer%20Simulations%20For%20TE%20Academy.pdf)] [[video](https://www.youtube.com/watch?v=TDG53PTbqhQ&ab_channel=TokenEngineering)] [[GSlides](https://docs.google.com/presentation/d/1JfFi9hT4Lf3UQKfCXGDhA27YPpPcWsXU7YArfRGAmMQ/edit#slide=id.p1)], TE Academy, May 21, 2021
 
 ### Done so far:
