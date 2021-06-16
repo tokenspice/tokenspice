@@ -17,9 +17,10 @@ TokenSPICE was meant to be simple. It definitely makes no claims on "best" for a
 # Contents
 
 - [🏗 Initial Setup](#-initial-setup)
-- [🐟 Updating Envt](#updating-envt)
+- [🐟 Updating Envt](#-updating-envt)
 - [🏄 Do Simulations, Make Changes](#-do-simulations-make-changes)
 - [🦑 TokenSPICE Design](#-tokenspice-design)
+- [🐡 Backlog](#-backlog)
 - [🏛 License](#-license)
 
 # 🏗 Initial Setup
@@ -213,7 +214,7 @@ eog outdir_png
 
 Then repeat previous steps as desired.
 
-# TokenSPICE Design
+# 🦑 TokenSPICE Design
 
 # Architecture, Controllables, Uncontrollables, Metrics
 
@@ -303,7 +304,7 @@ Schematics to simulate Ocean Market. We've kept them in the context of system-le
 
 [Gslides](https://docs.google.com/presentation/d/14BB50dkGXTcPjlbrZilQ3WYnFLDetgfMS1BKGuMX8Q0/edit#slide=id.p1)
 
-# Backlog
+# 🐡 Backlog
 
 Work is currently geared towards verifying Ocean V4, which updates Ocean smart contracts for better IDOs through one-sided market makers and more.
 
@@ -330,7 +331,7 @@ Shortlist:
 [Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)
 
 
-# License
+# 🏛 License
 
 Copyright ((C)) 2021 Ocean Protocol Foundation
 
