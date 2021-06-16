@@ -110,7 +110,7 @@ Usage: plot_1 INPUT_DIR
     # and *many* more: see what gets added to 'dataheader' in SimEngine.createLogData().
 
     #plot
-    x = listToFloat(values[:,header.index("Year")])
+    x = listToFloat(values[:,header.index("Day")])
 
     #what to plot: (name in header, name for plot)
     LINEAR, LOG, BOTH = 'linear', 'log', 'both' #pyplot.yscale interprets 1st 2
@@ -174,7 +174,7 @@ Usage: plot_1 INPUT_DIR
 
         fig, ax = pyplot.subplots()
         
-        ax.set_xlabel("Year")
+        ax.set_xlabel("Day")
         
         for y, label in zip(ys, p.labels):
             if label == "":
