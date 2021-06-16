@@ -21,6 +21,7 @@ TokenSPICE was meant to be simple. It definitely makes no claims on "best" for a
 - [🏄 Do Simulations, Make Changes](#-do-simulations-make-changes)
 - [🦑 TokenSPICE Design](#-tokenspice-design)
 - [🐡 Backlog](#-backlog)
+- [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
 - [🏛 License](#-license)
 
 # 🏗 Initial Setup
@@ -346,9 +347,9 @@ This work is geared towards verifying & tuning Ocean V4.1, which updates Ocean s
 
 And much more - it's largely up to the community. For example, it would be cool to have a [machinations.io](https://machinations.io/)-like interface:)
 
-# Benefits of EVM-in-the-loop simulation
+# 🐋 Benefits of EVM Agent Simulation
 
-TokenSPICE 2 and other EVM-in-the-loop simulators have these benefits:
+TokenSPICE 2 and other EVM agent-based simulators have these benefits:
 - Faster and less error prone, because the model = the Solidity code. Don’t have to port any existing Solidity code into Python, just wrap it. Don’t have to write lower-fidelity equations.
 - Enables rapid iterations of writing Solidity code -> simulating -> changing Solidity code -> simulating. At both the parameter level and the structural level. 
 - Can quickly integrate Balancer V2 code. Then extend to model other AMMs. And other DeFi code. Etc etc.
