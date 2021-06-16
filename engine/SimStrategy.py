@@ -39,7 +39,7 @@ class SimStrategy(StrMixin):
         #-and, if we want lower bound of total growth of -25%,
         # we need growth_rate_if_0_sales = -11.8%
         self.growth_rate_if_0_sales = -0.118
-        self.max_growth_rate = 0.225
+        self.max_growth_rate = 0.415
         self.tau = 0.6
         
         #note: SimState now has many magic numbers, for simplicity
