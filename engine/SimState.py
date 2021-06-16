@@ -47,7 +47,7 @@ class SimState(object):
         self._total_OCEAN_burned: float = 0.0
         self._total_OCEAN_burned_USD: float = 0.0
 
-        self._speculation_valuation = 5e6 #in USD #magic number
+        self._speculation_valuation = 150e6 #in USD #magic number
         self._percent_increase_speculation_valuation_per_s = 0.10 / S_PER_YEAR # ""
 
         #Instantiate and connnect agent instances. "Wire up the circuit"
@@ -58,7 +58,7 @@ class SimState(object):
             name = "marketplaces1", USD=0.0, OCEAN=0.0,
             toll_agent_name = "opc_address",
             n_marketplaces = float(ss.init_n_marketplaces),
-            revenue_per_marketplace_per_s = 2e3 / S_PER_MONTH, #magic number
+            revenue_per_marketplace_per_s = 20e3 / S_PER_MONTH, #magic number
             time_step = self.ss.time_step,
             ))
 

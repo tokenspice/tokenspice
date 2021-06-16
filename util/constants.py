@@ -36,13 +36,13 @@ TOTAL_OCEAN_SUPPLY = 1.41e9
 INIT_OCEAN_SUPPLY = 0.49 * TOTAL_OCEAN_SUPPLY
 UNMINTED_OCEAN_SUPPLY = TOTAL_OCEAN_SUPPLY - INIT_OCEAN_SUPPLY
 
-OPF_TREASURY_USD = 0e6 #(not the true number)
-OPF_TREASURY_OCEAN = 1e6 #(not the true number)
-OPF_TREASURY_OCEAN_FOR_OCEAN_DAO = 1e6 #(not the true number)
+OPF_TREASURY_USD = 2e6 #(not the true number)
+OPF_TREASURY_OCEAN = 200e6 #(not the true number)
+OPF_TREASURY_OCEAN_FOR_OCEAN_DAO = 100e6 #(not the true number)
 OPF_TREASURY_OCEAN_FOR_OPF_MGMT = OPF_TREASURY_OCEAN - OPF_TREASURY_OCEAN_FOR_OCEAN_DAO
 
-BDB_TREASURY_USD = 0e6 #(not the true number)
-BDB_TREASURY_OCEAN = 1e6  #(not the true number)
+BDB_TREASURY_USD = 2e6 #(not the true number)
+BDB_TREASURY_OCEAN = 20e6  #(not the true number)
 
 #Number of half-lives that bitcoin stops after.
 # https://en.bitcoin.it/wiki/Controlled_supply#Projected_Bitcoins_Long_Term
