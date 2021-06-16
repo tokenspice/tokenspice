@@ -50,13 +50,13 @@ class Web3Wallet:
 
     @staticmethod
     def _get_nonce(address):
-        # We cannot rely on `web3.eth.getTransactionCount` because when sending multiple
+        # We cannot rely on `web3.eth.get_transaction_count` because when sending multiple
         # transactions in a row without wait in between the network may not get the chance to
         # update the transaction count for the account address in time.
         # So we have to manage this internally per account address.
         _web3 = web3util.get_web3()
         if address not in Web3Wallet._last_tx_count:
-            Web3Wallet._last_tx_count[address] = _web3.eth.getTransactionCount(address)
+            Web3Wallet._last_tx_count[address] = _web3.eth.get_transaction_count(address)
         else:
             Web3Wallet._last_tx_count[address] += 1
 
@@ -103,7 +103,7 @@ def buildAndSendTx(function,
     #assert isinstance(from_wallet.private_key, str)
 
     _web3 = web3util.get_web3()
-    nonce = _web3.eth.getTransactionCount(from_wallet.address)
+    nonce = _web3.eth.get_transaction_count(from_wallet.address)
     network = web3util.get_network()
     gas_price = int(web3util.confFileValue(network, 'GAS_PRICE'))
     tx_params = {
@@ -125,9 +125,9 @@ def buildAndSendTx(function,
         
     signed_tx = _web3.eth.account.sign_transaction(
         tx, private_key=from_wallet.private_key)
-    tx_hash = _web3.eth.sendRawTransaction(signed_tx.rawTransaction)
+    tx_hash = _web3.eth.send_raw_transaction(signed_tx.rawTransaction)
 
-    tx_receipt = _web3.eth.waitForTransactionReceipt(tx_hash)
+    tx_receipt = _web3.eth.wait_for_transaction_receipt(tx_hash)
     if tx_receipt['status'] == 0:  # did tx fail?
         raise Exception("The tx failed. tx_receipt: {tx_receipt}")
     return (tx_hash, tx_receipt)
