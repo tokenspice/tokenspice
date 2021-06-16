@@ -328,7 +328,7 @@ Shortlist:
 - Finish + verify Ocean V4 agents [#29](https://github.com/oceanprotocol/tokenspice2/issues/29)
 - And more. See [issues](https://github.com/oceanprotocol/tokenspice2/issues)
 
-[Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)
+**[Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)**
 
 
 # 🏛 License
