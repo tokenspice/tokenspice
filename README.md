@@ -312,17 +312,15 @@ Here's progress on that front. (Last updated 2020-12-10).
   - Started writing Python-level agent behaviors
 
 **Still to do:**
+
+Shortlist:
 - Be able to specify a netlist and run, without having to fork [#30](https://github.com/oceanprotocol/tokenspice2/issues/30)
 - Finish + verify Ocean V3 agents [#28](https://github.com/oceanprotocol/tokenspice2/issues/28)
 - Finish + verify Ocean V4 agents [#29](https://github.com/oceanprotocol/tokenspice2/issues/29)
 - And more. See [issues](https://github.com/oceanprotocol/tokenspice2/issues)
 
+[Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)
 
-# A Final Word, or Two
-
-1. Be careful not to read *too* much into any model. As George Box said, "all models are wrong, but some are useful."
-
-2. Have fun!
 
 # License
 
