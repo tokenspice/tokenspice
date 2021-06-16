@@ -308,7 +308,7 @@ Schematics to simulate Ocean Market. We've kept them in the context of system-le
 
 Work is currently geared towards verifying Ocean V4, which updates Ocean smart contracts for better IDOs through one-sided market makers and more.
 
-Here's progress on that front. (Last updated 2020-12-10).
+Here's progress on that front. (Last updated 2021-06-16).
 
 **Done so far:**
 - Wrote Ocean Market V4 smart contracts
