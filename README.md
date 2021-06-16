@@ -322,13 +322,15 @@ Here's progress on that front. (Last updated 2021-06-16).
 
 **Still to do:**
 
+**[Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)**
+
 Shortlist:
 - Be able to specify a netlist and run, without having to fork [#30](https://github.com/oceanprotocol/tokenspice2/issues/30)
 - Finish + verify Ocean V3 agents [#28](https://github.com/oceanprotocol/tokenspice2/issues/28)
 - Finish + verify Ocean V4 agents [#29](https://github.com/oceanprotocol/tokenspice2/issues/29)
 - And more. See [issues](https://github.com/oceanprotocol/tokenspice2/issues)
 
-**[Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)**
+
 
 
 # 🏛 License
