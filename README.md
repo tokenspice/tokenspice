@@ -72,7 +72,7 @@ Open a separate terminal.
 #Grab the contracts code from main, *OR* (see below)
 git clone https://github.com/oceanprotocol/contracts
 
-#OR grab from a branch. Here's Alex's V4 prototype branch
+#OR grab from a branch. Here's Alex's V4.1 prototype branch
 git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
 ```
 
@@ -303,7 +303,7 @@ In the meantime, it's hardcoded for the Web3 Sustainability Loop, with higher fi
 
 ### Ocean V4.1 Model
 
-Ocean V4 makes Ocean more flexible. Ocean V4.1 is "Better Staking / IDOs". Our focus is V4.1. 
+Ocean V4.0 makes Ocean more flexible. Ocean V4.1 is "Better Staking / IDOs". Our focus is V4.1. 
 
 <img src="images/model-new1.png" width="100%">
 
