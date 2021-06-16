@@ -290,29 +290,36 @@ If you make changes here, it's a great idea to write unit tests to make sure you
 
 Before making changes, we recommend having a better understanding of how the system works. Which brings us to...
 
-## Schematics
+## Schematics - Ocean V3 & V4.1
 
-Schematics to simulate Ocean Market. We've kept them in the context of system-level design (Web3 Sustainability Loop).
+Ultimately we aim for TokenSPICE to allow arbitary netlists. Since TokenSPICE already has good fundamentals (python, agent-based, EVM), then allowing this isn't magical or difficult, it just needs some dedicated software engineering. See backlog below for details. 
 
-### Status quo model
+In the meantime, it's hardcoded for the Web3 Sustainability Loop, with higher fidelity added to the "ecosystem" box; for Ocean this is the "data marketplaces ecosystem". Here are the schematics for that ecosystem, for Ocean V3 and Ocean V4.1. This is what TokenSPICE is wired to model. (But beware: things aren't fully wired up! Right now it's using the old agents without any EVM.)
+
+### Ocean V3 Model
 
 <img src="images/model-status-quo.png" width="100%">
 
-### New model 1
+### Ocean V4.1 Model
+
+Ocean V4 makes Ocean more flexible. Ocean V4.1 is "Better Staking / IDOs". Our focus is V4.1. 
 
 <img src="images/model-new1.png" width="100%">
 
-[Gslides](https://docs.google.com/presentation/d/14BB50dkGXTcPjlbrZilQ3WYnFLDetgfMS1BKGuMX8Q0/edit#slide=id.p1)
+[GSlides for the above images](https://docs.google.com/presentation/d/14BB50dkGXTcPjlbrZilQ3WYnFLDetgfMS1BKGuMX8Q0/edit#slide=id.gac81e1e848_0_8)
 
 # 🐡 Backlog
 
-Work is currently geared towards verifying Ocean V4, which updates Ocean smart contracts for better IDOs through one-sided market makers and more.
+**[Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)**
 
-Here's progress on that front. (Last updated 2021-06-16).
+### Context
 
-**Done so far:**
-- Wrote Ocean Market V4 smart contracts
-- Drew schematics for V3 & V4
+* TE for Ocean V3 [[slides](http://trent.st/content/20201209%20TE%20for%20Ocean%20Protocol%20V3.pdf)] [[video](https://www.youtube.com/watch?v=ztnIf9gCsNI&ab_channel=TokenEngineering)], TE Community Workshop, Dec 9, 2020
+* TE for Ocean V4.1 [[slides](http://trent.st/content/20210521%20Ocean%20Market%20Balancer%20Simulations%20For%20TE%20Academy.pdf)] [[video](https://www.youtube.com/watch?v=TDG53PTbqhQ&ab_channel=TokenEngineering)] [[GSlides](https://docs.google.com/presentation/d/1JfFi9hT4Lf3UQKfCXGDhA27YPpPcWsXU7YArfRGAmMQ/edit#slide=id.p1)], TE Academy, May 21, 2021
+
+### Done so far:
+- Wrote Ocean Market V4.1 prototype smart contracts
+- Drew schematics for V3 & V4.1
 - Adapted TokenSPICE code
   - Run EVM end-to-end via ganache
   - Lets third-parties deploy to ganache, then uses at their ABIs
@@ -320,18 +327,45 @@ Here's progress on that front. (Last updated 2021-06-16).
   - Already include: Ocean datatokens, Ocean datatoken factory, Ocean friendly fork of Balancer AMM, Balancer AMM factory, etc. Have Unit tests for all.
   - Started writing Python-level agent behaviors
 
-**Still to do:**
+### Roadmap - Near Term
 
-**[Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)**
+This work is geared towards verifying & tuning Ocean V4.1, which updates Ocean smart contracts for better IDOs through one-sided market makers and more.
 
-Shortlist:
-- Be able to specify a netlist and run, without having to fork [#30](https://github.com/oceanprotocol/tokenspice2/issues/30)
-- Finish + verify Ocean V3 agents [#28](https://github.com/oceanprotocol/tokenspice2/issues/28)
-- Finish + verify Ocean V4 agents [#29](https://github.com/oceanprotocol/tokenspice2/issues/29)
-- And more. See [issues](https://github.com/oceanprotocol/tokenspice2/issues)
+1. **Be able to specify a netlist and run, without having to fork** [#30](https://github.com/oceanprotocol/tokenspice2/issues/30)
+2. **Improve Continuous Integration** - various issues, see kanban 
+3. **Finish + verify Ocean V3 agents** [#28](https://github.com/oceanprotocol/tokenspice2/issues/28). AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
+4. **Finish + verify Ocean V4.1 agents** [#29](https://github.com/oceanprotocol/tokenspice2/issues/29). AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
+5. **Design space exploration**: tuning of Ocean V4.1 (w/ Balancer V2 design). Manual or optimization-based.
 
+### Roadmap - Longer Term
 
+6. System identification: high-fidelity model of whole Balancer V1 ecosystem; fit the model to observed on-chain dynamics (up to when V2 released). Bring in uncontrollable variables (probabilistic & worst-case).
+7. System identification: high-fidelity model of whole Balancer V1 & V2 ecosystem; fit the model to observed on-chain dynamics
+8. Design space exploration: tuning of Balancer V2 Strategies to minimize IL and other objectives & constraints. Account for uncontrollable variables (probabilistic & worst-case).
+10. Open-ended design space exploration: evolve solidity or EVM bytecode, go nuts. AI DAOs that own themselves. This will be fun:). But one step at a time.
 
+And much more - it's largely up to the community. For example, it would be cool to have a [machinations.io](https://machinations.io/)-like interface:)
+
+# Benefits of EVM-in-the-loop simulation
+
+TokenSPICE 2 and other EVM-in-the-loop simulators have these benefits:
+- Faster and less error prone, because the model = the Solidity code. Don’t have to port any existing Solidity code into Python, just wrap it. Don’t have to write lower-fidelity equations.
+- Enables rapid iterations of writing Solidity code -> simulating -> changing Solidity code -> simulating. At both the parameter level and the structural level. 
+- Can quickly integrate Balancer V2 code. Then extend to model other AMMs. And other DeFi code. Etc etc.
+- Plays well with other pure Python agents. Each agent can wrap Solidity, or be pure Python. 
+- Super high fidelity simulations, since it uses the actual code itself. Enables modeling of uncontrollable variables, both random (probabilistic) ones and worst-case ones. 
+- Can build higher-level CAD tools, that have TokenSPICE 2 in the loop: 
+  - 3-sigma verification - verification of random variables, including Monte Carlo analysis
+  - Worst-case analysis - verification across worst-case condition
+  - Corner extraction - finding representative “corners” -- a small handful of points in uncontrollable variable space to simulate against for rapid design-space exploration
+  - Local optimization - wiggle controllable params to optimize for objectives & constraints
+  - Global optimization - “”, with affordances to not get stuck
+  - Synthesis - “” but wiggle code structure itself in addition to parameters
+- Variation-aware synthesis - all of the above at once. This isn’t easy! But it’s possible. Example: use MOJITO (http://trent.st/mojito/), but use TokenSPICE 2 (not SPICE) and Solidity building blocks (not circuit ones) 
+- Mental model is general enough to extend to Vyper, LLL, and direct EVM bytecode. Can extend to non-EVM blockchain, and multi-chain scenarios. Can extend to work with hierarchical building blocks. 
+- Can also do real-time analysis / optimization / etc against live chains: grab the latest chain’s snapshot into ganache, run a local analysis / optimization etc for a few seconds or minutes, then do transaction(s) on the live chain. This can lead to trading systems, failure monitoring, more.
+
+In short, there's a lot of promise. But, the code is young! There's a lot of software engineering work to be done. This can evolve into something very exciting:)
 
 # 🏛 License
 
