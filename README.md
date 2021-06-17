@@ -21,6 +21,7 @@ TokenSPICE was meant to be simple. It definitely makes no claims on "best" for a
 - [🏄 Do Simulations, Make Changes](#-do-simulations-make-changes)
 - [🦑 TokenSPICE Design](#-tokenspice-design)
 - [🐡 Backlog](#-backlog)
+  - [Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
 - [🏛 License](#-license)
 
@@ -311,7 +312,7 @@ Ocean V4.0 makes Ocean more flexible. Ocean V4.1 is "Better Staking / IDOs". Our
 
 # 🐡 Backlog
 
-**[Full Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)**
+**[Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)**
 
 ### Context
 
