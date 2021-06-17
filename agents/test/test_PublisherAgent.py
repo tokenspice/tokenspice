@@ -52,6 +52,26 @@ def test_unstakeOCEANsomewhere():
     BPT_before = pub_agent.BPT(pool_agent.pool)
     pub_agent._unstakeOCEANsomewhere(state)
     BPT_after = pub_agent.BPT(pool_agent.pool)
-    assert BPT_after == (1.0 - 0.10) * BPT_before 
+    assert BPT_after == (1.0 - 0.10) * BPT_before
+
+@enforce_types
+def test_sellDTsomewhere():
+    state = MockState()
+    pub_agent = PublisherAgent("pub1", USD=0.0, OCEAN=1000.0)
     
+    state.addAgent(pub_agent)
+    assert len(state.agents.filterByNonzeroStake(pub_agent)) == 0
+    assert pub_agent._doSellDT(state) == False
     
+    pool_agent = pub_agent._createPoolAgent(state)
+    assert len(pub_agent._DTsWithNonzeroBalance(state)) == 1
+    assert pub_agent._doSellDT(state) == False
+
+    pub_agent._s_since_sellDT += pub_agent._s_between_sellDT #force sell
+    assert pub_agent._doSellDT(state) == True
+
+    DT_before = pub_agent.DT(pool_agent.datatoken)
+    perc_sell = 0.01
+    pub_agent._sellDTsomewhere(state, perc_sell=perc_sell)
+    DT_after = pub_agent.DT(pool_agent.datatoken)
+    assert DT_after == (1.0 - perc_sell) * DT_before

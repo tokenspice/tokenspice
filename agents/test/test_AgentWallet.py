@@ -156,16 +156,41 @@ def testETH2():
 #===================================================================
 #datatoken and pool-related
 @enforce_types
-def test_DT(alice_agent_wallet:AgentWallet, alice_DT:datatoken.Datatoken):
-    alice_DT_amt:float = alice_agent_wallet.DT(alice_DT)
+def test_DT(alice_info):
+    alice_DT_amt:float = alice_info.agent_wallet.DT(alice_info.DT)
     assert alice_DT_amt == (_DT_INIT - _DT_STAKE)
 
 @enforce_types
-def test_BPT(alice_agent_wallet:AgentWallet, alice_pool:bpool.BPool):
-    assert alice_agent_wallet.BPT(alice_pool) == 100.0
+def test_BPT(alice_info):
+    assert alice_info.agent_wallet.BPT(alice_info.pool) == 100.0
+
+@enforce_types
+def test_poolToDTaddress(alice_info):
+    alice_DT, alice_pool = alice_info.DT, alice_info.pool
+    assert _poolToDTaddress(alice_pool) == alice_DT.address
+
+@enforce_types
+def test_sellDT(alice_info):
+    alice_agent_wallet, alice_DT, alice_pool = \
+        alice_info.agent_wallet, alice_info.DT, alice_info.pool
+    assert _poolToDTaddress(alice_pool) == alice_DT.address
+    
+    DT_before:float = alice_agent_wallet.DT(alice_DT)
+    OCEAN_before:float = alice_agent_wallet.OCEAN()
+
+    DT_sell_amt = 10.0
+    alice_agent_wallet.sellDT(alice_pool, alice_DT, DT_sell_amt=DT_sell_amt)
+    
+    DT_after:float = alice_agent_wallet.DT(alice_DT)
+    OCEAN_after:float = alice_agent_wallet.OCEAN()
+        
+    assert OCEAN_after > OCEAN_before
+    assert DT_after == (DT_before - DT_sell_amt)
     
 @enforce_types
-def test_stakeOCEAN(alice_agent_wallet, alice_pool):
+def test_stakeOCEAN(alice_info):
+    alice_agent_wallet, alice_pool = alice_info.agent_wallet, alice_info.pool
+    
     BPT_before:float = alice_agent_wallet.BPT(alice_pool)
     OCEAN_before:float = alice_agent_wallet.OCEAN()
     
@@ -177,7 +202,9 @@ def test_stakeOCEAN(alice_agent_wallet, alice_pool):
     assert BPT_after > BPT_before
 
 @enforce_types
-def test_unstakeOCEAN(alice_agent_wallet, alice_pool):
+def test_unstakeOCEAN(alice_info):
+    alice_agent_wallet, alice_pool = alice_info.agent_wallet, alice_info.pool
+    
     BPT_before:float = alice_agent_wallet.BPT(alice_pool)
     
     alice_agent_wallet.unstakeOCEAN(BPT_unstake=20.0, pool=alice_pool)
@@ -199,3 +226,21 @@ def testStr():
 def testBurnWallet():
     w = BurnWallet()
     assert w._address == constants.BURN_ADDRESS
+
+
+    
+#===================================================================
+#helps testing
+
+
+def _poolToDTaddress(pool:bpool.BPool) -> str:
+    """Return the address of the datatoken of this pool.
+    Don't make this public because it has strong assumptions:
+    assumes 2 tokens; assumes one token is OCEAN; assumes other is DT
+    """
+    cur_addrs = pool.getCurrentTokens()
+    assert len(cur_addrs) == 2, "this method currently assumes 2 tokens"
+    OCEAN_addr = globaltokens.OCEAN_address()
+    assert OCEAN_addr in cur_addrs, "this method expects one token is OCEAN"
+    DT_addr = [addr for addr in cur_addrs if addr != OCEAN_addr][0]
+    return DT_addr

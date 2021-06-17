@@ -17,11 +17,11 @@ class DataconsumerAgent(BaseAgent):
     def takeStep(self, state) -> None:
         self._s_since_buy += state.ss.time_step
         
-        if self._doBuy(state):
+        if self._doBuyDT(state):
             self._s_since_buy = 0
-            self._buy(state)
+            self._buyDT(state)
 
-    def _doBuy(self, state):
+    def _doBuyDT(self, state):
         cand_pool_agents = self._candPoolAgents(state)
         if not cand_pool_agents:
             return False
@@ -64,7 +64,7 @@ class DataconsumerAgent(BaseAgent):
                 
         return cand_pool_agents
 
-    def _buy(self, state):
+    def _buyDT(self, state):
         """Buy, and consume dataset"""
         OCEAN_address = globaltokens.OCEAN_address()
         OCEAN = self.OCEAN()
