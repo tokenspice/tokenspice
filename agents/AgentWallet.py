@@ -4,7 +4,7 @@ log = logging.getLogger('wallet')
 from enforce_typing import enforce_types
 import typing
 
-from web3engine import bpool, datatoken, globaltokens
+from web3engine import bpool, btoken, datatoken, globaltokens
 from util import constants 
 from util.strutil import asCurrency
 from web3tools import web3util, web3wallet
@@ -151,8 +151,25 @@ class AgentWallet:
     
     def _BPT_base(self, pool:bpool.BPool) -> int:
         return pool.balanceOf_base(self._address)
+
+    def sellDT(self, pool:bpool.BPool, DT:datatoken.Datatoken,
+               DT_sell_amt:float, min_OCEAN_amt:float=0.0):
+        """Swap DT for OCEAN. min_OCEAN_amt>0 protects from slippage."""
+        DT.approve(pool.address, toBase18(DT_sell_amt),
+                   from_wallet=self._web3wallet)
+
+        pool.swapExactAmountIn(
+            tokenIn_address=DT.address,  # entering pool
+            tokenAmountIn_base=toBase18(DT_sell_amt),  # ""
+            tokenOut_address=globaltokens.OCEAN_address(),  # leaving pool
+            minAmountOut_base=toBase18(min_OCEAN_amt),  # ""
+            maxPrice_base=2 ** 255, #limit by min_OCEAN_amt, not price
+            from_wallet=self._web3wallet,
+        )
+        self.resetCachedInfo()
                 
     def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
+        """Convert some OCEAN to DT, then add both as liquidity."""
         OCEAN = globaltokens.OCEANtoken()
         OCEAN.approve(pool.address, toBase18(OCEAN_stake),
                       from_wallet=self._web3wallet)
