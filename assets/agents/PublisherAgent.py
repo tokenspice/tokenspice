@@ -3,11 +3,9 @@ import random
 
 from assets.agents.BaseAgent import BaseAgent
 from assets.agents.PoolAgent import PoolAgent
-from util import constants
-from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18
-        
+
 @enforce_types
 class PublisherAgent(BaseAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
@@ -69,9 +67,9 @@ class PublisherAgent(BaseAgent):
         OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt),from_wallet=wallet)
         
         pool.bind(DT.address, toBase18(DT_bind_amt),
-                  toBase18(POOL_WEIGHT_DT), from_wallet=wallet)
+                  toBase18(self.ss.POOL_WEIGHT_DT), from_wallet=wallet)
         pool.bind(OCEAN.address, toBase18(OCEAN_bind_amt),
-                  toBase18(POOL_WEIGHT_OCEAN), from_wallet=wallet)
+                  toBase18(self.ss.POOL_WEIGHT_OCEAN), from_wallet=wallet)
         
         pool.finalize(from_wallet=wallet)
 

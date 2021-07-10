@@ -7,7 +7,7 @@ from assets.agents import AgentWallet, BaseAgent
 from web3tools import web3util, web3wallet
 from web3tools.web3util import toBase18
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
-from util.constants import POOL_WEIGHT_DT, POOL_WEIGHT_OCEAN
+
 
 #alice:
 # 1. starts with an init OCEAN
@@ -18,6 +18,9 @@ _OCEAN_INIT = 1000.0
 _OCEAN_STAKE = 200.0
 _DT_INIT = 100.0
 _DT_STAKE = 20.0
+
+_POOL_WEIGHT_DT    = 3.0
+_POOL_WEIGHT_OCEAN = 7.0
 
 @pytest.fixture
 def alice_info():
@@ -99,9 +102,9 @@ def _createPool(DT:datatoken.Datatoken, web3_w:web3wallet.Web3Wallet):
     OCEAN.approve(pool.address, toBase18(_OCEAN_STAKE),from_wallet=web3_w)
 
     pool.bind(DT.address, toBase18(_DT_STAKE),
-              toBase18(POOL_WEIGHT_DT), from_wallet=web3_w)
+              toBase18(_POOL_WEIGHT_DT), from_wallet=web3_w)
     pool.bind(OCEAN.address, toBase18(_OCEAN_STAKE),
-              toBase18(POOL_WEIGHT_OCEAN), from_wallet=web3_w)
+              toBase18(_POOL_WEIGHT_OCEAN), from_wallet=web3_w)
 
     pool.finalize(from_wallet=web3_w)
     

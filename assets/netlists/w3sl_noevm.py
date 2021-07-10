@@ -43,6 +43,23 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.max_growth_rate = 0.415
         self.tau = 0.6
 
+        # (taken from constants.py)
+        self.TOTAL_OCEAN_SUPPLY = 1.41e9 
+        self.INIT_OCEAN_SUPPLY = 0.49 * self.TOTAL_OCEAN_SUPPLY
+        self.UNMINTED_OCEAN_SUPPLY = self.TOTAL_OCEAN_SUPPLY - self.INIT_OCEAN_SUPPLY
+
+        self.OPF_TREASURY_USD = 2e6 #(not the true number)
+        self.OPF_TREASURY_OCEAN = 200e6 #(not the true number)
+        self.OPF_TREASURY_OCEAN_FOR_OCEAN_DAO = 100e6 #(not the true number)
+        self.OPF_TREASURY_OCEAN_FOR_OPF_MGMT = self.OPF_TREASURY_OCEAN - self.OPF_TREASURY_OCEAN_FOR_OCEAN_DAO
+
+        self.BDB_TREASURY_USD = 2e6 #(not the true number)
+        self.BDB_TREASURY_OCEAN = 20e6  #(not the true number)
+
+        self.POOL_WEIGHT_DT    = 3.0
+        self.POOL_WEIGHT_OCEAN = 7.0
+        assert (self.POOL_WEIGHT_DT + self.POOL_WEIGHT_OCEAN) == 10.0
+
     def annualMktsGrowthRate(self, ratio_RND_to_sales: float) -> float:
         """
         Growth rate for marketplaces. Starts low, and increases as
@@ -117,25 +134,25 @@ class SimState(SimStateBase.SimStateBase):
         new_agents.add(MinterAgents.OCEANFuncMinterAgent(
             name = "ocean_51",
             receiving_agent_name = "ocean_dao",
-            total_OCEAN_to_mint = UNMINTED_OCEAN_SUPPLY,
+            total_OCEAN_to_mint = ss.UNMINTED_OCEAN_SUPPLY,
             s_between_mints = S_PER_DAY,
             func = func))
         
         new_agents.add(GrantGivingAgent(
             name = "opf_treasury_for_ocean_dao",
-            USD = 0.0, OCEAN = OPF_TREASURY_OCEAN_FOR_OCEAN_DAO, 
+            USD = 0.0, OCEAN = ss.OPF_TREASURY_OCEAN_FOR_OCEAN_DAO, 
             receiving_agent_name = "ocean_dao",
             s_between_grants = S_PER_MONTH, n_actions = 12 * 3))
         
         new_agents.add(GrantGivingAgent(
             name = "opf_treasury_for_opf_mgmt",
-            USD = OPF_TREASURY_USD, OCEAN = OPF_TREASURY_OCEAN_FOR_OPF_MGMT,
+            USD = ss.OPF_TREASURY_USD, OCEAN = ss.OPF_TREASURY_OCEAN_FOR_OPF_MGMT,
             receiving_agent_name = "opf_mgmt",
             s_between_grants = S_PER_MONTH, n_actions = 12 * 3))
         
         new_agents.add(GrantGivingAgent(
             name = "bdb_treasury",
-            USD = BDB_TREASURY_USD, OCEAN = BDB_TREASURY_OCEAN,
+            USD = ss.BDB_TREASURY_USD, OCEAN = ss.BDB_TREASURY_OCEAN,
             receiving_agent_name = "bdb_mgmt",
             s_between_grants = S_PER_MONTH, n_actions = 17))
         
@@ -221,7 +238,7 @@ class SimState(SimStateBase.SimStateBase):
             - self.totalOCEANburned()
         
     def initialOCEAN(self) -> float:
-        return INIT_OCEAN_SUPPLY
+        return self.ss.INIT_OCEAN_SUPPLY
         
     def totalOCEANminted(self) -> float:
         return self._total_OCEAN_minted

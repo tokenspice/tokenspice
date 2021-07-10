@@ -264,7 +264,7 @@ Uncontrollable Variables (Env & rnd structure & params)
 - Ranges for envvars, and parameters for rndvar pdfs, are in constants.py, etc.
 
 
-### Metrics
+### Metrics (KPIs)
 - These are what's output by SimEngine.py into the CSV, then plotted
 - In the future, we could get fancier by leveraging TheGraph. 
 

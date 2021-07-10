@@ -21,7 +21,3 @@ def testSeconds():
     assert isinstance(S_PER_MONTH, int)
     assert isinstance(S_PER_YEAR, int)
 
-def testTotalOceanSupply():
-    assert 1e6 < TOTAL_OCEAN_SUPPLY < 2e9
-    assert isinstance(TOTAL_OCEAN_SUPPLY, float)
-
