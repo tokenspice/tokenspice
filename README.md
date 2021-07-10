@@ -202,9 +202,9 @@ git push
 **Change sim settings as needed.**
 - To run faster: open `tokenspice.ini` and set `safety = False`. 
 
-**Run simulation.** Here, we run a 10-day sim, storing to `outdir_csv`. Observe the results while running. See `help.py` for more options.
+**Run simulation.** Here, we simulate the netlist `mynetlist1.py`, storing to `outdir_csv`. Observe the results while running. See `help.py` for more options.
 ```console
-rm -rf outdir_csv; ./run_1.py 10 outdir_csv 1>out.txt 2>&1 &
+rm -rf outdir_csv; ./tokenspice.py mynetlist1.py outdir_csv 1>out.txt 2>&1 &
 tail -f out.txt
 
 Create plots from run results, and store them in `outdir_png`. Then view the images.

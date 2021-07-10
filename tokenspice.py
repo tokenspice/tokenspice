@@ -1,7 +1,5 @@
 #!/usr/bin/env python 
 
-# from enforce_typing import enforce_types
-from enforce_typing import enforce_types
 import logging
 import os
 import sys
@@ -9,9 +7,6 @@ import sys
 INFO = logging.INFO
 DEBUG = logging.DEBUG
 WARNING = logging.WARNING
-
-# Removing enforce. enforce_typing should be much faster so we don't need the safety toggle.
-# enforce.config({'enabled': False})  # Turn off runtime type-checking, for speed
 
 if __name__== '__main__':            
     #set up logging
@@ -21,10 +16,10 @@ if __name__== '__main__':
     
     #set help message
     help = """
-Usage: run_1 MAX_DAYS OUTPUT_DIR [DO_PROFILE]
+Usage: tokenspice NETLIST OUTPUT_DIR [DO_PROFILE]
 
- MAX_DAYS -- float -- # days to simulate
- OUTPUT_DIR -- string -- output directory for csv file & state db files.
+ NETLIST -- string -- pathname for netlist
+ OUTPUT_DIR -- string -- output directory for csv file.
  DO_PROFILE -- bool -- if True, profile. Otherwise don't. Defalt=False.
  """
 
@@ -38,14 +33,14 @@ Usage: run_1 MAX_DAYS OUTPUT_DIR [DO_PROFILE]
         sys.exit(0)
     
     #extract inputs
-    max_days = eval(sys.argv[1])
+    netlist = sys.argv[1]
     output_dir = sys.argv[2]
     do_profile = False
     if num_args == 3 and sys.argv[3] == 'True':
         do_profile = True
 
-    print("Arguments: MAX_DAYS=%s, OUTPUT_DIR=%s, DO_PROFILE=%s\n" %
-          (max_days, output_dir, do_profile))
+    print("Arguments: NETLIST=%s, OUTPUT_DIR=%s, DO_PROFILE=%s\n" %
+          (netlist, output_dir, do_profile))
 
     #handle corner cases
     if os.path.exists(output_dir):
@@ -62,6 +57,7 @@ Usage: run_1 MAX_DAYS OUTPUT_DIR [DO_PROFILE]
     print('')
     
     ss = SimStrategy()
+    max_days = 10 #FIXME magic number. Should be in netlist!
     ss.setMaxTicks(max_days * constants.S_PER_DAY / ss.time_step + 1)
     
     assert hasattr(ss, 'save_interval')
