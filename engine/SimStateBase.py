@@ -1,4 +1,5 @@
 from enforce_typing import enforce_types
+from agents.AgentDict import AgentDict
 
 @enforce_types
 class SimStateBase(object):

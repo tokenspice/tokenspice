@@ -51,7 +51,7 @@ Usage: tsp NETLIST OUTPUT_DIR [DO_PROFILE]
     os.mkdir(output_dir)
 
     # initialize state from netlist file
-    from netlist.Web3SustLoopNoEvm import SimState #FIXME: replace w import netlist
+    from netlists.Web3SustLoopNoEvm import SimState #FIXME: replace w import netlist
     state = SimState()
     
     #go

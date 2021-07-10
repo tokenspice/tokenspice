@@ -3,7 +3,6 @@ from typing import Set
 
 from agents import MinterAgents
 from agents.BaseAgent import BaseAgent
-from agents.AgentDict import AgentDict
 from agents.GrantGivingAgent import GrantGivingAgent
 from agents.GrantTakingAgent import GrantTakingAgent
 from agents.MarketplacesAgent import MarketplacesAgent
@@ -16,16 +15,18 @@ from util.mathutil import Range
 from util.constants import *
 
 @enforce_types
-class SimState(SimStateBase):
+class SimState(SimStateBase.SimStateBase):
     
     def __init__(self):
         #initialize self.tick, ss, agents, kpis
-        super().__init__(name)
+        super().__init__()
 
         #now, fill in actual values for ss, agents, kpis
-        self.ss = SimStrategy()
-        max_days = 10 #magic number
-        ss.setMaxTicks(max_days * constants.S_PER_DAY / ss.time_step + 1)
+        self.ss = SimStrategy.SimStrategy()
+        ss = self.ss #for convenience as we go forward
+        
+        max_days = 10 
+        ss.setMaxTicks(max_days * S_PER_DAY / ss.time_step + 1)
                 
         #used to manage names
         self._next_free_marketplace_number = 0
