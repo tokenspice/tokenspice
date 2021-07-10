@@ -7,8 +7,6 @@ import os
 from util import valuation
 from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 from util.strutil import prettyBigNum
-import engine.SimState as SimState
-from engine.SimStrategy import SimStrategy
 
 @enforce_types
 class SimEngine(object):
@@ -17,16 +15,12 @@ class SimEngine(object):
       Runs a simulation.
       
     @attributes
-      ss -- simulation strategy parameters
+      state - child of SimState
       output_dir -- directory of where results are stored
-      state -- None or SimState -- start from scratch (if None) or 
-       from a pre-loaded state (e.g. with SimState.loadSimState).
     """
 
-    def __init__(self, ss: SimStrategy, output_dir: str, state = None):
+    def __init__(self, state, output_dir: str):
         self.state = state
-        if self.state is None:
-            self.state = SimState.SimState(ss)
         self.output_dir = output_dir
         self.output_csv = "data.csv" #magic number
 

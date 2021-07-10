@@ -8,7 +8,6 @@ from engine.SimStrategy import *
 @enforce_types
 def testBasic():
     ss = SimStrategy()
-    assert ss.save_interval >= 1
     assert ss.max_ticks > 0
 
 @enforce_types

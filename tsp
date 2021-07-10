@@ -16,7 +16,7 @@ if __name__== '__main__':
     
     #set help message
     help = """
-Usage: tokenspice NETLIST OUTPUT_DIR [DO_PROFILE]
+Usage: tsp NETLIST OUTPUT_DIR [DO_PROFILE]
 
  NETLIST -- string -- pathname for netlist
  OUTPUT_DIR -- string -- output directory for csv file.
@@ -50,21 +50,13 @@ Usage: tokenspice NETLIST OUTPUT_DIR [DO_PROFILE]
     # make directory
     os.mkdir(output_dir)
 
-    from engine.SimEngine import SimEngine
-    from engine.SimStrategy import SimStrategy
-    from util import constants
-    print(f'SAFETY = {constants.SAFETY}')
-    print('')
+    # initialize state from netlist file
+    from netlist.Web3SustLoopNoEvm import SimState #FIXME: replace w import netlist
+    state = SimState()
     
-    ss = SimStrategy()
-    max_days = 10 #FIXME magic number. Should be in netlist!
-    ss.setMaxTicks(max_days * constants.S_PER_DAY / ss.time_step + 1)
-    
-    assert hasattr(ss, 'save_interval')
-    ss.save_interval = constants.S_PER_DAY
-                
     #go
-    master = SimEngine(ss, output_dir)
+    from engine.SimEngine import SimEngine
+    master = SimEngine(state, output_dir)
     if not do_profile:
         master.run()
     else:

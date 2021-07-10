@@ -1,6 +1,3 @@
-import logging
-log = logging.getLogger('simstate')
-
 from enforce_typing import enforce_types
 from typing import Set
 
@@ -12,33 +9,30 @@ from agents.GrantTakingAgent import GrantTakingAgent
 from agents.MarketplacesAgent import MarketplacesAgent
 from agents.OCEANBurnerAgent import OCEANBurnerAgent
 from agents.RouterAgent import RouterAgent
-from engine import Kpis, SimStrategy
+
+from engine import SimStateBase, Kpis, SimStrategy
 from util import mathutil, valuation
 from util.mathutil import Range
 from util.constants import *
 
 @enforce_types
-class SimState(object):
+class SimState(SimStateBase):
     
-    def __init__(self, ss: SimStrategy.SimStrategy):
-        log.debug("init:begin")
-        
-        #main
-        self.ss = ss
-        self.tick = 0
+    def __init__(self):
+        #initialize self.tick, ss, agents, kpis
+        super().__init__(name)
 
+        #now, fill in actual values for ss, agents, kpis
+        self.ss = SimStrategy()
+        max_days = 10 #magic number
+        ss.setMaxTicks(max_days * constants.S_PER_DAY / ss.time_step + 1)
+                
         #used to manage names
         self._next_free_marketplace_number = 0
 
         #used to add agents
         self._marketplace_tick_previous_add = 0
-            
-        #main storage of agents. Fill this below
-        self.agents = AgentDict() #agent_name : Agent instance
-
-        #<<Note many magic numbers below, for simplicity>>
-        #note: KPIs class also has some magic number
-
+        
         #as ecosystem improves, these parameters may change / improve
         self._marketplace_percent_toll_to_ocean = 0.002 #magic number
         self._percent_burn: float = 0.05 #to burning, vs to DAO #magic number
@@ -53,7 +47,8 @@ class SimState(object):
         #Instantiate and connnect agent instances. "Wire up the circuit"
         new_agents: Set[BaseAgent] = set()
 
-        #FIXME: replace MarketplacesAgent with DataecosystemAgent, when ready
+        #Note: could replace MarketplacesAgent with DataecosystemAgent, for a
+        # higher-fidelity simulation using EVM agents
         new_agents.add(MarketplacesAgent(
             name = "marketplaces1", USD=0.0, OCEAN=0.0,
             toll_agent_name = "opc_address",
@@ -125,34 +120,15 @@ class SimState(object):
 
         #track certain metrics over time, so that we don't have to load
         self.kpis = Kpis.KPIs(self.ss.time_step)
-        
-        log.debug("init: end")
-            
+                    
     def takeStep(self) -> None:
         """This happens once per tick"""
         #update agents
-        for agent in self.agents.values():
-            agent.takeStep(self)
-
-        #update global state values: revenue, valuation
-        self.kpis.takeStep(self)
-
+        #update kpis (global state values)
+        super().takeStep()
+        
         #update global state values: other
         self._speculation_valuation *= (1.0 + self._percent_increase_speculation_valuation_per_s * self.ss.time_step)
-
-    #==============================================================   
-    def getAgent(self, name: str):
-        return self.agents[name]
-        
-    def allAgents(self):
-        return set(self.agents.values())
-
-    def numAgents(self) -> int:
-        return len(self.agents)
-
-    def addAgent(self, agent):
-        assert agent.name not in self.agents, "have an agent with this name" 
-        self.agents[agent.name] = self.agents
 
     #==============================================================      
     def marketplacePercentTollToOcean(self) -> float:

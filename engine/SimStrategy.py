@@ -22,9 +22,6 @@ class SimStrategy(StrMixin):
         #seconds per tick
         self.time_step: int = S_PER_HOUR
         
-        #number of ticks between saves
-        self.save_interval: int = 1
-
         #govern total sim time
         max_years = 20
         self.max_ticks: int = max_years * S_PER_YEAR / self.time_step + 10
