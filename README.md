@@ -206,6 +206,7 @@ git push
 ```console
 rm -rf outdir_csv; ./tokenspice.py mynetlist1.py outdir_csv 1>out.txt 2>&1 &
 tail -f out.txt
+```
 
 Create plots from run results, and store them in `outdir_png`. Then view the images.
 ```console
