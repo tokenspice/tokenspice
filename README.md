@@ -21,7 +21,7 @@ TokenSPICE was meant to be simple. It definitely makes no claims on "best" for a
 - [🏄 Do Simulations, Make Changes](#-do-simulations-make-changes)
 - [🦑 TokenSPICE Design](#-tokenspice-design)
 - [🐡 Backlog](#-backlog)
-  - [Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)
+  - [Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1?add_cards_query=is%3Aopen)
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
 - [🏛 License](#-license)
 
@@ -35,7 +35,7 @@ Open a new terminal and:
 pip uninstall eth-brownie
 
 #clone repo
-git clone https://github.com/oceanprotocol/tokenspice2.git tokenspice
+git clone https://github.com/oceanprotocol/tokenspice.git tokenspice
 cd tokenspice
 
 #make sure we're not in env't; remove old env'ts
@@ -312,7 +312,7 @@ Ocean V4.0 makes Ocean more flexible. Ocean V4.1 is "Better Staking / IDOs". Our
 
 # 🐡 Backlog
 
-**[Kanban Board](https://github.com/oceanprotocol/tokenspice2/projects/1?add_cards_query=is%3Aopen)**
+**[Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1?add_cards_query=is%3Aopen)**
 
 ### Context
 
@@ -334,11 +334,11 @@ Ocean V4.0 makes Ocean more flexible. Ocean V4.1 is "Better Staking / IDOs". Our
 
 This work is geared towards verifying & tuning Ocean V4.1, which updates Ocean smart contracts for better IDOs through one-sided market makers and more.
 
-1. **Get *some* overall loop running that includes at least one EVM agent** [#34](https://github.com/oceanprotocol/tokenspice2/issues/34)
-1. **Be able to specify a netlist and run, without having to fork** [#30](https://github.com/oceanprotocol/tokenspice2/issues/30)
+1. **Get *some* overall loop running that includes at least one EVM agent** [#34](https://github.com/oceanprotocol/tokenspice/issues/34)
+1. **Be able to specify a netlist and run, without having to fork** [#30](https://github.com/oceanprotocol/tokenspice/issues/30)
 2. **Improve Continuous Integration** - various issues, see kanban 
-3. **Finish + verify Ocean V3 agents** [#28](https://github.com/oceanprotocol/tokenspice2/issues/28). AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
-4. **Finish + verify Ocean V4.1 agents** [#29](https://github.com/oceanprotocol/tokenspice2/issues/29). AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
+3. **Finish + verify Ocean V3 agents** [#28](https://github.com/oceanprotocol/tokenspice/issues/28). AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
+4. **Finish + verify Ocean V4.1 agents** [#29](https://github.com/oceanprotocol/tokenspice/issues/29). AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
 5. **Design space exploration**: tuning of Ocean V4.1 (w/ Balancer V2 design). Manual or optimization-based.
 
 ### Roadmap - Longer Term
