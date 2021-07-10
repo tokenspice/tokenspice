@@ -1,6 +1,6 @@
 from enforce_typing import enforce_types
 
-from agents import MinterAgents
+from assets.agents import MinterAgents
 from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY
 
