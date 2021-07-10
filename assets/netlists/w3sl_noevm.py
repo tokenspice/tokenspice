@@ -1,3 +1,7 @@
+"""
+w3sl_noevm:
+Netlist to simulate Web3 Sustainability Loop (w3sl), with no EVM
+"""
 from enforce_typing import enforce_types
 from typing import List, Set
 
