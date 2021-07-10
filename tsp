@@ -1,5 +1,6 @@
 #!/usr/bin/env python 
 
+import importlib
 import logging
 import os
 import sys
@@ -51,8 +52,9 @@ Usage: tsp NETLIST OUTPUT_DIR [DO_PROFILE]
     os.mkdir(output_dir)
 
     # initialize state from netlist file
-    from assets.netlists.w3sl_noevm import SimState #FIXME: replace w import netlist
-    state = SimState()
+    module_str = netlist.replace('/','.').replace('.py','') 
+    netlist_module = importlib.import_module(module_str)
+    state = netlist_module.SimState()
     
     #go
     from engine.SimEngine import SimEngine
