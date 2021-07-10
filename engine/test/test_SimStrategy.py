@@ -37,17 +37,3 @@ def testSetMaxTicks():
 def testStr():
     ss = SimStrategy()
     assert "SimStrategy" in str(ss)
-
-@enforce_types
-def testSchedule():
-    s = Schedule(30, 5)
-    assert s.interval == 30
-    assert s.n_actions== 5
-    assert "Schedule" in str(s)
-
-    with pytest.raises(AssertionError): s = Schedule(0, 5)
-    with pytest.raises(AssertionError): s = Schedule(-1, 5)
-    with pytest.raises(AssertionError): s = Schedule(30, 0)
-    with pytest.raises(AssertionError): s = Schedule(30, -1)
-
-

@@ -9,11 +9,54 @@ from agents.MarketplacesAgent import MarketplacesAgent
 from agents.OCEANBurnerAgent import OCEANBurnerAgent
 from agents.RouterAgent import RouterAgent
 
-from engine import SimStateBase, Kpis, SimStrategy
-from util import mathutil, valuation
-from util.mathutil import Range
-from util.constants import *
+from engine import SimStateBase, Kpis, SimStrategyBase
+from util import valuation
+from util.constants import * #S_PER_HOUR, etc
 
+@enforce_types
+class SimStrategy(SimStrategyBase.SimStrategyBase):
+    def __init__(self):
+        #===initialize self.time_step, max_ticks====
+        super().__init__()
+
+        #===set base-class values we want for this netlist====
+        self.setTimeStep(S_PER_HOUR)
+        max_days = 10
+        self.setMaxTicks(max_days * S_PER_DAY / self.time_step + 1)
+
+        #===new attributes specific to this netlist===
+
+        #initial # mkts
+        self.init_n_marketplaces = 1
+
+        #for computing annualGrowthRate() of # marketplaces, revenue/mktplace
+        #-total marketplaces' growth = (1+annualGrowthRate)^2 - 1
+        #-so, if we want upper bound of total marketplaces' growth of 50%,
+        # we need max_growth_rate = 22.5%.
+        #-and, if we want lower bound of total growth of -25%,
+        # we need growth_rate_if_0_sales = -11.8%
+        self.growth_rate_if_0_sales = -0.118
+        self.max_growth_rate = 0.415
+        self.tau = 0.6
+
+    def annualMktsGrowthRate(self, ratio_RND_to_sales: float) -> float:
+        """
+        Growth rate for marketplaces. Starts low, and increases as
+        the ($ into R&D)/($ from sales) goes up, but w/ diminishing returns.
+
+        Modeled as an exponential decay function. 
+        -Input x: ratio_RND_to_sales
+        -Output y: growth rate
+        -Func params:
+          -self.tau: at x=tau, y has increased by 50% of its possible increase
+          -          at x=2*tau, y ... 75% ...
+          -self.growth_rate_if_0_sales 
+          -self.max_growth_rate
+        """
+        mult = self.max_growth_rate - self.growth_rate_if_0_sales
+        growth_rate: float = self.growth_rate_if_0_sales + mult * (1.0 - math.pow(0.5, ratio_RND_to_sales/self.tau))
+        return growth_rate
+    
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
     
@@ -22,12 +65,9 @@ class SimState(SimStateBase.SimStateBase):
         super().__init__()
 
         #now, fill in actual values for ss, agents, kpis
-        self.ss = SimStrategy.SimStrategy()
+        self.ss = SimStrategy()
         ss = self.ss #for convenience as we go forward
-        
-        max_days = 10 
-        ss.setMaxTicks(max_days * S_PER_DAY / ss.time_step + 1)
-                
+                        
         #used to manage names
         self._next_free_marketplace_number = 0
 
@@ -67,9 +107,9 @@ class SimState(SimStateBase.SimStateBase):
             name = "opc_burner", USD=0.0, OCEAN=0.0))
 
         #func = MinterAgents.ExpFunc(H=4.0)
-        func = MinterAgents.RampedExpFunc(H=4.0,                                 #magic number
-                                          T0=0.5, T1=1.0, T2=1.4, T3=3.0,        #""
-                                          M1=0.10, M2=0.25, M3=0.50)             #""
+        func = MinterAgents.RampedExpFunc(H=4.0,
+                                          T0=0.5, T1=1.0, T2=1.4, T3=3.0,
+                                          M1=0.10, M2=0.25, M3=0.50)
         new_agents.add(MinterAgents.OCEANFuncMinterAgent(
             name = "ocean_51",
             receiving_agent_name = "ocean_dao",
@@ -79,21 +119,21 @@ class SimState(SimStateBase.SimStateBase):
         
         new_agents.add(GrantGivingAgent(
             name = "opf_treasury_for_ocean_dao",
-            USD = 0.0, OCEAN = OPF_TREASURY_OCEAN_FOR_OCEAN_DAO,                 #magic number
+            USD = 0.0, OCEAN = OPF_TREASURY_OCEAN_FOR_OCEAN_DAO, 
             receiving_agent_name = "ocean_dao",
-            s_between_grants = S_PER_MONTH, n_actions = 12 * 3))                 #""
+            s_between_grants = S_PER_MONTH, n_actions = 12 * 3))
         
         new_agents.add(GrantGivingAgent(
             name = "opf_treasury_for_opf_mgmt",
-            USD = OPF_TREASURY_USD, OCEAN = OPF_TREASURY_OCEAN_FOR_OPF_MGMT,     #magic number
+            USD = OPF_TREASURY_USD, OCEAN = OPF_TREASURY_OCEAN_FOR_OPF_MGMT,
             receiving_agent_name = "opf_mgmt",
-            s_between_grants = S_PER_MONTH, n_actions = 12 * 3))                 #""
+            s_between_grants = S_PER_MONTH, n_actions = 12 * 3))
         
         new_agents.add(GrantGivingAgent(
             name = "bdb_treasury",
-            USD = BDB_TREASURY_USD, OCEAN = BDB_TREASURY_OCEAN,                  #magic number
+            USD = BDB_TREASURY_USD, OCEAN = BDB_TREASURY_OCEAN,
             receiving_agent_name = "bdb_mgmt",
-            s_between_grants = S_PER_MONTH, n_actions = 17))                     #""
+            s_between_grants = S_PER_MONTH, n_actions = 17))
         
         new_agents.add(RouterAgent(
             name = "ocean_dao",
@@ -164,7 +204,7 @@ class SimState(SimStateBase.SimStateBase):
         return v
     
     def fundamentalsValuation(self) -> float: #in USD
-        return self.kpis.valuationPS(30.0) #based on P/S=30                     #magic number
+        return self.kpis.valuationPS(30.0) #based on P/S=30
     
     def speculationValuation(self) -> float: #in USD
         return self._speculation_valuation
