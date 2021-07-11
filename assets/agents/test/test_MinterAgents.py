@@ -1,6 +1,6 @@
 from enforce_typing import enforce_types
 
-from assets.agents.BaseAgent import BaseAgent
+from engine.AgentBase import AgentBase
 from engine import SimState, SimStrategy
 from assets.agents.MinterAgents import *
 from util.constants import BITCOIN_NUM_HALF_LIVES, \
@@ -14,7 +14,7 @@ def testOCEANLinearMinterAgent():
 
     state = SimState.SimState(ss)
 
-    class SimpleAgent(BaseAgent):
+    class SimpleAgent(AgentBase):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
@@ -91,7 +91,7 @@ def _test_funcMinter(func):
 
     state = SimState.SimState(ss)
 
-    class SimpleAgent2(BaseAgent):
+    class SimpleAgent2(AgentBase):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent2("a1", 0.0, 0.0)

@@ -1,7 +1,7 @@
 from enforce_typing import enforce_types
 
 from engine import SimStateBase, SimStrategyBase, KPIsBase
-from assets.agents import BaseAgent
+from engine import AgentBase
 from util.constants import S_PER_DAY
 
 #==================================================================
@@ -15,7 +15,7 @@ class KPIs(KPIsBase.KPIsBase):
     def tick():
         pass
 
-class SimpleAgent(BaseAgent.BaseAgent):
+class SimpleAgent(AgentBase.AgentBase):
     def takeStep(self, state):
         pass
 

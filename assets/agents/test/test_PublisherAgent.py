@@ -3,7 +3,7 @@ import pytest
 
 from assets.agents.PoolAgent import PoolAgent
 from assets.agents.PublisherAgent import PublisherAgent
-from assets.agents.AgentDict import AgentDict
+from engine.AgentDict import AgentDict
 
 class MockState:
     def __init__(self):

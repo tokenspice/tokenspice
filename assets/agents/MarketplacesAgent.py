@@ -4,12 +4,12 @@ log = logging.getLogger('agents')
 from enforce_typing import enforce_types
 import math
 
-from assets.agents.BaseAgent import BaseAgent
+from engine.AgentBase import AgentBase
 from util.constants import S_PER_YEAR
     
 
 @enforce_types
-class MarketplacesAgent(BaseAgent):
+class MarketplacesAgent(AgentBase):
     def __init__(self,
                  name: str, USD: float, OCEAN: float,
                  toll_agent_name: str,

@@ -3,7 +3,7 @@ from enforce_typing import enforce_types
 import pytest
 from typing import Union
 
-from assets.agents import AgentWallet, BaseAgent
+from engine import AgentWallet, AgentBase
 from web3tools import web3util, web3wallet
 from web3tools.web3util import toBase18
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
@@ -34,7 +34,7 @@ def alice_private_key() -> str:
 
 @pytest.fixture
 def alice_agent():
-    class MockAgent(BaseAgent.BaseAgent):
+    class MockAgent(AgentBase.AgentBase):
         def takeStep(self, state):
             pass
     agent = MockAgent("agent1",USD=0.0,OCEAN=0.0)

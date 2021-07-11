@@ -1,11 +1,11 @@
 from enforce_typing import enforce_types
 import pytest
 
-from assets.agents.BaseAgent import *
-from assets.agents.test.conftest import _DT_INIT, _DT_STAKE 
+from engine.AgentBase import *
+from engine.test.conftest import _DT_INIT, _DT_STAKE 
 
 @enforce_types
-class MyTestAgent(BaseAgent):
+class MyTestAgent(AgentBase):
     def takeStep(self, state):
         pass
 
@@ -53,16 +53,16 @@ def testReceiveAndSend():
 #===================================================================
 # datatoken and pool-related
 @enforce_types
-def test_DT(alice_agent: BaseAgent, alice_DT: datatoken.Datatoken):    
+def test_DT(alice_agent: AgentBase, alice_DT: datatoken.Datatoken):    
     alice_DT_amt: float = alice_agent._wallet.DT(alice_DT)
     assert alice_DT_amt == (_DT_INIT - _DT_STAKE)
 
 @enforce_types
-def test_BPT(alice_agent: BaseAgent, alice_pool: bpool.BPool):    
+def test_BPT(alice_agent: AgentBase, alice_pool: bpool.BPool):    
     assert alice_agent.BPT(alice_pool) == 100.0
 
 @enforce_types
-def test_stakeOCEAN(alice_agent: BaseAgent, alice_pool):    
+def test_stakeOCEAN(alice_agent: AgentBase, alice_pool):    
     OCEAN_before:float = alice_agent.OCEAN()
     BPT_before:float = alice_agent.BPT(alice_pool)
     

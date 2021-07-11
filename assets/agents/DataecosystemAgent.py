@@ -4,14 +4,14 @@ log = logging.getLogger('marketagents')
 from enforce_typing import enforce_types
 import random
 
-from assets.agents.BaseAgent import BaseAgent
+from engine.AgentBase import AgentBase
 from assets.agents.PublisherAgent import PublisherAgent
 from assets.agents.StakerspeculatorAgent import StakerspeculatorAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
 from web3tools.web3util import toBase18
                     
 @enforce_types
-class DataecosystemAgent(BaseAgent):
+class DataecosystemAgent(AgentBase):
     """Will operate as a high-fidelity replacement for MarketplacesAgents,
     when it's ready."""
     def __init__(self, name: str, USD: float, OCEAN: float):

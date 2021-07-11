@@ -1,6 +1,6 @@
 from enforce_typing import enforce_types
 
-from assets.agents.BaseAgent import BaseAgent
+from engine.AgentBase import AgentBase
 from assets.agents.GrantGivingAgent import GrantGivingAgent
 from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY
@@ -13,7 +13,7 @@ def test1():
 
     state = SimState.SimState(ss)
 
-    class SimpleAgent(BaseAgent):
+    class SimpleAgent(AgentBase):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)

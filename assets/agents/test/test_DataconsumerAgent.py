@@ -1,6 +1,6 @@
 import pytest
 
-from assets.agents.AgentDict import AgentDict
+from engine.AgentDict import AgentDict
 from assets.agents.PoolAgent import PoolAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
 from util.constants import S_PER_HOUR

@@ -4,10 +4,10 @@ log = logging.getLogger('agents')
 from enforce_typing import enforce_types
 import math
 
-from assets.agents.BaseAgent import BaseAgent
+from engine.AgentBase import AgentBase
         
 @enforce_types
-class GrantTakingAgent(BaseAgent):    
+class GrantTakingAgent(AgentBase):    
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         self._spent_at_tick = 0.0 #USD and OCEAN (in USD) spent

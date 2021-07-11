@@ -1,6 +1,6 @@
 from enforce_typing import enforce_types
 
-from assets.agents import BaseAgent, GrantTakingAgent
+from engine import AgentBase, GrantTakingAgent
 from engine import SimState, SimStrategy
 
 @enforce_types

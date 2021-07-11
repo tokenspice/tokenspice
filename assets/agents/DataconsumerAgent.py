@@ -1,13 +1,13 @@
 from enforce_typing import enforce_types
 import random
 
-from assets.agents.BaseAgent import BaseAgent
+from engine.AgentBase import AgentBase
 from web3engine import bpool, datatoken, globaltokens
 from web3tools.web3util import fromBase18, toBase18
 from util import constants             
 
 @enforce_types
-class DataconsumerAgent(BaseAgent):
+class DataconsumerAgent(AgentBase):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         

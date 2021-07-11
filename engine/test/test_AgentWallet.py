@@ -1,8 +1,8 @@
 from enforce_typing import enforce_types
 import pytest
 
-from assets.agents.AgentWallet import *
-from assets.agents.test.conftest import _DT_INIT, _DT_STAKE 
+from engine.AgentWallet import *
+from engine.test.conftest import _DT_INIT, _DT_STAKE 
 from web3engine import bfactory, bpool, datatoken
 
 #=======================================================================

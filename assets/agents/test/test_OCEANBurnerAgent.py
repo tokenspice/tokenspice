@@ -1,7 +1,7 @@
 from enforce_typing import enforce_types
 import pytest
 
-from assets.agents import BaseAgent, OCEANBurnerAgent
+from engine import AgentBase, OCEANBurnerAgent
 from engine import SimState, SimStrategy
 
 @enforce_types

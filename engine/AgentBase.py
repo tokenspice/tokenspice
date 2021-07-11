@@ -5,14 +5,14 @@ from abc import ABC, abstractmethod
 from enforce_typing import enforce_types
 import typing
 
-from assets.agents import AgentWallet
+from engine import AgentWallet
 from web3engine import bpool, datatoken, globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
 from web3tools.web3util import toBase18
 
 @enforce_types
-class BaseAgent(ABC, StrMixin):
+class AgentBase(ABC, StrMixin):
     """This can be a data buyer, publisher, etc. Sub-classes implement each."""
        
     def __init__(self, name: str, USD: float, OCEAN: float):
@@ -39,7 +39,7 @@ class BaseAgent(ABC, StrMixin):
     def _transferUSD(self, receiving_agent, amount: float) -> None:
         """set receiver to None to model spending, without modeling receiver"""
         if SAFETY:
-            assert isinstance(receiving_agent, BaseAgent) or (receiving_agent is None)
+            assert isinstance(receiving_agent, AgentBase) or (receiving_agent is None)
         if receiving_agent is not None:
             self._wallet.transferUSD(receiving_agent._wallet, amount)
         else:
@@ -56,7 +56,7 @@ class BaseAgent(ABC, StrMixin):
     def _transferOCEAN(self, receiving_agent, amount: float) -> None:
         """set receiver to None to model spending, without modeling receiver"""
         if SAFETY:
-            assert isinstance(receiving_agent, BaseAgent) or (receiving_agent is None)
+            assert isinstance(receiving_agent, AgentBase) or (receiving_agent is None)
         if receiving_agent is not None:
             self._wallet.transferOCEAN(receiving_agent._wallet, amount)
         else:

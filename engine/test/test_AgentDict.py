@@ -1,17 +1,17 @@
-from assets.agents.AgentDict import AgentDict
+from engine.AgentDict import AgentDict
 
 from enforce_typing import enforce_types
 
 @enforce_types
 def test1():
-    class BaseAgent:
+    class AgentBase:
         def __init__(self, name):
             self.name = name
-    class FooAgent(BaseAgent):
+    class FooAgent(AgentBase):
         pass
-    class BarAgent(BaseAgent):
+    class BarAgent(AgentBase):
         pass
-    class BahAgent(BaseAgent):
+    class BahAgent(AgentBase):
         pass
     
     d = AgentDict({'foo1': FooAgent('foo1'),

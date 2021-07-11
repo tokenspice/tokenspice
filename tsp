@@ -80,14 +80,13 @@ def do_run():
     state = netlist_module.SimState()
     
     #go
-    from engine.SimEngine import SimEngine
-    master = SimEngine(state, output_dir)
+    engine = netlist_module.SimEngine(state, output_dir)
     if not do_profile:
-        master.run()
+        engine.run()
     else:
         import cProfile
         stats_filename = os.path.join(output_dir, 'stats')
-        cProfile.run('master.run()', stats_filename)
+        cProfile.run('engine.run()', stats_filename)
         print(f'Output stats file: {stats_filename}. To see: tsp showstats outdir_csv/stats 20 cumulative')
     print(f'Output directory: {output_dir}')
 
