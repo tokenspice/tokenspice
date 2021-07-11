@@ -114,11 +114,11 @@ tsp
 
 ## Run simulation
 
-Here's an example on a supplied netlist `w3sl_noevm.py`.
+Here's an example on a supplied netlist `wsloop.py`.
 
 Simulate the netlist, storing results to `outdir_csv`.
 ```console
-tsp run assets/netlists/w3sl_noevm.py outdir_csv outdir_csv
+tsp run assets/netlists/wsloop.py outdir_csv outdir_csv
 ```
 
 Output plots to `outdir_png`, and view them.

@@ -31,7 +31,7 @@ TOOLS:
   -Logging: ./logging.conf
 
   == Example flow ==
-  rm -rf outdir_csv; tsp run assets/netlists/w3sl_noevm.py outdir_csv
+  rm -rf outdir_csv; tsp run assets/netlists/wsloop.py outdir_csv
   rm -rf outdir_png; tsp plot outdir_csv outdir_png
   eog outdir_png
  """

@@ -2,7 +2,7 @@ from enforce_typing import enforce_types
 import pytest
 
 from assets.agents import MinterAgents
-from assets.netlists.w3sl_noevm import SimStrategy, SimState, KPIs
+from assets.netlists.wsloop import SimStrategy, SimState, KPIs
 from util.constants import S_PER_DAY
 
 #===============================================================
