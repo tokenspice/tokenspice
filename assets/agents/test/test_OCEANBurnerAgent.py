@@ -1,8 +1,7 @@
 from enforce_typing import enforce_types
 import pytest
 
-from engine import AgentBase, OCEANBurnerAgent
-from engine import SimState, SimStrategy
+from assets.agents.OCEANBurnerAgent import OCEANBurnerAgent
 
 @enforce_types
 def test_fixedOCEANprice():
@@ -14,7 +13,7 @@ def test_fixedOCEANprice():
         def OCEANprice(self) -> float:
             return 2.0
     state = DummySimState()
-    a = OCEANBurnerAgent.OCEANBurnerAgent("foo", USD=10.0, OCEAN=0.0)
+    a = OCEANBurnerAgent("foo", USD=10.0, OCEAN=0.0)
 
     a.takeStep(state)
     assert a.USD() == 0.0
@@ -46,7 +45,7 @@ def test_changingOCEANprice():
             return self._initial_OCEAN - self._total_OCEAN_burned
 
     state = DummySimState()
-    a = OCEANBurnerAgent.OCEANBurnerAgent("foo", USD=10.0, OCEAN=0.0)
+    a = OCEANBurnerAgent("foo", USD=10.0, OCEAN=0.0)
     assert state.OCEANprice() == 2.0 #(val 200)/(supply 100)
 
     a.takeStep(state)

@@ -1,18 +1,23 @@
 from enforce_typing import enforce_types
 
-from engine.AgentBase import AgentBase
 from assets.agents.RouterAgent import RouterAgent
-from engine import SimState, SimStrategy
+from engine import AgentBase, SimStateBase, SimStrategyBase
 from util.constants import S_PER_DAY, S_PER_MONTH
+ 
+class SimStrategy(SimStrategyBase.SimStrategyBase):
+    pass
+
+class SimState(SimStateBase.SimStateBase):
+    pass
 
 @enforce_types
 def test1():
     #getting "tickOneMonthAgo" is tricky, so test it well
-    ss = SimStrategy.SimStrategy()
+    ss = SimStrategy()
     ss.time_step = S_PER_DAY
-    state = SimState.SimState(ss)
+    state = SimState(ss)
 
-    class SimpleAgent(AgentBase):
+    class SimpleAgent(AgentBase.AgentBase):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)

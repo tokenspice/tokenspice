@@ -1,20 +1,20 @@
 from enforce_typing import enforce_types
 
-from engine.AgentBase import AgentBase
-from engine import SimState, SimStrategy
 from assets.agents.MinterAgents import *
+from assets.netlists.w3sl_noevm import SimState, SimStrategy
+from engine import AgentBase
 from util.constants import BITCOIN_NUM_HALF_LIVES, \
     S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 
 @enforce_types
 def testOCEANLinearMinterAgent():
-    ss = SimStrategy.SimStrategy()
+    ss = SimStrategy()
     assert hasattr(ss, 'time_step')
     ss.time_step = 2
 
-    state = SimState.SimState(ss)
+    state = SimState(ss)
 
-    class SimpleAgent(AgentBase):
+    class SimpleAgent(AgentBase.AgentBase):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
@@ -80,7 +80,7 @@ def _test_funcMinter(func):
     do_log_plot = False #if manual_test, linear or log plot?
     max_year = 5 #if manual_test, stop earlier?
 
-    ss = SimStrategy.SimStrategy()
+    ss = SimStrategy()
     assert hasattr(ss, 'time_step')
     if manual_test:
         ss.time_step = S_PER_DAY
@@ -89,9 +89,9 @@ def _test_funcMinter(func):
         ss.time_step = 100 * S_PER_DAY
         s_between_mints = 100 * S_PER_YEAR
 
-    state = SimState.SimState(ss)
+    state = SimState(ss)
 
-    class SimpleAgent2(AgentBase):
+    class SimpleAgent2(AgentBase.AgentBase):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent2("a1", 0.0, 0.0)

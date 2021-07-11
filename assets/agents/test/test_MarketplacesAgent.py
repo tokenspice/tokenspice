@@ -3,7 +3,6 @@ import math
 import pytest
 
 from assets.agents.MarketplacesAgent import MarketplacesAgent
-from engine import SimState, SimStrategy
 from util.constants import S_PER_DAY, S_PER_YEAR
 
 @enforce_types

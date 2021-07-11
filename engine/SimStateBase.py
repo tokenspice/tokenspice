@@ -4,12 +4,12 @@ from engine.AgentDict import AgentDict
 @enforce_types
 class SimStateBase(object):
     
-    def __init__(self):
+    def __init__(self, ss=None):
         #number of ticks elapsed in the simulation
         self.tick = 0
 
         #child of SimStrategy. Holds max num ticks, etc.
-        self.ss = None
+        self.ss = ss
             
         #agent instances. Holds state for each agent
         self.agents = AgentDict() #agent_name : Agent instance

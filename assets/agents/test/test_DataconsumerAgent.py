@@ -1,8 +1,8 @@
 import pytest
 
-from engine.AgentDict import AgentDict
 from assets.agents.PoolAgent import PoolAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
+from engine.AgentDict import AgentDict
 from util.constants import S_PER_HOUR
 
 class MockSS:

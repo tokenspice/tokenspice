@@ -3,11 +3,17 @@ import pytest
 
 from assets.agents.PoolAgent import PoolAgent
 from assets.agents.PublisherAgent import PublisherAgent
-from engine.AgentDict import AgentDict
+from engine import AgentDict
+
+class MockSS:
+    def __init__(self):
+        self.POOL_WEIGHT_DT = 3.0
+        self.POOL_WEIGHT_OCEAN = 7.0
 
 class MockState:
     def __init__(self):
-        self.agents = AgentDict({})
+        self.agents = AgentDict.AgentDict({})
+        self.ss = MockSS()
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 

@@ -1,10 +1,11 @@
 from enforce_typing import enforce_types
 import random
 
-from engine.AgentBase import AgentBase
 from assets.agents.PoolAgent import PoolAgent
+from engine.AgentBase import AgentBase
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18
+from util.constants import S_PER_DAY
 
 @enforce_types
 class PublisherAgent(AgentBase):
@@ -12,13 +13,13 @@ class PublisherAgent(AgentBase):
         super().__init__(name, USD, OCEAN)
         
         self._s_since_create = 0
-        self._s_between_create = 7 * constants.S_PER_DAY #magic number
+        self._s_between_create = 7 * S_PER_DAY #magic number
         
         self._s_since_unstake = 0
-        self._s_between_unstake = 3 * constants.S_PER_DAY #magic number
+        self._s_between_unstake = 3 * S_PER_DAY #magic number
         
         self._s_since_sellDT = 0
-        self._s_between_sellDT = 15 * constants.S_PER_DAY #magic number
+        self._s_between_sellDT = 15 * S_PER_DAY #magic number
         
     def takeStep(self, state) -> None:
         self._s_since_create += state.ss.time_step
@@ -67,9 +68,9 @@ class PublisherAgent(AgentBase):
         OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt),from_wallet=wallet)
         
         pool.bind(DT.address, toBase18(DT_bind_amt),
-                  toBase18(self.ss.POOL_WEIGHT_DT), from_wallet=wallet)
+                  toBase18(state.ss.POOL_WEIGHT_DT), from_wallet=wallet)
         pool.bind(OCEAN.address, toBase18(OCEAN_bind_amt),
-                  toBase18(self.ss.POOL_WEIGHT_OCEAN), from_wallet=wallet)
+                  toBase18(state.ss.POOL_WEIGHT_OCEAN), from_wallet=wallet)
         
         pool.finalize(from_wallet=wallet)
 

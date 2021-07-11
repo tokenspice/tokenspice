@@ -1,7 +1,6 @@
 from enforce_typing import enforce_types
 
-from engine import AgentBase, GrantTakingAgent
-from engine import SimState, SimStrategy
+from assets.agents.GrantTakingAgent import GrantTakingAgent
 
 @enforce_types
 def test1():
@@ -12,7 +11,7 @@ def test1():
         def OCEANprice(self) -> float:
             return 3.0
     state = DummySimState()
-    a = GrantTakingAgent.GrantTakingAgent("foo", USD=10.0, OCEAN=20.0)
+    a = GrantTakingAgent("foo", USD=10.0, OCEAN=20.0)
     assert a._spent_at_tick == 0.0
 
     a.takeStep(state)

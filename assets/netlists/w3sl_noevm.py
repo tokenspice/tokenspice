@@ -1,6 +1,12 @@
 """
 w3sl_noevm:
 Netlist to simulate Web3 Sustainability Loop (w3sl), with no EVM
+
+Implements classes:
+-SimEngine
+-SimStrategy
+-SimState
+-KPIs
 """
 from enforce_typing import enforce_types
 from typing import List, Set
@@ -204,12 +210,13 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
     
-    def __init__(self):
+    def __init__(self, ss=None):
         #initialize self.tick, ss, agents, kpis
-        super().__init__()
+        super().__init__(ss)
 
         #now, fill in actual values for ss, agents, kpis
-        self.ss = SimStrategy()
+        if self.ss is None:
+            self.ss = SimStrategy()
         ss = self.ss #for convenience as we go forward
                         
         #used to manage names

@@ -4,10 +4,10 @@ log = logging.getLogger('marketagents')
 from enforce_typing import enforce_types
 import random
 
-from engine.AgentBase import AgentBase
 from assets.agents.PublisherAgent import PublisherAgent
 from assets.agents.StakerspeculatorAgent import StakerspeculatorAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
+from engine.AgentBase import AgentBase
 from web3tools.web3util import toBase18
                     
 @enforce_types
