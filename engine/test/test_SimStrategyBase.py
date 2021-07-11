@@ -12,6 +12,6 @@ def test1():
     assert ss.time_step == 7
 
     ss.setMaxTicks(1000)
-    assert ss.max_ticks == 12
+    assert ss.max_ticks == 1000
 
     assert "SimStrategy" in str(ss)
