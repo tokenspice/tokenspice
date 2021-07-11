@@ -6,20 +6,20 @@ TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in 
 
 TokenSPICE simulates tokenized ecosystems using an agent-based approach.
 
-Each “agent” is a class. Has a wallet, and does work to earn $. One models the system by wiring up agents, and tracking metrics (kpis). Agents may be written in pure Python, or with an EVM-based backend. (The [original version](https://github.com/oceanprotocol/tokenspice0.1) was pure Python. This repo supersedes the original.)
+Each "agent" is a class. Has a wallet, and does work to earn $. One models the system by wiring up agents, and tracking metrics (kpis). Agents may be written in pure Python, or with an EVM-based backend.
 
-It's currently tuned to model [Ocean Market](https://market.oceanprotocol.com). The original version was tuned for the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. Simply fork it and get going.
+A "netlist" defines what you simulate, and how. It wires up a collection of agents to interact in a given way. You can write your own netlists to simulate whatever you like. The `assets/netlists` directory has examples.
 
-TokenSPICE was meant to be simple. It definitely makes no claims on "best" for anything. Maybe you'll find it useful.
+TokenSPICE was meant to be simple. It makes no claims on "best". Maybe you'll find it useful.
 
 [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a).
 
 # Contents
 
 - [🏗 Initial Setup](#-initial-setup)
-- [🐟 Updating Envt](#-updating-envt)
 - [🏄 Do Simulations, Make Changes](#-do-simulations-make-changes)
-- [🦑 TokenSPICE Design](#-tokenspice-design)
+- [🐟 Updating Envt](#-updating-envt)
+- [🦑 Netlists and Custom Simulations](#-netlists-and-custom-simulations)
 - [🐡 Backlog](#-backlog)
   - [Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1?add_cards_query=is%3Aopen)
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
@@ -100,44 +100,31 @@ conda activate tokenspiceenv
 pytest web3engine/test/test_btoken.py 
 ```
 
-## Test that everything is working
+## First usage of tsp
 
+First, add pwd to bash path.
 ```console
-conda activate tokenspiceenv
-pytest
+export PATH=$PATH:.
 ```
 
-## Linting
-
-Run linting, aka static type-checking by:
-
+`tsp` is the command-line module. To see help, call it with no args.
 ```console
-mypy --config-file mypy.ini ./
+tsp
 ```
 
-Note: TokenSPICE also uses the `enforce_types` library for *dynamic* type-checking. 
+## Run simulation
 
-# 🐟 Updating Envt
+Here's an example on a supplied netlist `w3sl_noevm.py`.
 
-You don't need this info at the beginning, but it's good to know about as you make changes.
-
-To change dependencies, first update `environment.yml`. Then:
+Simulate the netlist, storing results to `outdir_csv`.
 ```console
-#make sure env't is active
-conda activate tokenspiceenv
-
-#main update. The 'prune' part gets rid of unused pkgs
-conda env update --name tokenspiceenv --file environment.yml --prune
+tsp run assets/netlists/w3sl_noevm.py outdir_csv outdir_csv
 ```
 
-Leave environment:
+Output plots to `outdir_png`, and view them.
 ```console
-conda deactivate
-```
-
-Delete environment:
-```console
-conda remove --name tokenspiceenv --all
+tsp plot outdir_csv outdir_png
+eog outdir_png
 ```
 
 # 🏄 Do Simulations, Make Changes
@@ -181,7 +168,17 @@ pytest engine/
 #run all tests except web3engine/ (slow)
 pytest --ignore=web3engine
 
-#run all tests 
+#run all tests
+pytest
+
+#run static type-checking. Dynamic is automatic.
+mypy --config-file mypy.ini ./
+```
+
+## Test that everything is working
+
+```console
+conda activate tokenspiceenv
 pytest
 ```
 
@@ -199,113 +196,71 @@ git commit -am <my commit message>
 git push
 ```
 
-**Change sim settings as needed.**
-- To run faster: open `tokenspice.ini` and set `safety = False`. 
+# 🐟 Updating Envt
 
-**Run simulation.** Here, we simulate the netlist `mynetlist1.py`, storing to `outdir_csv`. Observe the results while running. See `help.py` for more options.
+You don't need this info at the beginning, but it's good to know about as you make changes.
+
+To change dependencies, first update `environment.yml`. Then:
 ```console
-rm -rf outdir_csv; ./tokenspice.py mynetlist1.py outdir_csv 1>out.txt 2>&1 &
-tail -f out.txt
+#make sure env't is active
+conda activate tokenspiceenv
+
+#main update. The 'prune' part gets rid of unused pkgs
+conda env update --name tokenspiceenv --file environment.yml --prune
 ```
 
-Create plots from run results, and store them in `outdir_png`. Then view the images.
+Leave environment:
 ```console
-rm -rf outdir_png; ./plot_1.py outdir_csv outdir_png
-eog outdir_png
-#finally, maybe import pngs into GSlides 
+conda deactivate
 ```
 
-Then repeat previous steps as desired.
+Delete environment:
+```console
+conda remove --name tokenspiceenv --all
+```
 
-# 🦑 TokenSPICE Design
+# 🦑 Netlists and Custom Simulations
 
-# Architecture, Controllables, Uncontrollables, Metrics
+## About Agents 
 
-### Top-level agent architecture
+- All agents are written in Python
+- Each Agent has an AgentWallet, which holds a Web3Wallet. The Web3Wallet holds a private key and creates TXs. 
+- Some agents may wrap smart contracts deployed to EVM (eg BPool).
 
-- All agents inherit BaseAgent
-- Controllable agents use EVM.
-- Uncontrollable agents use pure Python. But each has EOA.
-   - Therefore the core dynamics are still on-chain
+## Changing Sim Structure & Parameters
 
-### AgentWallet connects Python agents to web3 behavior
+The **netlist** defines what you simulate, and how.
 
-- Each Agent has an AgentWallet.
-- AgentWallet is the main bridge between higher-level Python and EVM.
-- Each AgentWallet holds a Web3Wallet.
-- The Web3Wallet holds a private key and creates TXs.
+Sample netlists, given below, can be run out-of-the-box.
 
-### Controllables
+Or run your own custom simulation, by changing the netlist. You can change:
+- Simulation run parameters
+- What metrics (KPIs) to log, later called by `tsp plot`
+- System-level structure & parameters - how agents are connected
+- Individual agent structure & parameters - each agent instance. To change agent structure, you'll need to change its module (py or sol code). Unit tests are recommended.
 
-Controllable agents (structure): 
-- What agents: just Pool (incl. Strategies and Pool Controllers).
-- The agent's state is stored on blockchain. Deployment is not in the scope of TokenSPICE right now. TokenSPICE just sees ABIs.
-- PoolAgent.py wraps BPool.sol. Agent's wallet grabs values from BPool.sol
-   - current design (.sol) is at oceanprotocol/contracts
-   - new design (.sol) is at branch 'feature/1mm-prototype_alex'
-   - how can PoolAgent see it? draw on btoken.py etc.
+## Sample Netlists
 
-Controllable variables:
-- Global design vars. E.g. schedule for token distribution.
-- Design vars within controllable agents
-       
-### Uncontrollables 
+Netlists live at `assets/netlists/`.
 
-Uncontrollable Agents:
-- Uncontrollable agents use pure Python. But each has an Externally Owned Address (EOA) to interact w EVM. Implemented inside Wallet.
-- What agents: 
-   - Status quo design: Publisher, Dataconsumer, Stakerspeculator
-   - New design 1: Publisher, Dataconsumer, Staker, Speculator
+### W3SL Netlist
 
-Uncontrollable Variables (Env & rnd structure & params)
-- Global rndvars & envvars. 
-- Rndvars and envvars within controllable agents
-- Rndvars and envvars within uncontrollable agents
-- Ranges for envvars, and parameters for rndvar pdfs, are in constants.py, etc.
+W3SL = Web3 Sustainability Loop
+ The original version was tuned for the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. 
 
+(FIXME add images - see tokenspice0.1)
 
-### Metrics (KPIs)
-- These are what's output by SimEngine.py into the CSV, then plotted
-- In the future, we could get fancier by leveraging TheGraph. 
+### Ocean V3 Netlist
 
+System-level design is W3SL. But now higher fidelity is added to the "data ecosystem" part. This is in order to better [Ocean Market](https://market.oceanprotocol.com) publishing, pool creation, staking, and data consumption.
 
-## Changing Sim Parameters
-
-The parameters are initially set with super-conservative values. Not reflective of reality. 
-
-Here's where to change parameters:
-- `engine/SimStrategy.py` - the whole file is parameters
-- `util/constants.py` - same thing
-- `engine/SimState.py` - where "magic number" is given 
-- simulation time when invoking the run. E.g. run for 20 years or 150 years.
-
-So, try playing with different parameter values and see what the results are. 
-
-## Changing Sim Structures
-
-TokenSPICE allows for change in the structure too. 
-
-The file `engine/SimState.py` is the "netlist" that wires up "agents". Each agent "does its thing" on each time step. The main result is that the agent may update its wallet (holds USD and OCEAN), or another internal state variable of the agent.
-
-Many Agents are defined in agents.py, and some in their own .py file. You can change an existing agent behavior, change the netlist, or create your agents and netlists. 
-
-If you make changes here, it's a great idea to write unit tests to make sure your agent behaves how you expect. You'll find that TokenSPICE has more than a few unit tests:) That's not by accident, it helps us to feel confident in the simulation results.
-
-Before making changes, we recommend having a better understanding of how the system works. Which brings us to...
-
-## Schematics - Ocean V3 & V4.1
-
-Ultimately we aim for TokenSPICE to allow arbitary netlists. Since TokenSPICE already has good fundamentals (python, agent-based, EVM), then allowing this isn't magical or difficult, it just needs some dedicated software engineering. See backlog below for details. 
-
-In the meantime, it's hardcoded for the Web3 Sustainability Loop, with higher fidelity added to the "ecosystem" box; for Ocean this is the "data marketplaces ecosystem". Here are the schematics for that ecosystem, for Ocean V3 and Ocean V4.1. This is what TokenSPICE is wired to model. (But beware: things aren't fully wired up! Right now it's using the old agents without any EVM.)
-
-### Ocean V3 Model
+The actual netlist is WIP.
 
 <img src="images/model-status-quo.png" width="100%">
 
-### Ocean V4.1 Model
+### Ocean V4 Netlist
 
-Ocean V4.0 makes Ocean more flexible. Ocean V4.1 is "Better Staking / IDOs". Our focus is V4.1. 
+Starts with Ocean V3, then makes staking safer via one-sided AMM bots. WIP.
 
 <img src="images/model-new1.png" width="100%">
 
