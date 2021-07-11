@@ -285,13 +285,13 @@ Starts with Ocean V3, then makes staking safer via one-sided AMM bots. WIP.
   - ABIs are wrapped as classes, which are inside agents.
   - Already include: Ocean datatokens, Ocean datatoken factory, Ocean friendly fork of Balancer AMM, Balancer AMM factory, etc. Have Unit tests for all.
   - Started writing Python-level agent behaviors
+- **Be able to specify a netlist and run, without having to fork** [#30](https://github.com/oceanprotocol/tokenspice/issues/30)
 
 ### Roadmap - Near Term
 
 This work is geared towards verifying & tuning Ocean V4.1, which updates Ocean smart contracts for better IDOs through one-sided market makers and more.
 
 1. **Get *some* overall loop running that includes at least one EVM agent** [#34](https://github.com/oceanprotocol/tokenspice/issues/34)
-1. **Be able to specify a netlist and run, without having to fork** [#30](https://github.com/oceanprotocol/tokenspice/issues/30)
 2. **Improve Continuous Integration** - various issues, see kanban 
 3. **Finish + verify Ocean V3 agents** [#28](https://github.com/oceanprotocol/tokenspice/issues/28). AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
 4. **Finish + verify Ocean V4.1 agents** [#29](https://github.com/oceanprotocol/tokenspice/issues/29). AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
