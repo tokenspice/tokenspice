@@ -39,6 +39,6 @@ class SimStateBase(object):
 
     def addAgent(self, agent):
         assert agent.name not in self.agents, "have an agent with this name" 
-        self.agents[agent.name] = self.agents
+        self.agents[agent.name] = agent
 
 
