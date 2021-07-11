@@ -79,7 +79,8 @@ def do_run():
     state = netlist_module.SimState()
     
     #go
-    engine = netlist_module.SimEngine(state, output_dir)
+    from engine.SimEngine import SimEngine
+    engine = SimEngine(state, output_dir, netlist_module.createLogData)
     if not do_profile:
         engine.run()
     else:

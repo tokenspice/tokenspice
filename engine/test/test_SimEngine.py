@@ -3,7 +3,7 @@ import os
 import shutil
 
 from engine import AgentBase
-from engine import SimEngineBase, SimStateBase, SimStrategyBase, KPIsBase
+from engine import SimEngine, SimStateBase, SimStrategyBase, KPIsBase
 
 PATH1 = '/tmp/test_outpath1'
 
@@ -29,9 +29,6 @@ class SimState(SimStateBase.SimStateBase):
         self.ss = SimStrategy()
         self.kpis = KPIs(time_step=3)
 
-class SimEngine(SimEngineBase.SimEngineBase):
-    pass
-
 #==================================================================
 #actual tests
 
@@ -48,14 +45,14 @@ def testRunLonger():
 def _testRunLonger(max_ticks):
     state = SimState()
     state.ss.setMaxTicks(max_ticks)
-    engine = SimEngine(state, PATH1)
+    engine = SimEngine.SimEngine(state, PATH1)
     engine.run()        
 
 @enforce_types
 def testRunEngine():
     state = SimState()
     state.ss.setMaxTicks(3)
-    engine = SimEngine(state, PATH1)
+    engine = SimEngine.SimEngine(state, PATH1)
     engine.run()
     assert os.path.exists(PATH1)
     assert engine.state.tick == 3

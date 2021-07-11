@@ -8,7 +8,7 @@ from util import valuation
 from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 
 @enforce_types
-class SimEngineBase(object):
+class SimEngine(object):
     """
     @description
       Runs a simulation.
@@ -18,10 +18,11 @@ class SimEngineBase(object):
       output_dir -- directory of where results are stored
     """
 
-    def __init__(self, state, output_dir: str):
+    def __init__(self, state, output_dir: str, netlist_createLogData=None):
         self.state = state
         self.output_dir = output_dir
         self.output_csv = "data.csv" #magic number
+        self.netlist_createLogData = netlist_createLogData
         
     def run(self):
         """
@@ -47,9 +48,9 @@ class SimEngineBase(object):
         log.debug("Tick=%d: begin" % (self.state.tick))
         
         if (self.elapsedSeconds() % S_PER_DAY) == 0:
-            str_data, csv_data = self.createLogData()
-            log.info(str_data)
-            self.logToCsv(csv_data)
+            s, dataheader, datarow  = self.createLogData()            
+            log.info("".join(s))
+            self.logToCsv(dataheader, datarow)
                 
         #main work
         self.state.takeStep()
@@ -58,8 +59,8 @@ class SimEngineBase(object):
         log.debug("Tick=%d: done" % self.state.tick)
 
     def createLogData(self):
-        #To log more, create a child class that re-implements this method
-        
+        """Compute this iter's status, and output in forms ready
+        for console logging and csv logging."""
         state = self.state
         ss = state.ss
         kpis = state.kpis
@@ -68,6 +69,7 @@ class SimEngineBase(object):
         dataheader = [] # for csv logging: list of string
         datarow = [] #for csv logging: list of float
 
+        #columns always logged: Tick, Second, Min, Hour, Day, Month, Year
         s += ["Tick=%d" % (state.tick)]
         dataheader += ["Tick"]
         datarow += [state.tick]
@@ -80,14 +82,16 @@ class SimEngineBase(object):
         dataheader += ["Second", "Min", "Hour", "Day", "Month", "Year"]
         datarow += [es, emi, eh, ed, emo, ey]
 
-        # (here's where you'd log more things)
-        
-        #package results up
-        str_data = "".join(s)
-        csv_data = (dataheader, datarow)
-        return str_data, csv_data
+        #other columns to log
+        if self.netlist_createLogData is not None:
+            s2, dataheader2, datarow2 = self.netlist_createLogData(state)
+            s += s2
+            dataheader += dataheader2
+            datarow += datarow2
 
-    def logToCsv(self, csv_data) -> None:
+        return s, dataheader, datarow
+
+    def logToCsv(self, dataheader, datarow) -> None:
         if self.output_dir is None:
             return
                 
@@ -95,7 +99,6 @@ class SimEngineBase(object):
             os.mkdir(self.output_dir)
             
         full_filename = os.path.join(self.output_dir, self.output_csv)
-        (dataheader, datarow) = csv_data
         
         #if needed, create file and add header
         if not os.path.exists(full_filename):
