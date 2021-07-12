@@ -492,6 +492,7 @@ class KPIs(KPIsBase.KPIsBase):
 
 @enforce_types
 def createLogData(state):
+    """pass this to SimEngine.__init__() as argument `netlist_createLogData`"""
     F = False
     ss = state.ss
     kpis = state.kpis
@@ -593,3 +594,46 @@ def createLogData(state):
 
     #done
     return s, dataheader, datarow
+
+@enforce_types
+def netlist_headerValuesToXY(header: List[str], values):
+    """
+    Describe how to plot the information.
+    tsp.do_plot() calls this
+
+    :param: header: List[str] holding 'Tick', 'Second', ...
+    :param: values: 2d array of float [tick_i, valuetype_i]
+    :return: x: List[float] -- x-axis info on how to plot
+    :return: y_params: List[YParam] -- y-axis info on how to plot
+    """
+    from util.plotutil import YParam, arrayToFloatList
+    
+    x = arrayToFloatList(values[:,header.index("Day")])
+    
+    y_params = [
+        YParam(["OCEAN_price"], [""], "OCEAN Price", LOG, MULT1, DOLLAR),
+        #YParam(["ocean_rev_growth/yr"], [""], "Annual Ocean Revenue Growth", BOTH, MULT100, PERCENT),
+        YParam(["overall_valuation", "fundamentals_valuation","speculation_valuation"],
+              ["Overall", "Fundamentals (P/S=30)", "Speculation"], "Valuation", LOG, DIV1M, DOLLAR),
+        YParam(["dao_USD/mo", "dao_OCEAN_in_USD/mo", "dao_total_in_USD/mo"],
+              ["Income as USD (ie network revenue)", "Income as OCEAN (ie from 51%; priced in USD)", "Total Income"],
+              "Monthly OceanDAO Income", LOG, DIV1M, DOLLAR),
+        YParam(["ocean_rev/yr","allmkts_rev/yr"], ["Ocean", "All marketplaces"],
+              "Annual Revenue", LOG, DIV1M, DOLLAR),
+        YParam(["tot_OCEAN_supply", "tot_OCEAN_minted", "tot_OCEAN_burned"],
+              ["Total supply","Tot # Minted","Tot # Burned"], "OCEAN Token Count", BOTH, DIV1M, COUNT),
+        YParam(["OCEAN_minted/mo", "OCEAN_burned/mo"], ["# Minted/mo", "# Burned/mo"],
+              "Monthly # OCEAN Minted & Burned", BOTH, DIV1M, COUNT),
+        YParam(["rnd_to_sales_ratio", "mkts_annual_growth_rate"], ["R&D/sales ratio", "Marketplaces annual growth rate"],
+              "R&D/Sales Ratio and Marketplaces Growth Rate", BOTH, MULT100, PERCENT),
+        YParam(["RND/mo"], [""], "Monthly R&D Spend", BOTH, DIV1M, DOLLAR),
+        
+        # YParam(["OCEAN_burned_USD/mo", "OCEAN_minted_USD/mo"],
+        #       ["$ of OCEAN Burned/mo", "$ of OCEAN Minted/mo"],
+        #       "Monthly OCEAN (in USD) Minted & Burned", LOG, DIV1M, DOLLAR),
+        # YParam(["OCEAN_burned_USD/mo", "ocean_rev/mo", "allmkts_rev/mo"],
+        #       ["$ OCEAN Burned monthly", "Ocean monthly revenue", "Marketplaces monthly revenue"],
+        #       "Monthly OCEAN Burned & Revenues", LOG, DIV1M, DOLLAR),
+    ]
+
+    return (x, y_params)
