@@ -606,7 +606,10 @@ def netlist_headerValuesToXY(header: List[str], values):
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
-    from util.plotutil import YParam, arrayToFloatList
+    from util.plotutil import YParam, arrayToFloatList, \
+        LINEAR, LOG, BOTH, \
+        MULT1, MULT100, DIV1M, DIV1B, \
+        COUNT, DOLLAR, PERCENT
     
     x = arrayToFloatList(values[:,header.index("Day")])
     

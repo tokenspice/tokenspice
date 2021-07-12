@@ -10,9 +10,9 @@ from typing import Any, List, Union
 
 from util.constants import * #S_PER_YEAR etc
 
-LINEAR, LOG, BOTH = 'linear', 'log', 'both' #pyplot.yscale interprets 1st 2
+LINEAR, LOG, BOTH = 0, 1, 2 #pyplot.yscale interprets 1st 2
 MULT1, MULT100, DIV1M, DIV1B = 0, 1, 2, 3 #multiply or divide the value?
-COUNT, DOLLAR, PERCENT = "#", "$", "%" #units
+COUNT, DOLLAR, PERCENT = 0, 1, 2
 
 @enforce_types
 class YParam:
@@ -20,14 +20,28 @@ class YParam:
     See example usage in netlist_headerValuesToXY.
     """
     def __init__(
-            self, y_header_names: List[str], labels: List[str],
-            y_pretty_name: str, y_scale: int, mult: int, unit: int):
+            self,
+            y_header_names: List[str],
+            labels: List[str],
+            y_pretty_name: str,
+            y_scale: int, #one of LINEAR, LOG, BOTH
+            mult: int,    #one of MULT1, MULT100, DIV1M, DIV1B
+            unit: int     #one of COUNT, DOLLAR, PERCENT
+    ):
+        
         self.y_header_names = y_header_names
         self.labels = labels
         self.y_pretty_name = y_pretty_name
-        self.y_scale = y_scale #one of LINEAR, ..
-        self.mult = mult #one of MULT1, ..
-        self.unit = unit #one of COUNT, ..
+        self.y_scale = y_scale 
+        self.mult = mult 
+        self.unit = unit 
+
+    @property
+    def y_scale_str(self):
+        if   self.y_scale == LINEAR:  return "LINEAR"
+        elif self.y_scale == LOG:     return "LOG"
+        elif self.y_scale == BOTH:    return "BOTH"
+        else: raise ValueError(self.y_scale)
 
 @enforce_types
 def arrayToFloatList(x_array) -> List[float]:
@@ -38,7 +52,7 @@ def arrayToFloatList(x_array) -> List[float]:
     return [float(x_item) for x_item in x_array]
 
 @enforce_types
-def _applyMult(y: Union[int,float], mult:int) -> List[float]:
+def _applyMult(y: List[float], mult:int) -> List[float]:
     """
     Apply multiplier according to enum specified by 'mult'
 
@@ -119,7 +133,7 @@ def _xyToPngs(header: List[str], values,
     :return: <None> but creates png directory
     """
     
-    assert not os.path.exists(output_png_filename)
+    assert not os.path.exists(output_png_dir)
     os.mkdir(output_png_dir)
 
     for p in y_params:
@@ -143,9 +157,9 @@ def _xyToPngs(header: List[str], values,
         mult_unit_s = _multUnitStr(p.mult, p.unit)
         ax.set_ylabel(f"{p.y_pretty_name} ({mult_unit_s})")
         
-        ax.set_title(f"{p.y_pretty_name}" + f" ({p.y_scale})")
+        ax.set_title(f"{p.y_pretty_name}" + f" ({p.y_scale_str})")
         
-        pyplot.yscale(p.y_scale)
+        pyplot.yscale(p.y_scale_str)
         
         if p.y_scale == LOG: #turn off exponential notation 
             ax.get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
@@ -170,7 +184,7 @@ def _xyToPngs(header: List[str], values,
 
         #pyplot.show() #popup
 
-        base_output_filename = f"{p.y_pretty_name}_{p.y_scale}.png".replace('/',"_per_").replace(" ","_").replace(",","_").replace("'","").replace("__","_")
+        base_output_filename = f"{p.y_pretty_name}_{p.y_scale_str}.png".replace('/',"_per_").replace(" ","_").replace(",","_").replace("'","").replace("__","_")
         full_output_filename = os.path.join(output_png_dir, base_output_filename)
         pyplot.savefig(full_output_filename,bbox_inches='tight') 
         print(f"Created '{full_output_filename}'")
