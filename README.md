@@ -243,11 +243,9 @@ Or run your own custom simulation, by changing the netlist. You can change:
 
 Netlists live at `assets/netlists/`.
 
-### Wsloop Netlist
-
-Wsloop = Web3 Sustainability Loop. The original version was tuned for the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). 
-
-(FIXME add images - see tokenspice0.1)
+- [wsloop](assets/netlists/wsloop/about.md) - Web3 Sustainability Loop
+- (WIP) Ocean V3 
+- (WIP) Ocean V4
 
 ### Ocean V3 Netlist
 
