@@ -5,19 +5,6 @@ from ..SimState import SimState
 from ..SimStrategy import SimStrategy
 
 @enforce_types
-def testSimState_BasicInit():
-    state = SimState()
-    assert isinstance(state.ss, SimStrategy)
-    assert state.tick == 0
-
-    assert state.numAgents() > 0
-
-@enforce_types
-def testSimState_GetAgent():
-    state = SimState()
-    assert id(state.getAgent("ocean_dao")) == id(state.agents["ocean_dao"])
-
-@enforce_types
 def testSimState_MoneyFlow1():
     state = SimState()
     assert hasattr(state, '_percent_burn')

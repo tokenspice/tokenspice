@@ -114,16 +114,16 @@ tsp
 
 ## Run simulation
 
-Here's an example on a supplied netlist `wsloop`.
+Here's an example on a supplied netlist `simple`.
 
 Simulate the netlist, storing results to `outdir_csv`.
 ```console
-tsp run assets/netlists/wsloop/netlist.py outdir_csv outdir_csv
+tsp run assets/netlists/simple/netlist.py outdir_csv outdir_csv
 ```
 
 Output plots to `outdir_png`, and view them.
 ```console
-tsp plot assets/netlists/wsloop/netlist.py outdir_csv outdir_png
+tsp plot assets/netlists/simple/netlist.py outdir_csv outdir_png
 eog outdir_png
 ```
 
@@ -221,6 +221,7 @@ For your own custom simulation, you can change any part of the netlist NETLISTX:
 
 Existing netlists include:
 
+- [simple](assets/netlists/simple/about.md) - granter plus receiver, that's all
 - [wsloop](assets/netlists/wsloop/about.md) - Web3 Sustainability Loop
 - [oceanv3](assets/netlists/oceanv3/about.md) - Ocean Market V3 - initial
 - [oceanv4](assets/netlists/oceanv4/about.md) - Ocean Market V4 - safer staking
