@@ -1,4 +1,4 @@
-## About Wsloop Netlist
+## About wsloop Netlist
 
 Wsloop = Web3 Sustainability Loop. [Here's the original article](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). 
 

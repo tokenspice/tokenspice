@@ -18,8 +18,8 @@ TokenSPICE was meant to be simple. It makes no claims on "best". Maybe you'll fi
 
 - [🏗 Initial Setup](#-initial-setup)
 - [🏄 Do Simulations, Make Changes](#-do-simulations-make-changes)
+- [🦑 Agents and Netlists](#-agents-and-netlists)
 - [🐟 Updating Envt](#-updating-envt)
-- [🦑 Netlists and Custom Simulations](#-netlists-and-custom-simulations)
 - [🐡 Backlog](#-backlog)
   - [Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1?add_cards_query=is%3Aopen)
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
@@ -196,6 +196,36 @@ git commit -am <my commit message>
 git push
 ```
 
+# 🦑 Agents and Netlists
+
+## About Agents 
+
+- All agents are written in Python
+- Each Agent has an AgentWallet, which holds a Web3Wallet. The Web3Wallet holds a private key and creates TXs. 
+- Some agents may wrap smart contracts deployed to EVM, e.g. `BPoolAgent`.
+- Agents are defined at `assets/agents/`.
+
+## About Netlists
+
+The **netlist** defines what you simulate, and how.
+
+Netlists are defined at `assets/netlists/`.
+
+You can reuse existing ones or create your own. If you create your own, please add relevant unit tests.
+
+For your own custom simulation, you can change any part of the netlist NETLISTX:
+- `assets/netlists/NETLISTX/SimStrategy.py` which holds SimStrategy class - Simulation run parameters
+- `assets/netlists/NETLISTX/KPIs.py` which holds KPIs class, `netlist_createLogData` function, and `netlist_plotInstructions` function - What metrics to log, and how to plot them
+- `assets/netlists/NETLISTX/SimState.py` which holds SimState class - system-level structure & parameters - how agents instantiated and connected
+- `assets/agents/*Agent.py` - Individual agent structure & parameters - each agent class. To change agent structure, you'll need to change its module (py or sol code). Unit tests are recommended.
+
+Existing netlists include:
+
+- [wsloop](assets/netlists/wsloop/about.md) - Web3 Sustainability Loop
+- [oceanv3](assets/netlists/oceanv3/about.md) - Ocean Market V3 - initial
+- [oceanv4](assets/netlists/oceanv4/about.md) - Ocean Market V4 - safer staking
+
+
 # 🐟 Updating Envt
 
 You don't need this info at the beginning, but it's good to know about as you make changes.
@@ -219,49 +249,6 @@ Delete environment:
 conda remove --name tokenspiceenv --all
 ```
 
-# 🦑 Netlists and Custom Simulations
-
-## About Agents 
-
-- All agents are written in Python
-- Each Agent has an AgentWallet, which holds a Web3Wallet. The Web3Wallet holds a private key and creates TXs. 
-- Some agents may wrap smart contracts deployed to EVM (eg BPool).
-
-## Changing Sim Structure & Parameters
-
-The **netlist** defines what you simulate, and how.
-
-Sample netlists, given below, can be run out-of-the-box.
-
-Or run your own custom simulation, by changing the netlist. You can change:
-- Simulation run parameters
-- What metrics (KPIs) to log, later called by `tsp plot`
-- System-level structure & parameters - how agents are connected
-- Individual agent structure & parameters - each agent instance. To change agent structure, you'll need to change its module (py or sol code). Unit tests are recommended.
-
-## Sample Netlists
-
-Netlists live at `assets/netlists/`.
-
-- [wsloop](assets/netlists/wsloop/about.md) - Web3 Sustainability Loop
-- (WIP) Ocean V3 
-- (WIP) Ocean V4
-
-### Ocean V3 Netlist
-
-System-level design is W3SL. But now higher fidelity is added to the "data ecosystem" part. This is in order to better [Ocean Market](https://market.oceanprotocol.com) publishing, pool creation, staking, and data consumption.
-
-The actual netlist is WIP.
-
-<img src="images/model-status-quo.png" width="100%">
-
-### Ocean V4 Netlist
-
-Starts with Ocean V3, then makes staking safer via one-sided AMM bots. WIP.
-
-<img src="images/model-new1.png" width="100%">
-
-[GSlides for the above images](https://docs.google.com/presentation/d/14BB50dkGXTcPjlbrZilQ3WYnFLDetgfMS1BKGuMX8Q0/edit#slide=id.gac81e1e848_0_8)
 
 # 🐡 Backlog
 
@@ -282,7 +269,7 @@ Starts with Ocean V3, then makes staking safer via one-sided AMM bots. WIP.
   - ABIs are wrapped as classes, which are inside agents.
   - Already include: Ocean datatokens, Ocean datatoken factory, Ocean friendly fork of Balancer AMM, Balancer AMM factory, etc. Have Unit tests for all.
   - Started writing Python-level agent behaviors
-- **Be able to specify a netlist and run, without having to fork** [#30](https://github.com/oceanprotocol/tokenspice/issues/30)
+- Be able to specify a netlist and run, without having to fork [#30](https://github.com/oceanprotocol/tokenspice/issues/30)
 
 ### Roadmap - Near Term
 
