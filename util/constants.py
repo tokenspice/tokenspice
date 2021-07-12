@@ -1,3 +1,7 @@
+#Note: this file no longer contains magic numbers, just useful
+# numbers for running TokenSPICE. Magic numbers have been
+# moved into netlists.
+
 CONF_FILE_PATH = './tokenspice.ini'
 
 import configparser, os
@@ -31,28 +35,10 @@ S_PER_WEEK  = S_PER_DAY * 7
 S_PER_MONTH = S_PER_DAY * 30
 S_PER_YEAR  = S_PER_DAY * 365
 
-#
-TOTAL_OCEAN_SUPPLY = 1.41e9 
-INIT_OCEAN_SUPPLY = 0.49 * TOTAL_OCEAN_SUPPLY
-UNMINTED_OCEAN_SUPPLY = TOTAL_OCEAN_SUPPLY - INIT_OCEAN_SUPPLY
-
-OPF_TREASURY_USD = 2e6 #(not the true number)
-OPF_TREASURY_OCEAN = 200e6 #(not the true number)
-OPF_TREASURY_OCEAN_FOR_OCEAN_DAO = 100e6 #(not the true number)
-OPF_TREASURY_OCEAN_FOR_OPF_MGMT = OPF_TREASURY_OCEAN - OPF_TREASURY_OCEAN_FOR_OCEAN_DAO
-
-BDB_TREASURY_USD = 2e6 #(not the true number)
-BDB_TREASURY_OCEAN = 20e6  #(not the true number)
-
 #Number of half-lives that bitcoin stops after.
 # https://en.bitcoin.it/wiki/Controlled_supply#Projected_Bitcoins_Long_Term
 BITCOIN_NUM_HALF_LIVES = 34
 
-#=============================================
 #evm stuff
 GASLIMIT_DEFAULT = 5000000
 BURN_ADDRESS = '0x000000000000000000000000000000000000dEaD'
-
-POOL_WEIGHT_DT    = 3.0
-POOL_WEIGHT_OCEAN = 7.0
-assert (POOL_WEIGHT_DT + POOL_WEIGHT_OCEAN) == 10.0
