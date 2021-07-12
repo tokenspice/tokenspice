@@ -8,11 +8,11 @@ from util.constants import BITCOIN_NUM_HALF_LIVES, \
 
 @enforce_types
 def testOCEANLinearMinterAgent():
-    ss = SimStrategy()
+    ss = SimStrategy.SimStrategy()
     assert hasattr(ss, 'time_step')
     ss.time_step = 2
 
-    state = SimState(ss)
+    state = SimState.SimState(ss)
 
     class SimpleAgent(AgentBase.AgentBase):
         def takeStep(self, state):
@@ -80,7 +80,7 @@ def _test_funcMinter(func):
     do_log_plot = False #if manual_test, linear or log plot?
     max_year = 5 #if manual_test, stop earlier?
 
-    ss = SimStrategy()
+    ss = SimStrategy.SimStrategy()
     assert hasattr(ss, 'time_step')
     if manual_test:
         ss.time_step = S_PER_DAY
@@ -89,7 +89,7 @@ def _test_funcMinter(func):
         ss.time_step = 100 * S_PER_DAY
         s_between_mints = 100 * S_PER_YEAR
 
-    state = SimState(ss)
+    state = SimState.SimState(ss)
 
     class SimpleAgent2(AgentBase.AgentBase):
         def takeStep(self, state):

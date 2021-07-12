@@ -18,11 +18,11 @@ class SimEngine(object):
       output_dir -- directory of where results are stored
     """
 
-    def __init__(self, state, output_dir: str, netlist_createLogData=None):
+    def __init__(self, state, output_dir: str, netlist_log_func=None):
         self.state = state
         self.output_dir = output_dir
         self.output_csv = "data.csv" #magic number
-        self.netlist_createLogData = netlist_createLogData
+        self.netlist_log_func = netlist_log_func
         
     def run(self):
         """
@@ -83,8 +83,8 @@ class SimEngine(object):
         datarow += [es, emi, eh, ed, emo, ey]
 
         #other columns to log
-        if self.netlist_createLogData is not None:
-            s2, dataheader2, datarow2 = self.netlist_createLogData(state)
+        if self.netlist_log_func is not None:
+            s2, dataheader2, datarow2 = self.netlist_log_func(state)
             s += s2
             dataheader += dataheader2
             datarow += datarow2

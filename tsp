@@ -31,8 +31,8 @@ TOOLS:
   -Logging: ./logging.conf
 
   == Example flow ==
-  rm -rf outdir_csv; tsp run assets/netlists/wsloop.py outdir_csv
-  rm -rf outdir_png; tsp plot assets/netlists/wsloop.py outdir_csv outdir_png
+  rm -rf outdir_csv; tsp run assets/netlists/wsloop/netlist.py outdir_csv
+  rm -rf outdir_png; tsp plot assets/netlists/wsloop/netlist.py outdir_csv outdir_png
   eog outdir_png
  """
     
@@ -56,13 +56,13 @@ def do_run():
 
     #extract inputs
     assert sys.argv[1] == "run"
-    netlist = sys.argv[2]
+    netlist_str = sys.argv[2]
     output_dir = sys.argv[3]
     do_profile = False
     if len(sys.argv) == 5 and sys.argv[4] == 'True':
         do_profile = True
 
-    print(f"Arguments: NETLIST={netlist}, OUTPUT_DIR={output_dir},"
+    print(f"Arguments: NETLIST={netlist_str}, OUTPUT_DIR={output_dir},"
           " DO_PROFILE={do_profile}")
 
     #handle corner cases
@@ -73,13 +73,13 @@ def do_run():
     # make directory
     os.mkdir(output_dir)
 
-    # import netlist module
-    netlist_module = _importNetlistModule(netlist)
+    # go
+    netlist_module = _importNetlistModule(netlist_str)
+    netlist_state = netlist_module.SimState()
+    netlist_log_func = netlist_module.netlist_createLogData
     
-    #go
     from engine.SimEngine import SimEngine
-    state = netlist_module.SimState()
-    engine = SimEngine(state, output_dir, netlist_module.createLogData)
+    engine = SimEngine(netlist_state, output_dir, netlist_log_func)
     if not do_profile:
         engine.run()
     else:
@@ -89,8 +89,8 @@ def do_run():
         print(f'Output stats file: {stats_filename}. To see: tsp showstats outdir_csv/stats 20 cumulative')
     print(f'Output directory: {output_dir}')
 
-def _importNetlistModule(netlist: str):
-    module_str = netlist.replace('/','.').replace('.py','') 
+def _importNetlistModule(netlist_str: str):
+    module_str = netlist_str.replace('/','.').replace('.py','') 
     netlist_module = importlib.import_module(module_str)
     return netlist_module
     
@@ -114,7 +114,7 @@ def do_plot():
     
     #extract inputs
     assert sys.argv[1] == "plot"
-    netlist = sys.argv[2]
+    netlist_str = sys.argv[2]
     input_csv_dir = sys.argv[3]
     output_png_dir = sys.argv[4]
 
@@ -122,7 +122,7 @@ def do_plot():
     base_input_csv_filename = "data.csv" #magic number. Set in engine/SimEngine.py
     input_csv_filename = os.path.join(input_csv_dir, base_input_csv_filename)
 
-    print(f"Arguments: NETLIST={netlist}, INPUT_CSV_DIR={input_csv_dir}, "
+    print(f"Arguments: NETLIST={netlist_str}, INPUT_CSV_DIR={input_csv_dir}, "
           "OUTPUT_PNG_DIR={output_pngdir}")
     print(f"Base input filename: '{base_input_csv_filename}' (hardcoded)")
     print(f"Full input filename: '{input_csv_filename}'")
@@ -142,12 +142,12 @@ def do_plot():
         sys.exit(0)
 
     #get netlist module
-    netlist_module = _importNetlistModule(netlist)    
+    netlist_module = _importNetlistModule(netlist_str)
+    netlist_plot_instrs_func = netlist_module.netlist_plotInstructions
 
     #main work    
     from util.plotutil import csvToPngs
-    csvToPngs(input_csv_filename, output_png_dir,
-              netlist_module.netlist_headerValuesToXY)
+    csvToPngs(input_csv_filename, output_png_dir, netlist_plot_instrs_func)
 
     print("Done")
     

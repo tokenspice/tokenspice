@@ -114,16 +114,16 @@ tsp
 
 ## Run simulation
 
-Here's an example on a supplied netlist `wsloop.py`.
+Here's an example on a supplied netlist `wsloop`.
 
 Simulate the netlist, storing results to `outdir_csv`.
 ```console
-tsp run assets/netlists/wsloop.py outdir_csv outdir_csv
+tsp run assets/netlists/wsloop/netlist.py outdir_csv outdir_csv
 ```
 
 Output plots to `outdir_png`, and view them.
 ```console
-tsp plot outdir_csv outdir_png
+tsp plot assets/netlists/wsloop/netlist.py outdir_csv outdir_png
 eog outdir_png
 ```
 
@@ -243,10 +243,9 @@ Or run your own custom simulation, by changing the netlist. You can change:
 
 Netlists live at `assets/netlists/`.
 
-### W3SL Netlist
+### Wsloop Netlist
 
-W3SL = Web3 Sustainability Loop
- The original version was tuned for the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). However you can rewire the "netlist" of "agents" to simulate whatever you like. 
+Wsloop = Web3 Sustainability Loop. The original version was tuned for the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). 
 
 (FIXME add images - see tokenspice0.1)
 

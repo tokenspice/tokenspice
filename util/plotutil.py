@@ -220,7 +220,7 @@ def _csvToHeaderValues(input_csv_filename: str):
         
 @enforce_types
 def csvToPngs(input_csv_filename: str, output_png_dir: str,
-              netlist_headerValuesToXY):
+              netlist_plot_instrs_func):
     """
     Main plotting routine, delegates subtasks to worker routines.
 
@@ -233,7 +233,7 @@ def csvToPngs(input_csv_filename: str, output_png_dir: str,
     """
     (header, values) = _csvToHeaderValues(input_csv_filename)
 
-    (x, y_params) = netlist_headerValuesToXY(header, values)
+    (x, y_params) = netlist_plot_instrs_func(header, values)
     y_params = _expandBOTHinY(y_params)
 
     _xyToPngs(header, values, x, y_params, output_png_dir)
