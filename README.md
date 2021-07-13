@@ -221,10 +221,11 @@ For your own custom simulation, you can change any part of the netlist NETLISTX:
 
 Existing netlists include:
 
-- [simplegrant](assets/netlists/simplegrant/about.md) - granter plus receiver, that's all
-- [wsloop](assets/netlists/wsloop/about.md) - Web3 Sustainability Loop
-- [oceanv3](assets/netlists/oceanv3/about.md) - Ocean Market V3 - initial
-- [oceanv4](assets/netlists/oceanv4/about.md) - Ocean Market V4 - safer staking
+- [simplegrant](assets/netlists/simplegrant/about.md) - granter plus receiver, that's all. No EVM.
+- [simplepool](assets/netlists/simplepool/about.md) - publisher that periodically creates new pools. EVM.
+- [wsloop](assets/netlists/wsloop/about.md) - Web3 Sustainability Loop. No EVM.
+- (WIP) [oceanv3](assets/netlists/oceanv3/about.md) - Ocean Market V3 - initial. EVM.
+- (WIP) [oceanv4](assets/netlists/oceanv4/about.md) - Ocean Market V4 - safer staking. EVM.
 
 
 # 🐟 Updating Envt
