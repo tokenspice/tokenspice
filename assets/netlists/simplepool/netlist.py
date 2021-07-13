@@ -1,5 +1,5 @@
 """
-Netlist to simulate Web3 Sustainability Loop, with no EVM
+Netlist for simplepool
 """
 
 #These puts all key interfaces in one module
