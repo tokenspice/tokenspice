@@ -272,23 +272,25 @@ conda remove --name tokenspiceenv --all
   - Already include: Ocean datatokens, Ocean datatoken factory, Ocean friendly fork of Balancer AMM, Balancer AMM factory, etc. Have Unit tests for all.
   - Started writing Python-level agent behaviors
 - Be able to specify a netlist and run, without having to fork [#30](https://github.com/oceanprotocol/tokenspice/issues/30)
+- Get *some* overall loop running that includes at least one EVM agent [#34](https://github.com/oceanprotocol/tokenspice/issues/34)
 
-### Roadmap - Near Term
+### Roadmap - Near & Medium Term
 
-This work is geared towards verifying & tuning Ocean V4.1, which updates Ocean smart contracts for better IDOs through one-sided market makers and more.
+(See Kanban)
 
-1. **Get *some* overall loop running that includes at least one EVM agent** [#34](https://github.com/oceanprotocol/tokenspice/issues/34)
-2. **Improve Continuous Integration** - various issues, see kanban 
-3. **Finish + verify Ocean V3 agents** [#28](https://github.com/oceanprotocol/tokenspice/issues/28). AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
-4. **Finish + verify Ocean V4.1 agents** [#29](https://github.com/oceanprotocol/tokenspice/issues/29). AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
-5. **Design space exploration**: tuning of Ocean V4.1 (w/ Balancer V2 design). Manual or optimization-based.
+### Roadmap -  Term
+
+- **Improve Continuous Integration** - various issues, see kanban 
+- **Finish + verify Ocean V3 agents** #28. AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
+- **Finish + verify Ocean V4 agents** #29. AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
 
 ### Roadmap - Longer Term
 
-6. System identification: high-fidelity model of whole Balancer V1 ecosystem; fit the model to observed on-chain dynamics (up to when V2 released). Bring in uncontrollable variables (probabilistic & worst-case).
-7. System identification: high-fidelity model of whole Balancer V1 & V2 ecosystem; fit the model to observed on-chain dynamics
-8. Design space exploration: tuning of Balancer V2 Strategies to minimize IL and other objectives & constraints. Account for uncontrollable variables (probabilistic & worst-case).
-10. Open-ended design space exploration: evolve solidity or EVM bytecode, go nuts. AI DAOs that own themselves. This will be fun:). But one step at a time.
+- Design space exploration: tuning of Ocean V4.1 (w/ Balancer V2 design). Manual or optimization-based.
+- System identification: high-fidelity model of whole Balancer V1 ecosystem; fit the model to observed on-chain dynamics (up to when V2 released). Bring in uncontrollable variables (probabilistic & worst-case).
+- System identification: high-fidelity model of whole Balancer V1 & V2 ecosystem; fit the model to observed on-chain dynamics
+- Design space exploration: tuning of Balancer V2 Strategies to minimize IL and other objectives & constraints. Account for uncontrollable variables (probabilistic & worst-case).
+- Open-ended design space exploration: evolve solidity or EVM bytecode, go nuts. AI DAOs that own themselves. This will be fun:). But one step at a time.
 
 And much more - it's largely up to the community. For example, it would be cool to have a [machinations.io](https://machinations.io/)-like interface:)
 
