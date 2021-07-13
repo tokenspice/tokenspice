@@ -1,24 +1,22 @@
 import logging
 log = logging.getLogger('kpis')
 
-from abc import ABC, abstractmethod
 from enforce_typing import enforce_types
 
 @enforce_types
-class KPIsBase(ABC):
+class KPIsBase:
     def __init__(self, time_step: int):
         self._time_step = time_step #seconds per tick
+        self._tick = 0
 
-    @abstractmethod
     def takeStep(self, state):
-        pass
+        self._tick += 1
 
-    @abstractmethod
     def tick(self) -> int:
-        """# ticks that have elapsed since the beginning of the run"""
-        pass
+        """# ticks since start of run"""
+        return self._tick
 
     def elapsedTime(self) -> int:
-        """Elapsed time (seconds) since the beginning of the run"""
-        return self.tick() * self._time_step
+        """Elapsed time (seconds) since start of run"""
+        return self._tick * self._time_step
         

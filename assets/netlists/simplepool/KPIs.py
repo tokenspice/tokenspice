@@ -10,17 +10,7 @@ from util.strutil import prettyBigNum
 
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
-
-    def __init__(self, time_step: int):
-        super().__init__(time_step)
-        self._tick = 0
-
-    def takeStep(self, state):
-        self._tick += 1
-    
-    def tick(self) -> int:
-        """# ticks that have elapsed since the beginning of the run"""
-        return self._tick
+    pass
 
 @enforce_types
 def netlist_createLogData(state):
