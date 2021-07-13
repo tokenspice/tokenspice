@@ -44,9 +44,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.BDB_TREASURY_USD = 2e6 #(not the true number)
         self.BDB_TREASURY_OCEAN = 20e6  #(not the true number)
 
-        self.POOL_WEIGHT_DT    = 3.0
-        self.POOL_WEIGHT_OCEAN = 7.0
-        assert (self.POOL_WEIGHT_DT + self.POOL_WEIGHT_OCEAN) == 10.0
+        self.pool_weight_DT    = 3.0
+        self.pool_weight_OCEAN = 7.0
+        assert (self.pool_weight_DT + self.pool_weight_OCEAN) == 10.0
 
     def annualMktsGrowthRate(self, ratio_RND_to_sales: float) -> float:
         """

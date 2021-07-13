@@ -1,4 +1,4 @@
-## About simple Netlist
+## About simplegrant Netlist
 
 This netlist is a simple demonstrator, for users to gain insight into how TokenSPICE is structured.
 

@@ -31,8 +31,8 @@ TOOLS:
   -Logging: ./logging.conf
 
   == Example flow ==
-  rm -rf outdir_csv; tsp run assets/netlists/simple/netlist.py outdir_csv
-  rm -rf outdir_png; tsp plot assets/netlists/simple/netlist.py outdir_csv outdir_png
+  rm -rf outdir_csv; tsp run assets/netlists/simplegrant/netlist.py outdir_csv
+  rm -rf outdir_png; tsp plot assets/netlists/simplegrant/netlist.py outdir_csv outdir_png
   eog outdir_png
  """
     

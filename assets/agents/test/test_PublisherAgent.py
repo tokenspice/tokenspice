@@ -7,8 +7,8 @@ from engine import AgentDict
 
 class MockSS:
     def __init__(self):
-        self.POOL_WEIGHT_DT = 3.0
-        self.POOL_WEIGHT_OCEAN = 7.0
+        self.pool_weight_DT = 3.0
+        self.pool_weight_OCEAN = 7.0
 
 class MockState:
     def __init__(self):

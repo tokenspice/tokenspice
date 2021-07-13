@@ -20,7 +20,7 @@ class SimStateBase(object):
     def takeStep(self) -> None:
         """This happens once per tick"""
         #update agents
-        for agent in self.agents.values():
+        for agent in list(self.agents.values()):
             agent.takeStep(self)
 
         #update global state values
