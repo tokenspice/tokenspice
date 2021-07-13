@@ -1,14 +1,9 @@
-"""
-Netlist for simple grant.
-"""
-
 from enforce_typing import enforce_types
 from typing import List, Set
 
 from assets.agents import GrantGivingAgent, GrantTakingAgent
-from engine import AgentBase, KPIsBase, SimStateBase, SimStrategyBase
+from engine import KPIsBase, SimStateBase, SimStrategyBase
 from util.constants import S_PER_HOUR, S_PER_DAY
-from util.strutil import prettyBigNum
 
 @enforce_types
 class SimStrategy(SimStrategyBase.SimStrategyBase):
@@ -20,52 +15,37 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.setMaxTime(10, 'days')
 
         #==attributes specific to this netlist
-        self.granter_init_USD: float = 0.0
         self.granter_init_OCEAN: float = 1.0
         self.granter_s_between_grants: int = S_PER_DAY*3
         self.granter_n_actions: int = 4
 
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
-    
     def __init__(self, ss=None):
-        #initialize self.tick, ss, agents, kpis
-        assert ss is None, "simple SimState will initalize its own ss"
+        assert ss is None
         super().__init__(ss)
 
-        #now, fill in actual values for ss, agents, kpis
+        #ss is defined in this netlist module
         self.ss = SimStrategy()
-        ss = self.ss #shorter
-                       
-        #Instantiate and connect agent instances. "Wire up the circuit"
-        new_agents: Set[AgentBase.AgentBase] = set()
 
-        new_agents.add(GrantGivingAgent.GrantGivingAgent(
+        #wire up the circuit
+        granter = GrantGivingAgent.GrantGivingAgent(
             name="granter1",
-            USD=ss.granter_init_USD,
-            OCEAN=ss.granter_init_OCEAN,
+            USD=0.0,
+            OCEAN=self.ss.granter_init_OCEAN,
             receiving_agent_name="taker1",
-            s_between_grants=ss.granter_s_between_grants,
-            n_actions=ss.granter_n_actions))
-
-        new_agents.add(GrantTakingAgent.GrantTakingAgent(
-            name = "taker1", USD=0.0, OCEAN=0.0))
-
-        #fill in self.agents dict
-        for agent in new_agents:
+            s_between_grants=self.ss.granter_s_between_grants,
+            n_actions=self.ss.granter_n_actions)
+        taker = GrantTakingAgent.GrantTakingAgent(
+            name = "taker1", USD=0.0, OCEAN=0.0)
+        for agent in [granter, taker]:
             self.agents[agent.name] = agent
 
-        #track certain metrics over time, so that we don't have to load
-        self.kpis = KPIs(self.ss.time_step)
-                    
-    def takeStep(self) -> None:
-        """This happens once per tick"""
-        #update agents
-        #update kpis (global state values)
-        super().takeStep()
-
+        #kpis is defined in this netlist module
+        self.kpis = KPIs(self.ss.time_step) 
+                
     def OCEANprice(self) -> float:
-        return 1.0 #arbitrary. Need this func for GrantTakingAgent
+        return 1.0 #arbitrary. Need GrantTakingAgent
 
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
@@ -73,10 +53,7 @@ class KPIs(KPIsBase.KPIsBase):
 
 @enforce_types
 def netlist_createLogData(state):
-    """pass this to SimEngine.__init__() as argument `netlist_createLogData`"""
-    F = False
-    ss = state.ss
-    kpis = state.kpis
+    """SimEngine constructor uses this."""
 
     s = [] #for console logging
     dataheader = [] # for csv logging: list of string
@@ -86,8 +63,7 @@ def netlist_createLogData(state):
     #So we log other things...
 
     g = state.getAgent("granter1")
-    s += ["; granter OCEAN=%s, USD=%s" %
-          (prettyBigNum(g.OCEAN(),F), prettyBigNum(g.USD(), F))]
+    s += ["; granter OCEAN=%s, USD=%s" % (g.OCEAN(), g.USD())]
     dataheader += ["granter_OCEAN", "granter_USD"]
     datarow += [g.OCEAN(), g.USD()]
 
@@ -98,15 +74,14 @@ def netlist_createLogData(state):
 def netlist_plotInstructions(header: List[str], values):
     """
     Describe how to plot the information.
-    tsp.do_plot() calls this
+    tsp.do_plot() uses this.
 
     :param: header: List[str] holding 'Tick', 'Second', ...
     :param: values: 2d array of float [tick_i, valuetype_i]
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
-    from util.plotutil import YParam, arrayToFloatList, \
-        LINEAR, LOG, BOTH, MULT1, MULT100, DIV1M, DIV1B, COUNT, DOLLAR, PERCENT
+    from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, DOLLAR
     
     x = arrayToFloatList(values[:,header.index("Day")])
     

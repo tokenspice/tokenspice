@@ -20,7 +20,6 @@ def test_scope():
 def test_SimStrategy():
     #import from `netlist` module, not a `SimState` module. Netlist has it all:)
     ss = netlist.SimStrategy()
-    assert 0.0 <= ss.granter_init_USD <= 1e6
     assert 0.0 <= ss.granter_init_OCEAN <= 1e6
     assert ss.granter_s_between_grants > 0
     assert ss.granter_n_actions > 0
@@ -32,7 +31,7 @@ def test_SimState():
 
     assert len(state.agents) == 2
     assert state.getAgent("granter1").OCEAN() == state.ss.granter_init_OCEAN
-    assert state.getAgent("taker1").USD() == 0.0
+    assert state.getAgent("taker1").OCEAN() == 0.0
 
     state.takeStep()
     state.takeStep()
