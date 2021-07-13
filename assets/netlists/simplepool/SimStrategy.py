@@ -11,7 +11,7 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 
         #===set base-class values we want for this netlist====
         self.setTimeStep(S_PER_HOUR)
-        max_days = 10
+        max_days = 20
         self.setMaxTicks(max_days * S_PER_DAY / self.time_step + 1)
 
         #===new attributes specific to this netlist===

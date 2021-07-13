@@ -84,10 +84,12 @@ def _multUnitStr(mult:int, unit:int) -> str:
         return "$"
     elif mult == DIV1M and unit == DOLLAR:
         return "$M"
-    elif mult == DIV1M and unit == COUNT:
-        return "count, in millions"
     elif mult == DIV1B and unit == DOLLAR:
         return "$B"
+    elif mult == MULT1 and unit == COUNT:
+        return "count"
+    elif mult == DIV1M and unit == COUNT:
+        return "count, in millions"
     elif mult == DIV1B and unit == COUNT:
         return "count, in billions"
     elif mult == MULT100 and unit == PERCENT:

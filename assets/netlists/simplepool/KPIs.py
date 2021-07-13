@@ -40,6 +40,12 @@ def netlist_createLogData(state):
     dataheader += ["publisher_OCEAN"]
     datarow += [publisher.OCEAN()]
 
+    pool_agents = state.agents.filterToPool()
+    n_pools = len(pool_agents)
+    s += ["; # pools=%d" % n_pools]
+    dataheader += ["n_pools"]
+    datarow += [n_pools]
+
     #done
     return s, dataheader, datarow
 
@@ -60,8 +66,8 @@ def netlist_plotInstructions(header: List[str], values):
     x = arrayToFloatList(values[:,header.index("Day")])
     
     y_params = [
-        YParam(["granter_OCEAN"],["OCEAN"],"granter_OCEAN",LINEAR,MULT1,DOLLAR),
-        YParam(["granter_USD"],  ["USD"],  "granter_USD",  LINEAR,MULT1,DOLLAR)
+        YParam(["publisher_OCEAN"],["OCEAN"],"publisher_OCEAN",LINEAR,MULT1,DOLLAR),
+        YParam(["n_pools"],  ["# pools"],  "n_pools",  LINEAR,MULT1,COUNT)
     ]
 
     return (x, y_params)

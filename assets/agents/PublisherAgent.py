@@ -68,9 +68,9 @@ class PublisherAgent(AgentBase):
         OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt),from_wallet=wallet)
         
         pool.bind(DT.address, toBase18(DT_bind_amt),
-                  toBase18(state.ss.POOL_WEIGHT_DT), from_wallet=wallet)
+                  toBase18(state.ss.pool_weight_DT), from_wallet=wallet)
         pool.bind(OCEAN.address, toBase18(OCEAN_bind_amt),
-                  toBase18(state.ss.POOL_WEIGHT_OCEAN), from_wallet=wallet)
+                  toBase18(state.ss.pool_weight_OCEAN), from_wallet=wallet)
         
         pool.finalize(from_wallet=wallet)
 
