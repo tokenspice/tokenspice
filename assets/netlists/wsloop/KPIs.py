@@ -23,7 +23,9 @@ class KPIs(KPIsBase.KPIsBase):
         self._total_OCEAN_minted_USD__per_tick: List[float] = []
         self._total_OCEAN_burned_USD__per_tick: List[float] = []
 
-    def takeStep(self, state):        
+    def takeStep(self, state):
+        super().takeStep(state) #parent e.g. increments self._tick
+        
         self._granttakers_revenue_per_tick__per_tick.append(
             state.grantTakersSpentAtTick())
         
@@ -46,8 +48,9 @@ class KPIs(KPIsBase.KPIsBase):
         self._total_OCEAN_burned_USD__per_tick.append(O_burned_USD)
 
     def tick(self) -> int:
-        """# ticks that have elapsed since the beginning of the run"""
-        return len(self._revenue_per_marketplace_per_s__per_tick)
+        """# ticks since start of run"""
+        assert len(self._revenue_per_marketplace_per_s__per_tick) == self._tick
+        return self._tick
         
     #=======================================================================
     #growth rate
