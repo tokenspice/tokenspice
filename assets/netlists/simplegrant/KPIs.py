@@ -1,4 +1,5 @@
 from enforce_typing import enforce_types
+from typing import List
 
 from engine import KPIsBase
 from util.strutil import prettyBigNum
