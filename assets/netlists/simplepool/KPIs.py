@@ -7,6 +7,7 @@ from util import valuation
 from util.constants import S_PER_YEAR, S_PER_MONTH, INF
 from util.strutil import prettyBigNum
 
+
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
 
