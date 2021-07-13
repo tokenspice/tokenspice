@@ -1,4 +1,4 @@
-**WARNING: this is WIP code. Prototype, not fully functional, etc. Keep your expectations low. But maybe parts are useful to some:)**
+**WARNING: this code is still young. But maybe it's useful to some:)**
 
 # 🐠 TokenSPICE: EVM Agent-Based Token Simulator
 
