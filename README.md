@@ -19,6 +19,7 @@ A "netlist" defines what you simulate, and how. It wires up a collection of agen
 - [🐡 Backlog](#-backlog)
   - [Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1?add_cards_query=is%3Aopen)
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
+- [🦈 Resources](#-resources)
 - [🏛 License](#-license)
 
 # 🏗 Initial Setup
@@ -252,38 +253,15 @@ conda remove --name tokenspiceenv --all
 
 **[Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1?add_cards_query=is%3Aopen)**
 
-### Context
-
-* Intro to SPICE & TokenSPICE [[Gslides - short](https://docs.google.com/presentation/d/167nbvrQyr6vdvTE6exC1zEA3LktrPzbR08Cg5S1sVDs)] [[Gslides - long](https://docs.google.com/presentation/d/1yUrU7AI702zpRZve6CCR830JSXrpPmfg00M5x9ndhvE)]
-* TE for Ocean V3 [[slides](http://trent.st/content/20201209%20TE%20for%20Ocean%20Protocol%20V3.pdf)] [[video](https://www.youtube.com/watch?v=ztnIf9gCsNI&ab_channel=TokenEngineering)] [[Gslides](https://docs.google.com/presentation/d/1DmC6wfyl7ZMjuB-h3Zbfy--xFuYSt3tGACpgfJH9ZFk/edit)], TE Community Workshop, Dec 9, 2020
-* TE for Ocean V4.1 [[slides](http://trent.st/content/20210521%20Ocean%20Market%20Balancer%20Simulations%20For%20TE%20Academy.pdf)] [[video](https://www.youtube.com/watch?v=TDG53PTbqhQ&ab_channel=TokenEngineering)] [[GSlides](https://docs.google.com/presentation/d/1JfFi9hT4Lf3UQKfCXGDhA27YPpPcWsXU7YArfRGAmMQ/edit#slide=id.p1)], TE Academy, May 21, 2021
-
-### Done so far:
-- Wrote Ocean Market V4.1 prototype smart contracts
-- Drew schematics for V3 & V4.1
-- Adapted TokenSPICE code
-  - Run EVM end-to-end via ganache
-  - Lets third-parties deploy to ganache, then uses at their ABIs
-  - ABIs are wrapped as classes, which are inside agents.
-  - Already include: Ocean datatokens, Ocean datatoken factory, Ocean friendly fork of Balancer AMM, Balancer AMM factory, etc. Have Unit tests for all.
-  - Started writing Python-level agent behaviors
-- Be able to specify a netlist and run, without having to fork [#30](https://github.com/oceanprotocol/tokenspice/issues/30)
-- Get *some* overall loop running that includes at least one EVM agent [#34](https://github.com/oceanprotocol/tokenspice/issues/34)
-
-### Roadmap - Near & Medium Term
-
-Mostly: see Kanban. Some of the bigger issues include:
+Some larger issues include:
 
 - **Improve Continuous Integration** - various issues, see kanban 
 - **Finish + verify Ocean V3 agents** #28. AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
 - **Finish + verify Ocean V4 agents** #29. AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
 
-### Roadmap - Longer Term
-
-We can expect improvements to TokenSPICE itself in the form of faster simulation speed, improved UX, and more.
-
-**[Higher-level tools](README-tools.md).** TokenSPICE lends itself well to having tools built on top for design entry, verification, design space exploration, and more. 
-
+In the longer term, we can expect:
+- Improvements to TokenSPICE itself in the form of faster simulation speed, improved UX, and more.
+- **[Higher-level tools](README-tools.md)** that use TokenSPICE, including design entry, verification, design space exploration, and more. 
 
 # 🐋 Benefits of EVM Agent Simulation
 
@@ -294,7 +272,13 @@ TokenSPICE and other EVM agent simulators have these benefits:
 - Mental model is general enough to extend to Vyper, LLL, and direct EVM bytecode. Can extend to non-EVM blockchain, and multi-chain scenarios. 
 - Opportunity for real-time analysis / optimization / etc against *live chains*: grab the latest chain’s snapshot into ganache, run a local analysis / optimization etc for a few seconds or minutes, then do transaction(s) on the live chain. This can lead to trading systems, failure monitoring, more.
 
-In short, there's a lot of promise. But, the code is young! There's a lot of software engineering work to be done. This can evolve into something very exciting:)
+# 🦈 Resources
+
+Here are further resources.
+
+* Intro to SPICE & TokenSPICE [[Gslides - short](https://docs.google.com/presentation/d/167nbvrQyr6vdvTE6exC1zEA3LktrPzbR08Cg5S1sVDs)] [[Gslides - long](https://docs.google.com/presentation/d/1yUrU7AI702zpRZve6CCR830JSXrpPmfg00M5x9ndhvE)]
+* TE for Ocean V3 [[slides](http://trent.st/content/20201209%20TE%20for%20Ocean%20Protocol%20V3.pdf)] [[video](https://www.youtube.com/watch?v=ztnIf9gCsNI&ab_channel=TokenEngineering)] [[Gslides](https://docs.google.com/presentation/d/1DmC6wfyl7ZMjuB-h3Zbfy--xFuYSt3tGACpgfJH9ZFk/edit)], TE Community Workshop, Dec 9, 2020
+* TE for Ocean V4.1 [[slides](http://trent.st/content/20210521%20Ocean%20Market%20Balancer%20Simulations%20For%20TE%20Academy.pdf)] [[video](https://www.youtube.com/watch?v=TDG53PTbqhQ&ab_channel=TokenEngineering)] [[GSlides](https://docs.google.com/presentation/d/1JfFi9hT4Lf3UQKfCXGDhA27YPpPcWsXU7YArfRGAmMQ/edit#slide=id.p1)], TE Academy, May 21, 2021
 
 # 🏛 License
 
