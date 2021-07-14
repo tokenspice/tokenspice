@@ -8,8 +8,8 @@ Here are some such tools, largely inspired by tools from circuit land.
 
 ## Design entry tools
 
-- Schematic editor - be able to input netlists by editing a schematic. [[Examples from circuit land](https://www.google.com/search?q=spice+schematic+editor&sxsrf=ALeKk01lEnlL27hPsWzA_sBTOoxQLAlUJg:1626253838940&source=lnms&tbm=isch&sa=X&ved=2ahUKEwinnInTm-LxAhUNnYsKHe0mA1wQ_AUoAXoECAEQAw&biw=1600&bih=721#imgrc=TUv3yDrlTDLNVM)]. [[Example from video game land: machinations.io][machinations.io](https://machinations.io/)]
-- Waveform viewer - build on `tsp.do_plot` with more a interactive tool. [[Examples from circuit land](https://www.google.com/search?q=spice+waveform+viewer&sxsrf=ALeKk02nY3U9rkOZuz58PNXWjoFY4MCcUQ:1626255741604&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj9zareouLxAhXm-ioKHW0MCtgQ_AUoAXoECAEQAw&biw=1600&bih=721)
+- Schematic editor - be able to input netlists by editing a schematic. [[Examples from circuit land](https://www.google.com/search?q=spice+schematic+editor&sxsrf=ALeKk01lEnlL27hPsWzA_sBTOoxQLAlUJg:1626253838940&source=lnms&tbm=isch&sa=X&ved=2ahUKEwinnInTm-LxAhUNnYsKHe0mA1wQ_AUoAXoECAEQAw&biw=1600&bih=721#imgrc=TUv3yDrlTDLNVM)]. [[Example from video game land: machinations.io](https://machinations.io/)]
+- Waveform viewer - build on `tsp.do_plot` with more a interactive tool. [[Examples from circuit land](https://www.google.com/search?q=spice+waveform+viewer&sxsrf=ALeKk02nY3U9rkOZuz58PNXWjoFY4MCcUQ:1626255741604&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj9zareouLxAhXm-ioKHW0MCtgQ_AUoAXoECAEQAw&biw=1600&bih=721)]
 
 ## Verification tools
 
