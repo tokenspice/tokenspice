@@ -3,8 +3,8 @@
 TokenSPICE lends itself well to having tools built on top for design entry, verification, design space exploration, and more. 
 
 Here are some such tools, largely inspired by tools from circuit land. 
-- Each can have both a backend and frontend. A frontend with good UX can make a huge difference. 
-- This can be applied for the initial design, before deployment. And, they can be used in real-time against *live chains*, for real-time verification, optimization, etc. How: grab the latest chain’s snapshot into ganache, run a local verification etc for a few seconds or minutes, then do transaction(s) on the live chain. This can lead to trading systems, failure monitoring, more.
+- Each tool can have just a backend, or both a backend and frontend. A frontend with good UX can make a huge difference. 
+- Each tool can be applied for the initial design, before deployment. And, they can be used in real-time against *live chains*, for real-time verification, optimization, etc. How: grab the latest chain’s snapshot into ganache, run a local verification etc for a few seconds or minutes, then do transaction(s) on the live chain. This can lead to trading systems, failure monitoring, more.
 
 ## Design entry tools
 
