@@ -1,5 +1,3 @@
-**WARNING: this code is still young. But maybe it's useful to some:)**
-
 # 🐠 TokenSPICE: EVM Agent-Based Token Simulator
 
 TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
@@ -9,8 +7,6 @@ TokenSPICE simulates tokenized ecosystems using an agent-based approach.
 Each "agent" is a class. Has a wallet, and does work to earn $. One models the system by wiring up agents, and tracking metrics (kpis). Agents may be written in pure Python, or with an EVM-based backend.
 
 A "netlist" defines what you simulate, and how. It wires up a collection of agents to interact in a given way. You can write your own netlists to simulate whatever you like. The `assets/netlists` directory has examples.
-
-TokenSPICE was meant to be simple. It makes no claims on "best". Maybe you'll find it useful.
 
 [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a).
 
@@ -276,9 +272,7 @@ conda remove --name tokenspiceenv --all
 
 ### Roadmap - Near & Medium Term
 
-(See Kanban)
-
-### Roadmap -  Term
+Mostly: see Kanban. Some of the bigger issues include:
 
 - **Improve Continuous Integration** - various issues, see kanban 
 - **Finish + verify Ocean V3 agents** #28. AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
@@ -286,32 +280,43 @@ conda remove --name tokenspiceenv --all
 
 ### Roadmap - Longer Term
 
-- Design space exploration: tuning of Ocean V4.1 (w/ Balancer V2 design). Manual or optimization-based.
-- System identification: high-fidelity model of whole Balancer V1 ecosystem; fit the model to observed on-chain dynamics (up to when V2 released). Bring in uncontrollable variables (probabilistic & worst-case).
-- System identification: high-fidelity model of whole Balancer V1 & V2 ecosystem; fit the model to observed on-chain dynamics
-- Design space exploration: tuning of Balancer V2 Strategies to minimize IL and other objectives & constraints. Account for uncontrollable variables (probabilistic & worst-case).
-- Open-ended design space exploration: evolve solidity or EVM bytecode, go nuts. AI DAOs that own themselves. This will be fun:). But one step at a time.
+We can expect improvements to TokenSPICE itself in the form of faster simulation speed, improved UX, and more.
 
-And much more - it's largely up to the community. For example, it would be cool to have a [machinations.io](https://machinations.io/)-like interface:)
+TokenSPICE lends itself well to having tools built on top for design entry, verification, design space exploration, and more. So much of the roadmap of TokenSPICE is really going to be about building these tools (in their own repos). Here are some such tools, largely inspired by tools from circuit land. Each can have both a backend and frontend. A frontend with good UX can make a huge difference. 
+
+**Design entry tools:**
+
+- Schematic editor - be able to input netlists by editing a schematic. [[Examples from circuit land](https://www.google.com/search?q=spice+schematic+editor&sxsrf=ALeKk01lEnlL27hPsWzA_sBTOoxQLAlUJg:1626253838940&source=lnms&tbm=isch&sa=X&ved=2ahUKEwinnInTm-LxAhUNnYsKHe0mA1wQ_AUoAXoECAEQAw&biw=1600&bih=721#imgrc=TUv3yDrlTDLNVM)]. [[Example from video game land: machinations.io][machinations.io](https://machinations.io/)]
+- Waveform viewer - build on `tsp.do_plot` with more interactive tool
+
+**Verification tools:**
+
+- System identification - auto-extract a TokenSPICE netlist from raw blockchain info. To make it more tractable, use a parameterized netlist and Solidity code where possible. Ie "whitebox" not "blackbox".
+- Corner extraction - finding representative “corners” -- a small handful of points in random variable or worst-case variable space to simulate against. Enables rapid design-space exploration, because each you only simulate each design on corners.
+- Worst-case analysis - verification across worst-case variables. E.g. via global optimization across worst-case variables. E.g. global synthesis across worst-case variables and agent python structures.
+- 3-sigma verification - verification across random variables. E.g. via Monte Carlo analysis where all samples are drawn from the random variables' pdf, and each sample is simulated.
+- High-sigma verification - verification across random variables, where catastrophic failure happens rarely, e.g. 1 in a million times (4.5 sigma) or 1 in a billion (6 sigma). E.g. using tricks from "rare event estimation" literature or [this book](https://www.amazon.com/Variation-Aware-Design-Custom-Integrated-Circuits/dp/146142268X).
+- Behavioral modeling - auto-extract a lower-fidelity / faster-simulating TokenSPICE netlist from a higher-fidelity TokenSPICE netlist & simulation run, with minimal loss of error. 
+
+**Design Space Exploration tools:**
+
+- Sensitivity analysis - locally perterb design variables.
+- Sweep analysis - sweep design variables one at a time. Ignore interactions.
+- Fast sweep analysis - sweep across all design variables including interactions, but without combinatorial explosion via model-in-the-loop
+- Local optimization - search across design variables to optimize for objectives & constraints
+- Global optimization - search across all design variables, with affordances to not get stuck
+- Synthesis - search design variables *and structure*. E.g. Evolve solidity or EVM bytecode. AI DAOs that own themselves. Go nuts:)
+- Variation-aware synthesis - all of the above at once. This isn’t easy! But it’s possible. Example: use MOJITO (http://trent.st/mojito/), but use TokenSPICE (not SPICE) and Solidity building blocks (not circuit ones) 
+
 
 # 🐋 Benefits of EVM Agent Simulation
 
-TokenSPICE 2 and other EVM agent-based simulators have these benefits:
+TokenSPICE and other EVM agent simulators have these benefits:
 - Faster and less error prone, because the model = the Solidity code. Don’t have to port any existing Solidity code into Python, just wrap it. Don’t have to write lower-fidelity equations.
-- Enables rapid iterations of writing Solidity code -> simulating -> changing Solidity code -> simulating. At both the parameter level and the structural level. 
-- Can quickly integrate Balancer V2 code. Then extend to model other AMMs. And other DeFi code. Etc etc.
-- Plays well with other pure Python agents. Each agent can wrap Solidity, or be pure Python. 
-- Super high fidelity simulations, since it uses the actual code itself. Enables modeling of uncontrollable variables, both random (probabilistic) ones and worst-case ones. 
-- Can build higher-level CAD tools, that have TokenSPICE 2 in the loop: 
-  - 3-sigma verification - verification of random variables, including Monte Carlo analysis
-  - Worst-case analysis - verification across worst-case condition
-  - Corner extraction - finding representative “corners” -- a small handful of points in uncontrollable variable space to simulate against for rapid design-space exploration
-  - Local optimization - wiggle controllable params to optimize for objectives & constraints
-  - Global optimization - “”, with affordances to not get stuck
-  - Synthesis - “” but wiggle code structure itself in addition to parameters
-  - Variation-aware synthesis - all of the above at once. This isn’t easy! But it’s possible. Example: use MOJITO (http://trent.st/mojito/), but use TokenSPICE 2 (not SPICE) and Solidity building blocks (not circuit ones) 
-- Mental model is general enough to extend to Vyper, LLL, and direct EVM bytecode. Can extend to non-EVM blockchain, and multi-chain scenarios. Can extend to work with hierarchical building blocks. 
-- Can also do real-time analysis / optimization / etc against live chains: grab the latest chain’s snapshot into ganache, run a local analysis / optimization etc for a few seconds or minutes, then do transaction(s) on the live chain. This can lead to trading systems, failure monitoring, more.
+- Enables rapid iterations of writing Solidity code -> simulating -> changing Solidity code -> simulating. 
+- Super high fidelity simulations, since it uses the actual code itself. Enables modeling of design, random and worst-case variables.
+- Mental model is general enough to extend to Vyper, LLL, and direct EVM bytecode. Can extend to non-EVM blockchain, and multi-chain scenarios. 
+- Opportunity for real-time analysis / optimization / etc against *live chains*: grab the latest chain’s snapshot into ganache, run a local analysis / optimization etc for a few seconds or minutes, then do transaction(s) on the live chain. This can lead to trading systems, failure monitoring, more.
 
 In short, there's a lot of promise. But, the code is young! There's a lot of software engineering work to be done. This can evolve into something very exciting:)
 
