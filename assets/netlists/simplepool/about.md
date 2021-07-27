@@ -2,7 +2,7 @@
 
 This netlist is a simple demonstrator, for users to gain insight into how TokenSPICE is structured. It includes EVM agents.
 
-[Here's the code](netlist.py). It's just one file.
+[Here's the netlist code](netlist.py). It's just one file.
 
 It has these agents:
 
