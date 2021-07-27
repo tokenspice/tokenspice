@@ -201,10 +201,11 @@ git push
 
 ## About Agents 
 
+- Agents are defined at `assets/agents/`.
 - All agents are written in Python
 - Each Agent has an AgentWallet, which holds a Web3Wallet. The Web3Wallet holds a private key and creates TXs. 
-- Some agents may wrap smart contracts deployed to EVM, e.g. `BPoolAgent`.
-- Agents are defined at `assets/agents/`.
+- Some agents may wrap smart contracts deployed to EVM, e.g. `PoolAgent`.
+- PoolAgent and many other EVM agents wrap Ocean or Balancer smart contracts, with Python driver middleware. A good Pythonic way to get familiar with the driver middleware is to play with [ocean.py](https://github.com/oceanprotocol/ocean.py). (Note that TokenSPICE currently copies-and-pastes some of that code, there is not a dependency.)
 
 ## About Netlists
 
