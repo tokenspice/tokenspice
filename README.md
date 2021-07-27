@@ -124,6 +124,10 @@ tsp plot assets/netlists/simplegrant/netlist.py outdir_csv outdir_png
 eog outdir_png
 ```
 
+Here are example plots from [wsloop netlist](assets/netlists/wsloop/about.md). They track token count, tokens minted, tokens burned, and tokens granted over a 20 year period.
+
+<img src="images/wsloop-example-small.png">
+
 # 🏄 Do Simulations, Make Changes
 
 ## Do Once, At Session Start
