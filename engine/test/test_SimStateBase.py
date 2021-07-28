@@ -12,7 +12,7 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 class KPIs(KPIsBase.KPIsBase):
     def takeStep(self, state):
         pass
-    def tick():
+    def tick(self):
         pass
 
 class SimpleAgent(AgentBase.AgentBase):
@@ -33,21 +33,19 @@ class SimState(SimStateBase.SimStateBase):
 #actual tests
 
 @enforce_types
-def test1():    
+def test1():
     state = SimState()
     assert state.tick == 0
     assert state.numAgents() == 2
     assert isinstance(state.kpis, KPIs)
 
     state.takeStep()
-    
+
     assert id(state.getAgent("agent1")) == id(state.agents["agent1"])
-    
+
     assert len(state.allAgents()) == 2
     assert state.numAgents() == 2
 
     agent3 = SimpleAgent("agent3", 0.0, 0.0)
     state.addAgent(agent3)
     assert state.numAgents() == 3
-
-    

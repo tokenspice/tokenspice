@@ -16,7 +16,7 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 class KPIs(KPIsBase.KPIsBase):
     def takeStep(self, state):
         pass
-    def tick():
+    def tick(self):
         pass
 
 class SimpleAgent(AgentBase.AgentBase):
@@ -33,7 +33,7 @@ class SimState(SimStateBase.SimStateBase):
 #actual tests
 
 @enforce_types
-def setUp():        
+def setUp():
     #possible cleanup from prev run
     if os.path.exists(PATH1): shutil.rmtree(PATH1)
 
@@ -46,7 +46,7 @@ def _testRunLonger(max_ticks):
     state = SimState()
     state.ss.setMaxTicks(max_ticks)
     engine = SimEngine.SimEngine(state, PATH1)
-    engine.run()        
+    engine.run()
 
 @enforce_types
 def testRunEngine():
