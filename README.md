@@ -8,6 +8,8 @@ Each "agent" is a class. Has a wallet, and does work to earn $. One models the s
 
 A "netlist" defines what you simulate, and how. It wires up a collection of agents to interact in a given way. You can write your own netlists to simulate whatever you like. The `assets/netlists` directory has examples.
 
+Twitter: [@tokenspice](https://twitter.com/tokenspice)
+
 [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a).
 
 # Contents
