@@ -1,16 +1,19 @@
-# 🐠 TokenSPICE: EVM Agent-Based Token Simulator
+<img src="images/fishnado2-crop.jpeg" width="100%">
 
-TokenSPICE can be used to help design, tune, and verify tokenized ecosystems in an overall Token Engineering (TE) flow.
+# TokenSPICE: EVM Agent-Based Token Simulator 🐟🌪️
 
-TokenSPICE simulates tokenized ecosystems using an agent-based approach.
+TokenSPICE simulates tokenized ecosystems via an agent-based approach, with EVM in-the-loop.
 
-Each "agent" is a class. Has a wallet, and does work to earn $. One models the system by wiring up agents, and tracking metrics (kpis). Agents may be written in pure Python, or with an EVM-based backend.
+It can help design, tune, and verify tokenized ecosystems. It's young but promising. We welcome you to contribute! 👋
 
-A "netlist" defines what you simulate, and how. It wires up a collection of agents to interact in a given way. You can write your own netlists to simulate whatever you like. The `assets/netlists` directory has examples.
-
-Twitter: [@tokenspice](https://twitter.com/tokenspice)
+- Each "agent" is a class. Has a wallet, and does work to earn $. One models the system by wiring up agents, and tracking metrics (kpis). Agents may be written in pure Python, or with an EVM-based backend.
+- A "netlist" defines what you simulate, and how. It wires up a collection of agents to interact in a given way. You can write your own netlists to simulate whatever you like. The `assets/netlists` directory has examples.
 
 [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a).
+
+TokenSPICE was initially developed for use by [Ocean Protocol][https://www.oceanprotocol.com], and has now become more general.
+
+Twitter: [@tokenspice](https://twitter.com/tokenspice)
 
 # Contents
 
