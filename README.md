@@ -13,8 +13,8 @@ It can help design, tune, and verify tokenized ecosystems. It's young but promis
 
 Quick links:
 - Twitter: [@tokenspice](https://twitter.com/tokenspice)
-- [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a).
-- TokenSPICE was initially developed for use by [Ocean Protocol][https://www.oceanprotocol.com], and has now become more general.
+- [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a)
+- TokenSPICE was initially developed for use by [Ocean Protocol](https://www.oceanprotocol.com), and has now become more general.
 
 # Contents
 
