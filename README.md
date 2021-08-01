@@ -12,6 +12,7 @@ It can help design, tune, and verify tokenized ecosystems. It's young but promis
 <img src="images/plots-crop.PNG" width="100%">
 
 Quick links:
+- Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216)
 - Twitter: [@tokenspice](https://twitter.com/tokenspice)
 - [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a)
 - TokenSPICE was initially developed for use by [Ocean Protocol](https://www.oceanprotocol.com), and has now become more general.
