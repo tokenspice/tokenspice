@@ -15,7 +15,8 @@ Quick links:
 - Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216)
 - Twitter: [@tokenspice](https://twitter.com/tokenspice)
 - [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a)
-- TokenSPICE was initially developed for use by [Ocean Protocol](https://www.oceanprotocol.com), and has now become more general.
+
+History: TokenSPICE was [initially built to model](https://github.com/tokenspice/tokenspice0.1) the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). It's now been generalized to support EVM, on arbitary netlists. Most initial work was by [trentmc](https://github.com/trentmc) ([Ocean Protocol](https://www.oceanprotocol.com)); more contributors have joined since.
 
 # Contents
 
