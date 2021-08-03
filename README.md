@@ -123,7 +123,7 @@ Here's an example on a supplied netlist `simplegrant`.
 
 Simulate the netlist, storing results to `outdir_csv`.
 ```console
-tsp run assets/netlists/simplegrant/netlist.py outdir_csv outdir_csv
+tsp run assets/netlists/simplegrant/netlist.py outdir_csv
 ```
 
 Output plots to `outdir_png`, and view them.
