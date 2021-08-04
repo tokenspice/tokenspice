@@ -169,7 +169,7 @@ class AgentWallet:
         self.resetCachedInfo()
 
     def buyDT(self, pool:bpool.BPool, DT:datatoken.Datatoken,
-               DT_buy_amt:float, max_OCEAN_allow:float):
+              DT_buy_amt:float, max_OCEAN_allow:float):
         """Swap OCEAN for DT """
         OCEAN = globaltokens.OCEANtoken()
         OCEAN.approve(pool.address, toBase18(max_OCEAN_allow),
