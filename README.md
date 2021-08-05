@@ -12,7 +12,7 @@ It can help design, tune, and verify tokenized ecosystems. It's young but promis
 <img src="images/plots-crop.PNG" width="100%">
 
 Quick links:
-- Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216)
+- Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216), [First time](https://discord.gg/FREcbdnUTw)
 - Twitter: [@tokenspice](https://twitter.com/tokenspice)
 - [Documentation](https://www.notion.so/TokenSPICE2-Docs-b6fc0b91269946eb9f7deaa020d81e9a)
 
