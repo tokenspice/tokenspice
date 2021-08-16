@@ -66,29 +66,16 @@ class DataconsumerAgent(AgentBase):
 
     def _buyDT(self, state):
         """Buy, and consume dataset"""
-        OCEAN_address = globaltokens.OCEAN_address()
-        OCEAN = self.OCEAN()
-        OCEAN_base = self._wallet._OCEAN_base()
-        DT_amount_out_base = toBase18(1.0)
-        
-        cand_pool_agents = self._candPoolAgents()
+        DT_buy_amt = 1.0
+        max_OCEAN_allow = self.OCEAN()
+        OCEANtoken = globaltokens.OCEANtoken()
+
+        cand_pool_agents = self._candPoolAgents(state)
         assert cand_pool_agents
         random.shuffle(cand_pool_agents)
 
-        #FIXME: there will be times when slippage is sufficiently high that
-        # the data consumer won't be able to successfully buy the DT.
-        # In that case, should pick the second choice in cand_pool_agents. Etc.
         pool_agent = cand_pool_agents[0]
         pool = pool_agent.pool
-        DT_address = pool_agent.datatoken_address
-        
-        pool.swapExactAmountOut(
-            tokenIn_address=OCEAN_address,
-            maxAmountIn_base=OCEAN_base,
-            tokenOut_address=DT_address,
-            tokenAmountOut_base=DT_amount_out_base,
-            maxPrice_base=constants.HUGEINT,
-            from_wallet=self._wallet._web3wallet)
-        
-        self._wallet.resetCachedInfo()
-        
+        DT = pool_agent.datatoken
+
+        self._wallet.buyDT(pool, DT, DT_buy_amt, max_OCEAN_allow)

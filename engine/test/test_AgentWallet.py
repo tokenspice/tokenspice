@@ -186,7 +186,25 @@ def test_sellDT(alice_info):
         
     assert OCEAN_after > OCEAN_before
     assert DT_after == (DT_before - DT_sell_amt)
+
+@enforce_types
+def test_buyDT(alice_info):
+    alice_agent_wallet, alice_DT, alice_pool = \
+        alice_info.agent_wallet, alice_info.DT, alice_info.pool
+    assert _poolToDTaddress(alice_pool) == alice_DT.address
     
+    DT_before:float = alice_agent_wallet.DT(alice_DT)
+    OCEAN_before:float = alice_agent_wallet.OCEAN()
+
+    DT_buy_amt = 1.0
+    alice_agent_wallet.buyDT(alice_pool, alice_DT, DT_buy_amt=DT_buy_amt, max_OCEAN_allow=OCEAN_before)
+    
+    DT_after:float = alice_agent_wallet.DT(alice_DT)
+    OCEAN_after:float = alice_agent_wallet.OCEAN()
+        
+    assert OCEAN_after < OCEAN_before
+    assert DT_after == (DT_before + DT_buy_amt)    
+
 @enforce_types
 def test_stakeOCEAN(alice_info):
     alice_agent_wallet, alice_pool = alice_info.agent_wallet, alice_info.pool
