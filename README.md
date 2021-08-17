@@ -107,6 +107,8 @@ pytest web3engine/test/test_btoken.py
 
 ## First usage of tsp
 
+We use `tsp` for TokenSPICE in the command line.
+
 First, add pwd to bash path.
 ```console
 export PATH=$PATH:.
