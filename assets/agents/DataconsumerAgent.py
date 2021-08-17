@@ -1,6 +1,7 @@
 from enforce_typing import enforce_types
 import random
 
+from assets.agents.PoolAgent import PoolAgent
 from engine.AgentBase import AgentBase
 from web3engine import bpool, datatoken, globaltokens
 from web3tools.web3util import fromBase18, toBase18
@@ -34,6 +35,7 @@ class DataconsumerAgent(AgentBase):
         """
         OCEAN_address = globaltokens.OCEAN_address()
         OCEAN = self.OCEAN()
+        OCEAN_base = toBase18(OCEAN)
         all_pool_agents = state.agents.filterToPool().values()
         cand_pool_agents = []
         for pool_agent in all_pool_agents:
@@ -59,8 +61,12 @@ class DataconsumerAgent(AgentBase):
                 tokenAmountOut_base=DT_amount_out_base,
                 swapFee_base=pool_swapFee_base)
 
-            if OCEANamountIn_base < OCEAN:
-                cand_pool_agents.append(pool)
+            if OCEANamountIn_base < OCEAN_base:
+                cand_pool_agents.append(pool_agent)
+
+        #postconditions
+        for agent in cand_pool_agents:
+            assert isinstance(agent, PoolAgent)
                 
         return cand_pool_agents
 
