@@ -75,9 +75,8 @@ class DataconsumerAgent(AgentBase):
 
         cand_pool_agents = self._candPoolAgents(state)
         assert cand_pool_agents
-        random.shuffle(cand_pool_agents)
-
-        pool_agent = cand_pool_agents[0]
+        pool_agent = random.choice(cand_pool_agents)
+        
         pool = pool_agent.pool
         DT = pool_agent.datatoken
 
