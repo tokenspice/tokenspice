@@ -1,5 +1,6 @@
 from enforce_typing import enforce_types
 import random
+from typing import List
 
 from assets.agents.PoolAgent import PoolAgent
 from engine.AgentBase import AgentBase
@@ -29,7 +30,7 @@ class DataconsumerAgent(AgentBase):
         else:
             return self._s_since_buy >= self._s_between_buys
 
-    def _candPoolAgents(self, state):
+    def _candPoolAgents(self, state) -> List[PoolAgent]:
         """Pools that this agent can afford to buy 1.0 datatokens from,
         at least based on a first approximation. 
         """
@@ -63,10 +64,6 @@ class DataconsumerAgent(AgentBase):
 
             if OCEANamountIn_base < OCEAN_base:
                 cand_pool_agents.append(pool_agent)
-
-        #postconditions
-        for agent in cand_pool_agents:
-            assert isinstance(agent, PoolAgent)
                 
         return cand_pool_agents
 
