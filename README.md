@@ -60,7 +60,7 @@ Open a new terminal and:
 ```console
 cd tokenspice
 
-#active env't
+#activate env't
 conda activate tokenspiceenv
 
 #run ganache
