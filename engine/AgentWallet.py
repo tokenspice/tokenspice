@@ -167,7 +167,24 @@ class AgentWallet:
             from_wallet=self._web3wallet,
         )
         self.resetCachedInfo()
-                
+    
+    def buyDT(self, pool:bpool.BPool, DT:datatoken.Datatoken,
+              DT_buy_amt:float, max_OCEAN_allow:float):
+        """Swap OCEAN for DT """
+        OCEAN = globaltokens.OCEANtoken()
+        OCEAN.approve(pool.address, toBase18(max_OCEAN_allow),
+                      from_wallet=self._web3wallet)
+
+        pool.swapExactAmountOut(
+            tokenIn_address=globaltokens.OCEAN_address(),
+            maxAmountIn_base=toBase18(max_OCEAN_allow),
+            tokenOut_address=DT.address,
+            tokenAmountOut_base=toBase18(DT_buy_amt),
+            maxPrice_base=2 ** 255,
+            from_wallet=self._web3wallet,
+        )
+        self.resetCachedInfo()
+                        
     def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
         """Convert some OCEAN to DT, then add both as liquidity."""
         OCEAN = globaltokens.OCEANtoken()

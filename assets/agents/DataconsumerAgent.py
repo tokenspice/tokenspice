@@ -1,6 +1,8 @@
 from enforce_typing import enforce_types
 import random
+from typing import List
 
+from assets.agents.PoolAgent import PoolAgent
 from engine.AgentBase import AgentBase
 from web3engine import bpool, datatoken, globaltokens
 from web3tools.web3util import fromBase18, toBase18
@@ -28,12 +30,13 @@ class DataconsumerAgent(AgentBase):
         else:
             return self._s_since_buy >= self._s_between_buys
 
-    def _candPoolAgents(self, state):
+    def _candPoolAgents(self, state) -> List[PoolAgent]:
         """Pools that this agent can afford to buy 1.0 datatokens from,
         at least based on a first approximation. 
         """
         OCEAN_address = globaltokens.OCEAN_address()
         OCEAN = self.OCEAN()
+        OCEAN_base = toBase18(OCEAN)
         all_pool_agents = state.agents.filterToPool().values()
         cand_pool_agents = []
         for pool_agent in all_pool_agents:
@@ -59,36 +62,22 @@ class DataconsumerAgent(AgentBase):
                 tokenAmountOut_base=DT_amount_out_base,
                 swapFee_base=pool_swapFee_base)
 
-            if OCEANamountIn_base < OCEAN:
-                cand_pool_agents.append(pool)
+            if OCEANamountIn_base < OCEAN_base:
+                cand_pool_agents.append(pool_agent)
                 
         return cand_pool_agents
 
     def _buyDT(self, state):
         """Buy, and consume dataset"""
-        OCEAN_address = globaltokens.OCEAN_address()
-        OCEAN = self.OCEAN()
-        OCEAN_base = self._wallet._OCEAN_base()
-        DT_amount_out_base = toBase18(1.0)
-        
-        cand_pool_agents = self._candPoolAgents()
-        assert cand_pool_agents
-        random.shuffle(cand_pool_agents)
+        DT_buy_amt = 1.0
+        max_OCEAN_allow = self.OCEAN()
+        OCEANtoken = globaltokens.OCEANtoken()
 
-        #FIXME: there will be times when slippage is sufficiently high that
-        # the data consumer won't be able to successfully buy the DT.
-        # In that case, should pick the second choice in cand_pool_agents. Etc.
-        pool_agent = cand_pool_agents[0]
+        cand_pool_agents = self._candPoolAgents(state)
+        assert cand_pool_agents
+        pool_agent = random.choice(cand_pool_agents)
+        
         pool = pool_agent.pool
-        DT_address = pool_agent.datatoken_address
-        
-        pool.swapExactAmountOut(
-            tokenIn_address=OCEAN_address,
-            maxAmountIn_base=OCEAN_base,
-            tokenOut_address=DT_address,
-            tokenAmountOut_base=DT_amount_out_base,
-            maxPrice_base=constants.HUGEINT,
-            from_wallet=self._wallet._web3wallet)
-        
-        self._wallet.resetCachedInfo()
-        
+        DT = pool_agent.datatoken
+
+        self._wallet.buyDT(pool, DT, DT_buy_amt, max_OCEAN_allow)
