@@ -54,6 +54,15 @@ def test_buyDT(alice_pool, alice_agent):
     assert agent._candPoolAgents(state) #have useful pools
     assert agent._doBuyDT(state)
 
-    agent._buyDT(state)
     dt = state.agents["pool1"].datatoken
+    assert agent.DT(dt) == 0.0
+    pool_agent = agent._buyDT(state)
     assert agent.DT(dt) == 1.0
+
+    # consume
+    controller = pool_agent.controller_address
+    assert agent._searchAgentAddress(state, controller)
+    assert alice_agent.DT(dt) == 80.0
+    agent._consumeDT(state, pool_agent)
+    assert agent.DT(dt) == 0.0
+    assert alice_agent.DT(dt) == 81.0
