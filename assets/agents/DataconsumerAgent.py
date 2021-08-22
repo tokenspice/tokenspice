@@ -21,7 +21,8 @@ class DataconsumerAgent(AgentBase):
         
         if self._doBuyDT(state):
             self._s_since_buy = 0
-            self._buyDT(state)
+            pool_agent = self._buyDT(state)
+            self._consumeDT(state, pool_agent)
 
     def _doBuyDT(self, state):
         cand_pool_agents = self._candPoolAgents(state)
@@ -77,7 +78,7 @@ class DataconsumerAgent(AgentBase):
                 return agent
 
     def _buyDT(self, state):
-        """Buy, and consume dataset"""
+        """Buy dataset"""
         DT_buy_amt = 1.0
         max_OCEAN_allow = self.OCEAN()
         OCEANtoken = globaltokens.OCEANtoken()
@@ -92,6 +93,13 @@ class DataconsumerAgent(AgentBase):
         self._wallet.buyDT(pool, DT, DT_buy_amt, max_OCEAN_allow)
 
         assert self.DT(DT) == DT_buy_amt
+
+        return pool_agent
+
+    def _consumeDT(self, state, pool_agent):
+        """Consume dataset"""
+        DT_buy_amt = 1.0
+        DT = pool_agent.datatoken
 
         controller = pool_agent.controller_address
         controller_agent = self._searchAgentAddress(state, controller)
