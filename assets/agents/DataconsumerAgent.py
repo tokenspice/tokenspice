@@ -81,3 +81,9 @@ class DataconsumerAgent(AgentBase):
         DT = pool_agent.datatoken
 
         self._wallet.buyDT(pool, DT, DT_buy_amt, max_OCEAN_allow)
+
+        assert self.DT(DT) == DT_buy_amt
+
+        controller = pool.controller_address()
+
+        self._wallet.transferDT(controller, DT, DT_buy_amt)

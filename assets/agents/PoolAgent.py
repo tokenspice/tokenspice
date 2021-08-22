@@ -13,6 +13,7 @@ class PoolAgent(AgentBase):
         
         self._dt_address = self._datatokenAddress()
         self._dt = datatoken.Datatoken(self._dt_address)
+        self._controller_address = self._controllerAddress()
 
     @property
     def pool(self) -> bpool.BPool:
@@ -38,3 +39,10 @@ class PoolAgent(AgentBase):
             if addr != OCEAN_addr:
                 return addr
         raise AssertionError("should never get here")
+
+    @property
+    def controller_address(self) -> str:
+        return self._controller_address
+
+    def _controllerAddress(self):
+        return self._pool.getController() 
