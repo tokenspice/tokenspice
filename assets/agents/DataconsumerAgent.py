@@ -84,6 +84,6 @@ class DataconsumerAgent(AgentBase):
 
         assert self.DT(DT) == DT_buy_amt
 
-        controller = pool.controller_address()
+        controller = pool_agent.controller_address
 
         self._wallet.transferDT(controller, DT, DT_buy_amt)
