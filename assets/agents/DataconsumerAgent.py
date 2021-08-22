@@ -67,6 +67,15 @@ class DataconsumerAgent(AgentBase):
                 
         return cand_pool_agents
 
+    def _searchAgentAddress(self, state, search_address):
+        """Search all agents by eth address"""
+        all_agents = state.agents.values()
+        for agent in all_agents:
+            address = agent._wallet._address
+
+            if address == search_address:
+                return agent
+
     def _buyDT(self, state):
         """Buy, and consume dataset"""
         DT_buy_amt = 1.0
@@ -85,5 +94,6 @@ class DataconsumerAgent(AgentBase):
         assert self.DT(DT) == DT_buy_amt
 
         controller = pool_agent.controller_address
+        controller_agent = self._searchAgentAddress(state, controller)
 
-        self._wallet.transferDT(controller, DT, DT_buy_amt)
+        self._wallet.transferDT(controller_agent._wallet, DT, DT_buy_amt)
