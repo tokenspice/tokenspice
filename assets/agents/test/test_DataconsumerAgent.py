@@ -2,6 +2,7 @@ import pytest
 
 from assets.agents.PoolAgent import PoolAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
+from assets.agents.PublisherAgent import PublisherAgent
 from engine.AgentDict import AgentDict
 from util.constants import S_PER_HOUR
 
@@ -9,6 +10,8 @@ class MockSS:
     def __init__(self):
         #seconds per tick
         self.time_step: int = S_PER_HOUR
+        self.pool_weight_DT: float = 1.0
+        self.pool_weight_OCEAN: float = 1.0
 
 class MockState:
     def __init__(self):
@@ -37,9 +40,11 @@ def test_doBuyDT(alice_pool):
     assert agent._candPoolAgents(state) #have useful pools
     assert agent._doBuyDT(state)
 
-def test_buyDT(alice_pool):
+def test_buyDT(alice_pool, alice_agent):
     state = MockState()
-    agent = DataconsumerAgent("agent1",USD=0.0,OCEAN=1000.0) 
+    state.addAgent(alice_agent)
+    agent = DataconsumerAgent("con1", USD=0.0, OCEAN=1000.0) 
+    state.addAgent(agent)
 
     agent._s_since_buy += agent._s_between_buys
 
