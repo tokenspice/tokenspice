@@ -3,6 +3,7 @@ import pytest
 from assets.agents.PoolAgent import PoolAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
 from assets.agents.PublisherAgent import PublisherAgent
+from engine.AgentBase import AgentBase
 from engine.AgentDict import AgentDict
 from util.constants import S_PER_HOUR
 
@@ -19,6 +20,10 @@ class MockState:
         self.ss = MockSS()
     def addAgent(self, agent):
         self.agents[agent.name] = agent
+
+class MockAgent(AgentBase):
+    def takeStep(self, state):
+        pass
 
 # @pytest.mark.skip(reason="TODO FIXME")
 def test_doBuyDT(alice_pool):
@@ -40,11 +45,15 @@ def test_doBuyDT(alice_pool):
     assert agent._candPoolAgents(state) #have useful pools
     assert agent._doBuyDT(state)
 
-def test_buyDT(alice_pool, alice_agent):
+def test_buyDT(alice_info):
     state = MockState()
+    alice_agent = MockAgent("agent1", USD=0.0, OCEAN=0.0)
+    alice_agent._wallet = alice_info.agent_wallet
     state.addAgent(alice_agent)
     agent = DataconsumerAgent("con1", USD=0.0, OCEAN=1000.0) 
     state.addAgent(agent)
+
+    alice_pool = alice_info.pool
 
     agent._s_since_buy += agent._s_between_buys
 
