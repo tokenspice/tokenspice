@@ -79,7 +79,7 @@ class DataconsumerAgent(AgentBase):
 
     def _buyDT(self, state):
         """Buy dataset"""
-        DT_buy_amt = 1.0
+        DT_buy_amt = 1.0 # magic number 
         max_OCEAN_allow = self.OCEAN()
         OCEANtoken = globaltokens.OCEANtoken()
 
@@ -98,10 +98,10 @@ class DataconsumerAgent(AgentBase):
 
     def _consumeDT(self, state, pool_agent):
         """Consume dataset"""
-        DT_buy_amt = 1.0
+        DT_consume_amt = 1.0 # magic number 
         DT = pool_agent.datatoken
 
         controller = pool_agent.controller_address
         controller_agent = self._searchAgentAddress(state, controller)
 
-        self._wallet.transferDT(controller_agent._wallet, DT, DT_buy_amt)
+        self._wallet.transferDT(controller_agent._wallet, DT, DT_consume_amt)
