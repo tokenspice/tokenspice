@@ -227,11 +227,7 @@ class AgentWallet:
             raise ValueError("transfer amt (%s) exceeds DT holdings (%s)"
                              % (fromBase18(amt_base), fromBase18(DT_base)))
 
-        DT.transfer(dst_address, amt_base, self._web3wallet)
-
-        dst_wallet.DT(DT) += amt
-        self.resetCachedInfo()
-        dst_wallet.resetCachedInfo()     
+        DT.transfer(dst_address, amt_base, self._web3wallet)     
 
     #===================================================================
     def __str__(self) -> str:
