@@ -63,15 +63,21 @@ def test_buyDT(alice_info):
     assert agent._candPoolAgents(state) #have useful pools
     assert agent._doBuyDT(state)
 
+    # buyDT
     dt = state.agents["pool1"].datatoken
+    assert agent.OCEAN() == 1000.0
     assert agent.DT(dt) == 0.0
-    pool_agent = agent._buyDT(state)
+    pool_agent, OCEAN_spend = agent._buyDT(state)
+    assert agent.OCEAN() == 1000.0 - OCEAN_spend
     assert agent.DT(dt) == 1.0
 
-    # consume
+    # consumeDT
     controller = pool_agent.controller_address
     assert agent._searchAgentAddress(state, controller)
+
+    # we model lag from consume to value creation simply by a delay between buys
     assert alice_agent.DT(dt) == 80.0
-    agent._consumeDT(state, pool_agent)
+    agent._consumeDT(state, pool_agent, OCEAN_spend)
+    assert agent.OCEAN() == 1000.0 + OCEAN_spend * agent.OCEAN_profit
     assert agent.DT(dt) == 0.0
     assert alice_agent.DT(dt) == 81.0
