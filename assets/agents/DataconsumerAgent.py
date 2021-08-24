@@ -100,7 +100,7 @@ class DataconsumerAgent(AgentBase):
         pool_OCEAN_weight_base = pool.getDenormalizedWeight_base(OCEAN_address)
         pool_swapFee_base = pool.getSwapFee_base()
 
-        DT_amount_out_base = toBase18(1.0)
+        DT_amount_out_base = toBase18(DT_buy_amt)
 
         OCEANamountIn_base = fromBase18(pool.calcInGivenOut_base(
             tokenBalanceIn_base=pool_OCEAN_balance_base,
