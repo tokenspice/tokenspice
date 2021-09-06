@@ -36,4 +36,10 @@ class AgentDict(dict):
         return AgentDict({agent.name : agent
                           for agent in self.values()
                           if isinstance(agent, _class)})
-    
+
+    def agentByAddress(self, address):
+        for agent in self.values():
+            if agent.address == address:
+                return agent
+        return None
+
