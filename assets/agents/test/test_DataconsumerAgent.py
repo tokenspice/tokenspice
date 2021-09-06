@@ -77,6 +77,6 @@ def test_buyDT(alice_info):
     # we model lag from consume to value creation simply by a delay between buys
     assert alice_agent.DT(dt) == 80.0
     agent._consumeDT(state, pool_agent, OCEAN_spend)
-    assert agent.OCEAN() == 1000.0 + OCEAN_spend * agent.OCEAN_profit
+    assert agent.OCEAN() == 1000.0 + OCEAN_spend * agent.profit_margin_on_consume
     assert agent.DT(dt) == 0.0
     assert alice_agent.DT(dt) == 81.0

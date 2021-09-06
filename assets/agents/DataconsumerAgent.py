@@ -15,7 +15,7 @@ class DataconsumerAgent(AgentBase):
         
         self._s_since_buy = 0
         self._s_between_buys = 3 * constants.S_PER_DAY #magic number
-        self.OCEAN_profit = 0.2 # magic number 
+        self.profit_margin_on_consume = 0.2 # magic number 
         
     def takeStep(self, state) -> None:
         self._s_since_buy += state.ss.time_step
@@ -119,5 +119,5 @@ class DataconsumerAgent(AgentBase):
 
         self._wallet.transferDT(controller_agent._wallet, DT, DT_consume_amt)
 
-        OCEAN_returned = OCEAN_spend * (1 + self.OCEAN_profit)
+        OCEAN_returned = OCEAN_spend * (1 + self.profit_margin_on_consume)
         self.receiveOCEAN(OCEAN_returned)
