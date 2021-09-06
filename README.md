@@ -161,20 +161,20 @@ npm run deploy
 ```console
 cd ~/code/tokenspice
 conda activate tokenspiceenv
-./emacs <path/foo.py>
-#then change foo.py in editor
+
+#then use editor to change assets/netlists/foo.py
 ```
 
 **Run tests.** In the same terminal as before:
 ```console
 #run a single pytest-based test
-pytest tests/test_foo.py::test_foobar
+pytest assets/agents/test/test_DataconsumerAgent.py::test_buyDT
 
 #run a single pytest-based test file
-pytest tests/test_foo.py
+pytest assets/agents/test/test_DataconsumerAgent.py
 
 #run all tests in engine/ directory
-pytest engine/
+pytest assets
 
 #run all tests except web3engine/ (slow)
 pytest --ignore=web3engine
