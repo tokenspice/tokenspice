@@ -82,30 +82,17 @@ class DataconsumerAgent(AgentBase):
         pool = pool_agent.pool
         DT = pool_agent.datatoken
 
-        OCEAN_address = globaltokens.OCEAN_address()
-        DT_address = pool_agent.datatoken_address
-
-        pool_DT_balance_base = pool.getBalance_base(DT_address)
-        pool_OCEAN_balance_base = pool.getBalance_base(OCEAN_address)
-        pool_DT_weight_base = pool.getDenormalizedWeight_base(DT_address)
-        pool_OCEAN_weight_base = pool.getDenormalizedWeight_base(OCEAN_address)
-        pool_swapFee_base = pool.getSwapFee_base()
-        DT_amount_out_base = toBase18(DT_buy_amt)
-
-        OCEANamountIn_base = pool.calcInGivenOut_base(
-            tokenBalanceIn_base=pool_OCEAN_balance_base,
-            tokenWeightIn_base=pool_OCEAN_weight_base,
-            tokenBalanceOut_base=pool_DT_balance_base,
-            tokenWeightOut_base=pool_DT_weight_base,
-            tokenAmountOut_base=DT_amount_out_base,
-            swapFee_base=pool_swapFee_base)
-
-        OCEANamountIn = fromBase18(OCEANamountIn_base)
-        OCEAN_spend = OCEANamountIn * DT_buy_amt
-
+        DT_before = self.DT(DT)
+        OCEAN_before = self.OCEAN()
+        
         self._wallet.buyDT(pool, DT, DT_buy_amt, max_OCEAN_allow)
+        DT_after = self.DT(DT)
+        OCEAN_after = self.OCEAN()
+        
+        assert self.DT(DT) == (DT_before + DT_buy_amt)
+        assert OCEAN_after < OCEAN_before
 
-        assert self.DT(DT) == DT_buy_amt
+        OCEAN_spend = OCEAN_before - OCEAN_after
 
         return pool_agent, OCEAN_spend
 
