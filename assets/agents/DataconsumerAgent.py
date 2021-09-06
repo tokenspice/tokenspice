@@ -20,12 +20,12 @@ class DataconsumerAgent(AgentBase):
     def takeStep(self, state) -> None:
         self._s_since_buy += state.ss.time_step
         
-        if self._doBuyDT(state):
+        if self._doBuyAndConsumeDT(state):
             self._s_since_buy = 0
             pool_agent, OCEAN_spend = self._buyDT(state)
             self._consumeDT(state, pool_agent, OCEAN_spend)
 
-    def _doBuyDT(self, state):
+    def _doBuyAndConsumeDT(self, state):
         cand_pool_agents = self._candPoolAgents(state)
         if not cand_pool_agents:
             return False

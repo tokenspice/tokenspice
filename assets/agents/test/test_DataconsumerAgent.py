@@ -26,7 +26,7 @@ class MockAgent(AgentBase):
         pass
 
 # @pytest.mark.skip(reason="TODO FIXME")
-def test_doBuyDT(alice_pool):
+def test_doBuyAndConsumeDT(alice_pool):
     state = MockState()
 
     agent = DataconsumerAgent("agent1",USD=0.0,OCEAN=1000.0)
@@ -34,16 +34,16 @@ def test_doBuyDT(alice_pool):
     assert agent._s_since_buy == 0
     assert agent._s_between_buys > 0
 
-    assert not agent._doBuyDT(state)
+    assert not agent._doBuyAndConsumeDT(state)
 
     agent._s_since_buy += agent._s_between_buys
     assert not state.agents.filterToPool().values()
-    assert not agent._doBuyDT(state) #still no, since no pools
+    assert not agent._doBuyAndConsumeDT(state) #still no, since no pools
 
     state.agents["pool1"] = PoolAgent("pool1", alice_pool)
     assert state.agents.filterToPool().values() #have pools
     assert agent._candPoolAgents(state) #have useful pools
-    assert agent._doBuyDT(state)
+    assert agent._doBuyAndConsumeDT(state)
 
 def test_buyDT(alice_info):
     state = MockState()
@@ -61,7 +61,7 @@ def test_buyDT(alice_info):
 
     assert state.agents.filterToPool().values() #have pools
     assert agent._candPoolAgents(state) #have useful pools
-    assert agent._doBuyDT(state)
+    assert agent._doBuyAndConsumeDT(state)
 
     # buyDT
     dt = state.agents["pool1"].datatoken
