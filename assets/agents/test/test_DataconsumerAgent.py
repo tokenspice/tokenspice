@@ -72,8 +72,7 @@ def test_buyDT(alice_info):
     assert agent.DT(dt) == 1.0
 
     # consumeDT
-    controller = pool_agent.controller_address
-    assert agent._searchAgentAddress(state, controller)
+    assert state.agents.agentByAddress(pool_agent.controller_address)
 
     # we model lag from consume to value creation simply by a delay between buys
     assert alice_agent.DT(dt) == 80.0

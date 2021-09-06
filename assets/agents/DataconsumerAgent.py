@@ -69,18 +69,9 @@ class DataconsumerAgent(AgentBase):
                 
         return cand_pool_agents
 
-    def _searchAgentAddress(self, state, search_address):
-        """Search all agents by eth address"""
-        all_agents = state.agents.values()
-        for agent in all_agents:
-            address = agent._wallet._address
-
-            if address == search_address:
-                return agent
-
     def _buyDT(self, state):
         """Buy dataset"""
-        DT_buy_amt = 1.0 # magic number 
+        DT_buy_amt = 1.0 # buy just enough to consume once
         max_OCEAN_allow = self.OCEAN()
         OCEANtoken = globaltokens.OCEANtoken()
 
@@ -120,11 +111,11 @@ class DataconsumerAgent(AgentBase):
 
     def _consumeDT(self, state, pool_agent, OCEAN_spend):
         """Consume dataset"""
-        DT_consume_amt = 1.0 # magic number 
+        DT_consume_amt = 1.0 # consume just once
         DT = pool_agent.datatoken
 
-        controller = pool_agent.controller_address
-        controller_agent = self._searchAgentAddress(state, controller)
+        controller_agent = state.agents.agentByAddress(
+            pool_agent.controller_address)
 
         self._wallet.transferDT(controller_agent._wallet, DT, DT_consume_amt)
 
