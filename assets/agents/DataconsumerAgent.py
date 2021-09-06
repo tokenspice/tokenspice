@@ -59,7 +59,7 @@ class DataconsumerAgent(AgentBase):
             OCEANamountIn_base = pool.calcInGivenOut_base(
                 tokenBalanceIn_base=pool_OCEAN_balance_base,
                 tokenWeightIn_base=pool_OCEAN_weight_base,
-                tokenBalanceOut_base=pool_DT_balance_base,
+                tokenBalanceOut_base=pool.getBalance_base(DT_address),
                 tokenWeightOut_base=pool_DT_weight_base,
                 tokenAmountOut_base=DT_amount_out_base,
                 swapFee_base=pool_swapFee_base)
@@ -70,7 +70,7 @@ class DataconsumerAgent(AgentBase):
         return cand_pool_agents
 
     def _buyDT(self, state):
-        """Buy dataset"""
+        """Buy dataset. Returns (pool_agent, OCEAN_spent)"""
         DT_buy_amt = 1.0 # buy just enough to consume once
         max_OCEAN_allow = self.OCEAN()
         OCEANtoken = globaltokens.OCEANtoken()
@@ -90,18 +90,18 @@ class DataconsumerAgent(AgentBase):
         pool_DT_weight_base = pool.getDenormalizedWeight_base(DT_address)
         pool_OCEAN_weight_base = pool.getDenormalizedWeight_base(OCEAN_address)
         pool_swapFee_base = pool.getSwapFee_base()
-
         DT_amount_out_base = toBase18(DT_buy_amt)
 
-        OCEANamountIn_base = fromBase18(pool.calcInGivenOut_base(
+        OCEANamountIn_base = pool.calcInGivenOut_base(
             tokenBalanceIn_base=pool_OCEAN_balance_base,
             tokenWeightIn_base=pool_OCEAN_weight_base,
             tokenBalanceOut_base=pool_DT_balance_base,
             tokenWeightOut_base=pool_DT_weight_base,
             tokenAmountOut_base=DT_amount_out_base,
-            swapFee_base=pool_swapFee_base))
+            swapFee_base=pool_swapFee_base)
 
-        OCEAN_spend = OCEANamountIn_base * DT_buy_amt
+        OCEANamountIn = fromBase18(OCEANamountIn_base)
+        OCEAN_spend = OCEANamountIn * DT_buy_amt
 
         self._wallet.buyDT(pool, DT, DT_buy_amt, max_OCEAN_allow)
 
@@ -109,7 +109,7 @@ class DataconsumerAgent(AgentBase):
 
         return pool_agent, OCEAN_spend
 
-    def _consumeDT(self, state, pool_agent, OCEAN_spend):
+    def _consumeDT(self, state, pool_agent, OCEAN_spend: float):
         """Consume dataset"""
         DT_consume_amt = 1.0 # consume just once
         DT = pool_agent.datatoken
@@ -119,5 +119,5 @@ class DataconsumerAgent(AgentBase):
 
         self._wallet.transferDT(controller_agent._wallet, DT, DT_consume_amt)
 
-        OCEAN_returned = OCEAN_spend * (1 + self.profit_margin_on_consume)
+        OCEAN_returned = OCEAN_spend * (1.0 + self.profit_margin_on_consume)
         self.receiveOCEAN(OCEAN_returned)
