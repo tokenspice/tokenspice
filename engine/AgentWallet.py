@@ -205,6 +205,30 @@ class AgentWallet:
             from_wallet=self._web3wallet)
         self.resetCachedInfo()
 
+    def transferDT(self, dst_wallet, DT: datatoken.Datatoken, amt: float) -> None:
+        assert isinstance(dst_wallet, AgentWallet) or \
+            isinstance(dst_wallet, BurnWallet)
+        dst_address = dst_wallet._address
+
+        amt_base = toBase18(amt)
+        assert amt_base >= 0
+        if amt_base == 0:
+            return
+
+        DT_base = self._DT_base(DT)
+        if DT_base == 0:
+            raise ValueError("no data tokens to transfer")        
+
+        tol = 1e-12
+        if (1.0 - tol) <= amt/fromBase18(DT_base) <= (1.0 + tol):
+            amt_base = DT_base
+
+        if amt_base > DT_base:
+            raise ValueError("transfer amt (%s) exceeds DT holdings (%s)"
+                             % (fromBase18(amt_base), fromBase18(DT_base)))
+
+        DT.transfer(dst_address, amt_base, self._web3wallet)     
+
     #===================================================================
     def __str__(self) -> str:
         s = []

@@ -16,6 +16,8 @@ def testInit():
     assert agent.USD() == 1.1
     assert agent.OCEAN() == 1.2
     assert "MyTestAgent" in str(agent)
+    assert isinstance(agent.address, str)
+    assert agent.address == agent._wallet._address
 
 @enforce_types
 def testReceiveAndSend():

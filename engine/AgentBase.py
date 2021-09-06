@@ -29,6 +29,12 @@ class AgentBase(ABC, StrMixin):
         pass
 
     #=======================================================================
+    #core
+    @property
+    def address(self) -> str:
+        return self._wallet._address
+        
+    #=======================================================================
     #USD-related
     def USD(self) -> float:
         return self._wallet.USD() 

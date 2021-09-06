@@ -47,4 +47,20 @@ def test2():
     assert not d.filterToDataconsumer()
     
     assert len(d.filterByClass(FooAgent)) == 1
+
+@enforce_types
+def test_agentByAddress():
+    class FooAgent:
+        def __init__(self, name, address):
+            self.name = name
+            self.address = address
+
+    d = AgentDict(
+        {'foo1': FooAgent('foo1', 'address 111'),
+         'foo2': FooAgent('foo2', 'address 222')
+        })
+
+    assert d.agentByAddress('address 111').address == 'address 111'
+    assert d.agentByAddress('address 222').address == 'address 222'
+    assert d.agentByAddress('address foo') is None
     
