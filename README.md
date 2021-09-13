@@ -56,6 +56,8 @@ conda activate tokenspiceenv
 
 ## Get Ganache running
 
+If you haven't yet, [install Ganache](https://www.trufflesuite.com/docs/ganache/quickstart).
+
 Open a new terminal and:
 ```console
 cd tokenspice
