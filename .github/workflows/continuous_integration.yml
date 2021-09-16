@@ -44,7 +44,7 @@ jobs:
           
       - name: Executing Python Ganache script
         run: |
-          ./ganache.py
+          nohup python3 ganache.py
 
       - name: Check Node version on this machine.
         run: |
