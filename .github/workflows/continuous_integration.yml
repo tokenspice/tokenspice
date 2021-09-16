@@ -47,7 +47,7 @@ jobs:
           npm -v
 
       - name: Clone Ocean Protocol Contracts and Install them
-        run: |
-          git clone https://github.com/oceanprotocol/contracts
-          npm i 
-          npm run deploy
+        uses: actions/checkout@master
+        with:
+          name: oceanprotocol/contracts
+          ref: refs/heads/release
