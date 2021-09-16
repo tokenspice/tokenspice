@@ -50,4 +50,4 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: oceanprotocol/contracts
-          ref: refs/heads/release
+          #ref: refs/heads/release
