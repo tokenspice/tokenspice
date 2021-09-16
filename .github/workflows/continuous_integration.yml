@@ -2,9 +2,9 @@ name: tokenspice_continuous_integration
 
 on:
   push:
-    branches: [ main ]
+    branches: [ action_tests ]
   pull_request:
-    branches: [ main ]
+    branches: [ action_tests ]
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [ 3.8, 3.9 ]
 
 
     steps:
@@ -35,3 +35,8 @@ jobs:
         run: |
           echo "Hello world. TokenSPICE Integration ftw!"
         
+      - name: Find out what the directory structure looks like
+        run: |
+          pwd
+          tree
+          
