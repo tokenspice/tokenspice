@@ -24,6 +24,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Ganache-CLI
+        run: npm install ganache-cli --global
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -37,6 +40,7 @@ jobs:
         run: |
           pwd
           tree
+
           
       - name: Executing Python Ganache script
         run: |
@@ -52,7 +56,3 @@ jobs:
           repository: oceanprotocol/contracts
           #ref: refs/heads/release
 
-      - name: Inspect contracts folder
-        run: |
-          pwd
-          tree
