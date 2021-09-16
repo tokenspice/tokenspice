@@ -49,5 +49,5 @@ jobs:
       - name: Clone Ocean Protocol Contracts and Install them
         uses: actions/checkout@master
         with:
-          name: oceanprotocol/contracts
+          repository: oceanprotocol/contracts
           ref: refs/heads/release
