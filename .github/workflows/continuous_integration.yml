@@ -48,7 +48,7 @@ jobs:
 
       - name: Check Node version on this machine.
         run: |
-          npm -v
+          node -v
 
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
