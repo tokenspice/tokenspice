@@ -65,9 +65,9 @@ jobs:
         run: |
           pwd
 
-      - name: Check Pytest version
+      - name: Remove offending line from contracts/setup.cfg
         run: |
-          pip list | grep pytest
+          dd if=/dev/null of="contracts/setup.cfg" bs=1 seek=$(echo $(stat --format=%s "contracts/setup.cfg" ) - $( tail -n1 "contracts/setup.cfg" | wc -c) | bc )
 
       - name: Run Pytest (Just one test)
         run: |
