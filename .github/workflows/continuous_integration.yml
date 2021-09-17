@@ -65,6 +65,10 @@ jobs:
         run: |
           pwd
 
+      - name: Check Pytest version
+        run: |
+          pip list | grep pytest
+
       - name: Run Pytest (Just one test)
         run: |
           pytest assets/agents/test/test_DataconsumerAgent.py::test_buyDT
