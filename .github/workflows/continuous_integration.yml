@@ -50,9 +50,14 @@ jobs:
         run: |
           npm -v
 
-      - name: Clone Ocean Protocol Contracts and Install them
+      - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
         with:
           repository: oceanprotocol/contracts
-          #ref: refs/heads/release
+
+      - name: Deploy Contracts to Ganache
+        run: |
+          cd contracts
+          npm i
+          npm run deploy
 
