@@ -61,3 +61,6 @@ jobs:
           npm i
           npm run deploy
 
+      - name: Check Current directory after installing and deploying contracts
+        run: |
+          pwd
