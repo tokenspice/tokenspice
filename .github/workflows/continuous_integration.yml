@@ -50,6 +50,10 @@ jobs:
         run: |
           node -v
 
+      - name: Making a Directory for Ocean Protocol Repo
+        run: |
+          mkdir contracts && cd contracts
+
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
         with:
@@ -57,7 +61,6 @@ jobs:
 
       - name: Deploy Contracts to Ganache
         run: |
-          cd contracts
           npm i
           npm run deploy
 
