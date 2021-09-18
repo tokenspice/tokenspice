@@ -53,7 +53,7 @@ jobs:
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
         with:
-          repository: oceanprotocol/contracts
+          repository: JohannSuarez/contracts
 
       - name: Deploy Contracts to Ganache
         run: |
@@ -70,10 +70,6 @@ jobs:
         run: |
           cat contracts/setup.cfg
 
-      - name: Remove offending line from contracts/setup.cfg
+       - name: Run Pytest (Just one test)
         run: |
-          dd if=/dev/null of="contracts/setup.cfg" bs=1 seek=$(echo $(stat --format=%s "contracts/setup.cfg" ) - $( tail -n1 "contracts/setup.cfg" | wc -c) | bc )
-
-          #- name: Run Pytest (Just one test)
-        #run: |
-          #     pytest assets/agents/test/test_DataconsumerAgent.py::test_buyDT
+          pytest assets/agents/test/test_DataconsumerAgent.py::test_buyDT
