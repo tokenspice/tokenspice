@@ -66,9 +66,9 @@ jobs:
           pwd
           tree
 
-          #- name: Trying to print contracts/setup.cfg
-          #run: |
-          #cat contracts/setup.cfg
+      - name: Trying to print contracts/setup.cfg
+        run: |
+          cat setup.cfg
 
           #- name: Run Pytest (Just one test)
           #run: |
