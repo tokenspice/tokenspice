@@ -52,12 +52,13 @@ jobs:
 
       - name: Making a Directory for Ocean Protocol Repo
         run: |
-          mkdir contracts && cd contracts
+          mkdir contracts 
 
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
         with:
           repository: JohannSuarez/contracts
+          path: contracts
 
       - name: Deploy Contracts to Ganache
         run: |
