@@ -70,6 +70,6 @@ jobs:
         run: |
           cat contracts/setup.cfg
 
-       - name: Run Pytest (Just one test)
+      - name: Run Pytest (Just one test)
         run: |
           pytest assets/agents/test/test_DataconsumerAgent.py::test_buyDT
