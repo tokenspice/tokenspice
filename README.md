@@ -3,7 +3,7 @@
 # TokenSPICE: EVM Agent-Based Token Simulator 🐟🌪️
 
 <div align="center">
-<img alt="Super-Linter Status" src="https://github.com/JohannSuarez/tokenspice/actions/workflows/continuous_integration.yml/badge.svg">
+<img alt="Unit Tests" src="https://github.com/JohannSuarez/tokenspice/actions/workflows/pytest.yml/badge.svg">
 </div>
 
 TokenSPICE simulates tokenized ecosystems via an agent-based approach, with EVM in-the-loop.
