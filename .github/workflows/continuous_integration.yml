@@ -1,4 +1,4 @@
-name: tokenspice_continuous_integration
+name: Unit Testing
 
 on:
   push:
