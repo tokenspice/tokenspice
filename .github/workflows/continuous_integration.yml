@@ -33,7 +33,7 @@ jobs:
           pip install flake8 pytest numpy
           if [ -f requirements.txt ]; 
             then pip install -r requirements.txt; 
-            echo "Requirements.txt found! ( thnx BK :* )"
+            echo "Requirements.txt found!"
           fi
           
       - name: Find out what the directory structure looks like
@@ -78,3 +78,7 @@ jobs:
       - name: Run Pytest (Just one test)
         run: |
           pytest assets/agents/test/test_DataconsumerAgent.py
+
+      - name: Run Entire Suite of Tests 
+        run: |
+          pytest
