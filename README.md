@@ -35,7 +35,7 @@ History: TokenSPICE was [initially built to model](https://github.com/tokenspice
 ## Set up environment
 
 Open a new terminal and:
-```
+```console
 #clone repo
 git clone https://github.com/oceanprotocol/tokenspice.git tokenspice
 cd tokenspice
