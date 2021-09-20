@@ -1,4 +1,4 @@
-name: Unit Testing
+name: MyPy Static Type Checking
 
 on:
   push:
