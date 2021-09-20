@@ -178,7 +178,7 @@ conda activate tokenspiceenv
 **Run tests.** In the same terminal as before:
 ```console
 #run a single pytest-based test
-pytest assets/agents/test/test_DataconsumerAgent.py::test_buyDT
+pytest assets/agents/test/test_DataconsumerAgent.py::test_doBuyAndConsumeDT
 
 #run a single pytest-based test file
 pytest assets/agents/test/test_DataconsumerAgent.py
