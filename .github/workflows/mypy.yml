@@ -1,4 +1,4 @@
-name: MyPy Static Type Checking
+name: MyPy Static Typechecking
 
 on:
   push:
