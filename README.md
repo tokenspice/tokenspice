@@ -37,14 +37,17 @@ History: TokenSPICE was [initially built to model](https://github.com/tokenspice
 Open a new terminal and:
 ```console
 #clone repo
-git clone https://github.com/oceanprotocol/tokenspice.git tokenspice
+git clone https://github.com/oceanprotocol/tokenspice.git
 cd tokenspice
 
-#create a virtual environment using pipenv and install dependencies
-pipenv install
+#create a virtual environment
+python3 -m venv tokenspiceenv
 
-#activate environment shell
-pipenv shell
+#activate env
+source tokenspiceenv/bin/activate
+
+#install dependencies
+pip install -r requirements.txt
 ```
 
 ## Get Ganache running
@@ -59,7 +62,7 @@ Open a new terminal and:
 cd tokenspice
 
 #activate env't
-pipenv shell
+source tokenspiceenv/bin/activate
 
 #run ganache
 ./ganache.py
@@ -99,7 +102,7 @@ Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/ar
 ## Test one EVM-based test
 
 ```console
-pipenv shell
+source tokenspiceenv/bin/activate
 pytest web3engine/test/test_btoken.py 
 ```
 
@@ -143,7 +146,7 @@ Here are example plots from [wsloop netlist](assets/netlists/wsloop/about.md). T
 **Start chain.** Open a new terminal and:
 ```console
 cd ~/code/tokenspice
-conda activate tokenspiceenv
+source tokenspiceenv/bin/activate
 ./ganache.py
 ```
 
@@ -158,7 +161,7 @@ npm run deploy
 **Update simulation code.** Open a new terminal. In it:
 ```console
 cd ~/code/tokenspice
-pipenv shell
+source tokenspiceenv/bin/activate
 
 #then use editor to change assets/netlists/foo.py
 ```
@@ -187,7 +190,7 @@ mypy --config-file mypy.ini ./
 ## Test that everything is working
 
 ```console
-pipenv shell
+source tokenspiceenv/bin/activate
 pytest
 ```
 
@@ -245,18 +248,18 @@ You don't need this info at the beginning, but it's good to know about as you ma
 To change dependencies,
 ```console
 #make sure env't is active
-pipenv shell
+source tokenspiceenv/bin/activate
 ```
 Make installs and unistalls using `pipenv`
 ```console
 #Install
-pipenv install package-name
+pip install package-name
 #Uninstall
-pipenv uninstall package-name
+pip uninstall package-name
 ```
 Update requirements.txt:
 ```console
-pipenv lock -r > requirements.txt
+pip freeze > requirements.txt
 ```
 
 # 🐡 Backlog
