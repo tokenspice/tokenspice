@@ -169,7 +169,7 @@ source tokenspiceenv/bin/activate
 **Run tests.** In the same terminal as before:
 ```console
 #run a single pytest-based test
-pytest assets/agents/test/test_DataconsumerAgent.py::test_buyDT
+pytest web3engine/test/test_btoken.py::test_ERC20
 
 #run a single pytest-based test file
 pytest assets/agents/test/test_DataconsumerAgent.py
