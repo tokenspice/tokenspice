@@ -32,6 +32,12 @@ History: TokenSPICE was [initially built to model](https://github.com/tokenspice
 
 # 🏗 Initial Setup
 
+## Prerequisites
+
+- Linux/MacOS
+- Python 3.8.5+
+
+
 ## Set up environment
 
 Open a new terminal and:
@@ -46,7 +52,8 @@ python3 -m venv venv
 #activate env
 source venv/bin/activate
 
-#install dependencies
+#install dependencies. Install wheel first to avoid errors.
+pip install wheel
 pip install -r requirements.txt
 ```
 
