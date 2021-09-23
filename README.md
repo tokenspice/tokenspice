@@ -249,15 +249,16 @@ Existing netlists include:
 
 You don't need this info at the beginning, but it's good to know about as you make changes.
 
-To change dependencies,
+First, ensure your env't is active.
 ```console
-#make sure env't is active
 source venv/bin/activate
 ```
-Make installs and unistalls using `pipenv`
+
+Install or uninstall packages using [pip](https://pip.pypa.io/en/stable/):
 ```console
 #Install
 pip install package-name
+
 #Uninstall
 pip uninstall package-name
 ```
