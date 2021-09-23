@@ -59,29 +59,24 @@ pip install -r requirements.txt
 
 ## Get Ganache running
 
-If you haven't yet, install [Ganache](https://www.trufflesuite.com/docs/ganache/):
-```console
-npm install ganache-cli --global
-```
+Think of [Ganache](https://www.trufflesuite.com/docs/ganache/) as local EVM blockchain network, with just one node.
 
 Open a new terminal and:
 ```console
-cd tokenspice
+#install Ganache (if you haven't yet)
+npm install ganache-cli --global
 
 #activate env't
+cd tokenspice
 source venv/bin/activate
 
-#run ganache
+#run ganache.py. It calls ganache cli and fills in many arguments for you.
 ./ganache.py
 ```
 
-Note: you could run ganache directly, but then you have to add many special arguments. The script above does that for you.
-
 ## Deploy the smart contracts to ganache
 
-Open a separate terminal.
-
-
+Open a new terminal and:
 ```console
 #Grab the contracts code from main, *OR* (see below)
 git clone https://github.com/oceanprotocol/contracts
