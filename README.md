@@ -41,10 +41,10 @@ git clone https://github.com/oceanprotocol/tokenspice.git
 cd tokenspice
 
 #create a virtual environment
-python3 -m venv tokenspiceenv
+python3 -m venv venv
 
 #activate env
-source tokenspiceenv/bin/activate
+source venv/bin/activate
 
 #install dependencies
 pip install -r requirements.txt
@@ -62,7 +62,7 @@ Open a new terminal and:
 cd tokenspice
 
 #activate env't
-source tokenspiceenv/bin/activate
+source venv/bin/activate
 
 #run ganache
 ./ganache.py
@@ -104,7 +104,7 @@ Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/ar
 Open a new terminal and:
 ```console
 #activate env't
-source tokenspiceenv/bin/activate
+source venv/bin/activate
 
 #run test
 pytest web3engine/test/test_btoken.py 
@@ -150,7 +150,7 @@ Here are example plots from [wsloop netlist](assets/netlists/wsloop/about.md). T
 **Start chain.** Open a new terminal and:
 ```console
 cd ~/code/tokenspice
-source tokenspiceenv/bin/activate
+source venv/bin/activate
 ./ganache.py
 ```
 
@@ -165,7 +165,7 @@ npm run deploy
 **Update simulation code.** Open a new terminal. In it:
 ```console
 cd ~/code/tokenspice
-source tokenspiceenv/bin/activate
+source venv/bin/activate
 
 #then use editor to change assets/netlists/foo.py
 ```
@@ -194,7 +194,7 @@ mypy --config-file mypy.ini ./
 ## Test that everything is working
 
 ```console
-source tokenspiceenv/bin/activate
+source venv/bin/activate
 pytest
 ```
 
@@ -252,7 +252,7 @@ You don't need this info at the beginning, but it's good to know about as you ma
 To change dependencies,
 ```console
 #make sure env't is active
-source tokenspiceenv/bin/activate
+source venv/bin/activate
 ```
 Make installs and unistalls using `pipenv`
 ```console
