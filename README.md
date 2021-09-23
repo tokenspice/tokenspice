@@ -101,8 +101,12 @@ Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/ar
 
 ## Test one EVM-based test
 
+Open a new terminal and:
 ```console
+#activate env't
 source tokenspiceenv/bin/activate
+
+#run test
 pytest web3engine/test/test_btoken.py 
 ```
 
