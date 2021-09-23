@@ -176,10 +176,10 @@ source tokenspiceenv/bin/activate
 pytest web3engine/test/test_btoken.py::test_ERC20
 
 #run a single pytest-based test file
-pytest assets/agents/test/test_DataconsumerAgent.py
+pytest web3engine/test/test_btoken.py 
 
-#run all tests in engine/ directory
-pytest assets
+#run all tests in util/ directory
+pytest util
 
 #run all tests except web3engine/ (slow)
 pytest --ignore=web3engine
