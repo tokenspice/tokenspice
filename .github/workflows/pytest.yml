@@ -68,23 +68,3 @@ jobs:
         run: |
           cd ~/contracts
           ls
-          #pwd
-          #npm i
-          #npm run deploy
-
-          #      - name: Check Current directory after installing and deploying contracts
-          #        run: |
-          #          pwd
-          #          tree
-          #
-          #      - name: Trying to print contracts/setup.cfg
-          #        run: |
-          #          cat ~/contracts/setup.cfg
-          #
-          #      - name: Run Pytest (Just one test)
-          #        run: |
-          #          pytest assets/agents/test/test_DataconsumerAgent.py
-          #
-          #      - name: Run Entire Suite of Tests 
-          #        run: |
-          #          pytest
