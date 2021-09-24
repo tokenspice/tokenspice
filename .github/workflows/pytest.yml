@@ -51,13 +51,13 @@ jobs:
 
       - name: Making a Directory for Ocean Protocol Repo
         run: |
-          mkdir ~/contracts 
+          mkdir ../contracts 
 
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
         with:
           repository: JohannSuarez/contracts
-          path: ~/contracts/.
+          path: ../contracts/
 
 
       - name: Find $GITHUB_WORKSPACE 
@@ -69,9 +69,9 @@ jobs:
       - name: Inspect directories
         run: |
           cd $HOME
-          pwd
+          pwd ../
           ls
 
       - name: Deploy Contracts to Ganache
         run: |
-          ls ~/contracts
+          ls ../contracts
