@@ -59,9 +59,15 @@ jobs:
           repository: JohannSuarez/contracts
           path: ~/contracts
 
+      - name: Inspect directories
+        run: |
+          cd $
+          pwd
+
       - name: Deploy Contracts to Ganache
         run: |
           cd ~/contracts
+          pwd
           npm i
           npm run deploy
 
