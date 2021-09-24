@@ -53,6 +53,12 @@ jobs:
         run: |
           mkdir ../contracts 
 
+      - name: Find $GITHUB_WORKSPACE 
+        run: |
+          cd $GITHUB_WORKSPACE
+          pwd
+          ls
+
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
         with:
@@ -60,11 +66,6 @@ jobs:
           path: ../contracts/
 
 
-      - name: Find $GITHUB_WORKSPACE 
-        run: |
-          cd $GITHUB_WORKSPACE
-          pwd
-          ls
 
       - name: Inspect directories
         run: |
