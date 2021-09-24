@@ -66,5 +66,4 @@ jobs:
 
       - name: Deploy Contracts to Ganache
         run: |
-          cd ~/contracts
-          ls
+          ls ~/contracts
