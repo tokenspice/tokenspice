@@ -67,6 +67,7 @@ jobs:
       - name: Deploy Contracts to Ganache
         run: |
           cd ~/contracts
+          ls
           pwd
           npm i
           npm run deploy
