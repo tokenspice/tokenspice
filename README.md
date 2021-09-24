@@ -182,7 +182,6 @@ source venv/bin/activate
 #run a single pytest-based test
 pytest web3engine/test/test_btoken.py::test_ERC20
 
-
 #run a single pytest-based test file
 pytest web3engine/test/test_btoken.py 
 
