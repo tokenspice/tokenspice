@@ -51,17 +51,17 @@ jobs:
 
       - name: Making a Directory for Ocean Protocol Repo
         run: |
-          mkdir ../contracts 
+          mkdir contracts 
 
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
         with:
           repository: JohannSuarez/contracts
-          path: ../contracts
+          path: contracts
 
       - name: Deploy Contracts to Ganache
         run: |
-          cd ../contracts
+          cd contracts
           npm i
           npm run deploy
 
@@ -72,7 +72,7 @@ jobs:
 
       - name: Trying to print contracts/setup.cfg
         run: |
-          cat ../contracts/setup.cfg
+          cat contracts/setup.cfg
 
       - name: Run Pytest (Just one test)
         run: |
