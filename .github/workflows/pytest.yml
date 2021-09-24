@@ -68,7 +68,7 @@ jobs:
         run: |
           cd ~/contracts
           ls
-          pwd
+          #pwd
           #npm i
           #npm run deploy
 
