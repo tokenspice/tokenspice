@@ -57,7 +57,14 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: JohannSuarez/contracts
-          path: ~/contracts
+          path: ~/contracts/.
+
+
+      - name: Find $GITHUB_WORKSPACE 
+        run: |
+          cd $GITHUB_WORKSPACE
+          pwd
+          ls
 
       - name: Inspect directories
         run: |
