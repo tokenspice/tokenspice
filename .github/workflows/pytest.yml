@@ -58,7 +58,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           pwd
-          ls
+          ls -a
 
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
