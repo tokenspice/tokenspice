@@ -52,6 +52,7 @@ jobs:
       - name: Making a Directory for Ocean Protocol Repo
         run: |
           mkdir ../contracts 
+          pwd
 
       - name: Find $GITHUB_WORKSPACE 
         run: |
