@@ -64,8 +64,7 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: JohannSuarez/contracts
-          path: ../contracts/
-
+          path: /home/runner/work/tokenspice/contracts/
 
 
       - name: Inspect directories
@@ -76,4 +75,4 @@ jobs:
 
       - name: Deploy Contracts to Ganache
         run: |
-          ls ../contracts
+          ls /home/runner/work/tokenspice/contracts/
