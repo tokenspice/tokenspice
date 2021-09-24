@@ -63,6 +63,7 @@ jobs:
         run: |
           cd $HOME
           pwd
+          ls
 
       - name: Deploy Contracts to Ganache
         run: |
