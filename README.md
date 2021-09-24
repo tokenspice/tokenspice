@@ -37,53 +37,51 @@ History: TokenSPICE was [initially built to model](https://github.com/tokenspice
 
 # 🏗 Initial Setup
 
+## Prerequisites
+
+- Linux/MacOS
+- Python 3.8.5+
+
+
 ## Set up environment
 
 Open a new terminal and:
 ```console
-#ensure brownie's *not* installed. It causes problems
-pip uninstall eth-brownie
-
 #clone repo
-git clone https://github.com/oceanprotocol/tokenspice.git tokenspice
+git clone https://github.com/oceanprotocol/tokenspice.git
 cd tokenspice
 
-#make sure we're not in env't; remove old env'ts
-conda deactivate
-conda remove --name tokenspiceenv --all
+#create a virtual environment
+python3 -m venv venv
 
-#create a python-anaconda env't in location ~/anaconda3/envs/tokenspiceenv
-conda env create -f environment.yml
+#activate env
+source venv/bin/activate
 
-#activate env't
-conda activate tokenspiceenv
+#install dependencies. Install wheel first to avoid errors.
+pip install wheel
+pip install -r requirements.txt
 ```
 
 ## Get Ganache running
 
-If you haven't yet, install [Ganache](https://www.trufflesuite.com/docs/ganache/):
-```console
-npm install ganache-cli --global
-```
+Think of [Ganache](https://www.trufflesuite.com/docs/ganache/) as local EVM blockchain network, with just one node.
 
 Open a new terminal and:
 ```console
-cd tokenspice
+#install Ganache (if you haven't yet)
+npm install ganache-cli --global
 
 #activate env't
-conda activate tokenspiceenv
+cd tokenspice
+source venv/bin/activate
 
-#run ganache
+#run ganache.py. It calls ganache cli and fills in many arguments for you.
 ./ganache.py
 ```
 
-Note: you could run ganache directly, but then you have to add many special arguments. The script above does that for you.
-
 ## Deploy the smart contracts to ganache
 
-Open a separate terminal.
-
-
+Open a new terminal and:
 ```console
 #Grab the contracts code from main, *OR* (see below)
 git clone https://github.com/oceanprotocol/contracts
@@ -110,8 +108,12 @@ Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/ar
 
 ## Test one EVM-based test
 
+Open a new terminal and:
 ```console
-conda activate tokenspiceenv
+#activate env't
+source venv/bin/activate
+
+#run test
 pytest web3engine/test/test_btoken.py 
 ```
 
@@ -119,7 +121,7 @@ pytest web3engine/test/test_btoken.py
 
 We use `tsp` for TokenSPICE in the command line.
 
-First, add pwd to bash path.
+First, add pwd to bash path. In the terminal:
 ```console
 export PATH=$PATH:.
 ```
@@ -155,7 +157,7 @@ Here are example plots from [wsloop netlist](assets/netlists/wsloop/about.md). T
 **Start chain.** Open a new terminal and:
 ```console
 cd ~/code/tokenspice
-conda activate tokenspiceenv
+source venv/bin/activate
 ./ganache.py
 ```
 
@@ -170,7 +172,7 @@ npm run deploy
 **Update simulation code.** Open a new terminal. In it:
 ```console
 cd ~/code/tokenspice
-conda activate tokenspiceenv
+source venv/bin/activate
 
 #then use editor to change assets/netlists/foo.py
 ```
@@ -178,13 +180,13 @@ conda activate tokenspiceenv
 **Run tests.** In the same terminal as before:
 ```console
 #run a single pytest-based test
-pytest assets/agents/test/test_DataconsumerAgent.py::test_doBuyAndConsumeDT
+pytest web3engine/test/test_btoken.py::test_ERC20
 
 #run a single pytest-based test file
-pytest assets/agents/test/test_DataconsumerAgent.py
+pytest web3engine/test/test_btoken.py 
 
-#run all tests in engine/ directory
-pytest assets
+#run all tests in util/ directory
+pytest util
 
 #run all tests except web3engine/ (slow)
 pytest --ignore=web3engine
@@ -199,7 +201,7 @@ mypy --config-file mypy.ini ./
 ## Test that everything is working
 
 ```console
-conda activate tokenspiceenv
+source venv/bin/activate
 pytest
 ```
 
@@ -254,25 +256,23 @@ Existing netlists include:
 
 You don't need this info at the beginning, but it's good to know about as you make changes.
 
-To change dependencies, first update `environment.yml`. Then:
+First, ensure your env't is active.
 ```console
-#make sure env't is active
-conda activate tokenspiceenv
-
-#main update. The 'prune' part gets rid of unused pkgs
-conda env update --name tokenspiceenv --file environment.yml --prune
+source venv/bin/activate
 ```
 
-Leave environment:
+Install or uninstall packages using [pip](https://pip.pypa.io/en/stable/):
 ```console
-conda deactivate
-```
+#Install
+pip install package-name
 
-Delete environment:
+#Uninstall
+pip uninstall package-name
+```
+Update requirements.txt:
 ```console
-conda remove --name tokenspiceenv --all
+pip freeze > requirements.txt
 ```
-
 
 # 🐡 Backlog
 
