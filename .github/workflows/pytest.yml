@@ -44,35 +44,33 @@ jobs:
       - name: Executing Python Ganache script
         run: |
           nohup python3 ganache.py
-
       - name: Check Node version on this machine.
         run: |
           node -v
-
       - name: Making a Directory for Ocean Protocol Repo
         run: |
-          mkdir ../contracts 
-          pwd
-
-      - name: Find $GITHUB_WORKSPACE 
-        run: |
-          cd $GITHUB_WORKSPACE
-          pwd
-          ls -a
-
+          mkdir contracts 
       - name: Clone Ocean Protocol Contracts
         uses: actions/checkout@master
         with:
           repository: JohannSuarez/contracts
-          path: /home/runner/work/tokenspice/contracts/
-
-
-      - name: Inspect directories
-        run: |
-          cd $HOME
-          pwd ../
-          ls
+          path: contracts
 
       - name: Deploy Contracts to Ganache
         run: |
-          ls /home/runner/work/tokenspice/contracts/
+          cd contracts
+          npm i
+          npm run deploy
+      - name: Check Current directory after installing and deploying contracts
+        run: |
+          pwd
+          tree
+      - name: Trying to print contracts/setup.cfg
+        run: |
+          cat contracts/setup.cfg
+      - name: Run Pytest (Just one test)
+        run: |
+          pytest assets/agents/test/test_DataconsumerAgent.py
+      - name: Run Entire Suite of Tests 
+        run: |
+          pytest
