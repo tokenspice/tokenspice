@@ -33,6 +33,6 @@ jobs:
             echo "Requirements.txt found!"
           fi
           
-      - name: Run MyPy
-        run: |
-          mypy --config-file mypy.ini ./
+      #- name: Run MyPy
+      #  run: |
+      #    mypy --config-file mypy.ini ./
