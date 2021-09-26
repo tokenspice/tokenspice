@@ -5,7 +5,7 @@
 <div align="center">
 <img alt="Pytest Unit Testing" src="https://github.com/JohannSuarez/tokenspice/actions/workflows/pytest.yml/badge.svg">
 
-<!-- <img alt="MyPy Static Type Checking" src="https://github.com/JohannSuarez/tokenspice/actions/workflows/mypy.yml/badge.svg"> -->
+<img alt="MyPy Static Type Checking" src="https://github.com/JohannSuarez/tokenspice/actions/workflows/mypy.yml/badge.svg">
 </div>
 
 TokenSPICE simulates tokenized ecosystems via an agent-based approach, with EVM in-the-loop.
