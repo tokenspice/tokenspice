@@ -15,7 +15,7 @@ def testOCEANLinearMinterAgent():
 
     state = SimState.SimState(ss)
 
-    class SimpleAgent(AgentBase.AgentBase):
+    class SimpleAgent(engine.AgentBase.AgentBase):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
@@ -99,7 +99,7 @@ def _test_funcMinter(func):
 
     state = SimState.SimState(ss)
 
-    class SimpleAgent2(AgentBase.AgentBase):
+    class SimpleAgent2(engine.AgentBase.AgentBase):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent2("a1", 0.0, 0.0)
