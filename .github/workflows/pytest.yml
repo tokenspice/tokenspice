@@ -2,9 +2,9 @@ name: Unit Testing
 
 on:
   push:
-    branches: [ background_ganache ]
+    branches: [ main ]
   pull_request:
-    branches: [ background_ganache ]
+    branches: [ main ]
 
 jobs:
   build:
