@@ -2,9 +2,9 @@ name: MyPy Static Typechecking
 
 on:
   push:
-    branches: [ action_tests ]
+    branches: [ background_ganache ]
   pull_request:
-    branches: [ action_tests ]
+    branches: [ background_ganache ]
 
 jobs:
   build:
