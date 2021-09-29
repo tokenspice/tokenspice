@@ -2,9 +2,9 @@ name: Unit Testing
 
 on:
   push:
-    branches: [ action_tests ]
+    branches: [ main ]
   pull_request:
-    branches: [ action_tests ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -43,7 +43,7 @@ jobs:
           
       - name: Executing Python Ganache script
         run: |
-          nohup python3 ganache.py
+          nohup python3 ganache.py --run-in-background
 
       - name: Check Node version on this machine.
         run: |
