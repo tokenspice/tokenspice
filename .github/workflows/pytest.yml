@@ -2,9 +2,9 @@ name: Unit Testing
 
 on:
   push:
-    branches: [ ganachepy_background_toggle ]
+    branches: [ main ]
   pull_request:
-    branches: [ ganachepy_background_toggle ]
+    branches: [ main ]
 
 jobs:
   build:
