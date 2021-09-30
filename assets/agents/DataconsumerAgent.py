@@ -19,22 +19,10 @@ class DataconsumerAgent(AgentBase):
         self.profit_margin_on_consume = 0.2  # magic number
 
     def takeStep(self, state) -> None:
-
         self._s_since_buy += state.ss.time_step
-
-        '''
-
-        -- Issue found on September 25, 2021 5:43 PM PST
-        -- MyPy shows the method _buyDT was never defined anywhere, 
-        -- not even in the parent class.
-        -- I'm commenting out this if-block for now. - Johann
-        
         if self._doBuyAndConsumeDT(state):
-
             self._s_since_buy = 0
-            pool_agent, OCEAN_spend = self._buyDT(state)
-            self._consumeDT(state, pool_agent, OCEAN_spend)
-        '''
+            self._buyAndConsumeDT(state)
 
     def _doBuyAndConsumeDT(self, state):
         cand_pool_agents = self._candPoolAgents(state)
