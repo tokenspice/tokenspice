@@ -1,4 +1,4 @@
-name: Unit Testing
+name: Unit Testing and Code Coverage
 
 on:
   push:
