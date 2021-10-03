@@ -78,6 +78,9 @@ jobs:
         run: |
           pytest assets/agents/test/test_DataconsumerAgent.py
 
-      - name: Run Entire Suite of Tests 
+      - name: Run Entire Suite of Tests Along With Code Coverage Analysis
         run: |
-          pytest
+          coverage run -m pytest
+          coverage xml
+          export CODACY_PROJECT_TOKEN=${{ secrets.CODACY_PROJECT_TOKEN }}
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
