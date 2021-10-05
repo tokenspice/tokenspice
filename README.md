@@ -17,11 +17,14 @@ It can help design, tune, and verify tokenized ecosystems. It's young but promis
 
 <img src="images/plots-crop.PNG" width="100%">
 
-Quick links:
-- Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216), [First time](https://discord.gg/FREcbdnUTw)
+Community:
+- Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216), [first time](https://discord.gg/FREcbdnUTw). It's a sub-chainnel in the Token Engineering Discord.
+- TokenSPICE hacking sessions: Mondays at 17.00 Berlin // 11.00 Eastern // 8.00 Pacific. 120 min. [Zoom link](https://us02web.zoom.us/j/6985323627?pwd=YmxXaWNrdk1uSmV5bUFsaTJEWEtNZz09), Meeting ID 698 532 3627, Passcode 2021-99564. Anyone is welcome to drop in! 👋
 - Twitter: [@tokenspice](https://twitter.com/tokenspice)
 
-History: TokenSPICE was [initially built to model](https://github.com/tokenspice/tokenspice0.1) the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). It's now been generalized to support EVM, on arbitary netlists. Most initial work was by [trentmc](https://github.com/trentmc) ([Ocean Protocol](https://www.oceanprotocol.com)); more contributors have joined since.
+History: 
+- TokenSPICE was [initially built to model](https://github.com/tokenspice/tokenspice0.1) the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). It's now been generalized to support EVM, on arbitary netlists. 
+- Most initial work was by [trentmc](https://github.com/trentmc) ([Ocean Protocol](https://www.oceanprotocol.com)); [several more contributors](https://github.com/tokenspice/tokenspice/graphs/contributors) have joined since 👪👨‍👩‍👧‍👧
 
 # Contents
 
