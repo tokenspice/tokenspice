@@ -10,7 +10,7 @@
 
 TokenSPICE simulates tokenized ecosystems via an agent-based approach, with EVM in-the-loop.
 
-It can help design, tune, and verify tokenized ecosystems. It's young but promising. We welcome you to contribute! 👋
+It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-token-engineering-b02feeeff7ca) [Engineering](https://www.tokenengineering.org) flows, to design, tune, and verify tokenized ecosystems. It's young but promising. We welcome you to contribute! 👋
 
 - Each "agent" is a class. Has a wallet, and does work to earn $. One models the system by wiring up agents, and tracking metrics (kpis). Agents may be written in pure Python, or with an EVM-based backend.
 - A "netlist" defines what you simulate, and how. It wires up a collection of agents to interact in a given way. You can write your own netlists to simulate whatever you like. The `assets/netlists` directory has examples.
