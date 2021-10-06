@@ -41,7 +41,7 @@ jobs:
           pwd
           tree
           
-      - name: Executing Python Ganache script
+      - name: Executing Python Ganache Script
         run: |
           nohup python3 ganache.py --run-in-background
 
