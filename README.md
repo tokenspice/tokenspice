@@ -88,7 +88,11 @@ source venv/bin/activate
 
 ## Deploy the smart contracts to ganache
 
-Open a new terminal and:
+Below, you will deploy [smart contracts](https://github.com/oceanprotocol/contracts) from [Ocean Protocol](https://www.oceanprotocol.com). Those contracts include an ERC20 datatoken factory, ERC20 template, [Balancer](https://www.balancer.finance) pool factory, [Balancer pool template](https://github.com/balancer-labs/balancer-core/blob/master/contracts/BPool.sol), and metadata management. Each contract has a corresponding Python wrapper in the `web3engine` directory. Then, Python agents in `assets/agents` use these wrappers. 
+
+You can add your own smart contracts by deploying them to EVM, then adding corresponding Python wrappers and agents to use them.
+
+Let's do this. Open a new terminal and:
 ```console
 #Grab the contracts code from main, *OR* (see below)
 git clone https://github.com/oceanprotocol/contracts
