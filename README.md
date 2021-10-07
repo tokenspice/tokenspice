@@ -26,7 +26,7 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 - [🦑 Agents and Netlists](#-agents-and-netlists)
 - [🐟 Updating Envt](#-updating-envt)
 - [🐡 Backlog](#-backlog)
-  - [Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1?add_cards_query=is%3Aopen)
+  - [Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1)
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
 - [🦈 Resources](#-resources)
 - [🏛 License](#-license)
