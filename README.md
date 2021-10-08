@@ -1,6 +1,6 @@
-<img src="images/fishnado2-crop.jpeg" width="100%">
+<img src="images/tokenspice-banner-thin.png" width="100%">
 
-# TokenSPICE: EVM Agent-Based Token Simulator 🐟🌪️
+# TokenSPICE: EVM Agent-Based Token Simulator
 
 <div align="center">
 <img alt="Pytest Unit Testing" src="https://github.com/tokenspice/tokenspice/actions/workflows/pytest.yml/badge.svg">
@@ -15,8 +15,6 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 - TokenSPICE simulates by simply running a loop. At each iteration, each _agent_ in the _netlist_ takes a step. That's it! [Simple is good.](https://www.goodreads.com/quotes/7144975-i-apologize-for-such-a-long-letter---i-didn-t)
 - A netlist wires up a collection of agents to interact in a given way. Each agent is a class. It has an Ethereum wallet, and does work to earn money. Agents may be written in pure Python, or with an EVM-based backend.
 - One models a system by writing a netlist and tracking metrics (KPIs). One can write their own netlists and agents to simulate whatever they like. The [assets/netlists](https://github.com/tokenspice/tokenspice/tree/main/assets/netlists) directory has examples.
-
-<img src="images/plots-crop.PNG" width="100%">
 
 # Contents
 
@@ -40,7 +38,6 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 History:
 - TokenSPICE was [initially built to model](https://github.com/tokenspice/tokenspice0.1) the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e). It's now been generalized to support EVM, on arbitary netlists. 
 - Most initial work was by [trentmc](https://github.com/trentmc) ([Ocean Protocol](https://www.oceanprotocol.com)); [several more contributors](https://github.com/tokenspice/tokenspice/graphs/contributors) have joined since 👪👨‍👩‍👧‍👧
-
 
 # 🏗 Initial Setup
 
@@ -335,3 +332,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+<img src="images/fishnado2-crop.jpeg" width="100%">
