@@ -97,6 +97,9 @@ git clone https://github.com/oceanprotocol/contracts
 
 #OR grab from a branch. Here's Alex's V4 prototype branch
 git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
+
+#here's the v4 contracts repo, enjoy:)
+#https://github.com/oceanprotocol/contracts/tree/v4main
 ```
 
 Then, deploy. In that same terminal:
