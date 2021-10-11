@@ -70,7 +70,7 @@ jobs:
           pwd
           tree
 
-      - name: Trying to print contracts/setup.cfg
+      - name: Trying to Print contracts/setup.cfg
         run: |
           cat .github/to_outside/contracts/setup.cfg
 
