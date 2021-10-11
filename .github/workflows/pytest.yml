@@ -36,7 +36,7 @@ jobs:
             echo "Requirements.txt found!"
           fi
           
-      - name: Find out what the directory structure looks like
+      - name: Find out what the directory structure looks like.
         run: |
           pwd
           tree
