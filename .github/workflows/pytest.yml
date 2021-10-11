@@ -2,7 +2,7 @@ name: Unit Testing and Code Coverage
 
 on:
   push:
-    branches: [ main, local_branch_codacy_test ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
