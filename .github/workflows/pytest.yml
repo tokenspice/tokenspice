@@ -1,4 +1,4 @@
-name: Unit Testing
+name: Unit Testing and Code Coverage
 
 on:
   push:
@@ -36,12 +36,12 @@ jobs:
             echo "Requirements.txt found!"
           fi
           
-      - name: Find out what the directory structure looks like
+      - name: Find out what the directory structure looks like.
         run: |
           pwd
           tree
           
-      - name: Executing Python Ganache script
+      - name: Executing Python Ganache Script
         run: |
           nohup python3 ganache.py --run-in-background
 
@@ -65,12 +65,12 @@ jobs:
           npm i
           npm run deploy
 
-      - name: Check Current directory after installing and deploying contracts
+      - name: Check Current directory After installing and Deploying contracts
         run: |
           pwd
           tree
 
-      - name: Trying to print contracts/setup.cfg
+      - name: Trying to Print contracts/setup.cfg
         run: |
           cat .github/to_outside/contracts/setup.cfg
 
@@ -78,6 +78,9 @@ jobs:
         run: |
           pytest assets/agents/test/test_DataconsumerAgent.py
 
-      - name: Run Entire Suite of Tests 
+      - name: Run Entire Suite of Tests Along With Code Coverage Analysis
         run: |
-          pytest
+          coverage run -m pytest
+          coverage xml
+          export CODACY_PROJECT_TOKEN=${{ secrets.CODACY_PROJECT_TOKEN }}
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml

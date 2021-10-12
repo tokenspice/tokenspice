@@ -11,5 +11,7 @@ eth-keys
 eth-utils
 pandas
 matplotlib
+coverage
+codacy-coverage
 
 
