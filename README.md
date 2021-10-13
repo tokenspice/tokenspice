@@ -9,9 +9,9 @@
 <img alt="MyPy Static Type Checking" src="https://github.com/tokenspice/tokenspice/actions/workflows/mypy.yml/badge.svg">
 
 <!-- Codacy Badges -->
-<p><a href="https://www.codacy.com/gh/JohannSuarez/tokenspice/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JohannSuarez/tokenspice&amp;utm_campaign=Badge_Coverage"><img src="https://app.codacy.com/project/badge/Coverage/d1710b2e0daa474ba961ccbc9f38e6a9" alt="Codacy Badge"></a>
-<a href="https://www.codacy.com/gh/JohannSuarez/tokenspice/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JohannSuarez/tokenspice&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/d1710b2e0daa474ba961ccbc9f38e6a9" alt="Codacy Badge"></a></p>
-
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/1a5fde6940b246e1b0f927f96d05a285)](https://www.codacy.com/gh/tokenspice/tokenspice/dashboard?utm_source=github.com&utm_medium=referral&utm_content=tokenspice/tokenspice&utm_campaign=Badge_Coverage)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1a5fde6940b246e1b0f927f96d05a285)](https://www.codacy.com/gh/tokenspice/tokenspice/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tokenspice/tokenspice&amp;utm_campaign=Badge_Grade)
+  
 </div>
 
 
