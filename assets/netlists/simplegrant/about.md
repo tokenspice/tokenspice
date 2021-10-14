@@ -73,6 +73,6 @@ The netlist defines the `SimState` by inheriting from a base class, then injecti
 
 <img src="images/netlist_plotinstructions.png" width="100%">
 
-This concludes the description of the `simplegrant` netlist.
+This concludes the description of the `simplegrant` netlist. If you're working on learning the structure of TokenSPICE netlists, a great next step is the description of `simplepool` netlist, [here](../simplepool/about.md).
 
 
