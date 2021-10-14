@@ -277,6 +277,8 @@ The class `SimState` defines which agents are used. Some agents even spawn other
 Every iteration of the engine make a call to each agent's `takeStep()` method. The implementation of [`GrantGivingAgent.takeStep()`](https://github.com/tokenspice/tokenspice/blob/main/assets/agents/GrantGivingAgent.py) is shown below. Lines 26–33 determine whether it should disburse funds on this tick. Lines 35–37 do the disbursal if appropriate.
 There are no real constraints on how an agent's `takeStep()` is implemented. This which gives great TokenSPICE flexibility in agent-based simulation. For example, it can loop in EVM, like we show later.
 
+<img src="images/takestep.png" width="100%">
+
 ## Netlist Examples
 Here are some existing netlists.
 
@@ -286,7 +288,7 @@ Here are some existing netlists.
 - (WIP) [oceanv3](assets/netlists/oceanv3/about.md) - Ocean Market V3 - initial design. EVM.
 - (WIP) [oceanv4](assets/netlists/oceanv4/about.md) - Ocean Market V4 - solves rug pulls. EVM.
 
-The next two sections will show how TokenSPICE netlists are structured, by elaborating on the simplegrant (pure Python) and simplepool (Python+EVM) netlists.
+To learn more about how TokenSPICE netlists are structured, we refer you to the [simplegrant](assets/netlists/simplegrant/about.md) (pure Python) and [simplepool](assets/netlists/simplepool/about.md) (Python+EVM) netlists, which each have more thorough explainers. 
 
 # 🐟 Updating Envt
 
