@@ -5,10 +5,7 @@
 The [`simplegrant` netlist](netlist.py) at `assets/netlists/simplegrant/netlist.py` has two agents (objects):
 
 - `granter`, a [GrantGivingAgent](../../agents/GrantGivingAgent.py)
-- 'taker, a [GrantTakingAgent](../../agents/GrantTakingAgent.py) 
-
-granter, a GrantGivingAgent
-taker, a GrantTakingAgent
+- `taker`, a [GrantTakingAgent](../../agents/GrantTakingAgent.py) 
 
 As one might expect, `granter` gives grants to `taker` over time according to a simple schedule. This continues until runs out of money. These two agents are instantiated in the netlist's `SimStrategy` class.
 
