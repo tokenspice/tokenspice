@@ -124,7 +124,6 @@ Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/ar
 * Now, TokenSPICE knows where to find each contract on ganache (address.json file)
 * And, it knows what each contract's interface is (*.json files).
 
-
 ## Test one EVM-based test
 
 Open a new terminal and:
@@ -145,7 +144,7 @@ First, add pwd to bash path. In the terminal:
 export PATH=$PATH:.
 ```
 
-`tsp` is the command-line module. To see help, call it with no args.
+To see help, call `tsp` with no args.
 ```console
 tsp
 ```
@@ -240,36 +239,54 @@ git push
 
 # 🦑 Agents and Netlists
 
-## About Agents 
+## Agents Basics
 
-- Agents are defined at `assets/agents/`.
-- All agents are written in Python
-- Each Agent has an AgentWallet, which holds a Web3Wallet. The Web3Wallet holds a private key and creates TXs. 
-- Some agents may wrap smart contracts deployed to EVM, e.g. `PoolAgent`.
-- PoolAgent and many other EVM agents wrap Ocean or Balancer smart contracts, with Python driver middleware. A good Pythonic way to get familiar with the driver middleware is to play with [ocean.py](https://github.com/oceanprotocol/ocean.py). (Note that TokenSPICE currently copies-and-pastes some of that code, there is not a dependency.)
+Agents are defined at `assets/agents/`. Agents are in a separate directory than netlists, to facilitate reuse across many netlists.
 
-## About Netlists
+All agents are written in Python. Some may include EVM behavior (more on this later).
 
-The **netlist** defines what you simulate, and how.
+Each Agent has an [`AgentWallet`](https://github.com/tokenspice/tokenspice/blob/main/engine/AgentWallet.py), which holds a [`Web3Wallet`](https://github.com/tokenspice/tokenspice/blob/main/web3tools/web3wallet.py). The `Web3Wallet` holds a private key and creates transactions (txs).
 
-Netlists are defined at `assets/netlists/`.
+## Netlists Basics
 
-You can reuse existing ones or create your own. If you create your own, please add relevant unit tests.
+The netlist defines what you simulate, and how.
 
-For your own custom simulation, you can change any part of the netlist NETLISTX:
-- `assets/netlists/NETLISTX/SimStrategy.py` which holds SimStrategy class - Simulation run parameters
-- `assets/netlists/NETLISTX/KPIs.py` which holds KPIs class, `netlist_createLogData` function, and `netlist_plotInstructions` function - What metrics to log, and how to plot them
-- `assets/netlists/NETLISTX/SimState.py` which holds SimState class - system-level structure & parameters - how agents instantiated and connected
-- `assets/agents/*Agent.py` - Individual agent structure & parameters - each agent class. To change agent structure, you'll need to change its module (py or sol code). Unit tests are recommended.
+Netlists are defined at `assets/netlists/`. You can reuse existing netlists or create your own.
 
-Existing netlists include:
+## What A Netlist Definition Must Hold
+
+TokenSPICE expects a netlist module (in a netlist.py file) that defines these specific classes and functions:
+
+- `SimStrategy` class: simulation run parameters
+- `KPIs` class and `netlist_createLogData()` function: what metrics to log during the run
+- `netlist_plotInstructions()` function: how to plot the metrics after the run
+- `SimState` class: system-level structure & parameters, i.e. how agents are instantiated and connected. It imports agents defined in `assets/agents/*Agent.py`. Some agents use EVM. You can add and edit Agents to suit your needs.
+
+## How to Implement Netlists
+
+There are two practical ways to specify `SimStrategy`, `KPIs`, and so on for netlist.py:
+
+1. **For simple netlists.** Have just one file (`netlist.py`) to hold all the code for each class and method given above. This is appropriate for simple netlists, like [simplegrant](https://github.com/tokenspice/tokenspice/blob/main/assets/netlists/simplegrant/about.md) (just Python) and [simplepool](https://github.com/tokenspice/tokenspice/blob/main/assets/netlists/simplepool/about.md) (Python+EVM).
+
+2. **For complex netlists.** Have one or more _separate files_ for each class and method given above, such as `assets/netlists/NETLISTX/SimStrategy.py`. Then, import them all into `netlist.py` file to unify their scope to a single module (`netlist`). This allows for arbitrary levels of netlist complexity. The [wsloop](https://github.com/tokenspice/tokenspice/blob/main/assets/netlists/wsloop/about.md) netlist is a good example. It models the [Web3 Sustainability Loop](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e), which is inspired by the Amazon flywheel and used by [Ocean](https://www.oceanprotocol.com), [Boson](https://www.bosonprotocol.io/) and others as their system-level token design.
+
+## Agent.takeStep() method
+
+The class `SimState` defines which agents are used. Some agents even spawn other agents. Each agent object is stored in the `SimState.agents` object, a dict with  some added querying abilities. Key `SimState` methods to access this object are `addAgent(agent)`, `getAgent(name:str)`, `allAgents()`, and `numAgents()`. [`SimStateBase`](https://github.com/tokenspice/tokenspice/blob/main/engine/SimStateBase.py) has details.
+
+Every iteration of the engine make a call to each agent's `takeStep()` method. The implementation of [`GrantGivingAgent.takeStep()`](https://github.com/tokenspice/tokenspice/blob/main/assets/agents/GrantGivingAgent.py) is shown below. Lines 26–33 determine whether it should disburse funds on this tick. Lines 35–37 do the disbursal if appropriate.
+There are no real constraints on how an agent's `takeStep()` is implemented. This which gives great TokenSPICE flexibility in agent-based simulation. For example, it can loop in EVM, like we show later.
+
+## Netlist Examples
+Here are some existing netlists.
 
 - [simplegrant](assets/netlists/simplegrant/about.md) - granter plus receiver, that's all. No EVM.
 - [simplepool](assets/netlists/simplepool/about.md) - publisher that periodically creates new pools. EVM.
 - [wsloop](assets/netlists/wsloop/about.md) - Web3 Sustainability Loop. No EVM.
-- (WIP) [oceanv3](assets/netlists/oceanv3/about.md) - Ocean Market V3 - initial. EVM.
-- (WIP) [oceanv4](assets/netlists/oceanv4/about.md) - Ocean Market V4 - safer staking. EVM.
+- (WIP) [oceanv3](assets/netlists/oceanv3/about.md) - Ocean Market V3 - initial design. EVM.
+- (WIP) [oceanv4](assets/netlists/oceanv4/about.md) - Ocean Market V4 - solves rug pulls. EVM.
 
+The next two sections will show how TokenSPICE netlists are structured, by elaborating on the simplegrant (pure Python) and simplepool (Python+EVM) netlists.
 
 # 🐟 Updating Envt
 
