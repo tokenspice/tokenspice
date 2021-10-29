@@ -13,14 +13,14 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.setTimeStep(S_PER_HOUR)
         self.setMaxTime(100, 'days')
                
-        #publisher 
+        #publisher
         self.publisher_init_OCEAN = 10000.0
         
         # creating DT params
         self.DT_init = 100.0
 
         # pool params
-        self.DT_stake = 50.0                
+        self.DT_stake = 50.0
         self.pool_weight_DT = 3.0
         self.pool_weight_OCEAN = 7.0
         assert (self.pool_weight_DT + self.pool_weight_OCEAN) == 10.0

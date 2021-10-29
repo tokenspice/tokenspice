@@ -9,7 +9,7 @@ class KPIs(KPIsBase.KPIsBase):
     pass
 
 @enforce_types
-def get_OCEAN_in_DTs(state,agent,):
+def get_OCEAN_in_DTs(state,agent):
     pool_agents_list = list(state.agents.filterToPool().values())
     agent_OCEAN_in_DTs = 0
 
@@ -19,7 +19,7 @@ def get_OCEAN_in_DTs(state,agent,):
 
         # get spot price of datatoken over OCEAN
         datatoken_sp = pool.pool.getSpotPrice_base(OCEAN_address,datatoken.address)/1e18
-        agent_OCEAN_in_DTs += agent.DT(datatoken) * datatoken_sp    
+        agent_OCEAN_in_DTs += agent.DT(datatoken) * datatoken_sp
     return agent_OCEAN_in_DTs
 
 @enforce_types
@@ -41,7 +41,6 @@ def get_pool_BPTs(state,pool):
 def get_OCEAN_in_BPTs(state,agent):
     OCEAN_address = globaltokens.OCEAN_address()
     agent_OCEAN_in_BPTs = 0
-    
     pool_agents_list = list(state.agents.filterToPool().values())
 
     # each pool, agent might has some BPT, get fraction of that amount over BPTs hold by all agents
@@ -75,7 +74,7 @@ def netlist_createLogData(state):
         datarow += [agent.OCEAN()]
 
         # in DTs
-        dataheader += [f"{name}_OCEAN_in_DTs"] 
+        dataheader += [f"{name}_OCEAN_in_DTs"]
         datarow += [get_OCEAN_in_DTs(state,agent)]
 
         # in BPTs
@@ -84,8 +83,7 @@ def netlist_createLogData(state):
 
         # networth
         dataheader += [f"{name}_OCEAN_networth"]
-        datarow +=[agent.OCEAN()+get_OCEAN_in_DTs(state,agent)+get_OCEAN_in_BPTs(state,agent)]
-        
+        datarow += [agent.OCEAN()+get_OCEAN_in_DTs(state,agent)+get_OCEAN_in_BPTs(state,agent)]        
     
     pool_agents = state.agents.filterToPool()
     n_pools = len(pool_agents)
@@ -122,8 +120,6 @@ def netlist_plotInstructions(header: List[str], values):
         ["publisher","consumer","stakerSpeculator","speculator","maliciousPublisher"],"Agents OCEAN networth",LINEAR,MULT1,COUNT),
         YParam(["publisher_OCEAN","consumer_OCEAN","stakerSpeculator_OCEAN","speculator_OCEAN","maliciousPublisher_OCEAN"],
         ["publisher","consumer","staker","speculator","maliciousPublisher"],"Agents OCEAN wallet",LINEAR,MULT1,DOLLAR),
-        # YParam(["staker_OCEAN"],["OCEAN"],"staker_OCEAN",LINEAR,MULT1,DOLLAR),
-        # YParam(["speculator_OCEAN"],["OCEAN"],"speculator_OCEAN",LINEAR,MULT1,DOLLAR),
         YParam(["n_pools"],  ["# pools"],  "n_pools",  LINEAR,MULT1,COUNT)
     ]
 
