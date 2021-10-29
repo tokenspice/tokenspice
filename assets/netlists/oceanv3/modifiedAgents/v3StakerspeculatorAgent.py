@@ -1,14 +1,10 @@
 from enforce_typing import enforce_types
 import random
-from assets.agents import StakerspeculatorAgent
-from assets.agents.PoolAgent import PoolAgent
-from engine.AgentBase import AgentBase
-from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
-from web3tools.web3util import toBase18
-from util.constants import S_PER_DAY, S_PER_HOUR
+from assets.agents.StakerspeculatorAgent import StakerspeculatorAgent
+from util.constants import  S_PER_HOUR
 
 @enforce_types
-class StakerspeculatorAgent(StakerspeculatorAgent.StakerspeculatorAgent):
+class v3StakerspeculatorAgent(StakerspeculatorAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
 

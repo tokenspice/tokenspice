@@ -1,14 +1,9 @@
 from enforce_typing import enforce_types
 import random
-from assets.agents import SpeculatorAgent
-from assets.agents.PoolAgent import PoolAgent
-from engine.AgentBase import AgentBase
-from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
-from web3tools.web3util import toBase18
-from util.constants import S_PER_DAY, S_PER_HOUR
+from assets.agents.SpeculatorAgent import SpeculatorAgent
 
 @enforce_types
-class SpeculatorAgent(SpeculatorAgent.SpeculatorAgent):
+class v3SpeculatorAgent(SpeculatorAgent):
 
     def _speculateAction(self, state):
         pool_agents = state.agents.filterToPool()

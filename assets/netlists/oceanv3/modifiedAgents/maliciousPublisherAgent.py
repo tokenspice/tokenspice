@@ -1,14 +1,14 @@
 from enforce_typing import enforce_types
 import random
-from assets.agents import PublisherAgent
+from typing import List
+from assets.agents.PublisherAgent import PublisherAgent
 from assets.agents.PoolAgent import PoolAgent
-from engine.AgentBase import AgentBase
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18
 from util.constants import S_PER_DAY, S_PER_HOUR
 
 @enforce_types
-class maliciousPublisherAgent(PublisherAgent.PublisherAgent):
+class maliciousPublisherAgent(PublisherAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         
@@ -24,7 +24,7 @@ class maliciousPublisherAgent(PublisherAgent.PublisherAgent):
         self._s_since_sellDT = 0
         self._s_between_sellDT = 1 * S_PER_HOUR #magic number
 
-        self.pools = []
+        self.pools = [] # type: List[str]
     
     def takeStep(self, state) -> None:
         self._s_since_create += state.ss.time_step
