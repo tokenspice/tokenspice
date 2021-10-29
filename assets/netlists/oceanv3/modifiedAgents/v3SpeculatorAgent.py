@@ -4,15 +4,11 @@ from assets.agents.SpeculatorAgent import SpeculatorAgent
 
 @enforce_types
 class v3SpeculatorAgent(SpeculatorAgent):
-
     def _speculateAction(self, state):
         pool_agents = state.agents.filterToPool()
         # exclude rugged pool
         for pool_name in state.ss.rugged_pools:
-            try:
-                del pool_agents[pool_name]
-            except:
-                pass
+            del pool_agents[pool_name]
         
         pool_agents = pool_agents.values()
         assert pool_agents, "need pools to be able to speculate"

@@ -1,9 +1,8 @@
 from enforce_typing import enforce_types
-import random
 from typing import List
 from assets.agents.PublisherAgent import PublisherAgent
 from assets.agents.PoolAgent import PoolAgent
-from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
+from web3engine import bfactory, bpool, globaltokens
 from web3tools.web3util import toBase18
 from util.constants import S_PER_DAY, S_PER_HOUR
 
@@ -47,7 +46,7 @@ class maliciousPublisherAgent(PublisherAgent):
             if len(self.pools)>0:
                 state.ss.rugged_pools.append(self.pools[-1])
     
-    def _createPoolAgent(self, state) -> PoolAgent:        
+    def _createPoolAgent(self, state) -> PoolAgent:
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"
         wallet = self._wallet._web3wallet
         OCEAN = globaltokens.OCEANtoken()
@@ -106,8 +105,7 @@ class maliciousPublisherAgent(PublisherAgent):
             & (self._s_since_create <= self._s_wait_to_rug + self._s_rug_time)
 
     def _sellDTsomewhere(self, state, perc_sell:float=0.20):
-        """Choose what DT to sell and by how much. Then do the action."""        
-
+        """Choose what DT to sell and by how much. Then do the action."""
         pool_agent = state.getAgent(self.pools[-1])
         pool = pool_agent.pool
         DT   = pool_agent.datatoken

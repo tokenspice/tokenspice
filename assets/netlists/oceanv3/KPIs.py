@@ -1,15 +1,8 @@
 from enforce_typing import enforce_types
-import math
 from typing import List
 
 from engine import KPIsBase
-from util import valuation
-from util.constants import S_PER_YEAR, S_PER_MONTH, INF
-from util.strutil import prettyBigNum
-from web3engine import globaltokens# OCEAN_address, OCEANtoken
-
-from assets.agents.PoolAgent import PoolAgent
-from engine.AgentBase import AgentBase
+from web3engine import globaltokens
 
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
@@ -17,7 +10,7 @@ class KPIs(KPIsBase.KPIsBase):
 
 @enforce_types
 def get_OCEAN_in_DTs(state,agent,):
-    pool_agents_list = list(state.agents.filterToPool().values())  
+    pool_agents_list = list(state.agents.filterToPool().values())
     agent_OCEAN_in_DTs = 0
 
     for pool in pool_agents_list:
@@ -26,8 +19,7 @@ def get_OCEAN_in_DTs(state,agent,):
 
         # get spot price of datatoken over OCEAN
         datatoken_sp = pool.pool.getSpotPrice_base(OCEAN_address,datatoken.address)/1e18
-        agent_OCEAN_in_DTs += agent.DT(datatoken) * datatoken_sp
-    
+        agent_OCEAN_in_DTs += agent.DT(datatoken) * datatoken_sp    
     return agent_OCEAN_in_DTs
 
 @enforce_types
@@ -53,15 +45,13 @@ def get_OCEAN_in_BPTs(state,agent):
     pool_agents_list = list(state.agents.filterToPool().values())
 
     # each pool, agent might has some BPT, get fraction of that amount over BPTs hold by all agents
-    # multiple by OCEAN of the pool
+    # multiple by OCEANs and DTs values of the pool
     # aggerate for all pools
     for pool in pool_agents_list:
         percent_BPT = agent.BPT(pool.pool)/get_pool_BPTs(state,pool.pool)
         agent_OCEAN_in_BPTs += percent_BPT* pool.pool.getBalance_base(OCEAN_address)/1e18
         agent_OCEAN_in_BPTs += percent_BPT*pool.pool.getBalance_base(pool.datatoken.address)/1e18 \
                                 * pool.pool.getSpotPrice_base(OCEAN_address,pool.datatoken.address)/1e18
-                                 
-
     return agent_OCEAN_in_BPTs
 
 

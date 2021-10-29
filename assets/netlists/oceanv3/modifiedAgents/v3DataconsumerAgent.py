@@ -1,6 +1,5 @@
 from enforce_typing import enforce_types
 from typing import List
-import random
 from assets.agents.DataconsumerAgent import DataconsumerAgent
 from assets.agents.PoolAgent import PoolAgent
 from web3engine import globaltokens
@@ -16,7 +15,7 @@ class v3DataconsumerAgent(DataconsumerAgent):
         self._s_between_speculates = 8 * S_PER_HOUR #magic number
     def _candPoolAgents(self, state) -> List[PoolAgent]:
         """Pools that this agent can afford to buy 1.0 datatokens from,
-        at least based on a first approximation. 
+        at least based on a first approximation.
         """
         OCEAN_address = globaltokens.OCEAN_address()
         OCEAN = self.OCEAN()
@@ -25,10 +24,7 @@ class v3DataconsumerAgent(DataconsumerAgent):
         pool_agents = state.agents.filterToPool()
         # exclude rugged pool
         for pool_name in state.ss.rugged_pools:
-            try:
-                del pool_agents[pool_name]
-            except:
-                pass
+            del pool_agents[pool_name]
         
         all_pool_agents = pool_agents.values()
         

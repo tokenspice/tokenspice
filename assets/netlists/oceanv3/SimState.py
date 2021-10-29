@@ -1,5 +1,5 @@
 from enforce_typing import enforce_types
-from typing import List, Set
+from typing import Set
 
 from assets.netlists.oceanv3.modifiedAgents.maliciousPublisherAgent import maliciousPublisherAgent
 from assets.netlists.oceanv3.modifiedAgents.v3DataconsumerAgent import v3DataconsumerAgent

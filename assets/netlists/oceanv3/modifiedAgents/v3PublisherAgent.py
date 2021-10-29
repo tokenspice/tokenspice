@@ -1,14 +1,12 @@
 from enforce_typing import enforce_types
-import random
 from assets.agents.PublisherAgent import PublisherAgent
 from assets.agents.PoolAgent import PoolAgent
-from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
+from web3engine import bfactory, bpool, globaltokens
 from web3tools.web3util import toBase18
-
 
 @enforce_types
 class v3PublisherAgent(PublisherAgent):
-    def _createPoolAgent(self, state) -> PoolAgent:        
+    def _createPoolAgent(self, state) -> PoolAgent:
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"
         wallet = self._wallet._web3wallet
         OCEAN = globaltokens.OCEANtoken()

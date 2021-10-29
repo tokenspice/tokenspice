@@ -1,3 +1,4 @@
+from typing import List
 from enforce_typing import enforce_types
 
 from engine import SimStrategyBase
@@ -10,7 +11,7 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 
         #==baseline
         self.setTimeStep(S_PER_HOUR)
-        self.setMaxTime(10, 'days')
+        self.setMaxTime(100, 'days')
                
         #publisher 
         self.publisher_init_OCEAN = 10000.0
@@ -19,7 +20,6 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.DT_init = 100.0
 
         # pool params
-        # self.OCEAN_stake = 1000.0 # now publisher using all OCEAN in wallet to add to LP
         self.DT_stake = 50.0                
         self.pool_weight_DT = 3.0
         self.pool_weight_OCEAN = 7.0
@@ -38,4 +38,4 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.maliciousPublisher_init_OCEAN = 10000.0
         self.m_DT_init = 100.0
         self.m_DT_stake = 50.0
-        self.rugged_pools=[]
+        self.rugged_pools=[] # type: List[str]
