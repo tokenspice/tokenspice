@@ -4,6 +4,7 @@ from assets.agents.PublisherAgent import PublisherAgent
 from assets.agents.PoolAgent import PoolAgent
 from assets.agents.StakerspeculatorAgent import StakerspeculatorAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
+from assets.agents.SpeculatorAgent import SpeculatorAgent
 
 @enforce_types
 class AgentDict(dict):
@@ -31,6 +32,9 @@ class AgentDict(dict):
 
     def filterToDataconsumer(self):
         return self.filterByClass(DataconsumerAgent)
+    
+    def filterToSpeculator(self):
+        return self.filterByClass(SpeculatorAgent)
     
     def filterByClass(self, _class):
         return AgentDict({agent.name : agent
