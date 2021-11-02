@@ -39,7 +39,7 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 # 👪 Community
 
 - Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216), [first time](https://discord.gg/FREcbdnUTw). 
-- TokenSPICE hacking sessions: Mondays at 17.00 Berlin // 11.00 Eastern // 8.00 Pacific. 120 min. [Zoom link](https://us02web.zoom.us/j/6985323627?pwd=YmxXaWNrdk1uSmV5bUFsaTJEWEtNZz09), Meeting ID 698 532 3627, Passcode 2021-99564. Anyone is welcome to drop in! 👋
+- TokenSPICE hacking sessions: Mondays at 16.00 Berlin time. 120 min. [Zoom link](https://us02web.zoom.us/j/6985323627?pwd=YmxXaWNrdk1uSmV5bUFsaTJEWEtNZz09), Meeting ID 698 532 3627, Passcode 2021-99564. Anyone is welcome to drop in! 👋
 - Twitter: [@tokenspice](https://twitter.com/tokenspice)
 - Medium: [@tokenspice](https://medium.com/tokenspice)
 
