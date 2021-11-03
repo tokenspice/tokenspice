@@ -1,5 +1,3 @@
-USE_EVM = False
-
 from enforce_typing import enforce_types
 from typing import List, Set
 

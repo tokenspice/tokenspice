@@ -7,7 +7,6 @@ Netlist to simulate Web3 Sustainability Loop, with no EVM
 #Users just refer to netlist.SimStrategy, netlist.SimState, etc., versus
 # having to import directly from supporting modules.
 
-USE_EVM = False
 from .SimStrategy import SimStrategy
 from .SimState import SimState
 from .KPIs import KPIs, netlist_createLogData, netlist_plotInstructions

@@ -11,7 +11,6 @@ def test_scope():
     ss = netlist.SimState()
 
     #test that it's all there
-    assert netlist.USE_EVM == True
     assert inspect.isclass(netlist.SimStrategy)
     assert inspect.isclass(netlist.SimState)
     assert inspect.isclass(netlist.KPIs)
