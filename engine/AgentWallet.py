@@ -1,6 +1,20 @@
+"""
+Main classes in this module:
+-AgentWalletBase - abstract interface
+-AgentWalletNoEvm - no-EVM wallet
+-AgentWalletEvm - EVM wallet
+
+Support classes include:
+-USDNoEvmMixIn - no-EVM implement USD deposit/withdraw/..
+-OCEANNoEvmMixIn - no-EVM implement OCEAN deposit/withdraw/..
+-StrMixIn - for __str__()
+-BurnWallet - special wallet to burn to
+"""
+
 import logging
 log = logging.getLogger('wallet')
 
+from abc import abstractmethod, ABC
 from enforce_typing import enforce_types
 import typing
 
@@ -11,45 +25,61 @@ from web3tools import web3util, web3wallet
 from web3tools.web3util import fromBase18, toBase18
 
 @enforce_types
-class AgentWallet:
-    """An AgentWallet holds balances of USD, OCEAN, and DTs for a given Agent.
-    It also serves as a thin-layer conversion interface between
-    -the top-level system which operates in floats
-    -the EVM system which operates in base18-value ints
-
-    USD is stored as a variable internally. OCEAN & DTs are on EVM.
+class AgentWalletBase(ABC):
     """
+    An AgentWallet holds balances of USD and OCEAN for a given Agent.
 
+    This is an abstract class. It has children that (a) do (b) don't use Evm.
+    """
+    @abstractmethod
     def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
-        if private_key is None:
-            self._web3wallet = web3wallet.randomWeb3Wallet()
-        else:
-            self._web3wallet = web3wallet.Web3Wallet(private_key)
+        pass
 
-        #Give the new wallet ETH to pay gas fees (but don't track otherwise)
-        self._web3wallet.fundFromAbove(toBase18(0.01)) #magic number
+    #===================================================================  
+    #OCEAN-related
+    @abstractmethod
+    def OCEAN(self) -> float:
+        pass
         
-        #USD
-        self._USD = USD #lump in ETH too
-
-        #OCEAN
-        globaltokens.mintOCEAN(address=self._web3wallet.address,
-                               value_base=toBase18(OCEAN))
-        self._cached_OCEAN_base: typing.Union[int,None] = None #for speed
-
-        #amount 
-        self._total_USD_in:float = USD
-        self._total_OCEAN_in:float = OCEAN
-
-    def resetCachedInfo(self):
-        self._cached_OCEAN_base = None
+    @abstractmethod
+    def depositOCEAN(self, amt: float) -> None:
+        pass
         
-    @property
-    def _address(self):
-         return self._web3wallet.address
-     
-    #=================================================================== 
-    #USD-related   
+    @abstractmethod
+    def withdrawOCEAN(self, amt: float) -> None:
+        pass
+
+    @abstractmethod
+    def transferOCEAN(self, dst_wallet, amt: float) -> None:
+        pass
+
+    @abstractmethod
+    def totalOCEANin(self) -> float:
+        pass
+    
+    #===================================================================  
+    #USD-related
+    @abstractmethod
+    def USD(self) -> float:
+        pass
+        
+    @abstractmethod
+    def depositUSD(self, amt: float) -> None:
+        pass
+        
+    @abstractmethod
+    def withdrawUSD(self, amt: float) -> None:
+        pass
+
+    @abstractmethod
+    def transferUSD(self, dst_wallet, amt: float) -> None:
+        pass
+
+    @abstractmethod
+    def totalUSDin(self) -> float:
+        pass        
+        
+class USDNoEvmMixIn:
     def USD(self) -> float:
         return self._USD
         
@@ -72,12 +102,121 @@ class AgentWallet:
         self._USD -= amt
 
     def transferUSD(self, dst_wallet, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWallet)
+        assert isinstance(dst_wallet, AgentWalletBase)
         self.withdrawUSD(amt)
         dst_wallet.depositUSD(amt)
 
     def totalUSDin(self) -> float:
         return self._total_USD_in
+
+class OCEANNoEvmMixIn:
+    def OCEAN(self) -> float:
+        return self._OCEAN
+        
+    def depositOCEAN(self, amt: float) -> None:
+        assert amt >= 0.0
+        self._OCEAN += amt
+        self._total_OCEAN_in += amt
+        
+    def withdrawOCEAN(self, amt: float) -> None:
+        assert amt >= 0.0
+        if amt > 0.0 and self._OCEAN > 0.0:
+            tol = 1e-12
+            if (1.0 - tol) <= amt/self._OCEAN <= (1.0 + tol):
+                self._OCEAN = amt #avoid floating point roundoff
+        if amt > self._OCEAN:
+            amt = round(amt, 12)
+        if amt > self._OCEAN:
+            raise ValueError("OCEAN withdraw amount (%s) exceeds holdings (%s)"
+                             % (amt, self._OCEAN))
+        self._OCEAN -= amt
+
+    def transferOCEAN(self, dst_wallet, amt: float) -> None:
+        assert isinstance(dst_wallet, AgentWalletBase)
+        self.withdrawOCEAN(amt)
+        dst_wallet.depositOCEAN(amt)
+
+    def totalOCEANin(self) -> float:
+        return self._total_OCEAN_in
+
+class StrMixIn:
+    def __str__(self) -> str:
+        s = []
+        s += ["AgentWallet={\n"]
+        s += ['USD=%s' % asCurrency(self.USD())]
+        s += ['; OCEAN=%.6f' % self.OCEAN()]
+        s += ['; total_USD_in=%s' % asCurrency(self.totalUSDin())]
+        s += ['; total_OCEAN_in=%.6f' % self.totalOCEANin()]
+        s += [" /AgentWallet}"]
+        return "".join(s)
+    
+@enforce_types
+class AgentWalletNoEvm(USDNoEvmMixIn,
+                       OCEANNoEvmMixIn,
+                       StrMixIn,
+                       AgentWalletBase,
+):
+    """
+    In this wallet subclass, USD and OCEAN are stored in pure Python. No Evm.
+    """
+
+    def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
+        assert private_key is None, "if no evm, no private key"
+        
+        self._USD:float = USD
+        self._OCEAN:float = OCEAN
+        
+        self._total_USD_in:float = USD
+        self._total_OCEAN_in:float = OCEAN
+    
+    
+@enforce_types
+class AgentWalletEvm(USDNoEvmMixIn,
+                     StrMixIn,
+                     AgentWalletBase,
+                     ):
+    """
+    In this wallet subclass, OCEAN is on Evm. USD is stored in Python.
+
+    It also has functionality for ETH (for gas), DTs, and BPTs / staking.
+
+    It also serves as a thin-layer conversion interface between
+    -the top-level system which operates in floats
+    -the Evm system which operates in base18-value ints
+    """
+
+    def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
+        if private_key is None:
+            self._web3wallet = web3wallet.randomWeb3Wallet()
+        else:
+            self._web3wallet = web3wallet.Web3Wallet(private_key)
+
+        #Give the new wallet ETH to pay gas fees (but don't track otherwise)
+        self._web3wallet.fundFromAbove(toBase18(0.01)) #magic number
+        
+        #USD
+        self._USD:float = USD #lump in ETH too
+
+        #OCEAN
+        globaltokens.mintOCEAN(address=self._web3wallet.address,
+                               value_base=toBase18(OCEAN))
+        self._cached_OCEAN_base: typing.Union[int,None] = None #for speed
+
+        #amount 
+        self._total_USD_in:float = USD
+        self._total_OCEAN_in:float = OCEAN
+        
+    def resetCachedInfo(self):
+        self._cached_OCEAN_base = None
+        
+    @property
+    def _address(self):
+         return self._web3wallet.address
+     
+    #===================================================================  
+    #USD-related 
+    def _USD_base(self) -> int:      
+        pass
 
     #===================================================================  
     #OCEAN-related 
@@ -99,7 +238,7 @@ class AgentWallet:
         self.transferOCEAN(_BURN_WALLET, amt)
 
     def transferOCEAN(self, dst_wallet, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWallet) or \
+        assert isinstance(dst_wallet, AgentWalletBase) or \
             isinstance(dst_wallet, BurnWallet)
         dst_address = dst_wallet._address
         
@@ -206,7 +345,7 @@ class AgentWallet:
         self.resetCachedInfo()
 
     def transferDT(self, dst_wallet, DT: datatoken.Datatoken, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWallet) or \
+        assert isinstance(dst_wallet, AgentWalletBase) or \
             isinstance(dst_wallet, BurnWallet)
         dst_address = dst_wallet._address
 
@@ -227,19 +366,7 @@ class AgentWallet:
             raise ValueError("transfer amt (%s) exceeds DT holdings (%s)"
                              % (fromBase18(amt_base), fromBase18(DT_base)))
 
-        DT.transfer(dst_address, amt_base, self._web3wallet)     
-
-    #===================================================================
-    def __str__(self) -> str:
-        s = []
-        s += ["AgentWallet={\n"]
-        s += ['USD=%s' % asCurrency(self.USD())]
-        s += ['; OCEAN=%.6f' % self.OCEAN()]
-        s += ['; DT=(not shown), BPT=(not shown)']
-        s += ['; total_USD_in=%s' % asCurrency(self.totalUSDin())]
-        s += ['; total_OCEAN_in=%.6f' % self.totalOCEANin()]
-        s += [" /AgentWallet}"]
-        return "".join(s)
+        DT.transfer(dst_address, amt_base, self._web3wallet) 
 
 #========================================================================
 #burn-related
