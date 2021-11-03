@@ -158,15 +158,29 @@ Simulate the netlist, storing results to `outdir_csv`.
 tsp run assets/netlists/simplegrant/netlist.py outdir_csv
 ```
 
+Congrats! You've run your first TokenSPICE simulation. Let's see what the results look like.
+
 Output plots to `outdir_png`, and view them.
 ```console
 tsp plot assets/netlists/simplegrant/netlist.py outdir_csv outdir_png
 eog outdir_png
 ```
 
-Here are example plots from [wsloop netlist](assets/netlists/wsloop/about.md). They track token count, tokens minted, tokens burned, and tokens granted over a 20 year period.
+You should see two pngs, one of OCEAN vs time (descending), and one of USD vs time (flat). 
+
+The [wsloop netlist](assets/netlists/wsloop/about.md) is more complex. Below are example plots from it, tracking token count, tokens minted, tokens burned, and tokens granted over a 20 year period.
 
 <img src="images/wsloop-example-small.png">
+
+For runs that take more than a few seconds, it helps send stdout & stderr to a file while still monitoring the console in real-time. Here's how, on wsloop netlist:
+
+```console
+#remove previous directory, then start running
+rm -rf outdir_csv; tsp run assets/netlists/wsloop/netlist.py outdir_csv > out.txt 2>&1 &
+
+#monitor in real-time
+tail -f out.txt
+```
 
 # 🏄 Do Simulations, Make Changes
 
