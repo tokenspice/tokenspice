@@ -37,16 +37,11 @@ def alice_private_key() -> str:
 
 @pytest.fixture
 def alice_agent():
-    class MockAgent(AgentBase.AgentBase):
-        def takeStep(self, state):
-            pass
-    agent = MockAgent("agent1",USD=0.0,OCEAN=0.0)
-    agent._wallet_evm = _alice_info().agent_wallet_evm
-    return agent
+    return _alice_info().agent
 
 @pytest.fixture
-def alice_agent_wallet_evm() -> AgentWallet.AgentWalletEvm:
-    return _alice_info().agent_wallet_evm
+def alice_agent_wallet() -> AgentWallet.AgentWalletEvm:
+    return _alice_info().agent_wallet
 
 @pytest.fixture
 def alice_web3wallet() -> web3wallet.Web3Wallet:
@@ -69,7 +64,7 @@ def _make_info(private_key_name:str):
     class _Info:
         def __init__(self):
             self.private_key: Union[str, None] = None
-            self.agent_wallet_evm: Union[AgentWallet.AgentWalletEvm, None] = None
+            self.agent_wallet: Union[AgentWallet.AgentWalletEvm, None] = None
             self.web3wallet: Union[web3wallet, None] = None
             self.DT: Union[datatoken, None] = None
             self.pool: Union[bool, None] = None
@@ -77,12 +72,19 @@ def _make_info(private_key_name:str):
 
     network = web3util.get_network()
     info.private_key = web3util.confFileValue(network, private_key_name)
-    info.agent_wallet_evm = AgentWallet.AgentWalletEvm(
+    info.agent_wallet = AgentWallet.AgentWalletEvm(
         OCEAN=_OCEAN_INIT,private_key=info.private_key)
-    info.web3wallet = info.agent_wallet_evm._web3wallet
+    info.web3wallet = info.agent_wallet._web3wallet
 
     info.DT = _createDT(info.web3wallet)
     info.pool = _createPool(DT=info.DT, web3_w=info.web3wallet)
+
+    class MockAgent(AgentBase.AgentBaseEvm):
+        def takeStep(self, state):
+            pass
+    info.agent = MockAgent("agent1",USD=0.0,OCEAN=0.0)
+    info.agent._wallet = info.agent_wallet
+    
     return info
 
 @enforce_types

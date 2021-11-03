@@ -5,8 +5,8 @@ Main classes in this module:
 -AgentWalletEvm - EVM wallet
 
 Support classes include:
--USDNoEvmMixIn - no-EVM implement USD deposit/withdraw/..
--OCEANNoEvmMixIn - no-EVM implement OCEAN deposit/withdraw/..
+-UsdNoEvmWalletMixIn - no-EVM implement USD deposit/withdraw/..
+-OceanNoEvmWalletMixIn - no-EVM implement OCEAN deposit/withdraw/..
 -StrMixIn - for __str__()
 -BurnWallet - special wallet to burn to
 """
@@ -25,7 +25,7 @@ from web3tools import web3util, web3wallet
 from web3tools.web3util import fromBase18, toBase18
 
 @enforce_types
-class AgentWalletBase(ABC):
+class AgentWalletAbstract(ABC):
     """
     An AgentWallet holds balances of USD and OCEAN for a given Agent.
 
@@ -78,8 +78,9 @@ class AgentWalletBase(ABC):
     @abstractmethod
     def totalUSDin(self) -> float:
         pass        
-        
-class USDNoEvmMixIn:
+
+@enforce_types
+class UsdNoEvmWalletMixIn:
     def USD(self) -> float:
         return self._USD
         
@@ -102,14 +103,15 @@ class USDNoEvmMixIn:
         self._USD -= amt
 
     def transferUSD(self, dst_wallet, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWalletBase)
+        assert isinstance(dst_wallet, AgentWalletAbstract)
         self.withdrawUSD(amt)
         dst_wallet.depositUSD(amt)
 
     def totalUSDin(self) -> float:
         return self._total_USD_in
 
-class OCEANNoEvmMixIn:
+@enforce_types
+class OceanNoEvmWalletMixIn:
     def OCEAN(self) -> float:
         return self._OCEAN
         
@@ -132,13 +134,14 @@ class OCEANNoEvmMixIn:
         self._OCEAN -= amt
 
     def transferOCEAN(self, dst_wallet, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWalletBase)
+        assert isinstance(dst_wallet, AgentWalletAbstract)
         self.withdrawOCEAN(amt)
         dst_wallet.depositOCEAN(amt)
 
     def totalOCEANin(self) -> float:
         return self._total_OCEAN_in
 
+@enforce_types
 class StrMixIn:
     def __str__(self) -> str:
         s = []
@@ -151,10 +154,10 @@ class StrMixIn:
         return "".join(s)
     
 @enforce_types
-class AgentWalletNoEvm(USDNoEvmMixIn,
-                       OCEANNoEvmMixIn,
+class AgentWalletNoEvm(UsdNoEvmWalletMixIn,
+                       OceanNoEvmWalletMixIn,
                        StrMixIn,
-                       AgentWalletBase,
+                       AgentWalletAbstract,
 ):
     """
     In this wallet subclass, USD and OCEAN are stored in pure Python. No Evm.
@@ -171,9 +174,9 @@ class AgentWalletNoEvm(USDNoEvmMixIn,
     
     
 @enforce_types
-class AgentWalletEvm(USDNoEvmMixIn,
+class AgentWalletEvm(UsdNoEvmWalletMixIn,
                      StrMixIn,
-                     AgentWalletBase,
+                     AgentWalletAbstract,
                      ):
     """
     In this wallet subclass, OCEAN is on Evm. USD is stored in Python.
@@ -238,7 +241,7 @@ class AgentWalletEvm(USDNoEvmMixIn,
         self.transferOCEAN(_BURN_WALLET, amt)
 
     def transferOCEAN(self, dst_wallet, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWalletBase) or \
+        assert isinstance(dst_wallet, AgentWalletAbstract) or \
             isinstance(dst_wallet, BurnWallet)
         dst_address = dst_wallet._address
         
@@ -345,7 +348,7 @@ class AgentWalletEvm(USDNoEvmMixIn,
         self.resetCachedInfo()
 
     def transferDT(self, dst_wallet, DT: datatoken.Datatoken, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWalletBase) or \
+        assert isinstance(dst_wallet, AgentWalletAbstract) or \
             isinstance(dst_wallet, BurnWallet)
         dst_address = dst_wallet._address
 
@@ -370,6 +373,7 @@ class AgentWalletEvm(USDNoEvmMixIn,
 
 #========================================================================
 #burn-related
+@enforce_types
 class BurnWallet:
     """This is a wallet-level interface to send funds-to-burn to.
     This is *not* a burner wallet, that's a completely different concept.
