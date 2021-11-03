@@ -1,3 +1,5 @@
+USE_EVM = True
+
 from enforce_typing import enforce_types
 from typing import List
 

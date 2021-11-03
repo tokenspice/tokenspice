@@ -11,4 +11,7 @@ tags
 .ipynb_checkpoints
 example_makefile
 .vim/
-tokenspiceenv/
+venv/
+outdir_csv/
+outdir_png/
+out.txt
