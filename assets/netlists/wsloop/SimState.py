@@ -32,7 +32,7 @@ class SimState(SimStateBase.SimStateBase):
         self._marketplace_tick_previous_add = 0
         
         #as ecosystem improves, these parameters may change / improve
-        self._marketplace_percent_toll_to_ocean = 0.002 #magic number
+        self._marketplace_percent_toll_to_network = 0.002 #magic number
         self._percent_burn: float = 0.05 #to burning, vs to DAO #magic number
 
         self._total_OCEAN_minted: float = 0.0
@@ -130,7 +130,7 @@ class SimState(SimStateBase.SimStateBase):
 
     #==============================================================      
     def marketplacePercentTollToOcean(self) -> float:
-        return self._marketplace_percent_toll_to_ocean
+        return self._marketplace_percent_toll_to_network
     
     def percentToBurn(self) -> float:
         return self._percent_burn

@@ -48,7 +48,7 @@ def testKPIs__Ratio_do_not_rail_to_less_than_1():
 def _testKPIs_Ratio(monthly_RND, monthly_sales, target):
     kpis = KPIs(time_step=1)
     kpis.grantTakersMonthlyRevenueNow = lambda : monthly_RND
-    kpis.oceanMonthlyRevenueNow = lambda : monthly_sales
+    kpis.monthlyNetworkRevenueNow = lambda : monthly_sales
     assert kpis.mktsRNDToSalesRatio() == target
 
 @enforce_types
@@ -128,8 +128,8 @@ def testKPIs__mktsSalesAndValuation():
     assert kpis.allmktsAnnualSalesNow() == 0.0
     assert kpis.allmktsAnnualSalesOneYearAgo() == 0.0
 
-    assert kpis.oceanMonthlyRevenueNow() == 0.0
-    assert kpis.oceanAnnualRevenueNow() == 0.0
+    assert kpis.monthlyNetworkRevenueNow() == 0.0
+    assert kpis.annualNetworkRevenueNow() == 0.0
     assert kpis.oceanAnnualRevenueOneYearAgo() == 0.0
 
     assert kpis.valuationPS(30.0) == 0.0
@@ -141,7 +141,7 @@ def testKPIs__mktsSalesAndValuation():
     #key numbers:
     #  sales_per_marketplace_per_s = 10.0 
     #  n_marketplaces = 5
-    #  marketplace_percent_toll_to_ocean = 0.10
+    #  marketplace_percent_toll_to_network = 0.10
     #  time_step = 3 (seconds per tick)
     #  num time steps = num elapsed ticks = 8
     #  elapsed time = 8 * 3 = 24
@@ -163,14 +163,14 @@ def testKPIs__mktsSalesAndValuation():
     assert kpis._allmktsSalesOverInterval(0,23-1) == (5*230.0)
     assert kpis._allmktsSalesOverInterval(1,24) == (5*230.0)
 
-    assert kpis.oceanRevenuePerSecond(0) == (5.0)
-    assert kpis._oceanRevenueOverInterval(0,24-1) == (5*24.0)
-    assert kpis._oceanRevenueOverInterval(0,23-1) == (5*23.0)
-    assert kpis._oceanRevenueOverInterval(1,24) == (5*23.0)
+    assert kpis.networkRevenuePerSecond(0) == (5.0)
+    assert kpis._networkRevenueOverInterval(0,24-1) == (5*24.0)
+    assert kpis._networkRevenueOverInterval(0,23-1) == (5*23.0)
+    assert kpis._networkRevenueOverInterval(1,24) == (5*23.0)
 
     assert kpis.onemktMonthlySalesNow() == (240.0) 
     assert kpis.allmktsMonthlySalesNow() == (1200.0)
-    assert kpis.oceanMonthlyRevenueNow() == (120.0)
+    assert kpis.monthlyNetworkRevenueNow() == (120.0)
 
     #valuations
     assert kpis.valuationPS(30.0) == (120.0 * 30.0)
