@@ -91,7 +91,8 @@ def _make_info(private_key_name:str):
     w = info.agent._wallet
     OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
     OCEAN1 = w.OCEAN()
-    OCEAN2 = fromBase18(w._cached_OCEAN_base)
+    assert w._cached_OCEAN_base is not None
+    OCEAN2 = fromBase18(int(w._cached_OCEAN_base))
     OCEAN3 = fromBase18(OCEAN_bal_base(w._address))
     assert OCEAN1 == OCEAN2 == OCEAN3
     
