@@ -7,11 +7,11 @@ import random
 from assets.agents.PublisherAgent import PublisherAgent
 from assets.agents.StakerspeculatorAgent import StakerspeculatorAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
-from engine.AgentBase import AgentBase
+from engine import AgentBase
 from web3tools.web3util import toBase18
                     
 @enforce_types
-class DataecosystemAgent(AgentBase):
+class DataecosystemAgent(AgentBase.AgentBaseNoEvm):
     """Will operate as a high-fidelity replacement for MarketplacesAgents,
     when it's ready."""
     def __init__(self, name: str, USD: float, OCEAN: float):

@@ -2,13 +2,13 @@ from enforce_typing import enforce_types
 import random
 
 from assets.agents.PoolAgent import PoolAgent
-from engine.AgentBase import AgentBase
+from engine import AgentBase
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 from web3tools.web3util import toBase18
 from util.constants import S_PER_DAY
 
 @enforce_types
-class PublisherAgent(AgentBase):
+class PublisherAgent(AgentBase.AgentBaseEvm):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
         

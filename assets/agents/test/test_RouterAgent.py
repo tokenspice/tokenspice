@@ -17,7 +17,7 @@ def test1():
     ss.time_step = S_PER_DAY
     state = SimState(ss)
 
-    class SimpleAgent(AgentBase.AgentBase):
+    class SimpleAgent(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)

@@ -3,10 +3,10 @@ log = logging.getLogger('agents')
 
 from enforce_typing import enforce_types
 
-from engine.AgentBase import AgentBase
+from engine import AgentBase
                         
 @enforce_types
-class GrantGivingAgent(AgentBase):
+class GrantGivingAgent(AgentBase.AgentBaseNoEvm):
     """
     Disburses funds at a fixed # evenly-spaced intervals.
     Same amount each time.

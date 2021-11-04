@@ -18,7 +18,7 @@ class KPIs(KPIsBase.KPIsBase):
     def tick():
         pass
 
-class SimpleAgent(AgentBase.AgentBase):
+class SimpleAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
 

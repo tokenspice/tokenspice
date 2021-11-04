@@ -3,7 +3,7 @@ import pytest
 from assets.agents.PoolAgent import PoolAgent
 from assets.agents.DataconsumerAgent import DataconsumerAgent
 from assets.agents.PublisherAgent import PublisherAgent
-from engine.AgentBase import AgentBase
+from engine import AgentBase
 from engine.AgentDict import AgentDict
 from util.constants import S_PER_HOUR
 
@@ -21,7 +21,7 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 
-class MockAgent(AgentBase):
+class MockAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
 

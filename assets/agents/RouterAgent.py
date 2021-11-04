@@ -5,11 +5,11 @@ from enforce_typing import enforce_types
 from typing import List
 import math
 
-from engine.AgentBase import AgentBase
+from engine import AgentBase
 from util.constants import S_PER_MONTH
     
 @enforce_types
-class RouterAgent(AgentBase):
+class RouterAgent(AgentBase.AgentBaseNoEvm):
     def __init__(self, name: str, USD: float, OCEAN: float,
                  receiving_agents : dict):
         """receiving_agents -- [agent_n_name] : method_for_%_going_to_agent_n

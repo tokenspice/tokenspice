@@ -34,7 +34,7 @@ def alice_private_key() -> str:
 
 @pytest.fixture
 def alice_agent():
-    class MockAgent(AgentBase.AgentBase):
+    class MockAgent(AgentBase.AgentBaseEvm):
         def takeStep(self, state):
             pass
     agent = MockAgent("agent1",USD=0.0,OCEAN=0.0)
@@ -42,7 +42,7 @@ def alice_agent():
     return agent
 
 @pytest.fixture
-def alice_agent_wallet() -> AgentWallet.AgentWallet:
+def alice_agent_wallet() -> AgentWallet.AgentWalletAbstract:
     return _alice_info().agent_wallet
 
 @pytest.fixture
@@ -66,7 +66,7 @@ def _make_info(private_key_name:str):
     class _Info:
         def __init__(self):
             self.private_key: Union[str, None] = None
-            self.agent_wallet: Union[AgentWallet.AgentWallet, None] = None
+            self.agent_wallet: Union[AgentWallet.AgentWalletAbstract, None] = None
             self.web3wallet: Union[web3wallet, None] = None
             self.DT: Union[datatoken, None] = None
             self.pool: Union[bool, None] = None
@@ -74,7 +74,7 @@ def _make_info(private_key_name:str):
 
     network = web3util.get_network()
     info.private_key = web3util.confFileValue(network, private_key_name)
-    info.agent_wallet = AgentWallet.AgentWallet(
+    info.agent_wallet = AgentWallet.AgentWalletEvm(
         OCEAN=_OCEAN_INIT,private_key=info.private_key)
     info.web3wallet = info.agent_wallet._web3wallet
 
