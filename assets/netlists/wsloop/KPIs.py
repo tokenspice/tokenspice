@@ -15,7 +15,7 @@ class KPIs(KPIsBase.KPIsBase):
                 
         #for these, append a new value with each tick
         self._granttakers_revenue_per_tick__per_tick: List[float] = []
-        self._sales_per_marketplace_per_s__per_tick: List[float] = []
+        self._consume_sales_per_marketplace_per_s__per_tick: List[float] = []
         self._n_marketplaces__per_tick: List[int] = []
         self._marketplace_percent_toll_to_network__per_tick: List[float] = []
         self._total_OCEAN_minted__per_tick: List[float] = []
@@ -30,7 +30,7 @@ class KPIs(KPIsBase.KPIsBase):
             state.grantTakersSpentAtTick())
         
         am = state.getAgent("marketplaces1")
-        self._sales_per_marketplace_per_s__per_tick.append(
+        self._consume_sales_per_marketplace_per_s__per_tick.append(
             am.salesPerMarketplacePerSecond())
         self._n_marketplaces__per_tick.append(am.numMarketplaces())
         self._marketplace_percent_toll_to_network__per_tick.append(
@@ -49,7 +49,7 @@ class KPIs(KPIsBase.KPIsBase):
 
     def tick(self) -> int:
         """# ticks since start of run"""
-        assert len(self._sales_per_marketplace_per_s__per_tick) == self._tick
+        assert len(self._consume_sales_per_marketplace_per_s__per_tick) == self._tick
         return self._tick
         
     #=======================================================================
@@ -96,7 +96,7 @@ class KPIs(KPIsBase.KPIsBase):
 
     def onemktSalesPerSecond(self, tick) -> float:
         """Returns onemkt's revenue per second at a given tick"""
-        return self._sales_per_marketplace_per_s__per_tick[tick]
+        return self._consume_sales_per_marketplace_per_s__per_tick[tick]
 
     #=======================================================================
     #revenue numbers: n marketplaces
@@ -117,7 +117,7 @@ class KPIs(KPIsBase.KPIsBase):
 
     def allmktsSalesPerSecond(self, tick) -> float:
         """Returns allmkt's revenue per second at a given tick"""
-        return self._sales_per_marketplace_per_s__per_tick[tick] \
+        return self._consume_sales_per_marketplace_per_s__per_tick[tick] \
             * self._n_marketplaces__per_tick[tick]
             
     def _allmktsSalesOverInterval(self, t1: int, t2:int) -> float:
@@ -150,7 +150,7 @@ class KPIs(KPIsBase.KPIsBase):
     
     def networkRevenuePerSecond(self, tick) -> float:
         """Returns Network Revenue per second at a given tick"""
-        onemkt_sales = self._sales_per_marketplace_per_s__per_tick[tick]
+        onemkt_sales = self._consume_sales_per_marketplace_per_s__per_tick[tick]
         n_mkts = self._n_marketplaces__per_tick[tick]
         allmkts_sales = onemkt_sales * n_mkts
         network_percent_toll = self._marketplace_percent_toll_to_network__per_tick[tick]

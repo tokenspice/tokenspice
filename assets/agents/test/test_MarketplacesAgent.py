@@ -61,20 +61,20 @@ def test4_takeStep():
 
     a.takeStep(state)
     assert a._n_marketplaces == (100.0*(1.0+g))
-    assert a._sales_per_marketplace_per_s == (2.0 * (1.0+g))
+    assert a._consume_sales_per_marketplace_per_s == (2.0 * (1.0+g))
     assert a._salesPerTick() == \
-        (a._n_marketplaces * a._sales_per_marketplace_per_s * S_PER_DAY)
+        (a._n_marketplaces * a._consume_sales_per_marketplace_per_s * S_PER_DAY)
     expected_toll = 0.05 * a._salesPerTick()
     assert state._toll_agent.USD == (3.0 + expected_toll)
 
     a.takeStep(state)
     assert a._n_marketplaces == (100.0*(1.0+g)*(1.0+g))
-    assert a._sales_per_marketplace_per_s == (2.0*(1.0+g)*(1.0+g))
+    assert a._consume_sales_per_marketplace_per_s == (2.0*(1.0+g)*(1.0+g))
 
     for i in range(10):
         a.takeStep(state)
     assert pytest.approx(a._n_marketplaces) == 100.0*math.pow(1.0+g,1+1+10)
-    assert pytest.approx(a._sales_per_marketplace_per_s) == \
+    assert pytest.approx(a._consume_sales_per_marketplace_per_s) == \
         2.0*math.pow(1.0+g,1+1+10)
 
 @enforce_types
