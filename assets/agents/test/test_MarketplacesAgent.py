@@ -45,7 +45,7 @@ def test4_takeStep():
         def __init__(self):
             self.kpis, self.ss = DummyKpis(), DummySS()
             self._toll_agent = DummyTollAgent()
-        def marketplacePercentTollToOcean(self) -> float:
+        def marketplacePercentTollToNetworkRevenue(self) -> float:
             return 0.05
         def getAgent(self, name: str):
             assert name == "toll_agent"

@@ -19,7 +19,7 @@ class BaseDummySimState:
         pass
     def getAgent(self, name: str):
         return self._marketplaces1_agent    
-    def marketplacePercentTollToOcean(self) -> float:
+    def marketplacePercentTollToNetworkRevenue(self) -> float:
         return 0.0
     def grantTakersSpentAtTick(self) -> float:
         return 0.0
@@ -113,7 +113,7 @@ def testKPIs__mktsSalesAndValuation():
         def __init__(self):
             self._marketplaces1_agent = DummyMarketplacesAgent()
 
-        def marketplacePercentTollToOcean(self) -> float:
+        def marketplacePercentTollToNetworkRevenue(self) -> float:
             return 0.10
 
     state = DummySimState()

@@ -34,7 +34,7 @@ class KPIs(KPIsBase.KPIsBase):
             am.salesPerMarketplacePerSecond())
         self._n_marketplaces__per_tick.append(am.numMarketplaces())
         self._marketplace_percent_toll_to_network__per_tick.append(
-            state.marketplacePercentTollToOcean())
+            state.marketplacePercentTollToNetworkRevenue())
 
         O_minted = state.totalOCEANminted()
         O_burned = state.totalOCEANburned()

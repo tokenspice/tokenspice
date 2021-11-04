@@ -43,7 +43,7 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
         #compute sales -> toll -> send funds accordingly
         #NOTE: we don't bother modeling marketplace profits or tracking mkt wallet $
         sales = self._salesPerTick()
-        toll = sales * state.marketplacePercentTollToOcean()
+        toll = sales * state.marketplacePercentTollToNetworkRevenue()
         toll_agent = state.getAgent(self._toll_agent_name)
         toll_agent.receiveUSD(toll)
 

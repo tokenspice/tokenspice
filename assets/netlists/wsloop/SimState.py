@@ -129,7 +129,7 @@ class SimState(SimStateBase.SimStateBase):
         self._speculation_valuation *= (1.0 + self._percent_increase_speculation_valuation_per_s * self.ss.time_step)
 
     #==============================================================      
-    def marketplacePercentTollToOcean(self) -> float:
+    def marketplacePercentTollToNetworkRevenue(self) -> float:
         return self._marketplace_percent_toll_to_network
     
     def percentToBurn(self) -> float:
