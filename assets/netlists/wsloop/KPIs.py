@@ -149,7 +149,7 @@ class KPIs(KPIsBase.KPIsBase):
         return self._salesOverInterval(t1, t2, self.networkRevenuePerSecond)
     
     def networkRevenuePerSecond(self, tick) -> float:
-        """Returns ocean's revenue per second at a given tick"""
+        """Returns Network Revenue per second at a given tick"""
         return self._sales_per_marketplace_per_s__per_tick[tick] \
             * self._n_marketplaces__per_tick[tick] \
             * self._marketplace_percent_toll_to_network__per_tick[tick]
