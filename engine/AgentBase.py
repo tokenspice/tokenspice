@@ -26,10 +26,6 @@ class AgentBaseAbstract(ABC):
     def __init__(self, name: str):
         self.name = name
         self._wallet: AgentWalletAbstract
-
-    @property
-    def use_EVM(self) -> bool:
-        pass
     
     @abstractmethod
     def takeStep(self, state): #this is where the Agent does *work*
@@ -76,10 +72,6 @@ class AgentBaseNoEvm(StrMixin,
         #postconditions
         assert self.USD() == USD
         assert self.OCEAN() == OCEAN
-
-    @property
-    def use_EVM(self) -> bool:
-        return False
         
 @enforce_types
 class AgentBaseEvm(StrMixin,
@@ -92,10 +84,6 @@ class AgentBaseEvm(StrMixin,
         #postconditions
         assert self.USD() == USD
         assert self.OCEAN() == OCEAN
-
-    @property
-    def use_EVM(self) -> bool:
-        return True
 
     @property
     def address(self) -> str:

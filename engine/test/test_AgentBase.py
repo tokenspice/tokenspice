@@ -24,7 +24,6 @@ def _MyTestAgent(use_EVM):
 @enforce_types
 def testInitEvm():
     agent = MyTestAgentEvm("agent1", USD=1.1, OCEAN=1.2)
-    assert agent.use_EVM == True
     assert agent.name == "agent1"
     assert agent.USD() == 1.1
     assert agent.OCEAN() == 1.2
@@ -35,7 +34,6 @@ def testInitEvm():
 @enforce_types
 def testInitNoEvm():
     agent = MyTestAgentNoEvm("agent1", USD=1.1, OCEAN=1.2)
-    assert agent.use_EVM == False
     assert agent.name == "agent1"
     assert agent.USD() == 1.1
     assert agent.OCEAN() == 1.2
