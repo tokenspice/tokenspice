@@ -150,9 +150,12 @@ class KPIs(KPIsBase.KPIsBase):
     
     def networkRevenuePerSecond(self, tick) -> float:
         """Returns Network Revenue per second at a given tick"""
-        return self._sales_per_marketplace_per_s__per_tick[tick] \
-            * self._n_marketplaces__per_tick[tick] \
-            * self._marketplace_percent_toll_to_network__per_tick[tick]
+        onemkt_sales = self._sales_per_marketplace_per_s__per_tick[tick]
+        n_mkts = self._n_marketplaces__per_tick[tick]
+        allmkts_sales = onemkt_sales * n_mkts
+        network_percent_toll = self._marketplace_percent_toll_to_network__per_tick[tick]
+        network_revenue = network_percent_toll * allmkts_sales
+        return network_revenue
     
     #=======================================================================
     def _salesOverInterval(self, t1: int, t2:int, revenuePerSecondFunc) \
