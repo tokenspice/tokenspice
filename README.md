@@ -271,7 +271,6 @@ Netlists are defined at `assets/netlists/`. You can reuse existing netlists or c
 
 TokenSPICE expects a netlist module (in a netlist.py file) that defines these specific classes and functions:
 
-- 'USE_EVM' boolean: if not using EVM, it employes speedups
 - `SimStrategy` class: simulation run parameters
 - `KPIs` class and `netlist_createLogData()` function: what metrics to log during the run
 - `netlist_plotInstructions()` function: how to plot the metrics after the run
