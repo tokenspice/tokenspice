@@ -3,7 +3,7 @@ import pytest
 
 from engine.AgentBase import *
 from engine.test.conftest import _DT_INIT, _DT_STAKE 
-    
+
 @enforce_types
 class MyTestAgentEvm(AgentBaseEvm):
     def takeStep(self, state):
@@ -14,6 +14,7 @@ class MyTestAgentNoEvm(AgentBaseNoEvm):
     def takeStep(self, state):
         pass
 
+@enforce_types
 def _MyTestAgent(use_EVM):
     if use_EVM:
         return MyTestAgentEvm

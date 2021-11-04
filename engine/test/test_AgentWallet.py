@@ -7,7 +7,7 @@ from engine.test.conftest import _DT_INIT, _DT_STAKE
 from web3engine import bfactory, bpool, datatoken
 from web3tools.web3util import fromBase18
 
-#=======================================================================
+@enforce_types
 def testUsdNoEvmWalletMixIn():
     m = UsdNoEvmWalletMixIn(USD=3.2)
     
@@ -36,6 +36,7 @@ def testUsdNoEvmWalletMixIn():
     assert m.totalUSDin() == approx(4.3)  # ""
 
 #=======================================================================
+@enforce_types
 def testOceanNoEvmWalletMixIn():
     m = OceanNoEvmWalletMixIn(OCEAN=3.2)
     
