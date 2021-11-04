@@ -155,10 +155,10 @@ class StrMixIn:
     def __str__(self) -> str:
         s = []
         s += ["AgentWallet={\n"]
-        s += ['USD=%s' % asCurrency(self.USD())]
-        s += ['; OCEAN=%.6f' % self.OCEAN()]
-        s += ['; total_USD_in=%s' % asCurrency(self.totalUSDin())]
-        s += ['; total_OCEAN_in=%.6f' % self.totalOCEANin()]
+        s += ['USD=%s' % asCurrency(self.USD())] #type:ignore
+        s += ['; OCEAN=%.6f' % self.OCEAN()] #type:ignore
+        s += ['; total_USD_in=%s' % asCurrency(self.totalUSDin())] #type:ignore
+        s += ['; total_OCEAN_in=%.6f' % self.totalOCEANin()] #type:ignore
         s += [" /AgentWallet}"]
         return "".join(s)
     
