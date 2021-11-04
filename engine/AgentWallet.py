@@ -268,7 +268,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         self.transferOCEAN(_BURN_WALLET, amt)
 
     def transferOCEAN(self, dst_wallet, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWalletAbstract) or \
+        assert isinstance(dst_wallet, AgentWalletEvm) or \
             isinstance(dst_wallet, BurnWallet)
         dst_address = dst_wallet._address
         
@@ -375,7 +375,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         self.resetCachedInfo()
 
     def transferDT(self, dst_wallet, DT: datatoken.Datatoken, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWalletAbstract) or \
+        assert isinstance(dst_wallet, AgentWalletEvm) or \
             isinstance(dst_wallet, BurnWallet)
         dst_address = dst_wallet._address
 
