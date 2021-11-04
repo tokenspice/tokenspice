@@ -19,13 +19,12 @@ from util.constants import SAFETY
 from util.strutil import StrMixin
 from web3tools.web3util import toBase18
 
-
 @enforce_types
 class AgentBaseAbstract(ABC):
 
-    @abstractmethod
-    def __init__(self, name: str, USD: float, OCEAN: float):
-        pass
+    def __init__(self, name: str):
+        self.name = name
+        self._wallet = None #filled in by children
 
     @property
     def use_EVM(self) -> bool:
@@ -36,37 +35,6 @@ class AgentBaseAbstract(ABC):
         pass
         
     #USD-related
-    @abstractmethod
-    def USD(self) -> float:
-        pass
-    
-    @abstractmethod
-    def receiveUSD(self, amount: float) -> None:
-        pass
-    
-    @abstractmethod
-    def _transferUSD(self, receiving_agent, amount: float) -> None:
-        """set receiver to None to model spending, without modeling receiver"""
-        pass
-            
-    #OCEAN-related
-    @abstractmethod
-    def OCEAN(self) -> float:
-        pass
-
-    @abstractmethod
-    def receiveOCEAN(self, amount: float) -> None:
-        pass
-
-    @abstractmethod
-    def _transferOCEAN(self, receiving_agent, amount: float) -> None:
-        """set receiver to None to model spending, without modeling receiver"""
-        pass
-                                        
-
-@enforce_types
-class UsdAgentMixIn:
-    #works for EVM and non-EVM
     def USD(self) -> float:
         return self._wallet.USD() 
     
@@ -81,9 +49,7 @@ class UsdAgentMixIn:
         else:
             self._wallet.withdrawUSD(amount)
 
-@enforce_types
-class OceanAgentMixIn:
-    #works for EVM and non-EVM
+    #OCEAN-related
     def OCEAN(self) -> float:
         return self._wallet.OCEAN() 
 
@@ -100,12 +66,10 @@ class OceanAgentMixIn:
 
 @enforce_types
 class AgentBaseNoEvm(StrMixin,
-                     UsdAgentMixIn,
-                     OceanAgentMixIn,
                      AgentBaseAbstract):
        
     def __init__(self, name: str, USD: float, OCEAN: float):
-        self.name = name
+        AgentBaseAbstract.__init__(self, name)
         self._wallet = AgentWallet.AgentWalletNoEvm(USD, OCEAN)
 
         #postconditions
@@ -118,12 +82,10 @@ class AgentBaseNoEvm(StrMixin,
         
 @enforce_types
 class AgentBaseEvm(StrMixin,
-                   UsdAgentMixIn,
-                   OceanAgentMixIn,
                    AgentBaseAbstract):
        
     def __init__(self, name: str, USD: float, OCEAN: float):
-        self.name = name
+        AgentBaseAbstract.__init__(self, name)
         self._wallet = AgentWallet.AgentWalletEvm(USD, OCEAN)
 
         #postconditions
