@@ -1,4 +1,4 @@
-import engine.AgentBase
+from engine import AgentBase
 from enforce_typing import enforce_types
 
 from assets.agents.MinterAgents import *
@@ -15,7 +15,7 @@ def testOCEANLinearMinterAgent():
 
     state = SimState.SimState(ss)
 
-    class SimpleAgent(engine.AgentBase.AgentBase):
+    class SimpleAgent(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
@@ -99,7 +99,7 @@ def _test_funcMinter(func):
 
     state = SimState.SimState(ss)
 
-    class SimpleAgent2(engine.AgentBase.AgentBase):
+    class SimpleAgent2(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent2("a1", 0.0, 0.0)

@@ -18,7 +18,7 @@ def test1():
 
     state = SimState(ss)
 
-    class SimpleAgent(AgentBase.AgentBase):
+    class SimpleAgent(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)

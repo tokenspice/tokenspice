@@ -3,14 +3,13 @@ import random
 from typing import List
 
 from assets.agents.PoolAgent import PoolAgent
-from engine.AgentBase import AgentBase
+from engine import AgentBase
 from web3engine import bpool, datatoken, globaltokens
 from web3tools.web3util import fromBase18, toBase18
 from util import constants
 
-
 @enforce_types
-class DataconsumerAgent(AgentBase):
+class DataconsumerAgent(AgentBase.AgentBaseEvm):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
 

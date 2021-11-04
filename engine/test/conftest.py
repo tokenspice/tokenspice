@@ -8,7 +8,7 @@ from typing import Union
 
 from engine import AgentWallet, AgentBase
 from web3tools import web3util, web3wallet
-from web3tools.web3util import toBase18
+from web3tools.web3util import fromBase18, toBase18
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 
 
@@ -37,15 +37,10 @@ def alice_private_key() -> str:
 
 @pytest.fixture
 def alice_agent():
-    class MockAgent(AgentBase.AgentBase):
-        def takeStep(self, state):
-            pass
-    agent = MockAgent("agent1",USD=0.0,OCEAN=0.0)
-    agent._wallet = _alice_info().agent_wallet
-    return agent
+    return _alice_info().agent
 
 @pytest.fixture
-def alice_agent_wallet() -> AgentWallet.AgentWallet:
+def alice_agent_wallet() -> AgentWallet.AgentWalletEvm:
     return _alice_info().agent_wallet
 
 @pytest.fixture
@@ -69,20 +64,38 @@ def _make_info(private_key_name:str):
     class _Info:
         def __init__(self):
             self.private_key: Union[str, None] = None
-            self.agent_wallet: Union[AgentWallet.AgentWallet, None] = None
+            self.agent_wallet: Union[AgentWallet.AgentWalletEvm, None] = None
             self.web3wallet: Union[web3wallet, None] = None
             self.DT: Union[datatoken, None] = None
             self.pool: Union[bool, None] = None
+            self.agent: Union[AgentBase.AgentBaseEvm, None] = None
     info = _Info()
 
     network = web3util.get_network()
     info.private_key = web3util.confFileValue(network, private_key_name)
-    info.agent_wallet = AgentWallet.AgentWallet(
+    info.agent_wallet = AgentWallet.AgentWalletEvm(
         OCEAN=_OCEAN_INIT,private_key=info.private_key)
     info.web3wallet = info.agent_wallet._web3wallet
 
     info.DT = _createDT(info.web3wallet)
     info.pool = _createPool(DT=info.DT, web3_w=info.web3wallet)
+
+    class MockAgent(AgentBase.AgentBaseEvm):
+        def takeStep(self, state):
+            pass
+    info.agent = MockAgent("agent1",USD=0.0,OCEAN=0.0)
+    info.agent._wallet = info.agent_wallet
+    info.agent._wallet.resetCachedInfo() #needed b/c we munged the wallet
+
+    #postconditions
+    w = info.agent._wallet
+    OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
+    OCEAN1 = w.OCEAN()
+    assert w._cached_OCEAN_base is not None
+    OCEAN2 = fromBase18(int(w._cached_OCEAN_base))
+    OCEAN3 = fromBase18(OCEAN_bal_base(w._address))
+    assert OCEAN1 == OCEAN2 == OCEAN3
+    
     return info
 
 @enforce_types

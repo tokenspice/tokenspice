@@ -1,13 +1,13 @@
 from enforce_typing import enforce_types
 import random
 
-from engine.AgentBase import AgentBase
+from engine import AgentBase
 from web3engine import bfactory, bpool, btoken, datatoken, dtfactory
 from web3tools.web3util import toBase18
 from util import constants
                     
 @enforce_types
-class StakerspeculatorAgent(AgentBase):
+class StakerspeculatorAgent(AgentBase.AgentBaseEvm):
     """Speculates by staking and unstaking"""
     
     def __init__(self, name: str, USD: float, OCEAN: float):

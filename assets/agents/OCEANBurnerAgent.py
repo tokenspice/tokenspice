@@ -3,10 +3,10 @@ log = logging.getLogger('agents')
 
 from enforce_typing import enforce_types
 
-from engine.AgentBase import AgentBase
+from engine import AgentBase
 
 @enforce_types
-class OCEANBurnerAgent(AgentBase):
+class OCEANBurnerAgent(AgentBase.AgentBaseNoEvm):
     def takeStep(self, state):
         if self.USD() > 0.0:
             #OCEAN price will go up as we buy. Reflect it here.

@@ -1,12 +1,12 @@
 from enforce_typing import enforce_types
 import random
 
-from engine.AgentBase import AgentBase
+from engine import AgentBase
 from web3engine import bpool, datatoken, globaltokens
 from web3tools.web3util import toBase18
             
 @enforce_types
-class PoolAgent(AgentBase):    
+class PoolAgent(AgentBase.AgentBaseEvm):
     def __init__(self, name: str, pool:bpool.BPool):
         super().__init__(name, USD=0.0, OCEAN=0.0)
         self._pool:bpool.BPool = pool

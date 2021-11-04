@@ -4,7 +4,7 @@ log = logging.getLogger('minteragents')
 from enforce_typing import enforce_types
 import math
 
-from engine.AgentBase import AgentBase    
+from engine import AgentBase    
 from util.constants import S_PER_YEAR, BITCOIN_NUM_HALF_LIVES
 
 #====================================================================
@@ -16,7 +16,7 @@ Minting schedule is linear (flat): same # OCEAN tokens each time, n times.
 """
 
 @enforce_types
-class OCEANLinearMinterAgent(AgentBase):
+class OCEANLinearMinterAgent(AgentBase.AgentBaseNoEvm):
     def __init__(self, name: str, 
                  receiving_agent_name: str,
                  total_OCEAN_to_mint: float,
@@ -210,7 +210,7 @@ class RampedExpFunc:
         return 1.0 - math.pow(0.5,t/H)
     
 @enforce_types
-class OCEANFuncMinterAgent(AgentBase):
+class OCEANFuncMinterAgent(AgentBase.AgentBaseNoEvm):
     def __init__(self, name: str, 
                  receiving_agent_name: str,
                  total_OCEAN_to_mint: float,
