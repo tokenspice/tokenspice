@@ -81,6 +81,10 @@ class AgentWalletAbstract(ABC):
 
 @enforce_types
 class UsdNoEvmWalletMixIn:
+    def __init__(self, USD:float):
+        self._USD = USD
+        self._total_USD_in:float = USD
+        
     def USD(self) -> float:
         return self._USD
         
@@ -104,6 +108,7 @@ class UsdNoEvmWalletMixIn:
 
     def transferUSD(self, dst_wallet, amt: float) -> None:
         assert isinstance(dst_wallet, AgentWalletAbstract)
+        
         self.withdrawUSD(amt)
         dst_wallet.depositUSD(amt)
 
@@ -112,6 +117,10 @@ class UsdNoEvmWalletMixIn:
 
 @enforce_types
 class OceanNoEvmWalletMixIn:
+    def __init__(self, OCEAN:float):
+        self._OCEAN = OCEAN
+        self._total_OCEAN_in:float = OCEAN
+        
     def OCEAN(self) -> float:
         return self._OCEAN
         
@@ -165,13 +174,12 @@ class AgentWalletNoEvm(UsdNoEvmWalletMixIn,
 
     def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
         assert private_key is None, "if no evm, no private key"
-        
-        self._USD:float = USD
-        self._OCEAN:float = OCEAN
-        
-        self._total_USD_in:float = USD
-        self._total_OCEAN_in:float = OCEAN
-    
+        UsdNoEvmWalletMixIn.__init__(self, USD)
+        OceanNoEvmWalletMixIn.__init__(self, OCEAN)    
+
+        #postconditions
+        assert self.USD() == USD
+        assert self.OCEAN() == OCEAN
     
 @enforce_types
 class AgentWalletEvm(UsdNoEvmWalletMixIn,
@@ -189,6 +197,8 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
     """
 
     def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
+        UsdNoEvmWalletMixIn.__init__(self, USD)
+        
         if private_key is None:
             self._web3wallet = web3wallet.randomWeb3Wallet()
         else:
@@ -197,17 +207,30 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         #Give the new wallet ETH to pay gas fees (but don't track otherwise)
         self._web3wallet.fundFromAbove(toBase18(0.01)) #magic number
         
-        #USD
-        self._USD:float = USD #lump in ETH too
-
-        #OCEAN
+        #OCEAN is tracked in EVM, not here. But we cache here for speed
+        self._burnOCEAN_nocache() #ensure 0 OCEAN (eg >1 unit tests)
+        self._cached_OCEAN_base: typing.Union[int,None] = None
+        self._total_OCEAN_in:float = OCEAN
+        assert self.OCEAN() == 0.0
+        
         globaltokens.mintOCEAN(address=self._web3wallet.address,
                                value_base=toBase18(OCEAN))
-        self._cached_OCEAN_base: typing.Union[int,None] = None #for speed
+        self._cached_OCEAN_base = None
+        
+        #postconditions
+        assert self.USD() == USD
+        assert self.OCEAN() == OCEAN
 
-        #amount 
-        self._total_USD_in:float = USD
-        self._total_OCEAN_in:float = OCEAN
+    def _burnOCEAN_nocache(self):
+        """
+        If this agent has any OCEAN, burn it. 
+        Explicitly don't use caching, so __init__ can safely call this
+        """
+        OCEAN_token = globaltokens.OCEANtoken()
+        OCEAN_balance_base = OCEAN_token.balanceOf_base(self._address)
+        if OCEAN_balance_base  > 0:
+            OCEAN_token.transfer(_BURN_WALLET._address, OCEAN_balance_base,
+                                 self._web3wallet)
         
     def resetCachedInfo(self):
         self._cached_OCEAN_base = None
@@ -227,9 +250,13 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         return fromBase18(self._OCEAN_base())
 
     def _OCEAN_base(self) -> int:
+        OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
         if self._cached_OCEAN_base is None:
-            self._cached_OCEAN_base = globaltokens.OCEANtoken().balanceOf_base(self._address)
-        return self._cached_OCEAN_base            
+            self._cached_OCEAN_base = OCEAN_bal_base(self._address)
+                   
+        assert self._cached_OCEAN_base == OCEAN_bal_base(self._address)
+            
+        return self._cached_OCEAN_base
         
     def depositOCEAN(self, amt: float) -> None:
         assert amt >= 0.0

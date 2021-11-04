@@ -1,12 +1,68 @@
 from enforce_typing import enforce_types
 import pytest
+from pytest import approx
 
 from engine.AgentWallet import *
 from engine.test.conftest import _DT_INIT, _DT_STAKE 
 from web3engine import bfactory, bpool, datatoken
-
+from web3tools.web3util import fromBase18
 
 #=======================================================================
+def testUsdNoEvmWalletMixIn():
+    m = UsdNoEvmWalletMixIn(USD=3.2)
+    
+    assert m._USD == 3.2
+    assert m.USD() == 3.2
+    assert m._total_USD_in == 3.2
+    assert m.totalUSDin() == 3.2
+
+    m.depositUSD(1.1)
+    assert m._USD == approx(4.3)
+    assert m.USD() == approx(4.3)
+    assert m._total_USD_in == approx(4.3)
+    assert m.totalUSDin() == approx(4.3)
+
+    m.withdrawUSD(0.1)
+    assert m._USD == approx(4.2)
+    assert m.USD() == approx(4.2)
+    assert m._total_USD_in == approx(4.3) #don't shrink; it tracks total income
+    assert m.totalUSDin() == approx(4.3)  # ""
+
+    w2 = AgentWalletNoEvm()
+    m.transferUSD(w2, 0.2)
+    assert m._USD == approx(4.0)
+    assert m.USD() == approx(4.0)
+    assert m._total_USD_in == approx(4.3) #don't shrink; it tracks total income
+    assert m.totalUSDin() == approx(4.3)  # ""
+
+#=======================================================================
+def testOceanNoEvmWalletMixIn():
+    m = OceanNoEvmWalletMixIn(OCEAN=3.2)
+    
+    assert m._OCEAN == 3.2
+    assert m.OCEAN() == 3.2
+    assert m._total_OCEAN_in == 3.2
+    assert m.totalOCEANin() == 3.2
+
+    m.depositOCEAN(1.1)
+    assert m._OCEAN == approx(4.3)
+    assert m.OCEAN() == approx(4.3)
+    assert m._total_OCEAN_in == approx(4.3)
+    assert m.totalOCEANin() == approx(4.3)
+
+    m.withdrawOCEAN(0.1)
+    assert m._OCEAN == approx(4.2)
+    assert m.OCEAN() == approx(4.2)
+    assert m._total_OCEAN_in == approx(4.3) #don't shrink; it tracks total income
+    assert m.totalOCEANin() == approx(4.3)  # ""
+
+    w2 = AgentWalletNoEvm()
+    m.transferOCEAN(w2, 0.2)
+    assert m._OCEAN == approx(4.0)
+    assert m.OCEAN() == approx(4.0)
+    assert m._total_OCEAN_in == approx(4.3) #don't shrink; it tracks total income
+    assert m.totalOCEANin() == approx(4.3)  # ""
+
 #=======================================================================
 #=======================================================================
 #BOTH AgentWalletEvm *and* AgentWalletNoEvm
@@ -238,13 +294,17 @@ def test_buyDT(alice_info):
 @enforce_types
 def test_stakeOCEAN(alice_info):
     agent_wallet, pool = alice_info.agent_wallet, alice_info.pool
+    OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
     
-    BPT_before, OCEAN_before = agent_wallet.BPT(pool), agent_wallet.OCEAN()
+    BPT_before, OCEAN1 = agent_wallet.BPT(pool), agent_wallet.OCEAN()
+    OCEAN2 = fromBase18(agent_wallet._cached_OCEAN_base)
+    OCEAN3 = fromBase18(OCEAN_bal_base(agent_wallet._address))
+    assert OCEAN1 == OCEAN2 == OCEAN3
     
     agent_wallet.stakeOCEAN(OCEAN_stake=20.0, pool=pool)
     
     OCEAN_after, BPT_after = agent_wallet.OCEAN(), agent_wallet.BPT(pool)
-    assert OCEAN_after == (OCEAN_before - 20.0)
+    assert OCEAN_after == (OCEAN1 - 20.0)
     assert BPT_after > BPT_before
 
 @enforce_types

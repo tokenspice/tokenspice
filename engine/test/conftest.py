@@ -8,7 +8,7 @@ from typing import Union
 
 from engine import AgentWallet, AgentBase
 from web3tools import web3util, web3wallet
-from web3tools.web3util import toBase18
+from web3tools.web3util import fromBase18, toBase18
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
 
 
@@ -84,6 +84,15 @@ def _make_info(private_key_name:str):
             pass
     info.agent = MockAgent("agent1",USD=0.0,OCEAN=0.0)
     info.agent._wallet = info.agent_wallet
+    info.agent._wallet.resetCachedInfo() #needed b/c we munged the wallet
+
+    #postconditions
+    w = info.agent._wallet
+    OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
+    OCEAN1 = w.OCEAN()
+    OCEAN2 = fromBase18(w._cached_OCEAN_base)
+    OCEAN3 = fromBase18(OCEAN_bal_base(w._address))
+    assert OCEAN1 == OCEAN2 == OCEAN3
     
     return info
 
