@@ -107,13 +107,15 @@ def netlist_plotInstructions(header: List[str], values):
 
     :param: header: List[str] holding 'Tick', 'Second', ...
     :param: values: 2d array of float [tick_i, valuetype_i]
+    :return: x_label: str -- e.g. "Day", "Month", "Year"
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
     from util.plotutil import YParam, arrayToFloatList, \
         LINEAR, MULT1, COUNT, DOLLAR
     
-    x = arrayToFloatList(values[:,header.index("Day")])
+    x_label = "Year"
+    x = arrayToFloatList(values[:,header.index(x_label)])
     
     y_params = [
         YParam(["publisher_OCEAN_networth","consumer_OCEAN_networth","stakerSpeculator_OCEAN_networth","speculator_OCEAN_networth","maliciousPublisher_OCEAN_networth"],
@@ -123,4 +125,4 @@ def netlist_plotInstructions(header: List[str], values):
         YParam(["n_pools"],  ["# pools"],  "n_pools",  LINEAR,MULT1,COUNT)
     ]
 
-    return (x, y_params)
+    return (x_label, x, y_params)

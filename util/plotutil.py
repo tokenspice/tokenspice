@@ -121,7 +121,7 @@ def _expandBOTHinY(y_params: List[YParam]) -> List[YParam]:
 
 @enforce_types
 def _xyToPngs(header: List[str], values,
-              x: List[float], y_params: List[YParam],
+              x_label: str, x: List[float], y_params: List[YParam],
               output_png_dir: str):
     """
     Given actual data (header, values) and what to plot (x, y_params),
@@ -129,6 +129,7 @@ def _xyToPngs(header: List[str], values,
 
     :param: header: List[str] holding 'Tick', 'Second', ...
     :param: values: 2d array of float [tick_i, valuetype_i]
+    :param: x_label: str -- e.g. "Day", "Month", "Year"
     :param: x: x-axis info on how to plot
     :param: y_params: y-axis info on how to plot
     :param: output_png_dir: path of output png to be created and filled
@@ -146,7 +147,7 @@ def _xyToPngs(header: List[str], values,
 
         fig, ax = pyplot.subplots()
         
-        ax.set_xlabel("Day")
+        ax.set_xlabel(x_label)
         
         for y, label in zip(ys, p.labels):
             if label == "":
@@ -241,8 +242,8 @@ def csvToPngs(input_csv_filename: str, output_png_dir: str,
     """
     (header, values) = _csvToHeaderValues(input_csv_filename)
 
-    (x, y_params) = netlist_plot_instrs_func(header, values)
+    (x_label, x, y_params) = netlist_plot_instrs_func(header, values)
     y_params = _expandBOTHinY(y_params)
 
-    _xyToPngs(header, values, x, y_params, output_png_dir)
+    _xyToPngs(header, values, x_label, x, y_params, output_png_dir)
 
