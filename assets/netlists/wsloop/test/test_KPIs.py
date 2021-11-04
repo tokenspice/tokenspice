@@ -8,7 +8,7 @@ from util.constants import S_PER_DAY
 class BaseDummyMarketplacesAgent:
     def numMarketplaces(self) -> float:
         return 0.0
-    def salesPerMarketplacePerSecond(self) -> float:
+    def consumeSalesPerMarketplacePerSecond(self) -> float:
         return 0.0
 
 @enforce_types
@@ -106,7 +106,7 @@ def testKPIs__mktsSalesAndValuation():
         def numMarketplaces(self) -> float:
             return 5.0
 
-        def salesPerMarketplacePerSecond(self) -> float:
+        def consumeSalesPerMarketplacePerSecond(self) -> float:
             return 10.0
 
     class DummySimState(BaseDummySimState):
@@ -181,7 +181,7 @@ def testKPIs__mintAndBurn():
         def numMarketplaces(self) -> float:
             return 0.0
 
-        def salesPerMarketplacePerSecond(self) -> float:
+        def consumeSalesPerMarketplacePerSecond(self) -> float:
             return 0.0
 
     class DummySimState(BaseDummySimState):

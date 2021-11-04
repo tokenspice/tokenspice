@@ -31,7 +31,7 @@ class KPIs(KPIsBase.KPIsBase):
         
         am = state.getAgent("marketplaces1")
         self._consume_sales_per_marketplace_per_s__per_tick.append(
-            am.salesPerMarketplacePerSecond())
+            am.consumeSalesPerMarketplacePerSecond())
         self._n_marketplaces__per_tick.append(am.numMarketplaces())
         self._marketplace_percent_toll_to_network__per_tick.append(
             state.marketplacePercentTollToNetworkRevenue())

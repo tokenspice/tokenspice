@@ -9,7 +9,7 @@ from util.constants import S_PER_DAY, S_PER_YEAR
 def test1_basic():
     a = MarketplacesAgent("mkts", 0.0, 0.0, "toll", 10.0, 0.1, 1)
     assert a.numMarketplaces() == 10.0
-    assert a.salesPerMarketplacePerSecond() == 0.1
+    assert a.consumeSalesPerMarketplacePerSecond() == 0.1
 
 @enforce_types
 def test2_growthRatePerTick_000():

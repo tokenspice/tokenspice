@@ -28,7 +28,7 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
     def numMarketplaces(self) -> float:
         return self._n_marketplaces
         
-    def salesPerMarketplacePerSecond(self) -> float:
+    def consumeSalesPerMarketplacePerSecond(self) -> float:
         return self._consume_sales_per_marketplace_per_s
         
     def takeStep(self, state):
