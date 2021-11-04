@@ -68,6 +68,7 @@ def _make_info(private_key_name:str):
             self.web3wallet: Union[web3wallet, None] = None
             self.DT: Union[datatoken, None] = None
             self.pool: Union[bool, None] = None
+            self.agent: Union[AgentBase.AgentBaseEvm, None] = None
     info = _Info()
 
     network = web3util.get_network()
