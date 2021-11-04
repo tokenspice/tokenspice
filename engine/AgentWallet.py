@@ -1,6 +1,6 @@
 """
 Main classes in this module:
--AgentWalletBase - abstract interface
+-AgentWalletAbstract - abstract interface
 -AgentWalletNoEvm - no-EVM wallet
 -AgentWalletEvm - EVM wallet
 

@@ -13,7 +13,8 @@ from abc import ABC, abstractmethod
 from enforce_typing import enforce_types
 import typing
 
-from engine import AgentWallet
+from engine.AgentWallet import AgentWalletAbstract, AgentWalletEvm, \
+    AgentWalletNoEvm
 from web3engine import bpool, datatoken, globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
@@ -24,7 +25,7 @@ class AgentBaseAbstract(ABC):
 
     def __init__(self, name: str):
         self.name = name
-        self._wallet = None #filled in by children
+        self._wallet: AgentWalletAbstract
 
     @property
     def use_EVM(self) -> bool:
@@ -70,7 +71,7 @@ class AgentBaseNoEvm(StrMixin,
        
     def __init__(self, name: str, USD: float, OCEAN: float):
         AgentBaseAbstract.__init__(self, name)
-        self._wallet = AgentWallet.AgentWalletNoEvm(USD, OCEAN)
+        self._wallet:AgentWalletNoEvm = AgentWalletNoEvm(USD, OCEAN)
 
         #postconditions
         assert self.USD() == USD
@@ -86,7 +87,7 @@ class AgentBaseEvm(StrMixin,
        
     def __init__(self, name: str, USD: float, OCEAN: float):
         AgentBaseAbstract.__init__(self, name)
-        self._wallet = AgentWallet.AgentWalletEvm(USD, OCEAN)
+        self._wallet:AgentWalletEvm = AgentWalletEvm(USD, OCEAN)
 
         #postconditions
         assert self.USD() == USD
