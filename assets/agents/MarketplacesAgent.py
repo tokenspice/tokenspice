@@ -14,7 +14,7 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
                  name: str, USD: float, OCEAN: float,
                  toll_agent_name: str,
                  n_marketplaces: float,
-                 revenue_per_marketplace_per_s: float,
+                 sales_per_marketplace_per_s: float,
                  time_step: int,
                  ):
         super().__init__(name, USD, OCEAN)
@@ -22,14 +22,14 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
 
         #set initial values. These grow over time.
         self._n_marketplaces: float = n_marketplaces
-        self._revenue_per_marketplace_per_s: float = revenue_per_marketplace_per_s
+        self._sales_per_marketplace_per_s: float = sales_per_marketplace_per_s
         self._time_step: int = time_step
 
     def numMarketplaces(self) -> float:
         return self._n_marketplaces
         
-    def revenuePerMarketplacePerSecond(self) -> float:
-        return self._revenue_per_marketplace_per_s
+    def salesPerMarketplacePerSecond(self) -> float:
+        return self._sales_per_marketplace_per_s
         
     def takeStep(self, state):
         ratio = state.kpis.mktsRNDToSalesRatio()
@@ -38,7 +38,7 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
         
         #*grow* the number of marketplaces, and revenue per marketplace
         self._n_marketplaces *= (1.0 + mkts_growth_rate_per_tick)
-        self._revenue_per_marketplace_per_s *= (1.0 + mkts_growth_rate_per_tick)
+        self._sales_per_marketplace_per_s *= (1.0 + mkts_growth_rate_per_tick)
 
         #compute sales -> toll -> send funds accordingly
         #NOTE: we don't bother modeling marketplace profits or tracking mkt wallet $
@@ -48,7 +48,7 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
         toll_agent.receiveUSD(toll)
 
     def _salesPerTick(self) -> float:
-        return self._n_marketplaces * self._revenue_per_marketplace_per_s \
+        return self._n_marketplaces * self._sales_per_marketplace_per_s \
             * self._time_step
 
     def _growthRatePerTick(self, g_per_year: float) -> float:

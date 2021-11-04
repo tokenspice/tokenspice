@@ -8,7 +8,7 @@ from util.constants import S_PER_DAY
 class BaseDummyMarketplacesAgent:
     def numMarketplaces(self) -> float:
         return 0.0
-    def revenuePerMarketplacePerSecond(self) -> float:
+    def salesPerMarketplacePerSecond(self) -> float:
         return 0.0
 
 @enforce_types
@@ -101,12 +101,12 @@ def testKPIs_GrantTakersRevenue():
     assert pytest.approx(kpis.grantTakersMonthlyRevenueNow()) == 3e3
 
 @enforce_types
-def testKPIs__mktsRevenueAndValuation():
+def testKPIs__mktsSalesAndValuation():
     class DummyMarketplacesAgent(BaseDummyMarketplacesAgent):
         def numMarketplaces(self) -> float:
             return 5.0
 
-        def revenuePerMarketplacePerSecond(self) -> float:
+        def salesPerMarketplacePerSecond(self) -> float:
             return 10.0
 
     class DummySimState(BaseDummySimState):
@@ -120,13 +120,13 @@ def testKPIs__mktsRevenueAndValuation():
     kpis = KPIs(time_step=3)
 
     #base case - no time passed        
-    assert kpis.onemktMonthlyRevenueNow() == 0.0
-    assert kpis.onemktAnnualRevenueNow() == 0.0
-    assert kpis.onemktAnnualRevenueOneYearAgo() == 0.0
+    assert kpis.onemktMonthlySalesNow() == 0.0
+    assert kpis.onemktAnnualSalesNow() == 0.0
+    assert kpis.onemktAnnualSalesOneYearAgo() == 0.0
 
-    assert kpis.allmktsMonthlyRevenueNow() == 0.0
-    assert kpis.allmktsAnnualRevenueNow() == 0.0
-    assert kpis.allmktsAnnualRevenueOneYearAgo() == 0.0
+    assert kpis.allmktsMonthlySalesNow() == 0.0
+    assert kpis.allmktsAnnualSalesNow() == 0.0
+    assert kpis.allmktsAnnualSalesOneYearAgo() == 0.0
 
     assert kpis.oceanMonthlyRevenueNow() == 0.0
     assert kpis.oceanAnnualRevenueNow() == 0.0
@@ -139,7 +139,7 @@ def testKPIs__mktsRevenueAndValuation():
         kpis.takeStep(state)
 
     #key numbers:
-    #  revenue_per_marketplace_per_s = 10.0 
+    #  sales_per_marketplace_per_s = 10.0 
     #  n_marketplaces = 5
     #  marketplace_percent_toll_to_ocean = 0.10
     #  time_step = 3 (seconds per tick)
@@ -151,25 +151,25 @@ def testKPIs__mktsRevenueAndValuation():
     #  rev all mkts = 10 * 24 * 5 = 1200
     #  rev ocean = 10 * 24 * 5 * 0.10 = 120
 
-    assert kpis.onemktRevenuePerSecond(0) == (10.0)
-    assert kpis._onemktRevenueOverInterval(0,24-1) == (240.0)
-    assert kpis._onemktRevenueOverInterval(0,23-1) == (230.0)
-    assert kpis._onemktRevenueOverInterval(0,23-2) == (220.0)
-    assert kpis._onemktRevenueOverInterval(1,24) == (230.0)
-    assert kpis._onemktRevenueOverInterval(2,24) == (220.0)
+    assert kpis.onemktSalesPerSecond(0) == (10.0)
+    assert kpis._onemktSalesOverInterval(0,24-1) == (240.0)
+    assert kpis._onemktSalesOverInterval(0,23-1) == (230.0)
+    assert kpis._onemktSalesOverInterval(0,23-2) == (220.0)
+    assert kpis._onemktSalesOverInterval(1,24) == (230.0)
+    assert kpis._onemktSalesOverInterval(2,24) == (220.0)
 
-    assert kpis.allmktsRevenuePerSecond(0) == (50.0)
-    assert kpis._allmktsRevenueOverInterval(0,24-1) == (5*240.0)
-    assert kpis._allmktsRevenueOverInterval(0,23-1) == (5*230.0)
-    assert kpis._allmktsRevenueOverInterval(1,24) == (5*230.0)
+    assert kpis.allmktsSalesPerSecond(0) == (50.0)
+    assert kpis._allmktsSalesOverInterval(0,24-1) == (5*240.0)
+    assert kpis._allmktsSalesOverInterval(0,23-1) == (5*230.0)
+    assert kpis._allmktsSalesOverInterval(1,24) == (5*230.0)
 
     assert kpis.oceanRevenuePerSecond(0) == (5.0)
     assert kpis._oceanRevenueOverInterval(0,24-1) == (5*24.0)
     assert kpis._oceanRevenueOverInterval(0,23-1) == (5*23.0)
     assert kpis._oceanRevenueOverInterval(1,24) == (5*23.0)
 
-    assert kpis.onemktMonthlyRevenueNow() == (240.0) 
-    assert kpis.allmktsMonthlyRevenueNow() == (1200.0)
+    assert kpis.onemktMonthlySalesNow() == (240.0) 
+    assert kpis.allmktsMonthlySalesNow() == (1200.0)
     assert kpis.oceanMonthlyRevenueNow() == (120.0)
 
     #valuations
@@ -181,7 +181,7 @@ def testKPIs__mintAndBurn():
         def numMarketplaces(self) -> float:
             return 0.0
 
-        def revenuePerMarketplacePerSecond(self) -> float:
+        def salesPerMarketplacePerSecond(self) -> float:
             return 0.0
 
     class DummySimState(BaseDummySimState):

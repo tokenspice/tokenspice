@@ -51,7 +51,7 @@ class SimState(SimStateBase.SimStateBase):
             name = "marketplaces1", USD=0.0, OCEAN=0.0,
             toll_agent_name = "opc_address",
             n_marketplaces = float(ss.init_n_marketplaces),
-            revenue_per_marketplace_per_s = 20e3 / S_PER_MONTH, #magic number
+            sales_per_marketplace_per_s = 20e3 / S_PER_MONTH, #magic number
             time_step = self.ss.time_step,
             ))
 
