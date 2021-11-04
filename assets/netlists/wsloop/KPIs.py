@@ -2,7 +2,7 @@ from enforce_typing import enforce_types
 import math
 from typing import List
 
-from engine import KPIsBase
+from engine import KPIsBase, SimStrategyBase
 from util import valuation
 from util.constants import S_PER_YEAR, S_PER_MONTH, INF
 from util.strutil import prettyBigNum
@@ -10,9 +10,10 @@ from util.strutil import prettyBigNum
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
 
-    def __init__(self, time_step: int):
-        super().__init__(time_step)
-                
+    def __init__(self, ss:SimStrategyBase.SimStrategyBase):
+        super().__init__(ss.time_step)
+        self.ss = ss
+
         #for these, append a new value with each tick
         self._granttakers_revenue_per_tick__per_tick: List[float] = []
         self._consume_sales_per_marketplace_per_s__per_tick: List[float] = []

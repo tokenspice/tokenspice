@@ -117,7 +117,7 @@ class SimState(SimStateBase.SimStateBase):
             self.agents[agent.name] = agent
 
         #track certain metrics over time, so that we don't have to load
-        self.kpis = KPIs(self.ss.time_step)
+        self.kpis = KPIs(self.ss)
                     
     def takeStep(self) -> None:
         """This happens once per tick"""
