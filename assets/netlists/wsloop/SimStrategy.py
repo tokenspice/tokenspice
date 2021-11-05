@@ -12,7 +12,7 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 
         #===set base-class values we want for this netlist====
         self.setTimeStep(24 * S_PER_HOUR)
-        self.setMaxTime(10, 'years') #typical runs: 10 years, 20 years, 150 years
+        self.setMaxTime(2, 'years') #typical runs: 10 years, 20 years, 150 years
 
         #===new attributes specific to this netlist===
 
