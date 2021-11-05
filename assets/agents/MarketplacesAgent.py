@@ -41,15 +41,17 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
         self._consume_sales_per_marketplace_per_s *= (1.0 + mkts_growth_rate_per_tick)
 
         #compute sales -> toll -> send funds accordingly
-        #NOTE: we don't bother modeling marketplace profits or tracking mkt wallet $
-        sales = self._salesPerTick()
-        toll = sales * state.ss._percent_consume_sales_for_network
+        consume_sales = self._consumeSalesPerTick()
+        toll = state.ss.networkRevenue(consume_sales)
         toll_agent = state.getAgent(self._toll_agent_name)
         toll_agent.receiveUSD(toll)
 
-    def _salesPerTick(self) -> float:
-        return self._n_marketplaces * self._consume_sales_per_marketplace_per_s \
-            * self._time_step
+        #NOTE: we don't bother modeling marketplace profits or tracking mkt wallet $
+
+    def _consumeSalesPerTick(self) -> float:
+        return self._n_marketplaces * \
+            self._consume_sales_per_marketplace_per_s * \
+            self._time_step
 
     def _growthRatePerTick(self, g_per_year: float) -> float:
         """
