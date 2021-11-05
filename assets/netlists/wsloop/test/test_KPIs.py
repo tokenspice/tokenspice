@@ -7,6 +7,13 @@ from util.constants import S_PER_DAY
 class DummySS:
     def __init__(self, time_step:int):
         self.time_step:int = time_step
+        
+        self._percent_consume_sales_for_network = 0.10
+
+    def networkRevenue(self, consume_sales:float) -> float:
+        #NOTE: this dummy SS is simplistic, ignoring swap revenue. That's ok
+        # here since it's tested elsewhere
+        return consume_sales * self._percent_consume_sales_for_network
 
 @enforce_types
 class BaseDummyMarketplacesAgent:
@@ -111,7 +118,6 @@ def testKPIs__mktsConsumeSalesAndValuation():
         def __init__(self):
             self._marketplaces1_agent = DummyMarketplacesAgent()
             self.ss = DummySS(time_step=3)
-            self.ss._percent_consume_sales_for_network = 0.10
 
     state = DummySimState()
     kpis = KPIs(state.ss)

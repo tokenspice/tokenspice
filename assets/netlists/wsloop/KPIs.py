@@ -148,11 +148,10 @@ class KPIs(KPIsBase.KPIsBase):
     
     def networkRevenuePerSecond(self, tick) -> float:
         """Returns Network Revenue per second at a given tick"""
-        onemkt_sales = self._consume_sales_per_marketplace_per_s__per_tick[tick]
-        n_mkts = self._n_marketplaces__per_tick[tick]
-        allmkts_sales = onemkt_sales * n_mkts
-        network_percent_toll = self.ss._percent_consume_sales_for_network
-        network_revenue = network_percent_toll * allmkts_sales
+        n = self._n_marketplaces__per_tick[tick]
+        consume1 = self._consume_sales_per_marketplace_per_s__per_tick[tick]
+        consumeN = n * consume1
+        network_revenue = self.ss.networkRevenue(consumeN)
         return network_revenue
     
     #=======================================================================
