@@ -18,6 +18,10 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 
         #network revenue
         self._percent_consume_sales_for_network = 0.03 #0.1% no DF, 3% DF
+        self._percent_swap_sales_for_network = 0.001 #0.1%
+
+        # $ volume in swap : $ volume in consume
+        self._swap_to_consume_sales_ratio = 100.0
 
         #initial # mkts
         self.init_n_marketplaces = 1
@@ -49,6 +53,21 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.pool_weight_OCEAN = 7.0
         assert (self.pool_weight_DT + self.pool_weight_OCEAN) == 10.0
 
+    def swapSales(self, consume_sales:float) -> float:
+        return self._swap_to_consume_sales_ratio * consume_sales
+
+    def totalSales(self, consume_sales:float) -> float:
+        """Given marketplace consume sales, return swap + consume sales"""
+        swap_sales = self.swapSales(consume_sales)
+        return consume_sales + swap_sales
+        
+    def networkRevenue(self, consume_sales:float) -> float:
+        """Given marketplace consume sales, return network revenue"""
+        swap_sales = self.swapSales(consume_sales)
+        return \
+            self._percent_consume_sales_for_network * consume_sales + \
+            self._percent_swap_sales_for_network    * swap_sales    
+        
     def annualMktsGrowthRate(self, ratio_RND_to_sales: float) -> float:
         """
         Growth rate for marketplaces. Starts low, and increases as
