@@ -15,7 +15,7 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.setMaxTime(10, 'years') #typical runs: 10 years, 20 years, 150 years
 
         #===new attributes specific to this netlist===
-        self._marketplace_percent_toll_to_network = 0.002 #magic number
+        self._percent_consume_sales_for_network = 0.002 #magic number
 
         #initial # mkts
         self.init_n_marketplaces = 1

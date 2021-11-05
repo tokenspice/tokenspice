@@ -151,7 +151,7 @@ class KPIs(KPIsBase.KPIsBase):
         onemkt_sales = self._consume_sales_per_marketplace_per_s__per_tick[tick]
         n_mkts = self._n_marketplaces__per_tick[tick]
         allmkts_sales = onemkt_sales * n_mkts
-        network_percent_toll = self.ss._marketplace_percent_toll_to_network
+        network_percent_toll = self.ss._percent_consume_sales_for_network
         network_revenue = network_percent_toll * allmkts_sales
         return network_revenue
     

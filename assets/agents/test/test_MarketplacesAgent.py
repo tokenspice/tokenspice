@@ -38,7 +38,7 @@ def test4_takeStep():
     class DummySS:
         def __init__(self):
             self.time_step = S_PER_DAY
-            self._marketplace_percent_toll_to_network = 0.05
+            self._percent_consume_sales_for_network = 0.05
         def annualMktsGrowthRate(self, dummy_ratio):
             return 0.25
 

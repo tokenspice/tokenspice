@@ -111,7 +111,7 @@ def testKPIs__mktsSalesAndValuation():
         def __init__(self):
             self._marketplaces1_agent = DummyMarketplacesAgent()
             self.ss = DummySS(time_step=3)
-            self.ss._marketplace_percent_toll_to_network = 0.10
+            self.ss._percent_consume_sales_for_network = 0.10
 
     state = DummySimState()
     kpis = KPIs(state.ss)
