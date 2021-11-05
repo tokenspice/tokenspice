@@ -9,7 +9,15 @@ def testTotalOceanSupply():
     assert 1e6 < ss.TOTAL_OCEAN_SUPPLY < 2e9
     assert isinstance(ss.TOTAL_OCEAN_SUPPLY, float)
     
+@enforce_types
+def testBurn():
+    ss = SimStrategy()
+    assert hasattr(ss, '_percent_burn')
+    ss._percent_burn = 0.19
 
+    assert ss.percentToBurn() == 0.19
+    assert ss.percentToOceanDao() == 0.81
+    
 @enforce_types
 def testNetworkRevenue():
     ss = SimStrategy()

@@ -26,6 +26,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         #initial # mkts
         self.init_n_marketplaces = 1
 
+        # % network revenue to burn, vs to DAO
+        self._percent_burn: float = 0.05
+
         #for computing annualGrowthRate() of # marketplaces, revenue/mktplace
         #-total marketplaces' growth = (1+annualGrowthRate)^2 - 1
         #-so, if we want upper bound of total marketplaces' growth of 50%,
@@ -66,7 +69,13 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         swap_sales = self.swapSales(consume_sales)
         return \
             self._percent_consume_sales_for_network * consume_sales + \
-            self._percent_swap_sales_for_network    * swap_sales    
+            self._percent_swap_sales_for_network    * swap_sales
+
+    def percentToBurn(self) -> float:
+        return self._percent_burn
+
+    def percentToOceanDao(self) -> float:
+        return 1.0 - self._percent_burn
         
     def annualMktsGrowthRate(self, ratio_RND_to_sales: float) -> float:
         """

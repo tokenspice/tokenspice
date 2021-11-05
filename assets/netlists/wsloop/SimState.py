@@ -32,8 +32,6 @@ class SimState(SimStateBase.SimStateBase):
         self._marketplace_tick_previous_add = 0
         
         #as ecosystem improves, these parameters may change / improve
-        self._percent_burn: float = 0.05 #to burning, vs to DAO #magic number
-
         self._total_OCEAN_minted: float = 0.0
         self._total_OCEAN_burned: float = 0.0
         self._total_OCEAN_burned_USD: float = 0.0
@@ -56,8 +54,8 @@ class SimState(SimStateBase.SimStateBase):
 
         new_agents.add(RouterAgent(
             name = "opc_address", USD=0.0, OCEAN=0.0,
-            receiving_agents = {"ocean_dao" : self.percentToOceanDao,
-                                "opc_burner" : self.percentToBurn}))
+            receiving_agents = {"ocean_dao" : self.ss.percentToOceanDao,
+                                "opc_burner" : self.ss.percentToBurn}))
 
         new_agents.add(OCEANBurnerAgent(
             name = "opc_burner", USD=0.0, OCEAN=0.0))
@@ -126,13 +124,6 @@ class SimState(SimStateBase.SimStateBase):
         
         #update global state values: other
         self._speculation_valuation *= (1.0 + self._percent_increase_speculation_valuation_per_s * self.ss.time_step)
-
-    #==============================================================
-    def percentToBurn(self) -> float:
-        return self._percent_burn
-
-    def percentToOceanDao(self) -> float:
-        return 1.0 - self._percent_burn
     
     #==============================================================
     def grantTakersSpentAtTick(self) -> float:
