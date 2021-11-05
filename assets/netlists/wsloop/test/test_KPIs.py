@@ -4,6 +4,10 @@ import pytest
 from ..KPIs import KPIs
 from util.constants import S_PER_DAY
 
+class DummySS:
+    def __init__(self, time_step:int):
+        self.time_step:int = time_step
+
 @enforce_types
 class BaseDummyMarketplacesAgent:
     def numMarketplaces(self) -> float:
@@ -18,9 +22,7 @@ class BaseDummySimState:
     def takeStep(state) -> None:
         pass
     def getAgent(self, name: str):
-        return self._marketplaces1_agent    
-    def marketplacePercentTollToNetworkRevenue(self) -> float:
-        return 0.0
+        return self._marketplaces1_agent
     def grantTakersSpentAtTick(self) -> float:
         return 0.0
     def OCEANprice(self) -> float:
@@ -46,7 +48,8 @@ def testKPIs__Ratio_do_not_rail_to_less_than_1():
 
 @enforce_types
 def _testKPIs_Ratio(monthly_RND, monthly_sales, target):
-    kpis = KPIs(time_step=1)
+    ss = DummySS(time_step=1)
+    kpis = KPIs(ss)
     kpis.grantTakersMonthlyRevenueNow = lambda : monthly_RND
     kpis.monthlyNetworkRevenueNow = lambda : monthly_sales
     assert kpis.mktsRNDToSalesRatio() == target
@@ -54,19 +57,14 @@ def _testKPIs_Ratio(monthly_RND, monthly_sales, target):
 @enforce_types
 def testKPIs_GrantTakersRevenue():        
     class DummySimState(BaseDummySimState):
-        def __init__(self, ss):
-            self.ss = ss
+        def __init__(self):
+            self.ss = DummySS(time_step=S_PER_DAY*10) #1 tick = 10/30 = 0.33 mos
             self._marketplaces1_agent = BaseDummyMarketplacesAgent()
         def grantTakersSpentAtTick(self):
             return 1e3
 
-    class DummySS:
-        def __init__(self):
-            self.time_step = S_PER_DAY*10 #1 tick = 10/30 = 0.33 mos
-
-    ss = DummySS()
-    state = DummySimState(ss)
-    kpis = KPIs(time_step=ss.time_step)
+    state = DummySimState()
+    kpis = KPIs(state.ss)
 
     #tick = 0, months = 0     
     assert kpis.grantTakersMonthlyRevenueNow() == 0.0
@@ -112,12 +110,11 @@ def testKPIs__mktsSalesAndValuation():
     class DummySimState(BaseDummySimState):
         def __init__(self):
             self._marketplaces1_agent = DummyMarketplacesAgent()
-
-        def marketplacePercentTollToNetworkRevenue(self) -> float:
-            return 0.10
+            self.ss = DummySS(time_step=3)
+            self.ss._marketplace_percent_toll_to_network = 0.10
 
     state = DummySimState()
-    kpis = KPIs(time_step=3)
+    kpis = KPIs(state.ss)
 
     #base case - no time passed        
     assert kpis.onemktMonthlySalesNow() == 0.0
@@ -181,11 +178,12 @@ def testKPIs__mintAndBurn():
         def numMarketplaces(self) -> float:
             return 0.0
 
-        def consumeSalesPerMarketplacePerSecond(self) -> float:
+        def consumeSalesPerMarketpgglacePerSecond(self) -> float:
             return 0.0
 
     class DummySimState(BaseDummySimState):
         def __init__(self):
+            self.ss = DummySS(time_step=S_PER_DAY*10)
             self._marketplaces1_agent = DummyMarketplacesAgent()
 
             self._total_OCEAN_minted = 0.0
@@ -210,7 +208,7 @@ def testKPIs__mintAndBurn():
             return self._total_OCEAN_burned_USD
 
     state = DummySimState()
-    kpis = KPIs(time_step=S_PER_DAY*10) #1 tick = 10/30 = 0.33 mos
+    kpis = KPIs(state.ss) 
     assert kpis._ticksOneMonth() == (3)
 
     #tick = 0, months = 0

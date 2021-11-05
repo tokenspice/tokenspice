@@ -2,7 +2,7 @@ from enforce_typing import enforce_types
 import math
 from typing import List
 
-from engine import KPIsBase, SimStrategyBase
+from engine import KPIsBase
 from util import valuation
 from util.constants import S_PER_YEAR, S_PER_MONTH, INF
 from util.strutil import prettyBigNum
@@ -10,7 +10,7 @@ from util.strutil import prettyBigNum
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
 
-    def __init__(self, ss:SimStrategyBase.SimStrategyBase):
+    def __init__(self, ss):
         super().__init__(ss.time_step)
         self.ss = ss
 
@@ -18,7 +18,6 @@ class KPIs(KPIsBase.KPIsBase):
         self._granttakers_revenue_per_tick__per_tick: List[float] = []
         self._consume_sales_per_marketplace_per_s__per_tick: List[float] = []
         self._n_marketplaces__per_tick: List[int] = []
-        self._marketplace_percent_toll_to_network__per_tick: List[float] = []
         self._total_OCEAN_minted__per_tick: List[float] = []
         self._total_OCEAN_burned__per_tick: List[float] = []
         self._total_OCEAN_minted_USD__per_tick: List[float] = []
@@ -34,8 +33,6 @@ class KPIs(KPIsBase.KPIsBase):
         self._consume_sales_per_marketplace_per_s__per_tick.append(
             am.consumeSalesPerMarketplacePerSecond())
         self._n_marketplaces__per_tick.append(am.numMarketplaces())
-        self._marketplace_percent_toll_to_network__per_tick.append(
-            state.marketplacePercentTollToNetworkRevenue())
 
         O_minted = state.totalOCEANminted()
         O_burned = state.totalOCEANburned()
@@ -154,7 +151,7 @@ class KPIs(KPIsBase.KPIsBase):
         onemkt_sales = self._consume_sales_per_marketplace_per_s__per_tick[tick]
         n_mkts = self._n_marketplaces__per_tick[tick]
         allmkts_sales = onemkt_sales * n_mkts
-        network_percent_toll = self._marketplace_percent_toll_to_network__per_tick[tick]
+        network_percent_toll = self.ss._marketplace_percent_toll_to_network
         network_revenue = network_percent_toll * allmkts_sales
         return network_revenue
     
