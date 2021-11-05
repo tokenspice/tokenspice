@@ -75,6 +75,11 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
             self._percent_consume_sales_for_network * consume_sales + \
             self._percent_swap_sales_for_network    * swap_sales
 
+    def totalStaked(self, daily_consume_sales:float) -> float:
+        total_daily_sales = self.totalSales(daily_consume_sales)
+        total_staked = total_daily_sales #simple heuristic for now
+        return total_staked
+
     def percentToBurn(self) -> float:
         return self._percent_burn
 

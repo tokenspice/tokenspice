@@ -268,12 +268,18 @@ def netlist_createLogData(state):
     dataheader += ["allmkts_cons_sales/mo", "allmkts_cons_sales/yr"]
     datarow += [allmkts_cons_sales_mo, allmkts_cons_sales_yr]
 
+    allmkts_tot_sales_day = ss.totalSales(allmkts_cons_sales_mo/30.5)
     allmkts_tot_sales_mo = ss.totalSales(allmkts_cons_sales_mo)
     allmkts_tot_sales_yr = ss.totalSales(allmkts_cons_sales_yr)
     #s += ["; allmkts_tot_sales/mo=$%s,/yr=$%s" %
     #      (prettyBigNum(allmkts_tot_sales_mo,F), prettyBigNum(allmkts_tot_sales_yr,F))]
-    dataheader += ["allmkts_tot_sales/mo", "allmkts_tot_sales/yr"]
-    datarow += [allmkts_tot_sales_mo, allmkts_tot_sales_yr]
+    dataheader += ["allmkts_tot_sales/day", "allmkts_tot_sales/mo", "allmkts_tot_sales/yr"]
+    datarow += [allmkts_tot_sales_day, allmkts_tot_sales_mo, allmkts_tot_sales_yr]
+    
+    tot_staked = ss.totalStaked(allmkts_tot_sales_day)
+    s += ["; tot_staked=$%s" % prettyBigNum(tot_staked,F)]
+    dataheader += ["tot_staked"]
+    datarow += [tot_staked]
 
     network_rev_mo = kpis.monthlyNetworkRevenueNow()
     network_rev_yr = kpis.annualNetworkRevenueNow()
@@ -378,6 +384,7 @@ def netlist_plotInstructions(header: List[str], values):
         YParam(["network_rev/yr","allmkts_cons_sales/yr","allmkts_tot_sales/yr"],
                ["Network Revenue", "All marketplaces consume sales", "All marketplaces total sales"],
               "Annual Revenue or Sales", LOG, DIV1M, DOLLAR),
+        YParam(["tot_staked"], ["USD worth of OCEAN"], "Total OCEAN Staked (in USD)", LOG, DIV1M, DOLLAR),
         YParam(["tot_OCEAN_supply", "tot_OCEAN_minted", "tot_OCEAN_burned"],
               ["Total supply","Tot # Minted","Tot # Burned"], "OCEAN Token Count", BOTH, DIV1M, COUNT),
         YParam(["OCEAN_minted/mo", "OCEAN_burned/mo"], ["# Minted/mo", "# Burned/mo"],

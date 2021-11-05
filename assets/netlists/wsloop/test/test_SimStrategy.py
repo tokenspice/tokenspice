@@ -38,6 +38,14 @@ def testNetworkRevenue():
 
     assert ss.networkRevenue(consume_sales) == \
         approx(0.01 * consume_sales + 0.02 * target_swap_sales)
+
+
+@enforce_types
+def testTotalStaked():
+    ss = SimStrategy()
+    daily_consume_sales = 1000.0
+    target_total_staked = ss.totalSales(daily_consume_sales)
+    assert ss.totalStaked(daily_consume_sales) == approx(target_total_staked)
     
 @enforce_types
 def testAnnualMktsGrowthRate():
