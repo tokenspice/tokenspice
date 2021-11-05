@@ -73,7 +73,7 @@ class KPIs(KPIsBase.KPIsBase):
         return float(sum(rev_per_tick[-ticks_1mo:]))
         
     #=======================================================================
-    #revenue numbers: 1 marketplace
+    #sales numbers: 1 marketplace
     def onemktMonthlySalesNow(self) -> float:
         t2 = self.elapsedTime()
         t1 = t2 - S_PER_MONTH
@@ -93,11 +93,11 @@ class KPIs(KPIsBase.KPIsBase):
         return self._salesOverInterval(t1, t2, self.onemktSalesPerSecond)
 
     def onemktSalesPerSecond(self, tick) -> float:
-        """Returns onemkt's revenue per second at a given tick"""
+        """Returns onemkt's sales per second at a given tick"""
         return self._consume_sales_per_marketplace_per_s__per_tick[tick]
 
     #=======================================================================
-    #revenue numbers: n marketplaces
+    #sales numbers: n marketplaces
     def allmktsMonthlySalesNow(self) -> float:
         t2 = self.elapsedTime()
         t1 = t2 - S_PER_MONTH
@@ -114,7 +114,7 @@ class KPIs(KPIsBase.KPIsBase):
         return self._allmktsSalesOverInterval(t1, t2)
 
     def allmktsSalesPerSecond(self, tick) -> float:
-        """Returns allmkt's revenue per second at a given tick"""
+        """Returns allmkt's sales per second at a given tick"""
         return self._consume_sales_per_marketplace_per_s__per_tick[tick] \
             * self._n_marketplaces__per_tick[tick]
             
