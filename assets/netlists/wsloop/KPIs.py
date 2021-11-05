@@ -74,52 +74,52 @@ class KPIs(KPIsBase.KPIsBase):
         
     #=======================================================================
     #sales numbers: 1 marketplace
-    def onemktMonthlySalesNow(self) -> float:
+    def onemktMonthlyConsumeSalesNow(self) -> float:
         t2 = self.elapsedTime()
         t1 = t2 - S_PER_MONTH
-        return self._onemktSalesOverInterval(t1, t2)
+        return self._onemktConsumeSalesOverInterval(t1, t2)
     
-    def onemktAnnualSalesNow(self) -> float:
+    def onemktAnnualConsumeSalesNow(self) -> float:
         t2 = self.elapsedTime()
         t1 = t2 - S_PER_YEAR
-        return self._onemktSalesOverInterval(t1, t2)
+        return self._onemktConsumeSalesOverInterval(t1, t2)
     
-    def onemktAnnualSalesOneYearAgo(self) -> float:
+    def onemktAnnualConsumeSalesOneYearAgo(self) -> float:
         t2 = self.elapsedTime() - S_PER_YEAR
         t1 = t2 - S_PER_YEAR
-        return self._onemktSalesOverInterval(t1, t2)
+        return self._onemktConsumeSalesOverInterval(t1, t2)
             
-    def _onemktSalesOverInterval(self, t1: int, t2:int) -> float:
-        return self._salesOverInterval(t1, t2, self.onemktSalesPerSecond)
+    def _onemktConsumeSalesOverInterval(self, t1: int, t2:int) -> float:
+        return self._salesOverInterval(t1, t2, self.onemktConsumeSalesPerSecond)
 
-    def onemktSalesPerSecond(self, tick) -> float:
+    def onemktConsumeSalesPerSecond(self, tick) -> float:
         """Returns onemkt's sales per second at a given tick"""
         return self._consume_sales_per_marketplace_per_s__per_tick[tick]
 
     #=======================================================================
     #sales numbers: n marketplaces
-    def allmktsMonthlySalesNow(self) -> float:
+    def allmktsMonthlyConsumeSalesNow(self) -> float:
         t2 = self.elapsedTime()
         t1 = t2 - S_PER_MONTH
-        return self._allmktsSalesOverInterval(t1, t2)
+        return self._allmktsConsumeSalesOverInterval(t1, t2)
     
-    def allmktsAnnualSalesNow(self) -> float:
+    def allmktsAnnualConsumeSalesNow(self) -> float:
         t2 = self.elapsedTime()
         t1 = t2 - S_PER_YEAR
-        return self._allmktsSalesOverInterval(t1, t2)
+        return self._allmktsConsumeSalesOverInterval(t1, t2)
     
-    def allmktsAnnualSalesOneYearAgo(self) -> float:
+    def allmktsAnnualConsumeSalesOneYearAgo(self) -> float:
         t2 = self.elapsedTime() - S_PER_YEAR
         t1 = t2 - S_PER_YEAR
-        return self._allmktsSalesOverInterval(t1, t2)
+        return self._allmktsConsumeSalesOverInterval(t1, t2)
 
-    def allmktsSalesPerSecond(self, tick) -> float:
+    def allmktsConsumeSalesPerSecond(self, tick) -> float:
         """Returns allmkt's sales per second at a given tick"""
         return self._consume_sales_per_marketplace_per_s__per_tick[tick] \
             * self._n_marketplaces__per_tick[tick]
             
-    def _allmktsSalesOverInterval(self, t1: int, t2:int) -> float:
-        return self._salesOverInterval(t1, t2, self.allmktsSalesPerSecond)
+    def _allmktsConsumeSalesOverInterval(self, t1: int, t2:int) -> float:
+        return self._salesOverInterval(t1, t2, self.allmktsConsumeSalesPerSecond)
     
     #=======================================================================
     #revenue numbers: ocean community
@@ -255,15 +255,15 @@ def netlist_createLogData(state):
     dataheader += ["Num_mkts"]
     datarow += [am._n_marketplaces]
 
-    onemkt_rev_mo = kpis.onemktMonthlySalesNow()
-    onemkt_rev_yr = kpis.onemktAnnualSalesNow()
+    onemkt_rev_mo = kpis.onemktMonthlyConsumeSalesNow()
+    onemkt_rev_yr = kpis.onemktAnnualConsumeSalesNow()
     #s += ["; 1mkt_rev/mo=$%s,/yr=$%s" %
     #      (prettyBigNum(onemkt_rev_mo,F), prettyBigNum(onemkt_rev_yr,F))]
     dataheader += ["onemkt_rev/mo", "onemkt_rev/yr"]
     datarow += [onemkt_rev_mo, onemkt_rev_yr]
 
-    allmkts_rev_mo = kpis.allmktsMonthlySalesNow()
-    allmkts_rev_yr = kpis.allmktsAnnualSalesNow()
+    allmkts_rev_mo = kpis.allmktsMonthlyConsumeSalesNow()
+    allmkts_rev_yr = kpis.allmktsAnnualConsumeSalesNow()
     #s += ["; allmkts_rev/mo=$%s,/yr=$%s" %
     #      (prettyBigNum(allmkts_rev_mo,F), prettyBigNum(allmkts_rev_yr,F))]
     dataheader += ["allmkts_rev/mo", "allmkts_rev/yr"]

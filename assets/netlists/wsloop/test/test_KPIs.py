@@ -99,7 +99,7 @@ def testKPIs_GrantTakersRevenue():
     assert pytest.approx(kpis.grantTakersMonthlyRevenueNow()) == 3e3
 
 @enforce_types
-def testKPIs__mktsSalesAndValuation():
+def testKPIs__mktsConsumeSalesAndValuation():
     class DummyMarketplacesAgent(BaseDummyMarketplacesAgent):
         def numMarketplaces(self) -> float:
             return 5.0
@@ -117,13 +117,13 @@ def testKPIs__mktsSalesAndValuation():
     kpis = KPIs(state.ss)
 
     #base case - no time passed        
-    assert kpis.onemktMonthlySalesNow() == 0.0
-    assert kpis.onemktAnnualSalesNow() == 0.0
-    assert kpis.onemktAnnualSalesOneYearAgo() == 0.0
+    assert kpis.onemktMonthlyConsumeSalesNow() == 0.0
+    assert kpis.onemktAnnualConsumeSalesNow() == 0.0
+    assert kpis.onemktAnnualConsumeSalesOneYearAgo() == 0.0
 
-    assert kpis.allmktsMonthlySalesNow() == 0.0
-    assert kpis.allmktsAnnualSalesNow() == 0.0
-    assert kpis.allmktsAnnualSalesOneYearAgo() == 0.0
+    assert kpis.allmktsMonthlyConsumeSalesNow() == 0.0
+    assert kpis.allmktsAnnualConsumeSalesNow() == 0.0
+    assert kpis.allmktsAnnualConsumeSalesOneYearAgo() == 0.0
 
     assert kpis.monthlyNetworkRevenueNow() == 0.0
     assert kpis.annualNetworkRevenueNow() == 0.0
@@ -148,25 +148,25 @@ def testKPIs__mktsSalesAndValuation():
     #  rev all mkts = 10 * 24 * 5 = 1200
     #  rev ocean = 10 * 24 * 5 * 0.10 = 120
 
-    assert kpis.onemktSalesPerSecond(0) == (10.0)
-    assert kpis._onemktSalesOverInterval(0,24-1) == (240.0)
-    assert kpis._onemktSalesOverInterval(0,23-1) == (230.0)
-    assert kpis._onemktSalesOverInterval(0,23-2) == (220.0)
-    assert kpis._onemktSalesOverInterval(1,24) == (230.0)
-    assert kpis._onemktSalesOverInterval(2,24) == (220.0)
+    assert kpis.onemktConsumeSalesPerSecond(0) == (10.0)
+    assert kpis._onemktConsumeSalesOverInterval(0,24-1) == (240.0)
+    assert kpis._onemktConsumeSalesOverInterval(0,23-1) == (230.0)
+    assert kpis._onemktConsumeSalesOverInterval(0,23-2) == (220.0)
+    assert kpis._onemktConsumeSalesOverInterval(1,24) == (230.0)
+    assert kpis._onemktConsumeSalesOverInterval(2,24) == (220.0)
 
-    assert kpis.allmktsSalesPerSecond(0) == (50.0)
-    assert kpis._allmktsSalesOverInterval(0,24-1) == (5*240.0)
-    assert kpis._allmktsSalesOverInterval(0,23-1) == (5*230.0)
-    assert kpis._allmktsSalesOverInterval(1,24) == (5*230.0)
+    assert kpis.allmktsConsumeSalesPerSecond(0) == (50.0)
+    assert kpis._allmktsConsumeSalesOverInterval(0,24-1) == (5*240.0)
+    assert kpis._allmktsConsumeSalesOverInterval(0,23-1) == (5*230.0)
+    assert kpis._allmktsConsumeSalesOverInterval(1,24) == (5*230.0)
 
     assert kpis.networkRevenuePerSecond(0) == (5.0)
     assert kpis._networkRevenueOverInterval(0,24-1) == (5*24.0)
     assert kpis._networkRevenueOverInterval(0,23-1) == (5*23.0)
     assert kpis._networkRevenueOverInterval(1,24) == (5*23.0)
 
-    assert kpis.onemktMonthlySalesNow() == (240.0) 
-    assert kpis.allmktsMonthlySalesNow() == (1200.0)
+    assert kpis.onemktMonthlyConsumeSalesNow() == (240.0) 
+    assert kpis.allmktsMonthlyConsumeSalesNow() == (1200.0)
     assert kpis.monthlyNetworkRevenueNow() == (120.0)
 
     #valuations
