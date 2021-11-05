@@ -31,13 +31,11 @@ class SimState(SimStateBase.SimStateBase):
         #used to add agents
         self._marketplace_tick_previous_add = 0
         
-        #as ecosystem improves, these parameters may change / improve
+        #as ecosystem improves, these parameters may change
         self._total_OCEAN_minted: float = 0.0
         self._total_OCEAN_burned: float = 0.0
         self._total_OCEAN_burned_USD: float = 0.0
-
-        self._speculation_valuation = 150e6 #in USD #magic number
-        self._percent_increase_speculation_valuation_per_s = 0.10 / S_PER_YEAR # ""
+        self._speculation_valuation = ss._init_speculation_valuation
 
         #Instantiate and connnect agent instances. "Wire up the circuit"
         new_agents: Set[AgentBase.AgentBase] = set()
@@ -123,7 +121,7 @@ class SimState(SimStateBase.SimStateBase):
         super().takeStep()
         
         #update global state values: other
-        self._speculation_valuation *= (1.0 + self._percent_increase_speculation_valuation_per_s * self.ss.time_step)
+        self._speculation_valuation *= (1.0 + self.ss._percent_increase_speculation_valuation_per_s * self.ss.time_step)
     
     #==============================================================
     def grantTakersSpentAtTick(self) -> float:

@@ -2,7 +2,7 @@ import math
 from enforce_typing import enforce_types
 
 from engine import SimStrategyBase
-from util.constants import S_PER_HOUR
+from util.constants import S_PER_HOUR, S_PER_YEAR
 
 @enforce_types
 class SimStrategy(SimStrategyBase.SimStrategyBase):
@@ -28,6 +28,10 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 
         # % network revenue to burn, vs to DAO
         self._percent_burn: float = 0.05
+
+        #valuation
+        self._init_speculation_valuation = 150e6 #in USD
+        self._percent_increase_speculation_valuation_per_s = 0.10 / S_PER_YEAR
 
         #for computing annualGrowthRate() of # marketplaces, revenue/mktplace
         #-total marketplaces' growth = (1+annualGrowthRate)^2 - 1
