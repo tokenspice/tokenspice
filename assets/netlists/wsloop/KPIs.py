@@ -255,19 +255,19 @@ def netlist_createLogData(state):
     dataheader += ["Num_mkts"]
     datarow += [am._n_marketplaces]
 
-    onemkt_sales_mo = kpis.onemktMonthlyConsumeSalesNow()
-    onemkt_sales_yr = kpis.onemktAnnualConsumeSalesNow()
-    #s += ["; 1mkt_sales/mo=$%s,/yr=$%s" %
-    #      (prettyBigNum(onemkt_sales_mo,F), prettyBigNum(onemkt_sales_yr,F))]
-    dataheader += ["onemkt_sales/mo", "onemkt_sales/yr"]
-    datarow += [onemkt_sales_mo, onemkt_sales_yr]
+    onemkt_cons_sales_mo = kpis.onemktMonthlyConsumeSalesNow()
+    onemkt_cons_sales_yr = kpis.onemktAnnualConsumeSalesNow()
+    #s += ["; 1mkt_cons_sales/mo=$%s,/yr=$%s" %
+    #      (prettyBigNum(onemkt_cons_sales_mo,F), prettyBigNum(onemkt_cons_sales_yr,F))]
+    dataheader += ["onemkt_cons_sales/mo", "onemkt_cons_sales/yr"]
+    datarow += [onemkt_cons_sales_mo, onemkt_cons_sales_yr]
 
-    allmkts_sales_mo = kpis.allmktsMonthlyConsumeSalesNow()
-    allmkts_sales_yr = kpis.allmktsAnnualConsumeSalesNow()
-    #s += ["; allmkts_sales/mo=$%s,/yr=$%s" %
-    #      (prettyBigNum(allmkts_sales_mo,F), prettyBigNum(allmkts_sales_yr,F))]
-    dataheader += ["allmkts_sales/mo", "allmkts_sales/yr"]
-    datarow += [allmkts_sales_mo, allmkts_sales_yr]        
+    allmkts_cons_sales_mo = kpis.allmktsMonthlyConsumeSalesNow()
+    allmkts_cons_sales_yr = kpis.allmktsAnnualConsumeSalesNow()
+    #s += ["; allmkts_cons_sales/mo=$%s,/yr=$%s" %
+    #      (prettyBigNum(allmkts_cons_sales_mo,F), prettyBigNum(allmkts_cons_sales_yr,F))]
+    dataheader += ["allmkts_cons_sales/mo", "allmkts_cons_sales/yr"]
+    datarow += [allmkts_cons_sales_mo, allmkts_cons_sales_yr]
 
     network_rev_mo = kpis.monthlyNetworkRevenueNow()
     network_rev_yr = kpis.annualNetworkRevenueNow()
@@ -323,7 +323,7 @@ def netlist_createLogData(state):
     ratio = kpis.mktsRNDToSalesRatio()
     growth = ss.annualMktsGrowthRate(ratio)
     #s += ["; r&d/sales ratio=%.2f, growth(ratio)=%.3f" % (ratio, growth)]
-    dataheader += ["rnd_to_sales_ratio", "mkts_annual_growth_rate"]
+    dataheader += ["rnd_to_cons_sales_ratio", "mkts_annual_growth_rate"]
     datarow += [ratio, growth]
 
     dao = state.getAgent("ocean_dao") #RouterAgent
@@ -369,20 +369,20 @@ def netlist_plotInstructions(header: List[str], values):
         YParam(["dao_USD/mo", "dao_OCEAN_in_USD/mo", "dao_total_in_USD/mo"],
               ["Income as USD (ie network revenue)", "Income as OCEAN (ie from 51%; priced in USD)", "Total Income"],
               "Monthly OceanDAO Income", LOG, DIV1M, DOLLAR),
-        YParam(["network_rev/yr","allmkts_sales/yr"], ["Network Revenue", "All marketplaces sales"],
+        YParam(["network_rev/yr","allmkts_cons_sales/yr"], ["Network Revenue", "All marketplaces sales"],
               "Annual Revenue or Sales", LOG, DIV1M, DOLLAR),
         YParam(["tot_OCEAN_supply", "tot_OCEAN_minted", "tot_OCEAN_burned"],
               ["Total supply","Tot # Minted","Tot # Burned"], "OCEAN Token Count", BOTH, DIV1M, COUNT),
         YParam(["OCEAN_minted/mo", "OCEAN_burned/mo"], ["# Minted/mo", "# Burned/mo"],
               "Monthly # OCEAN Minted & Burned", BOTH, DIV1M, COUNT),
-        YParam(["rnd_to_sales_ratio", "mkts_annual_growth_rate"], ["R&D/sales ratio", "Marketplaces annual growth rate"],
+        YParam(["rnd_to_cons_sales_ratio", "mkts_annual_growth_rate"], ["R&D/sales ratio", "Marketplaces annual growth rate"],
               "R&D/Sales Ratio and Marketplaces Growth Rate", BOTH, MULT100, PERCENT),
         YParam(["RND/mo"], [""], "Monthly R&D Spend", BOTH, DIV1M, DOLLAR),
         
         # YParam(["OCEAN_burned_USD/mo", "OCEAN_minted_USD/mo"],
         #       ["$ of OCEAN Burned/mo", "$ of OCEAN Minted/mo"],
         #       "Monthly OCEAN (in USD) Minted & Burned", LOG, DIV1M, DOLLAR),
-        # YParam(["OCEAN_burned_USD/mo", "network_rev/mo", "allmkts_sales/mo"],
+        # YParam(["OCEAN_burned_USD/mo", "network_rev/mo", "allmkts_cons_sales/mo"],
         #       ["$ OCEAN Burned monthly", "Ocean monthly revenue", "Marketplaces monthly revenue"],
         #       "Monthly OCEAN Burned and Revenues", LOG, DIV1M, DOLLAR),
     ]
