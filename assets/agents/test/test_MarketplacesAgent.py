@@ -41,6 +41,8 @@ def test4_takeStep():
             self._percent_consume_sales_for_network = 0.05
         def annualMktsGrowthRate(self, dummy_ratio):
             return 0.25
+        def networkRevenue(self, consume_sales:float) -> float:
+            return self._percent_consume_sales_for_network * consume_sales
 
     class DummySimState:
         def __init__(self):
@@ -61,9 +63,9 @@ def test4_takeStep():
     a.takeStep(state)
     assert a._n_marketplaces == (100.0*(1.0+g))
     assert a._consume_sales_per_marketplace_per_s == (2.0 * (1.0+g))
-    assert a._salesPerTick() == \
+    assert a._consumeSalesPerTick() == \
         (a._n_marketplaces * a._consume_sales_per_marketplace_per_s * S_PER_DAY)
-    expected_toll = 0.05 * a._salesPerTick()
+    expected_toll = 0.05 * a._consumeSalesPerTick()
     assert state._toll_agent.USD == (3.0 + expected_toll)
 
     a.takeStep(state)
