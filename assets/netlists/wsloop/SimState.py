@@ -117,11 +117,11 @@ class SimState(SimStateBase.SimStateBase):
     def takeStep(self) -> None:
         """This happens once per tick"""
         #update agents
-        #update kpis (global state values)
+        #update kpis 
         super().takeStep()
         
-        #update global state values: other
-        self._speculation_valuation *= (1.0 + self.ss._percent_increase_speculation_valuation_per_s * self.ss.time_step)
+        #update global state values
+        self._updateSpeculationValuation()
     
     #==============================================================
     def grantTakersSpentAtTick(self) -> float:
@@ -139,6 +139,9 @@ class SimState(SimStateBase.SimStateBase):
         return price
     
     #==============================================================
+    def _updateSpeculationValuation(self):
+        self._speculation_valuation *= (1.0 + self.ss._percent_increase_speculation_valuation_per_s * self.ss.time_step)
+        
     def overallValuation(self) -> float: #in USD
         v = self.fundamentalsValuation() + \
             self.speculationValuation()
