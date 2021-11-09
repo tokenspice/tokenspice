@@ -30,6 +30,8 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self._percent_burn: float = 0.05
 
         #valuation
+        self._p_s_ratio = 30.0
+        
         self._init_speculation_valuation = 150e6 #in USD
         self._percent_increase_speculation_valuation_per_s = 0.10 / S_PER_YEAR
 
@@ -85,7 +87,18 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 
     def percentToOceanDao(self) -> float:
         return 1.0 - self._percent_burn
-        
+
+    def fundamentalsValuation(self, annual_revenue: float) -> float:
+        """
+        Valuation by price-to-sales (P/S) ratio.
+        Annual revenue = sales summed up over the last year (eg per quarter);
+          it's *not* based on run rate (sales based on this quarter * 4, 
+          or projected sales over the next year).
+        The market decides P/S based on revenue growth. Higher growth -> higher P/S.
+        Most blockchain co's have P/S of 30x-50x, as do startups like Zoom.
+        """
+        return annual_revenue * self._p_s_ratio
+
     def annualMktsGrowthRate(self, ratio_RND_to_sales: float) -> float:
         """
         Growth rate for marketplaces. Starts low, and increases as

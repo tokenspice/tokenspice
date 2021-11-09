@@ -10,6 +10,12 @@ def testTotalOceanSupply():
     assert isinstance(ss.TOTAL_OCEAN_SUPPLY, float)
     
 @enforce_types
+def testFundamentalsValuation():
+    ss = SimStrategy()
+    assert ss._p_s_ratio == 30.0
+    assert ss.fundamentalsValuation(1e3) == (1e3 * 30.0)
+    
+@enforce_types
 def testBurn():
     ss = SimStrategy()
     assert hasattr(ss, '_percent_burn')

@@ -199,8 +199,8 @@ class KPIs(KPIsBase.KPIsBase):
     @enforce_types
     def valuationPS(self, p_s_ratio: float) -> float:
         """Use Price/Sales ratio to compute valuation."""
-        annual_revenue = self.annualNetworkRevenueNow()
-        v = valuation.firmValuationPS(annual_revenue, p_s_ratio)
+        sales = self.annualNetworkRevenueNow()
+        v = self.ss.fundamentalsValuation(sales)
         return v
 
     #=======================================================================
@@ -293,15 +293,12 @@ def netlist_createLogData(state):
     datarow += [kpis.monthlyNetworkRevenueGrowth(),
                 kpis.annualNetworkRevenueGrowth()]
 
-    ps30_valuation = kpis.valuationPS(30.0)
-    dataheader += ["ps30_valuation"]
-    datarow += [ps30_valuation]
-
-    ov = state.overallValuation()
+    overall_valuation = state.overallValuation()
     dataheader += ["overall_valuation", "fundamentals_valuation",
                    "speculation_valuation"]
-    s += ["; valn=$%s" % prettyBigNum(ov,F)]
-    datarow += [ov, state.fundamentalsValuation(),
+    s += ["; valn=$%s" % prettyBigNum(overall_valuation,F)]
+    datarow += [overall_valuation,
+                state.fundamentalsValuation(),
                 state.speculationValuation()]
 
     tot_O_supply = state.OCEANsupply()

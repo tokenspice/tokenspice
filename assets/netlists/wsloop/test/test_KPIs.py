@@ -135,8 +135,6 @@ def testKPIs__mktsConsumeSalesAndValuation():
     assert kpis.annualNetworkRevenueNow() == 0.0
     assert kpis.oceanAnnualRevenueOneYearAgo() == 0.0
 
-    assert kpis.valuationPS(30.0) == 0.0
-
     #let time pass
     for i in range(8): 
         kpis.takeStep(state)
@@ -174,9 +172,6 @@ def testKPIs__mktsConsumeSalesAndValuation():
     assert kpis.onemktMonthlyConsumeSalesNow() == (240.0) 
     assert kpis.allmktsMonthlyConsumeSalesNow() == (1200.0)
     assert kpis.monthlyNetworkRevenueNow() == (120.0)
-
-    #valuations
-    assert kpis.valuationPS(30.0) == (120.0 * 30.0)
 
 @enforce_types
 def testKPIs__mintAndBurn():

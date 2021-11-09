@@ -149,7 +149,8 @@ class SimState(SimStateBase.SimStateBase):
         return v
     
     def fundamentalsValuation(self) -> float: #in USD
-        return self.kpis.valuationPS(30.0) #based on P/S=30
+        sales = self.kpis.annualNetworkRevenueNow()
+        return self.ss.fundamentalsValuation(sales)
     
     def speculationValuation(self) -> float: #in USD
         return self._speculation_valuation
