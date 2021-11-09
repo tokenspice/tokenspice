@@ -17,14 +17,6 @@ def firmValuationPS(annual_revenue: float, p_s_ratio: float) -> float:
     """
     return annual_revenue * p_s_ratio
 
-def firmValuationPE(annual_revenue: float, p_e_ratio: float) -> float:
-    """Valuation by price-to-earnings (P/E) ratio. Earnings are
-    sales minus costs.
-    Some people prefer P/E over P/S as it captures profitability. However, 
-    companies plowing extra money into growth will have poor P/E. Eg Amazon.
-    """
-    return annual_revenue * p_e_ratio
-
 def OCEANprice(firm_valuation: float, OCEAN_supply: float) -> float:
     """Return price of OCEAN token, in USD"""
     assert OCEAN_supply > 0
