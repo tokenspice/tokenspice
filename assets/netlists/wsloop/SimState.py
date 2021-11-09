@@ -143,8 +143,10 @@ class SimState(SimStateBase.SimStateBase):
         self._speculation_valuation *= (1.0 + self.ss._percent_increase_speculation_valuation_per_s * self.ss.time_step)
         
     def overallValuation(self) -> float: #in USD
-        v = self.fundamentalsValuation() + \
-            self.speculationValuation()
+        #fundamental valuation acts as a lower bound.
+        #sum() is too optimistic, so use max()
+        v = max(self.fundamentalsValuation(),
+                self.speculationValuation())
         assert v > 0.0
         return v
     
