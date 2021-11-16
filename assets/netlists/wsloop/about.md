@@ -30,6 +30,10 @@ We have slightly fancier models for growth rate and for token supply schedule. T
 
 ### Resources
 
+Working Slides:
+- [wsloop Key Variables Being Modeled](https://docs.google.com/presentation/d/1jsCg7iMcVM9Hk5wPeZyyN8WGXEzX2sDi98Yf0dH2F4Q/edit#slide=id.gfa42987b7d_0_73)
+
+Other:
 - "The Web3 Sustainability Loop" blog post [[ref](https://blog.oceanprotocol.com/the-web3-sustainability-loop-b2a4097a36e)] is a good first external reference
 - Then, "Ocean Token Model" blog post [[ref](https://blog.oceanprotocol.com/ocean-token-model-3e4e7af210f9)] adds a bit more fidelity.
 - The Ocean Whitepaper [[ref](https://oceanprotocol.com/tech-whitepaper.pdf)] has more fidelity yet.
