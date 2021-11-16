@@ -93,17 +93,16 @@ source venv/bin/activate
 
 ## Deploy the smart contracts to ganache
 
-Below, you will deploy [smart contracts](https://github.com/oceanprotocol/contracts) from [Ocean Protocol](https://www.oceanprotocol.com). Those contracts include an ERC20 datatoken factory, ERC20 template, [Balancer](https://www.balancer.finance) pool factory, [Balancer pool template](https://github.com/balancer-labs/balancer-core/blob/master/contracts/BPool.sol), and metadata management. Each contract has a corresponding Python wrapper in the `web3engine` directory. Then, Python agents in `assets/agents` use these wrappers. 
+Below, you will deploy [smart contracts](https://github.com/oceanprotocol/contracts) from [Ocean Protocol](https://www.oceanprotocol.com). Those contracts include an ERC20 datatoken factory, ERC20 template, [Balancer](https://www.balancer.finance) pool factory, [Balancer pool template](https://github.com/balancer-labs/balancer-core/blob/master/contracts/BPool.sol), and metadata management. Each contract has a corresponding Python driver in the `web3engine` directory. Then, Python agents in `assets/agents` use these wrappers.
 
-You can add your own smart contracts by deploying them to EVM, then adding corresponding Python wrappers and agents to use them.
+These contracts are relevant for the [simplegrant](assets/netlists/simplegrant/about.md) netlist, [oceanv3](assets/netlists/oceanv3/about.md) netlist, and any other netlist that may use them.
+
+You can add your own smart contracts by deploying them to EVM, then adding corresponding Python wrappers and agents to use them. [oceanv4](assets/netlists/oceanv4/about.md) netlist is an example; it has different contracts, drivers, and agents.
 
 Let's do this. Open a new terminal and:
 ```console
 #Grab the contracts code from main
 git clone https://github.com/oceanprotocol/contracts
-
-#Default is Ocean v3. If you want to use Ocean v4, switch to its branch via:
-git checkout v4main
 ```
 
 Then, deploy. In that same terminal:
