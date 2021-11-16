@@ -48,9 +48,17 @@ def abi(class_name: str):
         return json.loads(f.read())['abi']
 
 def abiFilename(class_name: str) -> str:
-    """Given e.g. 'DTFactory', returns './web3engine/DTFactory.json' """
+    """Given e.g. 'DTFactory', returns './artifacts/contracts/v3/V3DTFactory.sol/V3DTFactory.json`. It searches through subdirectories to find the path.
+    """
+    target_file = class_name + '.json'
     base_path = confFileValue('general', 'ARTIFACTS_PATH')
-    path = os.path.join(base_path, class_name) + '.json'
+    path = None
+    for root, dirs, files in os.walk(base_path):
+        if target_file in files:
+            base_path = dirs[0]
+            break
+    assert path is not None, f"file `{target_file}` not found" 
+    path = os.path.join(base_path, target_file)
     abspath = os.path.abspath(path)
     return abspath
 
@@ -71,7 +79,7 @@ def contractAddresses():
     return addresses[network]
 
 def contractAddressesFilename():
-    base_path = confFileValue('general', 'ARTIFACTS_PATH')
+    base_path = confFileValue('general', 'ADDRESSES_PATH')
     return os.path.join(base_path, 'address.json')
 
 def get_network():
