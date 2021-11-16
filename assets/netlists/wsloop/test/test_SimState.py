@@ -7,8 +7,9 @@ from ..SimStrategy import SimStrategy
 @enforce_types
 def testSimState_MoneyFlow1():
     state = SimState()
-    assert hasattr(state, '_percent_burn')
-    state._percent_burn = 0.20
+    assert hasattr(state.ss, '_percent_burn')
+    state.ss._percent_burn = 0.20
+    assert state.ss.percentToBurn() == 0.20
 
     #opc_address -> (opc_burner, ocean_dao)
     state.getAgent("opc_address").receiveUSD(100.0)

@@ -31,16 +31,11 @@ class SimState(SimStateBase.SimStateBase):
         #used to add agents
         self._marketplace_tick_previous_add = 0
         
-        #as ecosystem improves, these parameters may change / improve
-        self._marketplace_percent_toll_to_ocean = 0.002 #magic number
-        self._percent_burn: float = 0.05 #to burning, vs to DAO #magic number
-
+        #as ecosystem improves, these parameters may change
         self._total_OCEAN_minted: float = 0.0
         self._total_OCEAN_burned: float = 0.0
         self._total_OCEAN_burned_USD: float = 0.0
-
-        self._speculation_valuation = 150e6 #in USD #magic number
-        self._percent_increase_speculation_valuation_per_s = 0.10 / S_PER_YEAR # ""
+        self._speculation_valuation = ss._init_speculation_valuation
 
         #Instantiate and connnect agent instances. "Wire up the circuit"
         new_agents: Set[AgentBase.AgentBase] = set()
@@ -51,14 +46,14 @@ class SimState(SimStateBase.SimStateBase):
             name = "marketplaces1", USD=0.0, OCEAN=0.0,
             toll_agent_name = "opc_address",
             n_marketplaces = float(ss.init_n_marketplaces),
-            revenue_per_marketplace_per_s = 20e3 / S_PER_MONTH, #magic number
+            sales_per_marketplace_per_s = 20e3 / S_PER_MONTH, #magic number
             time_step = self.ss.time_step,
             ))
 
         new_agents.add(RouterAgent(
             name = "opc_address", USD=0.0, OCEAN=0.0,
-            receiving_agents = {"ocean_dao" : self.percentToOceanDao,
-                                "opc_burner" : self.percentToBurn}))
+            receiving_agents = {"ocean_dao" : self.ss.percentToOceanDao,
+                                "opc_burner" : self.ss.percentToBurn}))
 
         new_agents.add(OCEANBurnerAgent(
             name = "opc_burner", USD=0.0, OCEAN=0.0))
@@ -117,26 +112,16 @@ class SimState(SimStateBase.SimStateBase):
             self.agents[agent.name] = agent
 
         #track certain metrics over time, so that we don't have to load
-        self.kpis = KPIs(self.ss.time_step)
+        self.kpis = KPIs(self.ss)
                     
     def takeStep(self) -> None:
         """This happens once per tick"""
         #update agents
-        #update kpis (global state values)
+        #update kpis 
         super().takeStep()
         
-        #update global state values: other
-        self._speculation_valuation *= (1.0 + self._percent_increase_speculation_valuation_per_s * self.ss.time_step)
-
-    #==============================================================      
-    def marketplacePercentTollToOcean(self) -> float:
-        return self._marketplace_percent_toll_to_ocean
-    
-    def percentToBurn(self) -> float:
-        return self._percent_burn
-
-    def percentToOceanDao(self) -> float:
-        return 1.0 - self._percent_burn
+        #update global state values
+        self._updateSpeculationValuation()
     
     #==============================================================
     def grantTakersSpentAtTick(self) -> float:
@@ -154,14 +139,20 @@ class SimState(SimStateBase.SimStateBase):
         return price
     
     #==============================================================
+    def _updateSpeculationValuation(self):
+        self._speculation_valuation *= (1.0 + self.ss._percent_increase_speculation_valuation_per_s * self.ss.time_step)
+        
     def overallValuation(self) -> float: #in USD
-        v = self.fundamentalsValuation() + \
-            self.speculationValuation()
+        #fundamental valuation acts as a lower bound.
+        #sum() is too optimistic, so use max()
+        v = max(self.fundamentalsValuation(),
+                self.speculationValuation())
         assert v > 0.0
         return v
     
     def fundamentalsValuation(self) -> float: #in USD
-        return self.kpis.valuationPS(30.0) #based on P/S=30
+        sales = self.kpis.annualNetworkRevenueNow()
+        return self.ss.fundamentalsValuation(sales)
     
     def speculationValuation(self) -> float: #in USD
         return self._speculation_valuation

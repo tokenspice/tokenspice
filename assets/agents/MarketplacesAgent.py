@@ -14,7 +14,7 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
                  name: str, USD: float, OCEAN: float,
                  toll_agent_name: str,
                  n_marketplaces: float,
-                 revenue_per_marketplace_per_s: float,
+                 sales_per_marketplace_per_s: float,
                  time_step: int,
                  ):
         super().__init__(name, USD, OCEAN)
@@ -22,14 +22,14 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
 
         #set initial values. These grow over time.
         self._n_marketplaces: float = n_marketplaces
-        self._revenue_per_marketplace_per_s: float = revenue_per_marketplace_per_s
+        self._consume_sales_per_marketplace_per_s: float = sales_per_marketplace_per_s
         self._time_step: int = time_step
 
     def numMarketplaces(self) -> float:
         return self._n_marketplaces
         
-    def revenuePerMarketplacePerSecond(self) -> float:
-        return self._revenue_per_marketplace_per_s
+    def consumeSalesPerMarketplacePerSecond(self) -> float:
+        return self._consume_sales_per_marketplace_per_s
         
     def takeStep(self, state):
         ratio = state.kpis.mktsRNDToSalesRatio()
@@ -38,18 +38,20 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
         
         #*grow* the number of marketplaces, and revenue per marketplace
         self._n_marketplaces *= (1.0 + mkts_growth_rate_per_tick)
-        self._revenue_per_marketplace_per_s *= (1.0 + mkts_growth_rate_per_tick)
+        self._consume_sales_per_marketplace_per_s *= (1.0 + mkts_growth_rate_per_tick)
 
         #compute sales -> toll -> send funds accordingly
-        #NOTE: we don't bother modeling marketplace profits or tracking mkt wallet $
-        sales = self._salesPerTick()
-        toll = sales * state.marketplacePercentTollToOcean()
+        consume_sales = self._consumeSalesPerTick()
+        toll = state.ss.networkRevenue(consume_sales)
         toll_agent = state.getAgent(self._toll_agent_name)
         toll_agent.receiveUSD(toll)
 
-    def _salesPerTick(self) -> float:
-        return self._n_marketplaces * self._revenue_per_marketplace_per_s \
-            * self._time_step
+        #NOTE: we don't bother modeling marketplace profits or tracking mkt wallet $
+
+    def _consumeSalesPerTick(self) -> float:
+        return self._n_marketplaces * \
+            self._consume_sales_per_marketplace_per_s * \
+            self._time_step
 
     def _growthRatePerTick(self, g_per_year: float) -> float:
         """
