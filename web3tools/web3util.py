@@ -1,10 +1,11 @@
 import configparser
-
 import eth_account
 import json
+from pathlib import Path
 import os
 import typing
 from web3 import Web3
+
 from util import constants
 from web3tools.account import privateKeyToAddress
 
@@ -52,13 +53,8 @@ def abiFilename(class_name: str) -> str:
     """
     target_file = class_name + '.json'
     base_path = confFileValue('general', 'ARTIFACTS_PATH')
-    path = None
-    for root, dirs, files in os.walk(base_path):
-        if target_file in files:
-            base_path = dirs[0]
-            break
-    assert path is not None, f"file `{target_file}` not found" 
-    path = os.path.join(base_path, target_file)
+    paths = [path for path in Path(base_path).rglob(target_file)]
+    path = str(paths[0])
     abspath = os.path.abspath(path)
     return abspath
 
