@@ -97,11 +97,20 @@ Here are relative locations of V3 and V4 ocean artifacts. They will likely chang
 Let's test! Open a new terminal and:
 
 ```console
+#clone repo
+git clone https://github.com/oceanprotocol/tokenspice.git
 cd tokenspice
+
+#create a virtual environment
+python3 -m venv venv
 
 #activate env't
 source venv/bin/activate
 
+#install dependencies. Install wheel first to avoid errors.
+pip install wheel
+pip install -r requirements.txt
+
 #run test
-pytest web3engine/test/test_btoken.py 
+pytest web3engine/test/test_btoken.py::test_OCEAN
 ```
