@@ -99,14 +99,11 @@ You can add your own smart contracts by deploying them to EVM, then adding corre
 
 Let's do this. Open a new terminal and:
 ```console
-#Grab the contracts code from main, *OR* (see below)
+#Grab the contracts code from main
 git clone https://github.com/oceanprotocol/contracts
 
-#OR grab from a branch. Here's Alex's V4 prototype branch
-git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
-
-#here's the v4 contracts repo, enjoy:)
-#https://github.com/oceanprotocol/contracts/tree/v4main
+#Default is Ocean v3. If you want to use Ocean v4, switch to its branch via:
+git checkout v4main
 ```
 
 Then, deploy. In that same terminal:
