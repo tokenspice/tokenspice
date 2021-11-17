@@ -1,5 +1,8 @@
 from drivers_oceanv4 import btoken, datatoken, dtfactory
 from web3tools import web3util
+from drivers_oceanv4.contract_base import ContractBase
+from web3 import Web3
+
     
 def test_ERC20(alice_wallet, alice_address,
                bob_wallet, bob_address):
@@ -33,9 +36,5 @@ def test_ERC20(alice_wallet, alice_address,
     assert token.balanceOf_base(bob_address) == bob_TOK
 
 def test_OCEAN(OCEAN_address):
-    token = btoken.BToken(OCEAN_address)
-
-    #For ganache the symbol is 'DTT', not 'OCEAN'.
-    # This is an artifact of how 'contracts' repo deploys.
-    # Details: contracts/migrations/2_deploy_contracts.js
-    assert token.symbol() == 'DTT'
+    token = btoken.BToken(web3=Web3(), address=OCEAN_address)
+    assert token.symbol() == 'Ocean'

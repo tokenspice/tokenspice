@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, List, Optional
 
 # import 
-from assets.contracts import artifacts
+from contracts import artifacts
 from enforce_typing import enforce_types
 from eth_account.account import Account
 from eth_account.messages import encode_defunct

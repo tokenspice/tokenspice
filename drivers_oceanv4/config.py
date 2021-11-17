@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
-from assets.contracts import artifacts
+from contracts import artifacts
 from enforce_typing import enforce_types
 from drivers_oceanv4.integer import Integer
 from drivers_oceanv4.env_constants import ENV_CONFIG_FILE
