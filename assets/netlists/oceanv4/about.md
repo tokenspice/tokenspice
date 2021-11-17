@@ -85,7 +85,7 @@ Finally, open tokenspice/tokenspice.ini and set: `ARTIFACTS_PATH = contracts/art
 
 ## Testing it
 
-Here are relative locations of V3 and V4 ocean artifacts. They will likely change; as they do, please update here.
+Status quo relative locations of V3 and V4 ocean artifacts. They will likely change; as they do, please update here.
 
 | What    | v3             | v4               |
 | ----    | ----           | ----             |
@@ -94,6 +94,18 @@ Here are relative locations of V3 and V4 ocean artifacts. They will likely chang
 | **Agents**  | `assets/agents/` | `assets/agents/`, `assets/netlists/oceanv4/v4Agents/` |
 | **Netlist** | `assets/netlists/oceanv3/netlist.py` | `assets/netlists/oceanv4/netlist.py` |
 | **web3tools** | `web3tools/`    | `drivers_oceanv4/` |
+
+
+Ideally, the locations are the following. Once they're like this, we can merge the two tables into one.
+
+| What    | oceanv3             | oceanv4               |
+| ----    | ----           | ----             |
+|     |            |              |
+| **Contracts** | (don't store)   | (don't store) |
+| **Models (py wrappers of ABIs)** | `assets/netlists/oceanv3/models`    | `assets/netlists/oceanv4/models/` |
+| **Agents**  | General across >1 netlist (non-EVM, EVM base classes): `assets/agents/`, EVM: `assets/netlists/oceanv3/agents/`   | Pattern is like oceanv3. `assets/agents/`, `assets/netlists/oceanv4/agents/` |
+| **Netlist** | `assets/netlists/oceanv3/netlist.py` | `assets/netlists/oceanv4/netlist.py` |
+| **General Web3 contracts utilities** |  `assets/netlists/oceanv3/web3tools`    | `assets/netlists/oceanv4/web3tools/` |
 
 Let's test! Open a new terminal and:
 
