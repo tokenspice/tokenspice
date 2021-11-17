@@ -112,5 +112,5 @@ pip install wheel
 pip install -r requirements.txt
 
 #run test
-pytest web3engine/test/test_btoken.py::test_OCEAN
+pytest drivers_oceanv4/test/test_btoken.py::test_OCEAN
 ```
