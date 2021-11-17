@@ -93,6 +93,7 @@ Here are relative locations of V3 and V4 ocean artifacts. They will likely chang
 | **Drivers** | `web3engine/`    | `drivers_oceanv4/` |
 | **Agents**  | `assets/agents/` | `assets/agents/`, `assets/netlists/oceanv4/v4Agents/` |
 | **Netlist** | `assets/netlists/oceanv3/netlist.py` | `assets/netlists/oceanv4/netlist.py` |
+| **web3tools** | `web3tools/`    | `drivers_oceanv4/` |
 
 Let's test! Open a new terminal and:
 
