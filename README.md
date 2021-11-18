@@ -31,7 +31,7 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 - [🦑 Agents and Netlists](#-agents-and-netlists)
 - [🐟 Updating Envt](#-updating-envt)
 - [🐡 Backlog](#-backlog)
-  - [Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1)
+  - [Kanban Board](https://github.com/tokenspice/tokenspice/projects/1)
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
 - [🦈 Resources](#-resources)
 - [🏛 License](#-license)
@@ -60,7 +60,7 @@ History:
 Open a new terminal and:
 ```console
 #clone repo
-git clone https://github.com/oceanprotocol/tokenspice.git
+git clone https://github.com/tokenspice/tokenspice.git
 cd tokenspice
 
 #create a virtual environment
