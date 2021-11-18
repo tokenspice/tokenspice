@@ -93,8 +93,8 @@ def _deployAndMintToken(symbol: str, to_address: str) -> datatoken.DataToken:
     from_wallet = Web3Wallet(private_key=private_key)
     factory = dtfactory.DTFactory()
     amount_base = web3util.toBase18(1000.0)
-    import ipdb
-    ipdb.set_trace()
+    # import ipdb
+    # ipdb.set_trace()
     dt_address = factory.createToken(
         '', symbol, symbol, amount_base, from_wallet)
     dt = datatoken.DataToken(dt_address)
