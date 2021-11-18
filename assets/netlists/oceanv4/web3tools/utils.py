@@ -15,8 +15,8 @@ from eth_account.messages import encode_defunct
 from eth_keys import keys
 from eth_utils import big_endian_to_int, decode_hex
 from hexbytes.main import HexBytes
-from drivers_oceanv4.constants import DEFAULT_NETWORK_NAME, NETWORK_NAME_MAP
-from drivers_oceanv4.signature import SignatureFix
+from assets.netlists.oceanv4.web3tools.constants import DEFAULT_NETWORK_NAME, NETWORK_NAME_MAP
+from assets.netlists.oceanv4.web3tools.signature import SignatureFix
 from web3.main import Web3
 
 Signature = namedtuple("Signature", ("v", "r", "s"))

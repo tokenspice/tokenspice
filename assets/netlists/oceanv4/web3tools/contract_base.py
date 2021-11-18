@@ -12,14 +12,14 @@ import requests
 from enforce_typing import enforce_types
 from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
-from drivers_oceanv4.constants import ENV_GAS_PRICE
-from drivers_oceanv4.contract_utils import (
+from assets.netlists.oceanv4.web3tools.constants import ENV_GAS_PRICE
+from assets.netlists.oceanv4.web3tools.contract_utils import (
     get_contract_definition,
     get_contracts_addresses,
     load_contract,
 )
-from drivers_oceanv4.wallet import Wallet
-from drivers_oceanv4.contract import CustomContractFunction
+from assets.netlists.oceanv4.web3tools.wallet import Wallet
+from assets.netlists.oceanv4.web3tools.contract import CustomContractFunction
 from web3 import Web3
 from web3._utils.events import get_event_data
 from web3._utils.filters import construct_event_filter_params

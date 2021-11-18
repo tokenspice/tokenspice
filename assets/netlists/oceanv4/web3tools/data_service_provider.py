@@ -18,15 +18,15 @@ from unittest.mock import Mock
 import requests
 from enforce_typing import enforce_types
 from eth_account.messages import encode_defunct
-from drivers_oceanv4.service_types import ServiceTypes
-from drivers_oceanv4.requests_session import get_requests_session
-from drivers_oceanv4.config import Config
-from drivers_oceanv4.exceptions import OceanEncryptAssetUrlsError
-from drivers_oceanv4.algorithm_metadata import AlgorithmMetadata
-from drivers_oceanv4.env_constants import ENV_PROVIDER_API_VERSION
-from drivers_oceanv4.currency import to_wei
-from drivers_oceanv4.transactions import sign_hash
-from drivers_oceanv4.wallet import Wallet
+from assets.netlists.oceanv4.web3tools.service_types import ServiceTypes
+from assets.netlists.oceanv4.web3tools.requests_session import get_requests_session
+from assets.netlists.oceanv4.web3tools.config import Config
+from assets.netlists.oceanv4.web3tools.exceptions import OceanEncryptAssetUrlsError
+from assets.netlists.oceanv4.web3tools.algorithm_metadata import AlgorithmMetadata
+from assets.netlists.oceanv4.web3tools.env_constants import ENV_PROVIDER_API_VERSION
+from assets.netlists.oceanv4.web3tools.currency import to_wei
+from assets.netlists.oceanv4.web3tools.transactions import sign_hash
+from assets.netlists.oceanv4.web3tools.wallet import Wallet
 from requests.exceptions import InvalidURL
 from requests.models import PreparedRequest, Response
 from requests.sessions import Session

@@ -6,7 +6,7 @@ from decimal import ROUND_DOWN, Context, Decimal, localcontext
 from typing import Union
 
 from enforce_typing import enforce_types
-from drivers_oceanv4.constants import MAX_UINT256
+from assets.netlists.oceanv4.web3tools.constants import MAX_UINT256
 from web3.main import Web3
 
 """decimal.Context tuned to accomadate MAX_WEI.

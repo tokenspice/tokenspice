@@ -11,9 +11,9 @@ from typing import Any, Dict, Optional, Union
 
 from contracts import artifacts
 from enforce_typing import enforce_types
-from drivers_oceanv4.integer import Integer
-from drivers_oceanv4.env_constants import ENV_CONFIG_FILE
-from drivers_oceanv4.constants import GAS_LIMIT_DEFAULT
+from assets.netlists.oceanv4.web3tools.integer import Integer
+from assets.netlists.oceanv4.web3tools.env_constants import ENV_CONFIG_FILE
+from assets.netlists.oceanv4.web3tools.constants import GAS_LIMIT_DEFAULT
 
 DEFAULT_NETWORK_HOST = "localhost"
 DEFAULT_NETWORK_PORT = 8545

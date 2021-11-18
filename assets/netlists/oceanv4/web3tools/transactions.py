@@ -6,9 +6,9 @@ from typing import Optional, Union
 
 from enforce_typing import enforce_types
 from eth_account.messages import SignableMessage
-from drivers_oceanv4.constants import BLOCK_NUMBER_POLL_INTERVAL
-from drivers_oceanv4.wallet import Wallet
-from drivers_oceanv4.web3_overrides_utils import (
+from assets.netlists.oceanv4.web3tools.constants import BLOCK_NUMBER_POLL_INTERVAL
+from assets.netlists.oceanv4.web3tools.wallet import Wallet
+from assets.netlists.oceanv4.web3tools.web3_overrides_utils import (
     wait_for_transaction_receipt_and_block_confirmations,
 )
 from web3.datastructures import AttributeDict

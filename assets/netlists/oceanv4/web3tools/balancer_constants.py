@@ -14,7 +14,7 @@ Contains `Balancer` related constants for
 - `INIT_WEIGHT_OCEAN`
 - `DEFAULT_SWAP_FEE`
 """
-from drivers_oceanv4.currency import to_wei
+from assets.netlists.oceanv4.web3tools.currency import to_wei
 
 # ref: https://bankless.substack.com/p/how-to-create-your-own-balancer-pool
 GASLIMIT_BFACTORY_NEWBPOOL = 5000000  # from ref above

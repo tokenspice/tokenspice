@@ -10,9 +10,9 @@ from enforce_typing import enforce_types
 from eth_account.datastructures import SignedMessage
 from eth_account.messages import SignableMessage
 from hexbytes.main import HexBytes
-from drivers_oceanv4.integer import Integer
-from drivers_oceanv4.constants import ENV_MAX_GAS_PRICE, MIN_GAS_PRICE
-from drivers_oceanv4.utils import (
+from assets.netlists.oceanv4.web3tools.integer import Integer
+from assets.netlists.oceanv4.web3tools.constants import ENV_MAX_GAS_PRICE, MIN_GAS_PRICE
+from assets.netlists.oceanv4.web3tools.utils import (
     private_key_to_address,
     private_key_to_public_key,
 )

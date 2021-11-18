@@ -12,11 +12,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import requests
 from enforce_typing import enforce_types
 from eth_utils import remove_0x_prefix
-from drivers_oceanv4.requests_session import get_requests_session
-from drivers_oceanv4.data_service_provider import DataServiceProvider
-from drivers_oceanv4.contract_base import ContractBase
-from drivers_oceanv4.currency import from_wei, pretty_ether_and_wei, to_wei
-from drivers_oceanv4.wallet import Wallet
+from assets.netlists.oceanv4.web3tools.requests_session import get_requests_session
+from assets.netlists.oceanv4.web3tools.data_service_provider import DataServiceProvider
+from assets.netlists.oceanv4.web3tools.contract_base import ContractBase
+from assets.netlists.oceanv4.web3tools.currency import from_wei, pretty_ether_and_wei, to_wei
+from assets.netlists.oceanv4.web3tools.wallet import Wallet
 from web3 import Web3
 from web3.datastructures import AttributeDict
 from web3.exceptions import MismatchedABI

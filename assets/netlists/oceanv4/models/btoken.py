@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 from enforce_typing import enforce_types
-from drivers_oceanv4.contract_base import ContractBase
-from drivers_oceanv4.wallet import Wallet
+from assets.netlists.oceanv4.web3tools.contract_base import ContractBase
+from assets.netlists.oceanv4.web3tools.wallet import Wallet
 
 
 class BToken(ContractBase):

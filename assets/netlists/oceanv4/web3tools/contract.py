@@ -7,11 +7,11 @@ from typing import Any, Dict, Optional
 
 from enforce_typing import enforce_types
 from hexbytes.main import HexBytes
-from drivers_oceanv4.integer import Integer
-from drivers_oceanv4.constants import BLOCK_NUMBER_POLL_INTERVAL
-from drivers_oceanv4.utils import get_chain_id
-from drivers_oceanv4.wallet import Wallet
-from drivers_oceanv4.web3_overrides_utils import (
+from assets.netlists.oceanv4.web3tools.integer import Integer
+from assets.netlists.oceanv4.web3tools.constants import BLOCK_NUMBER_POLL_INTERVAL
+from assets.netlists.oceanv4.web3tools.utils import get_chain_id
+from assets.netlists.oceanv4.web3tools.wallet import Wallet
+from assets.netlists.oceanv4.web3tools.web3_overrides_utils import (
     wait_for_transaction_receipt_and_block_confirmations,
 )
 from web3.contract import prepare_transaction

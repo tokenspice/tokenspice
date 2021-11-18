@@ -8,10 +8,10 @@ from typing import Optional, Tuple
 
 from enforce_typing import enforce_types
 from eth_utils import remove_0x_prefix
-from drivers_oceanv4 import balancer_constants
-from drivers_oceanv4.btoken import BToken
-from drivers_oceanv4.currency import from_wei
-from drivers_oceanv4.wallet import Wallet
+from assets.netlists.oceanv4.web3tools import balancer_constants
+from assets.netlists.oceanv4.models.btoken import BToken
+from assets.netlists.oceanv4.web3tools.currency import from_wei
+from assets.netlists.oceanv4.web3tools.wallet import Wallet
 from web3.datastructures import AttributeDict
 from web3.main import Web3
 

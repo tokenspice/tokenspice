@@ -4,8 +4,8 @@ import web3
 from util import constants
 from web3tools import web3util, web3wallet
 # from web3engine import datatoken, dtfactory
-from drivers_oceanv4 import data_token, dtfactory
-from drivers_oceanv4 import data_token as datatoken
+from assets.netlists.oceanv4.models import data_token, dtfactory
+from assets.netlists.oceanv4.models import data_token as datatoken
 
 # from web3.main import Web3
 
