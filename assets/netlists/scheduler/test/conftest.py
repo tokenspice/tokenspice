@@ -28,10 +28,10 @@ def vesting_wallet():
     
     duration_seconds = 30 #magic number
     
-    t = BROWNIE_PROJECT.VestingWallet.deploy(
+    w = BROWNIE_PROJECT.VestingWallet.deploy(
         beneficiary_address, start_timestamp, duration_seconds,
         {'from' : brownie.network.accounts[0]})
-    return t
+    return w
 
 @pytest.fixture
 def token():
