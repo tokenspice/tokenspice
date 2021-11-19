@@ -1,6 +1,6 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.8.0;
 
-import "./SafeMath.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/math/SafeMath.sol";
 
 contract Datatoken {
 
@@ -37,7 +37,7 @@ contract Datatoken {
         emit Transfer(address(0), msg.sender, _totalSupply);
     }
 
-    function () external payable {
+    fallback () external payable {
         revert();
     }
 
