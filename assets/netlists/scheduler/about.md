@@ -55,8 +55,7 @@ Brownie v1.17.1 - Python development framework for Ethereum
 
 Compiling contracts...
   Solc version: 0.8.10
-  Optimizer: Enabled  Runs: 200
-  EVM Version: Istanbul
+  ...
 Generating build data...
  - OpenZeppelin/openzeppelin-contracts@4.0.0/IERC20
  ...
@@ -64,6 +63,28 @@ Generating build data...
  
 Project has been compiled. Build artifacts saved at ... build/contracts
 ```
+
+## Testing
+
+In terminal:
+```console
+pytest assets/netlists/scheduler/test
+```
+
+## Usage: Running Scheduler Netlist
+
+In terminal:
+```console
+export PATH=$PATH:.
+rm -rf outdir_csv; tsp run assets/netlists/scheduler/netlist.py outdir_csv
+rm -rf outdir_png; tsp plot assets/netlists/scheduler/netlist.py outdir_csv outdir_png
+eog outdir_png
+```
+
+
+
+
+# --- MAYBE USE THIS, MAYBE NOT ---
 
 ## Usage: Brownie Console
 
@@ -140,15 +161,4 @@ Transaction sent: 0x6640df70ee894b36d22a1cb07a882311fad0d44da581c7dcaa838a75f07c
   Datatoken.transfer confirmed   Block: 2   Gas used: 50599 (0.75%)
 
 Terminating local RPC client...
-```
-
-## Usage: Running Scheduler Script
-
-In terminal:
-```console
-cd assets/netlists/scheduler
-export OCEAN_PRIVATE_KEY1=cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b7
-export OCEAN_PRIVATE_KEY2=cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b8
-./scripts/scheduler run
-./scripts/scheduler plot
 ```
