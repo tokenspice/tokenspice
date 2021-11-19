@@ -117,5 +117,5 @@ Let's test! Open a new terminal and:
 source venv/bin/activate
 
 #run test
-pytest drivers_oceanv4/test/test_btoken.py::test_OCEAN
+pytest assets/netlists/oceanv4/models/test//test_btoken.py::test_OCEAN
 ```
