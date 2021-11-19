@@ -51,8 +51,24 @@ source venv/bin/activate
 ./ganache.py
 ```
 
-## Deploy Ocean V4 smart contracts
+It should output something like the following.
+```text
+Ganache CLI v6.12.2 (ganache-core: 2.13.2)
 
+Available Accounts
+==================
+(0) 0x66aB6D9362d4F35596279692F0251Db635165871 (100 ETH)
+(1) ...
+
+Private Keys
+==================
+(0) 0xbbfbee4961061d506ffbb11dfea64eba16355cbf1d9c29613126ba7fec0aed5d
+(1) ...
+```
+
+Take note of the private key (0), since the deployer must use the same key.
+
+## Deploy Ocean V4 smart contracts
 
 Open a new terminal, and:
 ```console
@@ -71,13 +87,39 @@ export NODE_OPTIONS=--openssl-legacy-provider
 #compile the contracts
 npx hardhat compile
 
-#set envvars
+#set envvars. The private key here must be the same as key (0) from ganache.
+export PRIVATE_KEY=0xbbfbee4961061d506ffbb11dfea64eba16355cbf1d9c29613126ba7fec0aed5d
 export NETWORK_RPC_URL=http://127.0.0.1:8545/
-export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 export ADDRESS_FILE=addresses/address.json
 
 #Deploy compiled bytecode to ganache
 npx hardhat run scripts/deploy-contracts.js --network localhost
+```
+
+The output should look like the following. If you see an error message "sender doesn't have enough funds to send tx" then your `PRIVATE_KEY` envvar is wrong.
+```text
+ ·----------------------------|-------------·
+ |  Contract Name             ·  Size (Kb)  │
+ ·····························|··············
+ |  Address                   ·       0.08  │
+ ·····························|··············
+ |  BConst                    ·       0.77  │
+...
+}
+Use existing addresses:{
+  "DTFactory": "0xB2e1f0e8aCc3d3d5246C3B18Fa822dBD0AD16057",
+  "BFactory": "0xeE7beF16098941c2B2D0495dCfe42ee4268d1607",
+...
+Deploying OceanMock
+Deploying DAI MOCK
+Deploying USDC MOCK
+...
+writing to addresses/address.json
+{
+  "development": {
+    "DTFactory": "0xB2e1f0e8aCc3d3d5246C3B18Fa822dBD0AD16057",
+    "BFactory": "0xeE7beF16098941c2B2D0495dCfe42ee4268d1607",
+...
 ```
 
 ## Point TokenSPICE to the deployed contracts
