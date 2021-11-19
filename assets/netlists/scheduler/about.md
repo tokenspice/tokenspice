@@ -70,6 +70,10 @@ Note: this will fail if there is a `contracts` directory side-by-side with `toke
 
 In terminal:
 ```console
+#run single test
+pytest assets/netlists/scheduler/test/test_transfer.py::test_transfer
+
+#run all of this netlist's tests
 pytest assets/netlists/scheduler/test
 ```
 
