@@ -81,8 +81,9 @@ npx hardhat run scripts/deploy-contracts.js --network localhost
 ```
 
 ## Point TokenSPICE to the deployed contracts
-Finally, open tokenspice/tokenspice.ini and set: `ARTIFACTS_PATH = contracts/artifacts/`, and `ADDRESSES_PATH = contracts/addresses/`
+Finally, open tokenspice/tokenspice.ini and set: `ARTIFACTS_PATH = ../contracts/artifacts/`, and `ADDRESSES_PATH = ../contracts/addresses/`
 
+- Note that these paths are in the _contracts_ repo, not the _tokenspice_ repo!
 - Now, TokenSPICE knows where to find each contract (address.json file)
 - And, it knows what each contract's interface is (*.json files).
 

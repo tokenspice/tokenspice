@@ -79,7 +79,10 @@ def contractAddresses():
 
 def contractAddressesFilename():
     base_path = confFileValue('general', 'ADDRESSES_PATH')
-    return os.path.join(base_path, 'address.json')
+    filename = os.path.join(base_path, 'address.json')
+    filename = os.path.abspath(filename)
+    assert os.path.exists(filename), filename
+    return filename
 
 def get_network():
     return confFileValue('general', 'NETWORK')
