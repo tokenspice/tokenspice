@@ -1,17 +1,4 @@
-enforce-typing
-mypy
-pytest
-web3
-deprecated
-pycryptodomex
-tqdm
-pytz
-eth-account
-eth-keys
-eth-utils
-pandas
+eth-brownie
 matplotlib
-coverage
-codacy-coverage
 
 
