@@ -40,9 +40,8 @@ Open a new terminal and:
 #install Ganache (if you haven't yet)
 npm install ganache-cli --global
 
-#create and activate env't
+#activate env't
 cd tokenspice
-python3 -m venv venv
 source venv/bin/activate
 
 #run ganache.py. It calls ganache cli and fills in many arguments for you.
