@@ -87,17 +87,17 @@ def make_info(name, private_key_name):
 
     return info
 
-def _deployAndMintToken(symbol: str, to_address: str) -> datatoken.DataToken:
+def _deployAndMintToken(symbol: str, to_address: str) -> datatoken.Datatoken:
     network = web3util.get_network()
     private_key = web3util.confFileValue(network, 'TEST_PRIVATE_KEY1')
     from_wallet = Web3Wallet(private_key=private_key)
     factory = dtfactory.DTFactory()
-    amount_base = web3util.toBase18(1000.0)
+    amount_base = web3util.toBase18(100.0)
     # import ipdb
     # ipdb.set_trace()
     dt_address = factory.createToken(
         '', symbol, symbol, amount_base, from_wallet)
-    dt = datatoken.DataToken(dt_address)
+    dt = datatoken.Datatoken(dt_address)
     dt.mint(account=to_address, value_base=amount_base, from_wallet=from_wallet)
     
     return dt

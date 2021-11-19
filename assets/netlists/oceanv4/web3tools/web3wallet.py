@@ -106,6 +106,7 @@ def buildAndSendTx(function,
     nonce = _web3.eth.get_transaction_count(from_wallet.address)
     network = web3util.get_network()
     gas_price = int(web3util.confFileValue(network, 'GAS_PRICE'))
+    # gas_price = 1000000000
     tx_params = {
         "from": from_wallet.address,
         "value": num_wei,
@@ -125,6 +126,8 @@ def buildAndSendTx(function,
         
     signed_tx = _web3.eth.account.sign_transaction(
         tx, private_key=from_wallet.private_key)
+    # import ipdb
+    # ipdb.set_trace()
     tx_hash = _web3.eth.send_raw_transaction(signed_tx.rawTransaction)
 
     tx_receipt = _web3.eth.wait_for_transaction_receipt(tx_hash)

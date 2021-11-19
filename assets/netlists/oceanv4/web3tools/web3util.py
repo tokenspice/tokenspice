@@ -52,7 +52,7 @@ def abiFilename(class_name: str) -> str:
     """Given e.g. 'DTFactory', returns './artifacts/contracts/v3/V3DTFactory.sol/V3DTFactory.json`. It searches through subdirectories to find the path.
     """
     target_file = class_name + '.json'
-    if class_name == 'DTFactory':
+    if class_name in ['DTFactory','DataTokenTemplate']:
         target_file = 'V3' + target_file
     # target_file = class_name + '.json'
     base_path = confFileValue('general', 'ARTIFACTS_PATH')

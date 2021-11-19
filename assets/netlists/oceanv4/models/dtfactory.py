@@ -101,8 +101,11 @@ class DTFactory:
         (tx_hash, tx_receipt) = web3wallet.buildAndSendTx(f, from_wallet)
 
         warnings.filterwarnings("ignore") #ignore unwarranted warning up next
-        rich_logs = getattr(self.contract.events, 'TokenCreated')().processReceipt(tx_receipt)
-        token_address = rich_logs[0]['args']['newTokenAddress'] 
+        # rich_logs = getattr(self.contract.events, 'TokenCreated')().processReceipt(tx_receipt)
+        # import ipdb
+        # ipdb.set_trace()
+        # token_address = rich_logs[0]['args']['newTokenAddress'] 
+        token_address = getattr(self.contract.events, 'TokenCreated')().address
         warnings.resetwarnings()
 
         return token_address

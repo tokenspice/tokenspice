@@ -1,55 +1,41 @@
-#
-# Copyright 2021 Ocean Protocol Foundation
-# SPDX-License-Identifier: Apache-2.0
-#
 from enforce_typing import enforce_types
-from assets.netlists.oceanv4.web3tools.contract_base import ContractBase
-from assets.netlists.oceanv4.web3tools.wallet import Wallet
+from assets.netlists.oceanv4.web3tools import web3util, web3wallet
 
-
-class BToken(ContractBase):
-    CONTRACT_NAME = "BToken"
-
-    # ============================================================
-    # reflect BToken Solidity methods
-    @enforce_types
+@enforce_types
+class BToken:
+    def __init__(self, contract_address):
+        name = self.__class__.__name__
+        abi = web3util.abi(name)
+        web3 = web3util.get_web3()
+        self.contract = web3.eth.contract(contract_address, abi=abi)
+        import ipdb
+        ipdb.set_trace()
+    @property
+    def address(self):
+        return self.contract.address
+        
+    #============================================================
+    #reflect BToken Solidity methods
     def symbol(self) -> str:
-        """
-        :return: str
-        """
-        return self.contract.caller.symbol()
-
-    @enforce_types
+        return self.contract.functions.symbol().call()
+    
     def decimals(self) -> int:
-        """
-        :return: int
-        """
-        return self.contract.caller.decimals()
+        return self.contract.functions.decimals().call()
+    
+    def balanceOf_base(self, address: str) -> int:
+        func = self.contract.functions.balanceOf(address)
+        return func.call()
 
-    @enforce_types
-    def balanceOf(self, address: str) -> int:
-        """
-        :return: int
-        """
-        return self.contract.caller.balanceOf(address)
+    def transfer(self, dst_address: str, amt_base: int,
+                 from_wallet: web3wallet.Web3Wallet):
+        f = self.contract.functions.transfer(dst_address, amt_base)
+        return web3wallet.buildAndSendTx(f, from_wallet)
 
-    @enforce_types
-    def approve(self, spender_address: str, amt: int, from_wallet: Wallet) -> str:
-        """
-        :return: hex str transaction hash
-        """
-        return self.send_transaction("approve", (spender_address, amt), from_wallet)
+    def approve(self, spender_address: str, amt_base: int,
+                from_wallet: web3wallet.Web3Wallet):
+        f = self.contract.functions.approve(spender_address, amt_base)
+        return web3wallet.buildAndSendTx(f, from_wallet)
 
-    @enforce_types
-    def transfer(self, dst_address: str, amt: int, from_wallet: Wallet) -> str:
-        """
-        :return: hex str transaction hash
-        """
-        return self.send_transaction("transfer", (dst_address, amt), from_wallet)
-
-    @enforce_types
-    def allowance(self, src_address: str, dst_address: str) -> int:
-        """
-        :return: int
-        """
-        return self.contract.caller.allowance(src_address, dst_address)
+    def allowance_base(self, src_address:str, dst_address: str) -> int:
+        f = self.contract.functions.allowance(src_address, dst_address)
+        return f.call() 

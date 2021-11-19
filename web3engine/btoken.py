@@ -8,7 +8,8 @@ class BToken:
         abi = web3util.abi(name)
         web3 = web3util.get_web3()
         self.contract = web3.eth.contract(contract_address, abi=abi)
-        
+        # import ipdb
+        # ipdb.set_trace()
     @property
     def address(self):
         return self.contract.address
