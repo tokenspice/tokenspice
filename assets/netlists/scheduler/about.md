@@ -66,6 +66,8 @@ Project has been compiled. Build artifacts saved at ... build/contracts
 
 ## Testing
 
+Note: this will fail if there is a `contracts` directory side-by-side with `tokenspice/`. If you have such a directory, delete or move it.
+
 In terminal:
 ```console
 pytest assets/netlists/scheduler/test
