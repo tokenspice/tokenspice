@@ -9,3 +9,7 @@ def project():
     project = brownie.project.load('assets/netlists/scheduler', name="MyProject")
     brownie.network.connect('development')
     return project
+
+@pytest.fixture(scope="module") 
+def accounts():
+    return brownie.network.accounts

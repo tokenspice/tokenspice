@@ -2,8 +2,7 @@
 
 import brownie
 
-def test_transfer(project):
-    accounts = brownie.network.accounts
+def test_transfer(project, accounts):
     token = project.Datatoken.deploy("TST", "Test Token", "blob", 18, 1e21,
                                      {'from' : accounts[0]})
     assert token.totalSupply() == 1e21
