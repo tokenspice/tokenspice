@@ -88,27 +88,13 @@ Finally, open tokenspice/tokenspice.ini and set: `ARTIFACTS_PATH = contracts/art
 
 ## Testing it
 
-Status quo relative locations of V3 and V4 ocean artifacts. They will likely change; as they do, please update here.
+Status quo locations of oceanv3 and v4 artifacts. Ideally the v3 ones will mirror the v4 ones. (But one step at a time.)
 
-| What    | v3             | v4               |
-| ----    | ----           | ----             |
-|     |            |              |
-| **Drivers** | `web3engine/`    | `drivers_oceanv4/` |
-| **Agents**  | `assets/agents/` | `assets/agents/`, `assets/netlists/oceanv4/v4Agents/` |
-| **Netlist** | `assets/netlists/oceanv3/netlist.py` | `assets/netlists/oceanv4/netlist.py` |
-| **web3tools** | `web3tools/`    | `drivers_oceanv4/` |
-
-
-Ideally, the locations are the following. Once they're like this, we can merge the two tables into one.
-
-| What    | oceanv3             | oceanv4               |
-| ----    | ----           | ----             |
-|     |            |              |
-| **Contracts** | (don't store)   | (don't store) |
-| **Models (py wrappers of ABIs)** | `assets/netlists/oceanv3/models`    | `assets/netlists/oceanv4/models/` |
-| **Agents**  | General across >1 netlist (non-EVM, EVM base classes): `assets/agents/`, EVM: `assets/netlists/oceanv3/agents/`   | Pattern is like oceanv3. `assets/agents/`, `assets/netlists/oceanv4/agents/` |
-| **Netlist** | `assets/netlists/oceanv3/netlist.py` | `assets/netlists/oceanv4/netlist.py` |
-| **General Web3 contracts utilities** |  `assets/netlists/oceanv3/web3tools`    | `assets/netlists/oceanv4/web3tools/` |
+ What                             | v3               | v4
+ ----                             | ----             | ----
+ **Models (py wrappers of ABIs)** | `web3engine/`    | `assets/netlists/oceanv4/models/`
+ **Agents**                       | `assets/agents/` | General across >1 netlist (non-EVM, EVM base classes): `assets/agents/`, EVM: `assets/netlists/oceanv4/agents/`
+ **General Web3 contracts utils** | `web3tools/`     | `assets/netlists/oceanv4/web3tools/` |
 
 Let's test! Open a new terminal and:
 
