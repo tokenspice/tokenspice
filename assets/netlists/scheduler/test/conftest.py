@@ -12,8 +12,27 @@ def project():
     return BROWNIE_PROJECT
 
 @pytest.fixture
+def chain():
+    return brownie.network.chain
+
+@pytest.fixture
 def accounts():
     return brownie.network.accounts
+
+@pytest.fixture
+def vesting_wallet():
+    #note: eth timestamps are in unix time (seconds since jan 1, 1970)
+    beneficiary_address = brownie.network.accounts[1].address
+    
+    recent_block = brownie.network.chain[-1]
+    start_timestamp = recent_block.timestamp + 5 #magic number
+    
+    duration_seconds = 30 #magic number
+    
+    t = BROWNIE_PROJECT.VestingWallet.deploy(
+        beneficiary_address, start_timestamp, duration_seconds,
+        {'from' : brownie.network.accounts[0]})
+    return t
 
 @pytest.fixture
 def token():
