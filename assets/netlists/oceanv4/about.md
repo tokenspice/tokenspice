@@ -12,7 +12,7 @@ Starts with Ocean V3, then makes staking safer via one-sided AMM bots. WIP.
 - Python 3.8.5+
 - Node 17.1.0+. [Upgrade instrs](https://askubuntu.com/a/480642)
 
-## Install repo & dependencies
+## Set up environment
 
 Open a new terminal and:
 ```console
@@ -31,7 +31,7 @@ pip install wheel
 pip install -r requirements.txt
 ```
 
-## Start Ganache
+## Get Ganache running
 
 To deploy, oceanv3 uses truffle, and oceanv4 uses [hardhat](https://hardhat.org/getting-started/). Both deploy _to_ the ganache chain.
 
