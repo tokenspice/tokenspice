@@ -6,25 +6,43 @@ Starts with Ocean V3, then makes staking safer via one-sided AMM bots. WIP.
 
 [GSlides for the above image](https://docs.google.com/presentation/d/14BB50dkGXTcPjlbrZilQ3WYnFLDetgfMS1BKGuMX8Q0/edit#slide=id.gac81e1e848_0_8)
 
-# Installation
-
 ## Prerequisites
 
 - Linux/MacOS
 - Python 3.8.5+
 - Node 17.1.0+. [Upgrade instrs](https://askubuntu.com/a/480642)
 
-## Getting Ganache running
+## Install repo & dependencies
 
-Oceanv3 netlist uses truffle to deploy, oceanv4 uses [hardhat](https://hardhat.org/getting-started/). But both will still use ganache test chain
+Open a new terminal and:
+```console
+#clone repo
+git clone https://github.com/oceanprotocol/tokenspice.git
+cd tokenspice
+
+#create a virtual environment
+python3 -m venv venv
+
+#activate env't
+source venv/bin/activate
+
+#install dependencies. Install wheel first to avoid errors.
+pip install wheel
+pip install -r requirements.txt
+```
+
+## Start Ganache
+
+To deploy, oceanv3 uses truffle, and oceanv4 uses [hardhat](https://hardhat.org/getting-started/). Both deploy _to_ the ganache chain.
 
 Open a new terminal and:
 ```console
 #install Ganache (if you haven't yet)
 npm install ganache-cli --global
 
-#activate env't
+#create and activate env't
 cd tokenspice
+python3 -m venv venv
 source venv/bin/activate
 
 #run ganache.py. It calls ganache cli and fills in many arguments for you.
@@ -102,19 +120,8 @@ Ideally, the locations are the following. Once they're like this, we can merge t
 Let's test! Open a new terminal and:
 
 ```console
-#clone repo
-git clone https://github.com/oceanprotocol/tokenspice.git
-cd tokenspice
-
-#create a virtual environment
-python3 -m venv venv
-
-#activate env't
+#if needed, activate env't
 source venv/bin/activate
-
-#install dependencies. Install wheel first to avoid errors.
-pip install wheel
-pip install -r requirements.txt
 
 #run test
 pytest drivers_oceanv4/test/test_btoken.py::test_OCEAN
