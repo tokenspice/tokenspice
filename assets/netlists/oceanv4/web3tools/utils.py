@@ -7,8 +7,7 @@ from collections import namedtuple
 from pathlib import Path
 from typing import Any, List, Optional
 
-# import 
-from contracts import artifacts
+# import
 from enforce_typing import enforce_types
 from eth_account.account import Account
 from eth_account.messages import encode_defunct

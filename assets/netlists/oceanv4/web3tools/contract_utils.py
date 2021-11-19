@@ -8,10 +8,7 @@ import logging
 import os
 from typing import Any, Dict, Optional
 
-# import artifacts  # noqa
-from contracts import artifacts
 from enforce_typing import enforce_types
-from jsonsempai import magic  # noqa: F401
 from web3.contract import Contract
 from web3.main import Web3
 from pathlib import Path
