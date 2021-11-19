@@ -38,7 +38,5 @@ def test_ERC20(alice_wallet, alice_address,
 def test_OCEAN(OCEAN_address):
     # token = btoken.BToken(web3 = Web3(), address=OCEAN_address)
     token = btoken.BToken(contract_address=OCEAN_address)
-    # import ipdb
-    # ipdb.set_trace()
 
     assert token.symbol() == 'Ocean'
