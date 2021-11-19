@@ -18,10 +18,7 @@ from pathlib import Path
 import configparser
 from util import constants
 
-
 logger = logging.getLogger(__name__)
-
-
 
 def abi(class_name: str):
     filename = abiFilename(class_name)
