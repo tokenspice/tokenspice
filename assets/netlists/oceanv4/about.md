@@ -61,31 +61,22 @@ git clone https://github.com/oceanprotocol/contracts
 
 #Switch to oceanv4 branch
 git checkout v4main
-```
 
-One-time install:
-```console
+#one-time install
 npm install
-```
 
-Node 17.x has an updated openssl that's a breaking change [[Reference](https://stackoverflow.com/a/69671888)]. To avoid problems in the forthcoming `npx` call, do:
-```console
+#work around Node 17.x bug
 export NODE_OPTIONS=--openssl-legacy-provider
-```
 
-
-```console
 #compile the contracts
 npx hardhat compile
 
 #set envvars
-export NODE_OPTIONS=--openssl-legacy-provider
 export NETWORK_RPC_URL=http://127.0.0.1:8545/
 export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 export ADDRESS_FILE=addresses/address.json
-```
-### Deploy compiled bytecode to ganache chain
-```console
+
+#Deploy compiled bytecode to ganache
 npx hardhat run scripts/deploy-contracts.js --network localhost
 ```
 
