@@ -24,8 +24,7 @@ def vesting_wallet():
     #note: eth timestamps are in unix time (seconds since jan 1, 1970)
     beneficiary_address = brownie.network.accounts[1].address
     
-    recent_block = brownie.network.chain[-1]
-    start_timestamp = recent_block.timestamp + 5 #magic number
+    start_timestamp = brownie.network.chain.time() + 5 #magic number
     
     duration_seconds = 30 #magic number
     
