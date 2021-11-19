@@ -16,9 +16,7 @@ def test_ERC20(alice_wallet, alice_address,
     #now that we've created & minted the token, we can use it with BToken interface
     token = btoken.BToken(dt_address)
     assert token.address == dt_address
-    # import ipdb
-    # ipdb.set_trace()
-    # assert token.decimals() == 18
+    assert token.decimals() == 18
     assert token.balanceOf_base(alice_address) == web3util.toBase18(100.0)
     assert token.balanceOf_base(bob_address) == 0
 
