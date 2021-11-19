@@ -87,7 +87,7 @@ Finally, open tokenspice/tokenspice.ini and set: `ARTIFACTS_PATH = ../contracts/
 - Now, TokenSPICE knows where to find each contract (address.json file)
 - And, it knows what each contract's interface is (*.json files).
 
-## Testing it
+## Locations
 
 Status quo locations of oceanv3 and v4 artifacts. Ideally the v3 ones will mirror the v4 ones. (But one step at a time.)
 
@@ -96,6 +96,8 @@ Status quo locations of oceanv3 and v4 artifacts. Ideally the v3 ones will mirro
  **Models (py wrappers of ABIs)** | `web3engine/`    | `assets/netlists/oceanv4/models/`
  **Agents**                       | `assets/agents/` | General across >1 netlist (non-EVM, EVM base classes): `assets/agents/`, EVM: `assets/netlists/oceanv4/agents/`
  **General Web3 contracts utils** | `web3tools/`     | `assets/netlists/oceanv4/web3tools/` |
+
+## Testing
 
 Let's test! Open a new terminal and:
 
