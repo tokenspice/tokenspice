@@ -83,6 +83,9 @@ Open a new terminal and:
 #install Ganache (if you haven't yet)
 npm install ganache-cli --global
 
+#Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
+export NODE_OPTIONS=--openssl-legacy-provider
+
 #activate env't
 cd tokenspice
 source venv/bin/activate
