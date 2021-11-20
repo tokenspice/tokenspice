@@ -49,7 +49,7 @@ def test1():
     assert funder_agent.OCEAN() == 0.0
     assert isinstance(state.vw_agent, VestingWalletAgent)
     assert state.vw_agent.name == "vw_agent"
-    OCEAN_address = globaltokens.OCEANtoken().address
+    OCEAN_address = globaltokens.OCEAN_address()
     vw = state.vw_agent.vesting_wallet
     assert vw.released(OCEAN_address) == approx(Wei(100.0))
     

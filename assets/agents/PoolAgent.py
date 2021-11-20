@@ -34,7 +34,7 @@ class PoolAgent(AgentBase.AgentBaseEvm):
     def _datatokenAddress(self):
         addrs = self._pool.getCurrentTokens()
         assert len(addrs) == 2
-        OCEAN_addr = globaltokens.OCEANtoken().address
+        OCEAN_addr = globaltokens.OCEAN_address()
         for addr in addrs:
             if addr != OCEAN_addr:
                 return addr

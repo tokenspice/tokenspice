@@ -5,8 +5,9 @@ import random
 
 from assets.agents.VestingWalletAgent import VestingWalletAgent
 from engine import AgentBase
-from web3engine import globaltokens
 from util.constants import BROWNIE_PROJECT, S_PER_DAY
+from web3engine import globaltokens
+from web3tools.web3util import toBase18
 
 @enforce_types
 class VestingFunderAgent(AgentBase.AgentBaseEvm):
@@ -40,7 +41,7 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
 
         #fund the vesting wallet with all of self's OCEAN
         token = globaltokens.OCEANtoken()
-        token.transfer(beneficary_agent.account(), Wei(self.OCEAN()),
+        token.transfer(beneficary_agent.account(), toBase18(self.OCEAN()),
                        {'from': self.account()})
         
         #create vesting wallet agent, add to state

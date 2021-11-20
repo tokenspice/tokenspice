@@ -13,7 +13,9 @@ log = logging.getLogger('constants')
 
 import brownie
 BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")
-brownie.network.connect('development') #FIXME: may need to be 'ganache', since brownie auto-reverts in 'development' 
+brownie.network.connect('development') #FIXME: may need to be 'ganache', since brownie auto-reverts in 'development'
+
+GOD_ACCOUNT = brownie.network.accounts[0]
 
 SAFETY = config['general'].getboolean('safety')
 assert SAFETY is not None

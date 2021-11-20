@@ -16,11 +16,13 @@ log = logging.getLogger('wallet')
 
 from abc import abstractmethod, ABC
 import brownie
+from brownie import Wei
 from enforce_typing import enforce_types
 import typing
 
 from web3engine import bpool, btoken, datatoken, globaltokens
-from util import constants 
+from util import constants
+from util.constants import GOD_ACCOUNT
 from util.strutil import asCurrency
 from web3tools import web3util
 from web3tools.web3util import toBase18, fromBase18
@@ -207,21 +209,21 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
             self._account = brownie.network.accounts.add(private_key=private_key)
 
         #Give the new wallet ETH to pay gas fees (but don't track otherwise)
-        brownie.network.accounts[0].transfer(self._account, "0.01 ether")
+        GOD_ACCOUNT.transfer(self._account, "0.01 ether")
                 
         #OCEAN is tracked in EVM, not here. But we cache here for speed
         self._burnOCEAN_nocache() #ensure 0 OCEAN (eg >1 unit tests)
         self._cached_OCEAN_base: typing.Union[int,None] = None
         self._total_OCEAN_in:float = OCEAN
         assert self.OCEAN() == 0.0
-        
-        globaltokens.mintOCEAN(address=self._account.address,
-                               value_base=toBase18(OCEAN))
+
+        globaltokens.fundOCEANFromAbove(self._account.address, toBase18(OCEAN))
         self._cached_OCEAN_base = None
         
         #postconditions
         assert self.USD() == USD
         assert self.OCEAN() == OCEAN
+
 
     @property
     def account(self):
@@ -257,17 +259,17 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         return fromBase18(self._OCEAN_base())
 
     def _OCEAN_base(self) -> int:
-        OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
+        OCEAN_token = globaltokens.OCEANtoken()
         if self._cached_OCEAN_base is None:
-            self._cached_OCEAN_base = OCEAN_bal_base(self._address)
+            self._cached_OCEAN_base = OCEAN_token.balanceOf(self._address)
                    
-        assert self._cached_OCEAN_base == OCEAN_bal_base(self._address)
+        assert self._cached_OCEAN_base == OCEAN_token.balanceOf(self._address)
             
         return self._cached_OCEAN_base
         
     def depositOCEAN(self, amt: float) -> None:
         assert amt >= 0.0
-        globaltokens.mintOCEAN(self._address, toBase18(amt))
+        globaltokens.fundOCEANFromAbove(self._account.address, toBase18(amt))
         self._total_OCEAN_in += amt
         self.resetCachedInfo()
         

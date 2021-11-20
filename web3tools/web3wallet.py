@@ -81,8 +81,8 @@ class Web3Wallet:
         _web3 = web3util.get_web3()
         return _web3.eth.getBalance(self._address)
 
-    def fundFromAbove(self, num_wei: int):
-        #Give the this wallet ETH to pay gas fees
+    def fundETHFromAbove(self, num_wei: int):
+        #Give this wallet ETH to pay gas fees
         #Use funds given to 'TEST_PRIVATE_KEY1' from ganache (see deploy.py)
         network = web3util.get_network()
         god_key = web3util.confFileValue(network, 'TEST_PRIVATE_KEY1')
