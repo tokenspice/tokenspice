@@ -21,14 +21,9 @@ class Ocean:
         
     def createDatatoken(self, blob):
         """@return -- brownie-style datatoken contract"""
-        try:
-            project = brownie.project.load('.', name="MyProject") #for brownie project dir
-        except brownie.exceptions.ProjectNotFound:
-            project = brownie.project.load('./assets/netlists/scheduler', name="MyProject") #for tsp dir
+        project = brownie.project.load('./', name="MyProject")
         return project.Datatoken.deploy(
                 "TST", "Test Token", blob, 18, 1e24,{'from' : self.account})
-            
-        return returnval
                 
 def privateKeyToAccount(private_key):
     return eth_account.Account().privateKeyToAccount(private_key)

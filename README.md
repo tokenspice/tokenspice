@@ -14,7 +14,6 @@
   
 </div>
 
-
 TokenSPICE simulates tokenized ecosystems via an agent-based approach, with EVM in-the-loop.
 
 It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-token-engineering-b02feeeff7ca) [Engineering](https://www.tokenengineering.org) flows, to design, tune, and verify tokenized ecosystems. It's young but promising. We welcome you to contribute! 👋
@@ -27,7 +26,7 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 
 - [👪 Community](#-community)
 - [🏗 Initial Setup](#-initial-setup)
-- [🏄 Do Simulations, Make Changes](#-do-simulations-make-changes)
+- [🏄 Running, Debugging](#-running-debugging)
 - [🦑 Agents and Netlists](#-agents-and-netlists)
 - [🐟 Updating Envt](#-updating-envt)
 - [🐡 Backlog](#-backlog)
@@ -54,14 +53,22 @@ History:
 - Linux/MacOS
 - Python 3.8.5+
 
-
-## Set up environment
+## Installation
 
 Open a new terminal and:
 ```console
+#install Ganache (if you haven't yet)
+npm install ganache-cli --global
+
+#Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
+export NODE_OPTIONS=--openssl-legacy-provider
+
 #clone repo
-git clone https://github.com/tokenspice/tokenspice.git
+git clone https://github.com/tokenspice/tokenspice
 cd tokenspice
+
+#[ONLY IF NOT MERGED YET] point to 'scheduler' branch
+git checkout scheduler
 
 #create a virtual environment
 python3 -m venv venv
@@ -72,110 +79,79 @@ source venv/bin/activate
 #install dependencies. Install wheel first to avoid errors.
 pip install wheel
 pip install -r requirements.txt
+
+#install openzeppelin library, to import from .sol files
+brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
 ```
 
-## Get Ganache running
+## Compiling
 
-Think of [Ganache](https://www.trufflesuite.com/docs/ganache/) as local EVM blockchain network, with just one node.
-
-Open a new terminal and:
+From terminal:
 ```console
-#install Ganache (if you haven't yet)
-npm install ganache-cli --global
-
-#Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
-export NODE_OPTIONS=--openssl-legacy-provider
-
-#activate env't
-cd tokenspice
-source venv/bin/activate
-
-#run ganache.py. It calls ganache cli and fills in many arguments for you.
-./ganache.py
+brownie compile
 ```
 
-## Deploy the smart contracts to ganache
+It should output something like:
+```text
+Brownie v1.17.1 - Python development framework for Ethereum
 
-Below, you will deploy [smart contracts](https://github.com/oceanprotocol/contracts) from [Ocean Protocol](https://www.oceanprotocol.com). Those contracts include an ERC20 datatoken factory, ERC20 template, [Balancer](https://www.balancer.finance) pool factory, [Balancer pool template](https://github.com/balancer-labs/balancer-core/blob/master/contracts/BPool.sol), and metadata management. Each contract has a corresponding Python wrapper in the `web3engine` directory. Then, Python agents in `assets/agents` use these wrappers. 
-
-You can add your own smart contracts by deploying them to EVM, then adding corresponding Python wrappers and agents to use them.
-
-Let's do this. Open a new terminal and:
-```console
-#Grab the contracts code from main, *OR* (see below)
-git clone https://github.com/oceanprotocol/contracts
-
-#OR grab from a branch. Here's Alex's V4 prototype branch
-git clone --branch feature/1mm-prototype_alex https://github.com/oceanprotocol/contracts
-
-#here's the v4 contracts repo, enjoy:)
-#https://github.com/oceanprotocol/contracts/tree/v4main
+Compiling contracts...
+  Solc version: 0.8.10
+  ...
+Generating build data...
+ - OpenZeppelin/openzeppelin-contracts@4.0.0/IERC20
+ ...
+ - VestingWallet
+ 
+Project has been compiled. Build artifacts saved at ... build/contracts
 ```
 
-Then, deploy. In that same terminal:
+# 🏄 Running, Debugging
+
+## Testing
+
+Note: this will fail if there is a `contracts` directory side-by-side with tokenspice/. If you have such a directory, delete or move it.
+
+From terminal:
 ```console
-cd contracts
+#run single test
+pytest assets/netlists/scheduler/test/test_vestingwallet.py::test_tokenFunding
 
-#one-time install
-npm i
+#run all of this netlist's tests
+pytest assets/netlists/scheduler/test
 
-#compile .sol, deploy to ganache, update contracts/artifacts/*.json
-npm run deploy
+#run all tests [FIXME!]
+pytest
+
+#run static type-checking. (pytest does dynamic type-checking.)
+mypy --config-file mypy.ini ./
 ```
 
-Finally, open `tokenspice/tokenspice.ini` and set `ARTIFACTS_PATH = contracts/artifacts`.
-* Now, TokenSPICE knows where to find each contract on ganache (address.json file)
-* And, it knows what each contract's interface is (*.json files).
+## TokenSPICE Command Line
 
-## Test one EVM-based test
-
-Open a new terminal and:
+Use `tsp`. From terminal:
 ```console
-#activate env't
-source venv/bin/activate
-
-#run test
-pytest web3engine/test/test_btoken.py 
-```
-
-## First usage of tsp
-
-We use `tsp` for TokenSPICE in the command line.
-
-First, add pwd to bash path. In the terminal:
-```console
+#add pwd to bash path
 export PATH=$PATH:.
-```
 
-To see help, call `tsp` with no args.
-```console
+#see tsp help
 tsp
-```
 
-## Run simulation
+#simulate 'scheduler' netlist, sending results to 'outdir_csv'
+tsp run assets/netlists/scheduler/netlist.py outdir_csv
 
-Here's an example on a supplied netlist `simplegrant`.
+#create output plots in 'outdir_png'
+tsp plot assets/netlists/scheduler/netlist.py outdir_csv outdir_png
 
-Simulate the netlist, storing results to `outdir_csv`.
-```console
-tsp run assets/netlists/simplegrant/netlist.py outdir_csv
-```
-
-Congrats! You've run your first TokenSPICE simulation. Let's see what the results look like.
-
-Output plots to `outdir_png`, and view them.
-```console
-tsp plot assets/netlists/simplegrant/netlist.py outdir_csv outdir_png
+#view plots
 eog outdir_png
 ```
 
-You should see two pngs, one of OCEAN vs time (descending), and one of USD vs time (flat). 
-
-The [wsloop netlist](assets/netlists/wsloop/about.md) is more complex. Below are example plots from it, tracking token count, tokens minted, tokens burned, and tokens granted over a 20 year period.
+The [wsloop netlist](assets/netlists/wsloop/about.md) is more complex. Below are sample results.
 
 <img src="images/wsloop-example-small.png">
 
-For runs that take more than a few seconds, it helps send stdout & stderr to a file while still monitoring the console in real-time. Here's how, on wsloop netlist:
+For runs that take more than a few seconds, it helps send stdout & stderr to a file while still monitoring the console in real-time. Here's how:
 
 ```console
 #remove previous directory, then start running
@@ -185,73 +161,81 @@ rm -rf outdir_csv; tsp run assets/netlists/wsloop/netlist.py outdir_csv > out.tx
 tail -f out.txt
 ```
 
-# 🏄 Do Simulations, Make Changes
+## Debugging from Brownie Console
 
-## Do Once, At Session Start
-
-**Start chain.** Open a new terminal and:
+From terminal:
 ```console
-cd ~/code/tokenspice
-source venv/bin/activate
-./ganache.py
+brownie console
 ```
 
-**Deploy contracts.** Open a new terminal and:
-```console
-cd ~/code/contracts
-npm run deploy
+In brownie console:
+```python
+>>> dt = Datatoken.deploy("DT1", "Datatoken 1", "123.com", 18, 100, {'from': accounts[0]})                                                                                                                 
+Transaction sent: 0x9d20d3239d5c8b8a029f037fe573c343efd9361efd4d99307e0f5be7499367ab
+  Gas price: 0.0 gwei   Gas limit: 6721975
+  Datatoken.constructor confirmed - Block: 1   Gas used: 601010 (8.94%)
+  Datatoken deployed at: 0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87
+
+>>> dt.blob()                                                                                                                                                                                              
+'123.com'
 ```
 
-## Do >=1 Times in a Session
+## Debugging from Python Console
 
-**Update simulation code.** Open a new terminal. In it:
+From terminal:
 ```console
-cd ~/code/tokenspice
-source venv/bin/activate
-
-#then use editor to change assets/netlists/foo.py
+python
 ```
 
-**Run tests.** In the same terminal as before:
-```console
-#run a single pytest-based test
-pytest web3engine/test/test_btoken.py::test_ERC20
-
-#run a single pytest-based test file
-pytest web3engine/test/test_btoken.py 
-
-#run all tests in util/ directory
-pytest util
-
-#run all tests except web3engine/ (slow)
-pytest --ignore=web3engine
-
-#run all tests
-pytest
-
-#run static type-checking. Dynamic is automatic.
-mypy --config-file mypy.ini ./
+In python console:
+```python
+from scripts import Ocean
+config = {
+   'network' : 'development',
+   'privateKey' : 'cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b7',
+}
+ocean = Ocean.Ocean(config)
+account = ocean.account
+dt = ocean.createDatatoken('blob_str')
+print(dt.address)
 ```
 
-## Test that everything is working
+## Run Brownie Tests
 
+(FIXME: should I have this?)
+
+Note that brownie uses "`tests`" (with "s"), while the other tokenspice test directories (and all pytest?) use "`test`" (no "s")
+
+In terminal:
 ```console
-source venv/bin/activate
-pytest
+brownie test
 ```
 
-**Commit changes.**
+## Usage: Running Datatoken Script
+
+(FIXME: should I have this?)
+
+In terminal:
 ```console
-git add <changed filename>
-git status -s [[check status]]
-git commit -m <my commit message>
-git push
+export OCEAN_PRIVATE_KEY1=cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b7
+export OCEAN_PRIVATE_KEY2=cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b8
+python scripts/dt.py
+```
 
-#or
+Output is like:
+```text
+Launching 'ganache-cli --accounts 10 --hardfork istanbul --gasLimit 6721975 --mnemonic brownie --port 8545'...
+Transaction sent: 0x3ec84a608396dc5516b2f80cee4af2f2c6ade54f98846fa94db8c999dff5823b
+  Gas price: 0.0 gwei   Gas limit: 6721975   Nonce: 0
+  Datatoken.constructor confirmed   Block: 1   Gas used: 601154 (8.94%)
+  Datatoken deployed at: 0x1678666e6A05a74cfE19f2Bb31eccf306206065C
 
-git status -s [[check status]]
-git commit -am <my commit message>
-git push
+0x1678666e6A05a74cfE19f2Bb31eccf306206065C
+Transaction sent: 0x6640df70ee894b36d22a1cb07a882311fad0d44da581c7dcaa838a75f07c85c1
+  Gas price: 0.0 gwei   Gas limit: 6721975   Nonce: 1
+  Datatoken.transfer confirmed   Block: 2   Gas used: 50599 (0.75%)
+
+Terminating local RPC client...
 ```
 
 # 🦑 Agents and Netlists
@@ -301,33 +285,12 @@ Here are some existing netlists.
 
 - [simplegrant](assets/netlists/simplegrant/about.md) - granter plus receiver, that's all. No EVM.
 - [simplepool](assets/netlists/simplepool/about.md) - publisher that periodically creates new pools. EVM.
+- [scheduler](assets/netlists/scheduler/about.md) - scheduled vesting from a wallet. EVM.
 - [wsloop](assets/netlists/wsloop/about.md) - Web3 Sustainability Loop. No EVM.
 - (WIP) [oceanv3](assets/netlists/oceanv3/about.md) - Ocean Market V3 - initial design. EVM.
 - (WIP) [oceanv4](assets/netlists/oceanv4/about.md) - Ocean Market V4 - solves rug pulls. EVM.
 
 To learn more about how TokenSPICE netlists are structured, we refer you to the [simplegrant](assets/netlists/simplegrant/about.md) (pure Python) and [simplepool](assets/netlists/simplepool/about.md) (Python+EVM) netlists, which each have more thorough explainers. 
-
-# 🐟 Updating Envt
-
-You don't need this info at the beginning, but it's good to know about as you make changes.
-
-First, ensure your env't is active.
-```console
-source venv/bin/activate
-```
-
-Install or uninstall packages using [pip](https://pip.pypa.io/en/stable/):
-```console
-#Install
-pip install package-name
-
-#Uninstall
-pip uninstall package-name
-```
-Update requirements.txt:
-```console
-pip freeze > requirements.txt
-```
 
 # 🐡 Backlog
 
@@ -335,7 +298,6 @@ pip freeze > requirements.txt
 
 Some larger issues include:
 
-- **Finish + verify Ocean V3 agents** #28. AKA: System identification: high-fidelity model of Ocean V3 (w/ Balancer V1); fit the model to observed on-chain dynamics
 - **Finish + verify Ocean V4 agents** #29. AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
 
 In the longer term, we can expect:

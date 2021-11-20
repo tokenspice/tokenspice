@@ -11,29 +11,14 @@ WARNING = logging.WARNING
 #==========================================================================
 #tsp help
 HELP_MAIN = """
-Usage: tsp run|plot [ARGS]
-Run TokenSPICE engine then plot results.
-
-TOOLS: 
-  === Generate results and plot ===
-  tsp run [[Run TokenSPICE simulation. Input netlist. Output rundir w/ csv.]]
-  tsp plot [[Plot results from 1 run. Input csv. Output pngs.]]
-  tsp showstats [[Show performance statistics for a run]]
-
-  === Tests === 
-  pytest [[run all tests]]
-  pytest engine/ [[run all tests in engine/ directory]]
-  pytest tests/test_foo.py [[run a single pytest-based test file]]
-  pytest tests/test_foo.py::test_foobar [[run a single pytest-based test]]
-
-  === Config files, with params to change === 
-  -System parameters: ~/tokenspice.conf
-  -Logging: ./logging.conf
-
-  == Example flow ==
-  rm -rf outdir_csv; tsp run assets/netlists/simplegrant/netlist.py outdir_csv
-  rm -rf outdir_png; tsp plot assets/netlists/simplegrant/netlist.py outdir_csv outdir_png
-  eog outdir_png
+ +-+-+-+-+-+-+-+-+-+-+
+ |T|o|k|e|n|S|P|I|C|E|
+ +-+-+-+-+-+-+-+-+-+-+
+                                            
+Usage: tsp run|plot|showstats
+  tsp run -- run simulation
+  tsp plot -- plot results
+  tsp showstats -- see stats for a given run
  """
     
 

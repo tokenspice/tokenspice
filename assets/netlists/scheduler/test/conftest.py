@@ -3,8 +3,7 @@
 import brownie
 import pytest
 
-BROWNIE_PROJECT = brownie.project.load(
-    'assets/netlists/scheduler', name="MyProject")
+BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")
 brownie.network.connect('development')
 
 @pytest.fixture
