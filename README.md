@@ -185,33 +185,6 @@ Transaction sent: 0x9d20d3239d5c8b8a029f037fe573c343efd9361efd4d99307e0f5be74993
 [abi, address, allowance, approve, balance, balanceOf, bytecode, decimals, decode_input, get_method, get_method_object, info, name, selectors, signatures, symbol, topics, totalSupply, transfer, transferFrom, tx]
 ```
 
-## Usage: Running Simpletoken Script
-
-(FIXME: should I have this?)
-
-In terminal:
-```console
-export OCEAN_PRIVATE_KEY1=cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b7
-export OCEAN_PRIVATE_KEY2=cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b8
-python scripts/st.py
-```
-
-Output is like:
-```text
-Launching 'ganache-cli --accounts 10 --hardfork istanbul --gasLimit 6721975 --mnemonic brownie --port 8545'...
-Transaction sent: 0x3ec84a608396dc5516b2f80cee4af2f2c6ade54f98846fa94db8c999dff5823b
-  Gas price: 0.0 gwei   Gas limit: 6721975   Nonce: 0
-  Simpletoken.constructor confirmed   Block: 1   Gas used: 601154 (8.94%)
-  Simpletoken deployed at: 0x1678666e6A05a74cfE19f2Bb31eccf306206065C
-
-0x1678666e6A05a74cfE19f2Bb31eccf306206065C
-Transaction sent: 0x6640df70ee894b36d22a1cb07a882311fad0d44da581c7dcaa838a75f07c85c1
-  Gas price: 0.0 gwei   Gas limit: 6721975   Nonce: 1
-  Simpletoken.transfer confirmed   Block: 2   Gas used: 50599 (0.75%)
-
-Terminating local RPC client...
-```
-
 # 🦑 Agents and Netlists
 
 ## Agents Basics
