@@ -115,10 +115,10 @@ Note: this will fail if there is a `contracts` directory side-by-side with token
 From terminal:
 ```console
 #run single test
-pytest assets/netlists/scheduler/test/test_vestingwallet.py::test_tokenFunding
+pytest contracts/test/test_Simpletoken.py::test_transfer
 
-#run all of this netlist's tests
-pytest assets/netlists/scheduler/test
+#run all of a directory's tests
+pytest contracts/test
 
 #run all tests [FIXME!]
 pytest
