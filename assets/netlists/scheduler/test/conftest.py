@@ -3,7 +3,8 @@
 import brownie
 import pytest
 
-BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")
+from util.constants import BROWNIE_PROJECT
+
 brownie.network.connect('development')
 
 @pytest.fixture

@@ -1,3 +1,4 @@
+import brownie
 from enforce_typing import enforce_types
 from typing import List, Set
 
@@ -15,9 +16,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.setMaxTime(10, 'days')
 
         #==attributes specific to this netlist
-        self.granter_init_OCEAN: float = 1.0
-        self.granter_s_between_grants: int = S_PER_DAY*3
-        self.granter_n_actions: int = 4
+        self.OCEAN_funded: float = 1.0
+        self.start_timestamp: int = brownie.network.chain.time() + 5
+        self.duration_seconds: int = 30
 
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
@@ -29,23 +30,23 @@ class SimState(SimStateBase.SimStateBase):
         self.ss = SimStrategy()
 
         #wire up the circuit
-        granter = GrantGivingAgent.GrantGivingAgent(
-            name="granter1",
-            USD=0.0,
-            OCEAN=self.ss.granter_init_OCEAN,
-            receiving_agent_name="taker1",
-            s_between_grants=self.ss.granter_s_between_grants,
-            n_actions=self.ss.granter_n_actions)
-        taker = GrantTakingAgent.GrantTakingAgent(
-            name = "taker1", USD=0.0, OCEAN=0.0)
-        for agent in [granter, taker]:
+        funder = VestingFunderAgent.VestingFunderAgent(
+            name = "funder1",
+            USD = 0.0,
+            OCEAN = self.ss.OCEAN_funded,
+            beneficiary_agent_name = "beneficiary1",
+            start_timestamp = self.ss.start_timestamp,
+            duration_seconds = self.ss.duration_seconds)
+        beneficary = VestingBeneficiaryAgent.VestingBeneficiaryAgent(
+            name = "beneficiary1", USD=0.0, OCEAN=0.0)
+        for agent in [funder, beneficiary]:
             self.agents[agent.name] = agent
 
         #kpis is defined in this netlist module
         self.kpis = KPIs(self.ss.time_step) 
                 
     def OCEANprice(self) -> float:
-        return 1.0 #arbitrary. Need GrantTakingAgent
+        return 1.0 #arbitrary. Needed by VestingBeneficiaryAgent
 
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
@@ -62,11 +63,23 @@ def netlist_createLogData(state):
     #SimEngine already logs: Tick, Second, Min, Hour, Day, Month, Year
     #So we log other things...
 
-    g = state.getAgent("granter1")
-    s += ["; granter OCEAN=%s, USD=%s" % (g.OCEAN(), g.USD())]
-    dataheader += ["granter_OCEAN", "granter_USD"]
-    datarow += [g.OCEAN(), g.USD()]
+    timestamp = FIXME
+    s += [f"; timestamp={timestamp}"]
+    dataheader += ["timestamp"]
+    datarow += [timestamp]
+    
+    vw = state.getAgent("vw_agent").vesting_wallet
+    OCEAN_vested = vw.vestedAmount(OCEAN_address, timestamp)
+    OCEAN_released = vw.released(OCEAN_address)
+    s += [f"; OCEAN_vested={OCEAN_vested}, OCEAN_released={OCEAN_released}"]
+    dataheader += ["OCEAN_vested", "OCEAN_released"]
+    datarow += [OCEAN_vested, OCEAN_released]
 
+    beneficiary_OCEAN = state.getAgent("beneficiary1").OCEANAtTick()
+    s += [f"; beneficiary_OCEAN={beneficiary_OCEAN}"]
+    dataheader += ["beneficiary_OCEAN"]
+    datarow += [beneficiary_OCEAN]
+    
     #done
     return s, dataheader, datarow
 
@@ -88,8 +101,9 @@ def netlist_plotInstructions(header: List[str], values):
     x = arrayToFloatList(values[:,header.index(x_label)])
     
     y_params = [
-        YParam(["granter_OCEAN"],["OCEAN"],"granter_OCEAN",LINEAR,MULT1,DOLLAR),
-        YParam(["granter_USD"],  ["USD"],  "granter_USD",  LINEAR,MULT1,DOLLAR)
+        YParam(["OCEAN_vested", "OCEAN_released", "beneficiary_OCEAN"],
+               ["OCEAN vested", "OCEAN released", "OCEAN to beneficiary"],
+               "Vesting over time", LINEAR, MULT1, DOLLAR)
     ]
 
     return (x_label, x, y_params)

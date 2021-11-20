@@ -15,14 +15,15 @@ import logging
 log = logging.getLogger('wallet')
 
 from abc import abstractmethod, ABC
+import brownie
 from enforce_typing import enforce_types
 import typing
 
 from web3engine import bpool, btoken, datatoken, globaltokens
 from util import constants 
 from util.strutil import asCurrency
-from web3tools import web3util, web3wallet
-from web3tools.web3util import fromBase18, toBase18
+from web3tools import web3util
+from web3tools.web3util import toBase18, fromBase18
 
 @enforce_types
 class AgentWalletAbstract(ABC):
@@ -198,22 +199,23 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
 
     def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
         UsdNoEvmWalletMixIn.__init__(self, USD)
-        
+
+        self._account = None #brownie account
         if private_key is None:
-            self._web3wallet = web3wallet.randomWeb3Wallet()
+            self._account = brownie.network.accounts.add()
         else:
-            self._web3wallet = web3wallet.Web3Wallet(private_key)
+            self._account = brownie.network.accounts.add(private_key=private_key)
 
         #Give the new wallet ETH to pay gas fees (but don't track otherwise)
-        self._web3wallet.fundFromAbove(toBase18(0.01)) #magic number
-        
+        brownie.network.accounts[0].transfer(self._account, "0.01 ether")
+                
         #OCEAN is tracked in EVM, not here. But we cache here for speed
         self._burnOCEAN_nocache() #ensure 0 OCEAN (eg >1 unit tests)
         self._cached_OCEAN_base: typing.Union[int,None] = None
         self._total_OCEAN_in:float = OCEAN
         assert self.OCEAN() == 0.0
         
-        globaltokens.mintOCEAN(address=self._web3wallet.address,
+        globaltokens.mintOCEAN(address=self._account.address,
                                value_base=toBase18(OCEAN))
         self._cached_OCEAN_base = None
         
@@ -221,23 +223,28 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         assert self.USD() == USD
         assert self.OCEAN() == OCEAN
 
+    @property
+    def account(self):
+        """Returns self's brownie account"""
+        return self._account
+
     def _burnOCEAN_nocache(self):
         """
         If this agent has any OCEAN, burn it. 
         Explicitly don't use caching, so __init__ can safely call this
         """
         OCEAN_token = globaltokens.OCEANtoken()
-        OCEAN_balance_base = OCEAN_token.balanceOf_base(self._address)
+        OCEAN_balance_base = OCEAN_token.balanceOf(self._account)
         if OCEAN_balance_base  > 0:
             OCEAN_token.transfer(_BURN_WALLET._address, OCEAN_balance_base,
-                                 self._web3wallet)
+                                 {'from': self._account})
         
     def resetCachedInfo(self):
         self._cached_OCEAN_base = None
         
     @property
     def _address(self):
-         return self._web3wallet.address
+         return self._account.address
      
     #===================================================================  
     #USD-related 
@@ -290,7 +297,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
                              % (fromBase18(amt_base), fromBase18(OCEAN_base)))
 
         globaltokens.OCEANtoken().transfer(
-            dst_address, amt_base, self._web3wallet)
+            dst_address, amt_base, {'from': self._account})
         
         dst_wallet._total_OCEAN_in += amt
         self.resetCachedInfo()
@@ -305,7 +312,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         return fromBase18(self._ETH_base())
 
     def _ETH_base(self) -> int: #i.e. num wei
-        return self._web3wallet.ETH_base()
+        return self._account.balance()
     
     #===================================================================
     #datatoken and pool-related

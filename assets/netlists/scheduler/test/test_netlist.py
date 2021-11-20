@@ -20,9 +20,9 @@ def test_scope():
 def test_SimStrategy():
     #import from `netlist` module, not a `SimState` module. Netlist has it all:)
     ss = netlist.SimStrategy()
-    assert 0.0 <= ss.granter_init_OCEAN <= 1e6
-    assert ss.granter_s_between_grants > 0
-    assert ss.granter_n_actions > 0
+    assert 0.0 <= ss.OCEAN_funded <= 1e9
+    assert ss.start_timestamp > 0
+    assert ss.duration_seconds > 0
 
 @enforce_types
 def test_SimState():

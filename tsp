@@ -11,14 +11,12 @@ WARNING = logging.WARNING
 #==========================================================================
 #tsp help
 HELP_MAIN = """
- +-+-+-+-+-+-+-+-+-+-+
- |T|o|k|e|n|S|P|I|C|E|
- +-+-+-+-+-+-+-+-+-+-+
+TokenSPICE - EVM agent-based token simulator
                                             
 Usage: tsp run|plot|showstats
   tsp run -- run simulation
   tsp plot -- plot results
-  tsp showstats -- see stats for a given run
+  tsp showstats -- see run stats
  """
     
 
