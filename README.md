@@ -170,14 +170,16 @@ brownie console
 
 In brownie console:
 ```python
->>> st = Simpletoken.deploy("DT1", "Simpletoken 1", 18, Wei('100 ether'), {'from': accounts[0]})                                                                                                                 
+>>> st = Simpletoken.deploy("DT1", "Simpletoken 1", 18, Wei('100 ether'), {'from': accounts[0]})
 Transaction sent: 0x9d20d3239d5c8b8a029f037fe573c343efd9361efd4d99307e0f5be7499367ab
   Gas price: 0.0 gwei   Gas limit: 6721975
   Simpletoken.constructor confirmed - Block: 1   Gas used: 601010 (8.94%)
   Simpletoken deployed at: 0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87
 
->>> st.symbol()                                                                                                                                                                                              
+>>> st.symbol()
 'DT1'
+
+>>> st.balanceOf(accounts[0])/1e18
 
 >>> dir(st)
 [abi, address, allowance, approve, balance, balanceOf, bytecode, decimals, decode_input, get_method, get_method_object, info, name, selectors, signatures, symbol, topics, totalSupply, transfer, transferFrom, tx]
