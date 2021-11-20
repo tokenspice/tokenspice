@@ -183,17 +183,6 @@ Transaction sent: 0x9d20d3239d5c8b8a029f037fe573c343efd9361efd4d99307e0f5be74993
 [abi, address, allowance, approve, balance, balanceOf, bytecode, decimals, decode_input, get_method, get_method_object, info, name, selectors, signatures, symbol, topics, totalSupply, transfer, transferFrom, tx]
 ```
 
-## Run Brownie Tests
-
-(FIXME: should I have this?)
-
-Note that brownie uses "`tests`" (with "s"), while the other tokenspice test directories (and all pytest?) use "`test`" (no "s")
-
-In terminal:
-```console
-brownie test
-```
-
 ## Usage: Running Simpletoken Script
 
 (FIXME: should I have this?)
