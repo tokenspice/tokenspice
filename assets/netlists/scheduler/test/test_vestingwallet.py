@@ -66,8 +66,8 @@ def test_ethFunding(project, accounts, chain):
     
 def test_tokenFunding(project, accounts, chain):
     #accounts 0, 1, 2 should each start with 100 TOK
-    token = project.Datatoken.deploy(
-        "TOK", "Test Token", "myblob", 18, Wei('300 ether'),
+    token = project.Simpletoken.deploy(
+        "TOK", "Test Token", 18, Wei('300 ether'),
         {'from' : accounts[0]})
     token.transfer(accounts[1], Wei('100 ether'), {'from': accounts[0]})
     token.transfer(accounts[2], Wei('100 ether'), {'from': accounts[0]})

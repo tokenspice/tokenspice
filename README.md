@@ -170,17 +170,22 @@ brownie console
 
 In brownie console:
 ```python
->>> dt = Datatoken.deploy("DT1", "Datatoken 1", "123.com", 18, 100, {'from': accounts[0]})                                                                                                                 
+>>> st = Simpletoken.deploy("DT1", "Simpletoken 1", 18, Wei('100 ether'), {'from': accounts[0]})                                                                                                                 
 Transaction sent: 0x9d20d3239d5c8b8a029f037fe573c343efd9361efd4d99307e0f5be7499367ab
   Gas price: 0.0 gwei   Gas limit: 6721975
-  Datatoken.constructor confirmed - Block: 1   Gas used: 601010 (8.94%)
-  Datatoken deployed at: 0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87
+  Simpletoken.constructor confirmed - Block: 1   Gas used: 601010 (8.94%)
+  Simpletoken deployed at: 0x3194cBDC3dbcd3E11a07892e7bA5c3394048Cc87
 
->>> dt.blob()                                                                                                                                                                                              
-'123.com'
+>>> st.symbol()                                                                                                                                                                                              
+'DT1'
+
+>>> dir(st)
+[abi, address, allowance, approve, balance, balanceOf, bytecode, decimals, decode_input, get_method, get_method_object, info, name, selectors, signatures, symbol, topics, totalSupply, transfer, transferFrom, tx]
 ```
 
 ## Debugging from Python Console
+
+(FIXME: should I have this?)
 
 From terminal:
 ```console
@@ -196,8 +201,8 @@ config = {
 }
 ocean = Ocean.Ocean(config)
 account = ocean.account
-dt = ocean.createDatatoken('blob_str')
-print(dt.address)
+st = ocean.createSimpletoken()
+print(st.address)
 ```
 
 ## Run Brownie Tests
@@ -211,7 +216,7 @@ In terminal:
 brownie test
 ```
 
-## Usage: Running Datatoken Script
+## Usage: Running Simpletoken Script
 
 (FIXME: should I have this?)
 
@@ -219,7 +224,7 @@ In terminal:
 ```console
 export OCEAN_PRIVATE_KEY1=cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b7
 export OCEAN_PRIVATE_KEY2=cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b8
-python scripts/dt.py
+python scripts/st.py
 ```
 
 Output is like:
@@ -227,13 +232,13 @@ Output is like:
 Launching 'ganache-cli --accounts 10 --hardfork istanbul --gasLimit 6721975 --mnemonic brownie --port 8545'...
 Transaction sent: 0x3ec84a608396dc5516b2f80cee4af2f2c6ade54f98846fa94db8c999dff5823b
   Gas price: 0.0 gwei   Gas limit: 6721975   Nonce: 0
-  Datatoken.constructor confirmed   Block: 1   Gas used: 601154 (8.94%)
-  Datatoken deployed at: 0x1678666e6A05a74cfE19f2Bb31eccf306206065C
+  Simpletoken.constructor confirmed   Block: 1   Gas used: 601154 (8.94%)
+  Simpletoken deployed at: 0x1678666e6A05a74cfE19f2Bb31eccf306206065C
 
 0x1678666e6A05a74cfE19f2Bb31eccf306206065C
 Transaction sent: 0x6640df70ee894b36d22a1cb07a882311fad0d44da581c7dcaa838a75f07c85c1
   Gas price: 0.0 gwei   Gas limit: 6721975   Nonce: 1
-  Datatoken.transfer confirmed   Block: 2   Gas used: 50599 (0.75%)
+  Simpletoken.transfer confirmed   Block: 2   Gas used: 50599 (0.75%)
 
 Terminating local RPC client...
 ```

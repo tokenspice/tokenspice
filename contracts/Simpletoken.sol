@@ -2,13 +2,12 @@ pragma solidity ^0.8.0;
 
 import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/math/SafeMath.sol";
 
-contract Datatoken {
+contract Simpletoken {
 
     using SafeMath for uint256;
 
     string public symbol;
     string public  name;
-    string public blob; 
     uint256 public decimals;
     uint256 public totalSupply;
 
@@ -22,7 +21,6 @@ contract Datatoken {
     constructor(
         string memory _symbol,
         string memory _name,
-	string memory _blob,
         uint256 _decimals,
         uint256 _totalSupply
     )
@@ -30,7 +28,6 @@ contract Datatoken {
     {
         symbol = _symbol;
         name = _name;
-        blob = _blob;
         decimals = _decimals;
         totalSupply = _totalSupply;
         balances[msg.sender] = _totalSupply;

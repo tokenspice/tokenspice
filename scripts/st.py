@@ -12,7 +12,7 @@ def main():
     }
     ocean = Ocean.Ocean(config)
     alice_account = ocean.accountFromKey(alice_private_key)
-    token = ocean.createDatatoken('localhost:8030')
+    token = ocean.createSimpletoken()
     dt_address = token.address
     print(dt_address)
 

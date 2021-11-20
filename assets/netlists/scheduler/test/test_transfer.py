@@ -1,7 +1,3 @@
-#!/usr/bin/python3
-
-import brownie
-
 def test_transfer(token, accounts):
     assert token.totalSupply() == 1e21
     token.transfer(accounts[1], 1e20, {'from': accounts[0]})

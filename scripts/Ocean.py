@@ -19,11 +19,11 @@ class Ocean:
     def accountFromKey(self, private_key):
         return brownie.network.accounts.add(private_key=private_key)
         
-    def createDatatoken(self, blob):
+    def createSimpletoken(self):
         """@return -- brownie-style datatoken contract"""
         project = brownie.project.load('./', name="MyProject")
-        return project.Datatoken.deploy(
-                "TST", "Test Token", blob, 18, 1e24,{'from' : self.account})
+        return project.Simpletoken.deploy(
+                "TST", "Test Token", 18, 1e24,{'from' : self.account})
                 
 def privateKeyToAccount(private_key):
     return eth_account.Account().privateKeyToAccount(private_key)

@@ -33,7 +33,7 @@ def vesting_wallet():
 
 @pytest.fixture
 def token():
-    t = BROWNIE_PROJECT.Datatoken.deploy(
-        "TST", "Test Token", "myblob", 18, 1e21,
+    t = BROWNIE_PROJECT.Simpletoken.deploy(
+        "TST", "Test Token", 18, 1e21,
         {'from' : brownie.network.accounts[0]})
     return t
