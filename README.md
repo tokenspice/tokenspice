@@ -183,28 +183,6 @@ Transaction sent: 0x9d20d3239d5c8b8a029f037fe573c343efd9361efd4d99307e0f5be74993
 [abi, address, allowance, approve, balance, balanceOf, bytecode, decimals, decode_input, get_method, get_method_object, info, name, selectors, signatures, symbol, topics, totalSupply, transfer, transferFrom, tx]
 ```
 
-## Debugging from Python Console
-
-(FIXME: should I have this?)
-
-From terminal:
-```console
-python
-```
-
-In python console:
-```python
-from scripts import Ocean
-config = {
-   'network' : 'development',
-   'privateKey' : 'cd9ecbe21eb30b7d9dd2808024b4f0da5876e7c7216b28ab6ecb0ccd1d4c76b7',
-}
-ocean = Ocean.Ocean(config)
-account = ocean.account
-st = ocean.createSimpletoken()
-print(st.address)
-```
-
 ## Run Brownie Tests
 
 (FIXME: should I have this?)
