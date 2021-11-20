@@ -5,8 +5,6 @@ import pytest
 
 from util.constants import BROWNIE_PROJECT
 
-brownie.network.connect('development')
-
 @pytest.fixture
 def project():
     return BROWNIE_PROJECT
