@@ -80,8 +80,11 @@ source venv/bin/activate
 pip install wheel
 pip install -r requirements.txt
 
-#install openzeppelin library, to import from .sol files
+#install contracts from openzeppelin and ocean github repos
 brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
+
+#[UNCOMMENT WHEN READY]
+#brownie pm install oceanprotocol/contracts@0.6.9
 ```
 
 ## Compiling
