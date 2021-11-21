@@ -15,6 +15,7 @@ def test1():
 
     #init vesting wallet agent
     class MockVestingWalletAgent:
+        """Simple vesting wallet: it releases everything at once"""
         def __init__(self):
             self.OCEAN_locked = 100.0
             self.OCEAN_unlocked = 0.0
@@ -26,26 +27,16 @@ def test1():
 
     #init beneficiary agent
     a = VestingBeneficiaryAgent("foo", USD=10.0, OCEAN=20.0,
-                                vesting_wallet_agent)
-    assert a._spent_at_tick == 0.0
+                                vesting_wallet_agent=vesting_wallet_agent)
+    assert id(a._vesting_wallet_agent) == id(vesting_wallet_agent)
 
-    #take a step. This agent will spend everything it can get its hands on
-    # In this case, it's getting 10 USD (from init) + 20 OCEAN (from init)
-    #   + 100 OCEAN (from vesting wallet agent)
+    #take a step
     a.takeStep(state)
-    assert a.USD() == 0.0
-    assert a.OCEAN() == 0.0
-    assert a._spent_at_tick == (10.0 + (20.0 + 100.0)*3.0) 
-
-    #from here on, it behaves just like a GrantTakingAgent
+    assert a.USD() == 10.0
+    assert a.OCEAN() == (20.0 + 100.0)
+    
+    #from here on, nothing new happens
     a.takeStep(state)
-    assert a._spent_at_tick == 0.0
-
-    a.receiveUSD(5.0)
-    a.takeStep(state)
-    assert a._spent_at_tick == 5.0
-
-    a.takeStep(state)
-    assert a._spent_at_tick == 0.0
-
+    assert a.USD() == 10.0
+    assert a.OCEAN() == (20.0 + 100.0)
                   

@@ -12,7 +12,6 @@ class VestingBeneficiaryAgent(AgentBase.AgentBaseEvm):
                  vesting_wallet_agent):
         super().__init__(name, USD, OCEAN)
         self._vesting_wallet_agent = vesting_wallet_agent
-        self._OCEAN_at_tick:float = 0.0 
         
     def takeStep(self, state):
         #ping the vesting wallet agent to release OCEAN
@@ -20,6 +19,4 @@ class VestingBeneficiaryAgent(AgentBase.AgentBaseEvm):
         #  the beneficiary then the vesting wallet will send OCEAN)
         self._vesting_wallet_agent.releaseOCEAN()
 
-        #record self's current balance for the tick
-        self._OCEAN_at_tick = self.OCEAN()
 
