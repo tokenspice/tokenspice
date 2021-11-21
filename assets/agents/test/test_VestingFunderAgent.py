@@ -16,7 +16,7 @@ def test1():
             self.account = account
         @property
         def address(self) -> str:
-            return self.acccount.address
+            return self.account.address
     beneficiary_agent = MockBeneficiaryAgent(accounts[1])
     
     class MockState:
