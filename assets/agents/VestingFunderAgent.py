@@ -37,12 +37,12 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
             beneficiary_agent.address,
             self._start_timestamp,
             self._duration_seconds,
-            {'from': self.account()}) #account() is a brownie account
+            {'from': self.account})
 
         #fund the vesting wallet with all of self's OCEAN
         token = globaltokens.OCEANtoken()
-        token.transfer(beneficary_agent.account(), toBase18(self.OCEAN()),
-                       {'from': self.account()})
+        token.transfer(beneficiary_agent.account, toBase18(self.OCEAN()),
+                       {'from': self.account})
         
         #create vesting wallet agent, add to state
         vw_agent = VestingWalletAgent("vw_agent", vw_contract)

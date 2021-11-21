@@ -210,13 +210,14 @@ def test_initFromPrivateKey():
     target_address = '0x66aB6D9362d4F35596279692F0251Db635165871'
     
     w = AgentWalletEvm(private_key=private_key)
-    assert w._address == target_address
+    assert w.address == target_address
+    assert w.account is not None
 
 @enforce_types
 def test_initFromRandom():
     w1 = AgentWalletEvm()
     w2 = AgentWalletEvm()
-    assert w1._address != w2._address
+    assert w1.address != w2.address
 
 @enforce_types
 def test_gotSomeETHforGas():
@@ -247,7 +248,7 @@ def testETH2():
 @enforce_types
 def testBurnWallet():
     w = BurnWallet()
-    assert w._address == constants.BURN_ADDRESS
+    assert w.address == constants.BURN_ADDRESS
     
     
 #===================================================================
@@ -313,7 +314,7 @@ def test_stakeOCEAN(alice_info):
     
     BPT_before, OCEAN1 = agent_wallet.BPT(pool), agent_wallet.OCEAN()
     OCEAN2 = fromBase18(agent_wallet._cached_OCEAN_base)
-    OCEAN3 = fromBase18(OCEAN_bal_base(agent_wallet._address))
+    OCEAN3 = fromBase18(OCEAN_bal_base(agent_wallet.address))
     assert OCEAN1 == OCEAN2 == OCEAN3
     
     agent_wallet.stakeOCEAN(OCEAN_stake=20.0, pool=pool)

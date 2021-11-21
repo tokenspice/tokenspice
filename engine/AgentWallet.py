@@ -37,7 +37,7 @@ class AgentWalletAbstract(ABC):
     @abstractmethod
     def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
         pass
-
+        
     #===================================================================  
     #OCEAN-related
     @abstractmethod
@@ -224,11 +224,14 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         assert self.USD() == USD
         assert self.OCEAN() == OCEAN
 
-
     @property
     def account(self):
         """Returns self's brownie account"""
         return self._account
+        
+    @property
+    def address(self) -> str:
+         return self._account.address
 
     def _burnOCEAN_nocache(self):
         """
@@ -238,15 +241,11 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         OCEAN_token = globaltokens.OCEANtoken()
         OCEAN_balance_base = OCEAN_token.balanceOf(self._account)
         if OCEAN_balance_base  > 0:
-            OCEAN_token.transfer(_BURN_WALLET._address, OCEAN_balance_base,
+            OCEAN_token.transfer(_BURN_WALLET.address, OCEAN_balance_base,
                                  {'from': self._account})
         
     def resetCachedInfo(self):
         self._cached_OCEAN_base = None
-        
-    @property
-    def _address(self):
-         return self._account.address
      
     #===================================================================  
     #USD-related 
@@ -261,9 +260,9 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
     def _OCEAN_base(self) -> int:
         OCEAN_token = globaltokens.OCEANtoken()
         if self._cached_OCEAN_base is None:
-            self._cached_OCEAN_base = OCEAN_token.balanceOf(self._address)
+            self._cached_OCEAN_base = OCEAN_token.balanceOf(self.address)
                    
-        assert self._cached_OCEAN_base == OCEAN_token.balanceOf(self._address)
+        assert self._cached_OCEAN_base == OCEAN_token.balanceOf(self.address)
             
         return self._cached_OCEAN_base
         
@@ -279,7 +278,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
     def transferOCEAN(self, dst_wallet, amt: float) -> None:
         assert isinstance(dst_wallet, AgentWalletEvm) or \
             isinstance(dst_wallet, BurnWallet)
-        dst_address = dst_wallet._address
+        dst_address = dst_wallet.address
         
         amt_base = toBase18(amt)
         assert amt_base >= 0
@@ -322,13 +321,13 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         return fromBase18(self._DT_base(dt))
 
     def _DT_base(self, dt:datatoken.Datatoken) -> int: 
-        return dt.balanceOf_base(self._address)
+        return dt.balanceOf_base(self.address)
     
     def BPT(self, pool:bpool.BPool) -> float:
         return fromBase18(self._BPT_base(pool))
     
     def _BPT_base(self, pool:bpool.BPool) -> int:
-        return pool.balanceOf_base(self._address)
+        return pool.balanceOf_base(self.address)
 
     def sellDT(self, pool:bpool.BPool, DT:datatoken.Datatoken,
                DT_sell_amt:float, min_OCEAN_amt:float=0.0):
@@ -386,7 +385,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
     def transferDT(self, dst_wallet, DT: datatoken.Datatoken, amt: float) -> None:
         assert isinstance(dst_wallet, AgentWalletEvm) or \
             isinstance(dst_wallet, BurnWallet)
-        dst_address = dst_wallet._address
+        dst_address = dst_wallet.address
 
         amt_base = toBase18(amt)
         assert amt_base >= 0
@@ -415,7 +414,7 @@ class BurnWallet:
     This is *not* a burner wallet, that's a completely different concept.
     """
     def __init__(self):
-        self._address = constants.BURN_ADDRESS
+        self.address = constants.BURN_ADDRESS
         self._total_OCEAN_in:float = 0.0
         
     def resetCachedInfo(self):

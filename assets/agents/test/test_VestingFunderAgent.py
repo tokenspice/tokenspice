@@ -13,10 +13,13 @@ def test1():
     
     class MockBeneficiaryAgent:
         def __init__(self, account):
-            self.account = account
+            self._account = account
         @property
         def address(self) -> str:
-            return self.account.address
+            return self._account.address
+        @property
+        def account(self) -> str:
+            return self._account
     beneficiary_agent = MockBeneficiaryAgent(accounts[1])
     
     class MockState:

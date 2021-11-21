@@ -87,7 +87,11 @@ class AgentBaseEvm(StrMixin,
 
     @property
     def address(self) -> str:
-        return self._wallet._address
+        return self._wallet.address
+
+    @property
+    def account(self) -> str:
+        return self._wallet.account
     
     #datatoken and pool-related
     def DT(self, dt:datatoken.Datatoken) -> float:
