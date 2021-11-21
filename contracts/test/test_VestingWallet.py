@@ -9,7 +9,7 @@ chain = brownie.network.chain
 def test_init():
     vesting_wallet = _vesting_wallet()
     assert vesting_wallet.beneficiary() == accounts[1].address
-    assert vesting_wallet.start() >= (chain.time() + 5)
+    assert vesting_wallet.start() > chain.time()
     assert vesting_wallet.duration() == 30
     assert vesting_wallet.released() == 0
 
