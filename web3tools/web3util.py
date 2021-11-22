@@ -1,11 +1,10 @@
-import configparser
-
 import eth_account
 import json
 import os
 import typing
 from web3 import Web3
 from util import constants
+from util.configutil import confFileValue
 from web3tools.account import privateKeyToAddress
 
 def get_infura_url(infura_id):
@@ -76,9 +75,3 @@ def contractAddressesFilename():
 
 def get_network():
     return confFileValue('general', 'NETWORK')
-
-def confFileValue(section: str, key: str) -> str:
-    conf = configparser.ConfigParser()
-    path = os.path.expanduser(constants.CONF_FILE_PATH)
-    conf.read(path)
-    return conf[section][key]

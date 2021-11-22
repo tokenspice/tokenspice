@@ -2,7 +2,7 @@
 # numbers for running TokenSPICE. Magic numbers have been
 # moved into netlists.
 
-CONF_FILE_PATH = './tokenspice.ini'
+from util.configutil import CONF_FILE_PATH
 
 import configparser, os
 config = configparser.ConfigParser()

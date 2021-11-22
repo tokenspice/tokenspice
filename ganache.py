@@ -4,7 +4,7 @@ import eth_utils
 import argparse
 import os
 
-from web3tools.web3util import confFileValue
+from util.configutil import confFileValue
 
 # Argument parsing for hiding ganache.py in background
 parser = argparse.ArgumentParser()
