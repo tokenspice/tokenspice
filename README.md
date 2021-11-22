@@ -53,16 +53,10 @@ History:
 - Linux/MacOS
 - Python 3.8.5+
 
-## Installation
+## Install TokenSPICE
 
 Open a new terminal and:
 ```console
-#install Ganache (if you haven't yet)
-npm install ganache-cli --global
-
-#Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
-export NODE_OPTIONS=--openssl-legacy-provider
-
 #clone repo
 git clone https://github.com/tokenspice/tokenspice
 cd tokenspice
@@ -79,18 +73,43 @@ source venv/bin/activate
 #install dependencies. Install wheel first to avoid errors.
 pip install wheel
 pip install -r requirements.txt
+```
 
+## Start Ganache
+
+Think of Ganache as local EVM blockchain network, with just one node.
+
+Open a new terminal and:
+```console
+#install Ganache (if you haven't yet)
+npm install ganache-cli --global
+
+#Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
+export NODE_OPTIONS=--openssl-legacy-provider
+
+#activate env't
+cd tokenspice
+source venv/bin/activate
+
+#run ganache.py. It calls ganache cli and fills in many arguments for you.
+./ganache.py
+```
+
+## Compile & deploy contracts to ganache
+
+Open a new terminal. From it:
+```console
+#activate env't
+cd tokenspice
+source venv/bin/activate
+
+#install 3rd party contracts:
 #install contracts from openzeppelin and ocean github repos
 brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
 
 #[UNCOMMENT WHEN READY]
 #brownie pm install oceanprotocol/contracts@0.6.9
-```
 
-## Compiling
-
-From terminal:
-```console
 brownie compile
 ```
 
@@ -106,8 +125,14 @@ Generating build data...
  ...
  - VestingWallet
  
-Project has been compiled. Build artifacts saved at ... build/contracts
+Project has been compiled. Build artifacts saved at <your dir>/tokenspice/build/contracts
 ```
+
+When TokenSPICE starts, it imports `util/constants.py`, and:
+- it loads a project via `BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")`. It loads the ABIs in the `build/` directory, which is enough info for brownie to start treating each contract from `contracts/` as a _class_.
+- it connects to a network via: `brownie.network.connect('development')`
+- now, each contract (class) can get deployed (as objects), dynamically as needed, via `BROWNIE_PROJECT.deploy()'. The contracts don't need to get deployed up-front, nor do we need addresses of deployed contract up-front.
+
 
 # 🏄 Running, Debugging
 
