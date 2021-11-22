@@ -25,18 +25,22 @@ def test1():
     globaltokens.fundOCEANFromAbove(vw.address, Wei("5 ether"))
     
     class MockState:
+        def __init__(self):
+            self.time_step = 10 # each tick is 10 seconds
         def takeStep(self):
-            pass
+            chain.mine(blocks=3, timedelta=self.time_step)
+            
     state = MockState()
-    state.takeStep() #nothing happens, because this doesn't advance time
+    state.takeStep() #pass enough time (10 s) for _some_ vesting
+    assert 0 < vw.vestedAmount(token.address, chain.time()) < Wei("5 ether")
     
-    #make time pass. **THIS SHOULD PROBABLY GO INTO state.takeStep()!!**
-    chain.mine(blocks=3, timedelta=100)
+    for i in range(6): #pass enough time for _all_ vesting
+        state.takeStep() 
     assert vw.vestedAmount(token.address, chain.time()) == Wei("5 ether")
     assert vw.released() == 0
     assert token.balanceOf(accounts[1].address) == 0
 
-    #release the OCEAN. Anyone can call it
+    #release the OCEAN. Anyone can call it. Beneficiary receives it
     vw.release(token.address, {'from': accounts[2]})
     assert vw.released(token.address)/1e18 == approx(5.0) #now it's released!
     assert token.balanceOf(accounts[1].address) == Wei("5 ether") #beneficiary is richer
