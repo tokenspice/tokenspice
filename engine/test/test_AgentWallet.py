@@ -4,6 +4,7 @@ from pytest import approx
 
 from engine.AgentWallet import *
 from engine.test.conftest import _DT_INIT, _DT_STAKE 
+from util import configutil
 from web3engine import bfactory, bpool, datatoken
 from web3tools.web3util import fromBase18
 
@@ -236,7 +237,7 @@ def testETH1():
 def testETH2():
     #TEST_PRIVATE_KEY1 should get initialized with ETH when ganache starts
     network = web3util.get_network()
-    private_key = web3util.confFileValue(network, 'TEST_PRIVATE_KEY1')
+    private_key = configutil.confFileValue(network, 'TEST_PRIVATE_KEY1')
     w = AgentWalletEvm(private_key=private_key)
     assert w.ETH() > 1.0
 

@@ -1,4 +1,5 @@
 import web3
+from util import configutil
 from web3tools import web3util, web3wallet
 
 def test_randomWeb3Wallet():
@@ -21,7 +22,7 @@ def test_ETHbalance1():
     _web3 = web3util.get_web3()
     network = web3util.get_network()
     
-    private_key = web3util.confFileValue(network, 'TEST_PRIVATE_KEY1')
+    private_key = configutil.confFileValue(network, 'TEST_PRIVATE_KEY1')
     wallet = web3wallet.Web3Wallet(private_key)
     assert wallet.ETH_base() > 1.0 #should have got ETH from ganache startup
     assert wallet.ETH_base() == _web3.eth.getBalance(wallet.address)
@@ -37,7 +38,7 @@ def testSendEth():
     network = web3util.get_network()
 
     #wallet1 should have got ETH from ganache startup (see deploy.py)
-    private_key1 = web3util.confFileValue(network, 'TEST_PRIVATE_KEY1')
+    private_key1 = configutil.confFileValue(network, 'TEST_PRIVATE_KEY1')
     wallet1 = web3wallet.Web3Wallet(private_key1)
     orig_bal1_base = wallet1.ETH_base()
     print("orig bal1 = %s" % web3util.fromBase18(orig_bal1_base))

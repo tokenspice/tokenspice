@@ -2,7 +2,7 @@ import logging
 import typing
 import web3
 
-from util import constants
+from util import configutil, constants
 from web3tools import web3util, account
 
 logger = logging.getLogger(__name__)
@@ -85,7 +85,7 @@ class Web3Wallet:
         #Give this wallet ETH to pay gas fees
         #Use funds given to 'TEST_PRIVATE_KEY1' from ganache (see deploy.py)
         network = web3util.get_network()
-        god_key = web3util.confFileValue(network, 'TEST_PRIVATE_KEY1')
+        god_key = configutil.confFileValue(network, 'TEST_PRIVATE_KEY1')
         god_wallet = Web3Wallet(god_key)
         god_wallet.sendEth(self.address, num_wei)
         
@@ -105,7 +105,7 @@ def buildAndSendTx(function,
     _web3 = web3util.get_web3()
     nonce = _web3.eth.get_transaction_count(from_wallet.address)
     network = web3util.get_network()
-    gas_price = int(web3util.confFileValue(network, 'GAS_PRICE'))
+    gas_price = int(configutil.confFileValue(network, 'GAS_PRICE'))
     tx_params = {
         "from": from_wallet.address,
         "value": num_wei,

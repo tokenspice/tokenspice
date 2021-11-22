@@ -7,6 +7,7 @@ import pytest
 from typing import Union
 
 from engine import AgentWallet, AgentBase
+from util import configutil
 from web3tools import web3util, web3wallet
 from web3tools.web3util import fromBase18, toBase18
 from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
@@ -72,7 +73,7 @@ def _make_info(private_key_name:str):
     info = _Info()
 
     network = web3util.get_network()
-    info.private_key = web3util.confFileValue(network, private_key_name)
+    info.private_key = configutil.confFileValue(network, private_key_name)
     info.agent_wallet = AgentWallet.AgentWalletEvm(
         OCEAN=_OCEAN_INIT,private_key=info.private_key)
     info.web3wallet = info.agent_wallet._web3wallet
