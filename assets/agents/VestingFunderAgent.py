@@ -11,7 +11,8 @@ from web3tools.web3util import toBase18
 
 @enforce_types
 class VestingFunderAgent(AgentBase.AgentBaseEvm):
-    """Funds the beneficiary with all of self's OCEAN, in a one-time act"""
+    """Factory for a VestingWalletAgent. Funds a beneficiary with 
+       with all of self's OCEAN, in a one-time act."""
     def __init__(self, name: str, USD: float, OCEAN: float,
                  beneficiary_agent_name: str,
                  start_timestamp: int,
@@ -41,8 +42,9 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
 
         #fund the vesting wallet with all of self's OCEAN
         token = globaltokens.OCEANtoken()
-        token.transfer(beneficiary_agent.account, toBase18(self.OCEAN()),
+        token.transfer(vw_contract.address, toBase18(self.OCEAN()),
                        {'from': self.account})
+        self._wallet.resetCachedInfo()
         
         #create vesting wallet agent, add to state
         vw_agent = VestingWalletAgent("vw_agent", vw_contract)

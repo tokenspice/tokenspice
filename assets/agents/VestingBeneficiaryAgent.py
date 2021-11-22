@@ -12,11 +12,18 @@ class VestingBeneficiaryAgent(AgentBase.AgentBaseEvm):
                  vesting_wallet_agent):
         super().__init__(name, USD, OCEAN)
         self._vesting_wallet_agent = vesting_wallet_agent
+
+    @property
+    def vesting_wallet_agent(self):
+        return self._vesting_wallet_agent
         
     def takeStep(self, state):
         #ping the vesting wallet agent to release OCEAN
         # (anyone can ping the vesting wallet; if this agent is
         #  the beneficiary then the vesting wallet will send OCEAN)
-        self._vesting_wallet_agent.releaseOCEAN()
+        self.vesting_wallet_agent.releaseOCEAN()
+
+        #ensure that self.OCEAN() is accurate
+        self._wallet.resetCachedInfo()
 
 

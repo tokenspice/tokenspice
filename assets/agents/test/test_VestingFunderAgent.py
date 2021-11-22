@@ -1,61 +1,68 @@
 import brownie
+from brownie import Wei
 from enforce_typing import enforce_types
 from pytest import approx
 
-from assets.agents import VestingFunderAgent
+from assets.agents.VestingFunderAgent import VestingFunderAgent
+from assets.agents.VestingWalletAgent import VestingWalletAgent
+from web3engine import globaltokens
 
-class MockState:
-    pass
+accounts = brownie.network.accounts
+chain = brownie.network.chain
     
 @enforce_types
 def test1():
-    accounts = brownie.network.accounts
-    
+    OCEAN_address = globaltokens.OCEAN_address()
+    OCEAN_token = globaltokens.OCEANtoken()
+
+    #initialize beneficiary agent
     class MockBeneficiaryAgent:
         def __init__(self, account):
-            self._account = account
-        @property
-        def address(self) -> str:
-            return self._account.address
-        @property
-        def account(self) -> str:
-            return self._account
+            self.account = account #brownie account
+            self.address = account.address
     beneficiary_agent = MockBeneficiaryAgent(accounts[1])
-    
+
+    #initialize state
     class MockState:
         def __init__(self, beneficiary_agent):
-            self.beneficiary_agent = beneficiary_agent
-            self.vw_agent = None
+            self.agents = {"beneficiary1":beneficiary_agent, "vw_agent":None}
         def getAgent(self, name):
-            if name == "beneficiary1":
-                return self.beneficiary_agent
-            else:
-                raise NotImplementedError()
+            return self.agents[name]
         def addAgent(self, agent):
-            assert agent.name == "vw_agent"
-            assert self.vw_agent is None
-            self.vw_agent = agent
+            self.agents[agent.name] = agent
+        def takeStep(self):
+            for agent in self.agent.values():
+                agent.takeStep(self)
     state = MockState(beneficiary_agent)
-    
-    funder_agent = VestingFunderAgent.VestingFunderAgent(
-        name = "funder1",
-        USD = 0.0,
-        OCEAN = 100.0,
+
+    #initialize funder agent
+    funder_agent = VestingFunderAgent(
+        name = "funder1", USD = 0.0, OCEAN = 100.0,
         beneficiary_agent_name = "beneficiary1",
-        start_timestamp = brownie.network.chain.time(),
-        duration_seconds = 30)
+        start_timestamp = chain.time(), duration_seconds = 30)
     assert not funder_agent._did_funding
     assert funder_agent.OCEAN() == 100.0
+    assert state.getAgent("vw_agent") is None
 
-    funder_agent.takeStep(state)
+    #create vw agent and send OCEAN to it
+    funder_agent.takeStep(state) 
+    assert state.getAgent("vw_agent") is not None
+    vw = state.getAgent("vw_agent").vesting_wallet
+    assert vw.beneficiary() == beneficiary_agent.address
+    assert 0 <= vw.vestedAmount(OCEAN_address, chain.time()) < Wei('100 ether')
+    assert vw.released(OCEAN_address) == 0
     assert funder_agent._did_funding
     assert funder_agent.OCEAN() == 0.0
-    assert isinstance(state.vw_agent, VestingWalletAgent)
-    assert state.vw_agent.name == "vw_agent"
-    OCEAN_address = globaltokens.OCEAN_address()
-    vw = state.vw_agent.vesting_wallet
-    assert vw.released(OCEAN_address) == approx(Wei(100.0))
+    assert OCEAN_token.balanceOf(beneficiary_agent.address) == 0
+
+    #OCEAN vests
+    chain.mine(blocks=1, timedelta=60) 
+    assert vw.vestedAmount(OCEAN_address, chain.time()) == Wei('100 ether')
+    assert vw.released(OCEAN_address) == 0
+    assert OCEAN_token.balanceOf(beneficiary_agent.address) == 0
+
+    #release OCEAN
+    state.getAgent("vw_agent").releaseOCEAN(from_account=accounts[1])
+    assert vw.released(OCEAN_address) == Wei('100 ether')
+    assert OCEAN_token.balanceOf(beneficiary_agent.address) == Wei('100 ether')
     
-    #no further actions
-    for i in range(10):
-        funder_agent.takeStep(state)
