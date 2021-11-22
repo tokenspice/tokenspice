@@ -1,28 +1,22 @@
-import logging
-log = logging.getLogger('agents')
-
 from enforce_typing import enforce_types
-import math
 
 from engine import AgentBase
+from web3engine.globaltokens import OCEAN_address
         
 @enforce_types
 class VestingBeneficiaryAgent(AgentBase.AgentBaseEvm):
     def __init__(self, name: str, USD: float, OCEAN: float,
-                 vesting_wallet_agent):
+                 vesting_wallet_agent_name: str):
         super().__init__(name, USD, OCEAN)
-        self._vesting_wallet_agent = vesting_wallet_agent
-
-    @property
-    def vesting_wallet_agent(self):
-        return self._vesting_wallet_agent
+        self._vesting_wallet_agent_name = vesting_wallet_agent_name
         
     def takeStep(self, state):
         #ping the vesting wallet agent to release OCEAN
         # (anyone can ping the vesting wallet; if this agent is
         #  the beneficiary then the vesting wallet will send OCEAN)
-        self.vesting_wallet_agent.releaseOCEAN()
-
+        vw = state.getAgent(self._vesting_wallet_agent_name).vesting_wallet
+        vw.release(OCEAN_address(), {'from' : self._wallet.account})
+        
         #ensure that self.OCEAN() is accurate
         self._wallet.resetCachedInfo()
 

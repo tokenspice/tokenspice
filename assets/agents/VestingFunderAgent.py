@@ -11,14 +11,17 @@ from web3tools.web3util import toBase18
 
 @enforce_types
 class VestingFunderAgent(AgentBase.AgentBaseEvm):
-    """Factory for a VestingWalletAgent. Funds a beneficiary with 
-       with all of self's OCEAN, in a one-time act."""
+    """Will create and fund a VestingWalletAgent with specified name.
+    The vesting wallet will vest over time; when its funds are released,
+    they will go to the specified beneficiary agent."""
     def __init__(self, name: str, USD: float, OCEAN: float,
+                 vesting_wallet_agent_name: str,
                  beneficiary_agent_name: str,
                  start_timestamp: int,
                  duration_seconds: int):
         super().__init__(name, USD, OCEAN)
         
+        self._vesting_wallet_agent_name:str = vesting_wallet_agent_name
         self._beneficiary_agent_name:str = beneficiary_agent_name
         self._start_timestamp:int = start_timestamp
         self._duration_seconds:int = duration_seconds
@@ -47,5 +50,6 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
         self._wallet.resetCachedInfo()
         
         #create vesting wallet agent, add to state
-        vw_agent = VestingWalletAgent("vw_agent", vw_contract)
+        vw_agent = VestingWalletAgent(
+            self._vesting_wallet_agent_name, vw_contract)
         state.addAgent(vw_agent)

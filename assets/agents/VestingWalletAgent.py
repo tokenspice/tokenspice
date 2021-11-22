@@ -16,9 +16,6 @@ class VestingWalletAgent(AgentBase.AgentBaseEvm):
     @property
     def vesting_wallet(self):
         return self._vesting_wallet
-
-    def releaseOCEAN(self, from_account):
-        self._vesting_wallet.release(OCEAN_address(), {'from':from_account})
         
     def takeStep(self, state):
         #it's a smart contract robot, it doesn't initiate anything itself

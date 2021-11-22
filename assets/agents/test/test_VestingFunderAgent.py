@@ -25,7 +25,7 @@ def test1():
     #initialize state
     class MockState:
         def __init__(self, beneficiary_agent):
-            self.agents = {"beneficiary1":beneficiary_agent, "vw_agent":None}
+            self.agents = {"beneficiary1":beneficiary_agent, "vw1":None}
         def getAgent(self, name):
             return self.agents[name]
         def addAgent(self, agent):
@@ -38,16 +38,18 @@ def test1():
     #initialize funder agent
     funder_agent = VestingFunderAgent(
         name = "funder1", USD = 0.0, OCEAN = 100.0,
+        vesting_wallet_agent_name = "vw1",
         beneficiary_agent_name = "beneficiary1",
-        start_timestamp = chain.time(), duration_seconds = 30)
+        start_timestamp = chain.time(),
+        duration_seconds = 30)
     assert not funder_agent._did_funding
     assert funder_agent.OCEAN() == 100.0
-    assert state.getAgent("vw_agent") is None
+    assert state.getAgent("vw1") is None
 
     #create vw agent and send OCEAN to it
     funder_agent.takeStep(state) 
-    assert state.getAgent("vw_agent") is not None
-    vw = state.getAgent("vw_agent").vesting_wallet
+    assert state.getAgent("vw1") is not None
+    vw = state.getAgent("vw1").vesting_wallet
     assert vw.beneficiary() == beneficiary_agent.address
     assert 0 <= vw.vestedAmount(OCEAN_address, chain.time()) < Wei('100 ether')
     assert vw.released(OCEAN_address) == 0
@@ -62,7 +64,7 @@ def test1():
     assert OCEAN_token.balanceOf(beneficiary_agent.address) == 0
 
     #release OCEAN
-    state.getAgent("vw_agent").releaseOCEAN(from_account=accounts[1])
+    vw.release(OCEAN_address, {'from':accounts[1]})
     assert vw.released(OCEAN_address) == Wei('100 ether')
     assert OCEAN_token.balanceOf(beneficiary_agent.address) == Wei('100 ether')
     

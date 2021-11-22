@@ -30,10 +30,13 @@ def test_SimState():
     state = netlist.SimState() 
 
     assert len(state.agents) == 2
-    assert state.getAgent("granter1").OCEAN() == state.ss.granter_init_OCEAN
-    assert state.getAgent("taker1").OCEAN() == 0.0
+    assert state.getAgent("funder1").OCEAN() == state.ss.OCEAN_funded
+    assert state.getAgent("beneficiary1").OCEAN() == 0.0
 
     state.takeStep()
+    assert len(state.agents) == 3
+    assert state.getAgent("vw1") is not None
+    
     state.takeStep()
 
 def test_KPIs():

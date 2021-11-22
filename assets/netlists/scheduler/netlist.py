@@ -5,6 +5,8 @@ from typing import List, Set
 from assets.agents import GrantGivingAgent, GrantTakingAgent
 from engine import KPIsBase, SimStateBase, SimStrategyBase
 from util.constants import S_PER_HOUR, S_PER_DAY
+from assets.agents.VestingBeneficiaryAgent import VestingBeneficiaryAgent
+from assets.agents.VestingFunderAgent import VestingFunderAgent
 
 @enforce_types
 class SimStrategy(SimStrategyBase.SimStrategyBase):
@@ -30,17 +32,19 @@ class SimState(SimStateBase.SimStateBase):
         self.ss = SimStrategy()
 
         #wire up the circuit
-        funder = VestingFunderAgent.VestingFunderAgent(
+        agents = []
+        agents.append(VestingFunderAgent(
             name = "funder1",
             USD = 0.0,
             OCEAN = self.ss.OCEAN_funded,
+            vesting_wallet_agent_name = "vw1",
             beneficiary_agent_name = "beneficiary1",
             start_timestamp = self.ss.start_timestamp,
-            duration_seconds = self.ss.duration_seconds)
-        beneficary = VestingBeneficiaryAgent.VestingBeneficiaryAgent(
-            name = "beneficiary1", USD=0.0, OCEAN=0.0)
-        for agent in [funder, beneficiary]:
-            self.agents[agent.name] = agent
+            duration_seconds = self.ss.duration_seconds))
+        agents.append(VestingBeneficiaryAgent(
+            name = "beneficiary1", USD=0.0, OCEAN=0.0,
+            vesting_wallet_agent_name = "vw1"))
+        self.agents = {agent.name : agent for agent in agents}
 
         #kpis is defined in this netlist module
         self.kpis = KPIs(self.ss.time_step) 
