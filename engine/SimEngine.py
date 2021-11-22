@@ -41,7 +41,7 @@ class SimEngine(object):
             if self.doStop():
                 break
             self.state.tick += 1
-            chain.mine(blocks=1, timedelta=self.state.ss.time_step)
+            chain.mine(blocks=1, timedelta=self.state.ss.time_step) 
         log.info("Done")
 
     def takeStep(self) -> None:
