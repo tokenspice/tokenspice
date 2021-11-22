@@ -1,12 +1,14 @@
 import brownie
 from enforce_typing import enforce_types
-from typing import List, Set
+from typing import List
 
-from assets.agents import GrantGivingAgent, GrantTakingAgent
-from engine import KPIsBase, SimStateBase, SimStrategyBase
-from util.constants import S_PER_HOUR, S_PER_DAY
 from assets.agents.VestingBeneficiaryAgent import VestingBeneficiaryAgent
 from assets.agents.VestingFunderAgent import VestingFunderAgent
+from engine import KPIsBase, SimStateBase, SimStrategyBase
+from util.constants import S_PER_HOUR
+from web3engine.globaltokens import OCEAN_address
+
+chain = brownie.network.chain
 
 @enforce_types
 class SimStrategy(SimStrategyBase.SimStrategyBase):
@@ -15,12 +17,12 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
 
         #==baseline
         self.setTimeStep(S_PER_HOUR)
-        self.setMaxTime(10, 'days')
+        self.setMaxTime(3, 'hours')
 
         #==attributes specific to this netlist
-        self.OCEAN_funded: float = 1.0
+        self.OCEAN_funded: float = 5.0
         self.start_timestamp: int = brownie.network.chain.time() + 5
-        self.duration_seconds: int = 30
+        self.duration_seconds: int = 1 * S_PER_HOUR
 
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
@@ -64,19 +66,22 @@ def netlist_createLogData(state):
     #SimEngine already logs: Tick, Second, Min, Hour, Day, Month, Year
     #So we log other things...
 
-    timestamp = FIXME
+    timestamp = chain.time()
     s += [f"; timestamp={timestamp}"]
     dataheader += ["timestamp"]
     datarow += [timestamp]
-    
-    vw = state.getAgent("vw_agent").vesting_wallet
-    OCEAN_vested = vw.vestedAmount(OCEAN_address, timestamp)
-    OCEAN_released = vw.released(OCEAN_address)
+
+    if "vw1" in state.agents:
+        vw = state.getAgent("vw1").vesting_wallet
+        OCEAN_vested = vw.vestedAmount(OCEAN_address(), timestamp)
+        OCEAN_released = vw.released(OCEAN_address())
+    else:
+        OCEAN_vested = OCEAN_released = 0
     s += [f"; OCEAN_vested={OCEAN_vested}, OCEAN_released={OCEAN_released}"]
     dataheader += ["OCEAN_vested", "OCEAN_released"]
     datarow += [OCEAN_vested, OCEAN_released]
 
-    beneficiary_OCEAN = state.getAgent("beneficiary1").OCEANAtTick()
+    beneficiary_OCEAN = state.getAgent("beneficiary1").OCEAN()
     s += [f"; beneficiary_OCEAN={beneficiary_OCEAN}"]
     dataheader += ["beneficiary_OCEAN"]
     datarow += [beneficiary_OCEAN]
