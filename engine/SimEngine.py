@@ -1,6 +1,7 @@
 import logging
 log = logging.getLogger('master')
 
+from brownie.network import chain
 from enforce_typing import enforce_types
 import os
 
@@ -39,7 +40,8 @@ class SimEngine(object):
             self.takeStep()
             if self.doStop():
                 break
-            self.state.tick += 1 #could be e.g. 10 or 100 or ..
+            self.state.tick += 1
+            chain.mine(blocks=1, timedelta=self.state.ss.time_step)
         log.info("Done")
 
     def takeStep(self) -> None:

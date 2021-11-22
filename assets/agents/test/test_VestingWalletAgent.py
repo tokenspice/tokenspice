@@ -25,10 +25,8 @@ def test1():
     globaltokens.fundOCEANFromAbove(vw.address, Wei("5 ether"))
     
     class MockState:
-        def __init__(self):
-            self.time_step = 10 # each tick is 10 seconds
         def takeStep(self):
-            chain.mine(blocks=3, timedelta=self.time_step)
+            chain.mine(blocks=3, timedelta=10)
             
     state = MockState()
     state.takeStep() #pass enough time (10 s) for _some_ vesting
