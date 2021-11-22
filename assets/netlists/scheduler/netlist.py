@@ -48,9 +48,6 @@ class SimState(SimStateBase.SimStateBase):
 
         #kpis is defined in this netlist module
         self.kpis = KPIs(self.ss.time_step) 
-                
-    def OCEANprice(self) -> float:
-        return 1.0 #arbitrary. Needed by VestingBeneficiaryAgent
 
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
