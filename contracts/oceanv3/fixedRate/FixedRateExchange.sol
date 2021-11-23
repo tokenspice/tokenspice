@@ -1,10 +1,9 @@
-pragma solidity 0.5.7;
+pragma solidity ^0.5.7;
 // Copyright BigchainDB GmbH and Ocean Protocol contributors
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
-// Code is Apache-2.0 and docs are CC-BY-4.0
 
 import '../interfaces/IERC20Template.sol';
-import 'OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/math/SafeMath.sol';
+import 'OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/math/SafeMath.sol';
 
 /**
  * @title FixedRateExchange

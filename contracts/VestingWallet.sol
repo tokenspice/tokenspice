@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.3.2 (finance/VestingWallet.sol)
-pragma solidity ^0.8.0;
+pragma solidity ^0.5.7;
 
-import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/token/ERC20/utils/SafeERC20.sol";
-import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/Address.sol";
-import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/Context.sol";
-import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/math/Math.sol";
+import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/token/ERC20/SafeERC20.sol";
+import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/utils/Address.sol";
+import "./Context.sol";
+import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/math/SafeMath.sol";
 
 /**
  * @title VestingWallet
@@ -23,9 +23,12 @@ contract VestingWallet is Context {
 
     uint256 private _released;
     mapping(address => uint256) private _erc20Released;
-    address private immutable _beneficiary;
-    uint64 private immutable _start;
-    uint64 private immutable _duration;
+    //address private immutable _beneficiary; //>=0.6.5. Makes them read-only
+    address private _beneficiary;
+    //uint64 private immutable _start; //>=0.6.5
+    uint64 private _start;
+    //uint64 private immutable _duration; //>=0.6.5
+    uint64 private _duration;
 
     /**
      * @dev Set the beneficiary, start timestamp and vesting duration of the vesting wallet.
@@ -44,7 +47,8 @@ contract VestingWallet is Context {
     /**
      * @dev The contract should be able to receive Eth.
      */
-    receive() external payable virtual {}
+    //receive() external payable virtual {} // >= 0.6.0
+    function () external payable {} //0.5.x
 
     /**
      * @dev Getter for the beneficiary address.
@@ -90,7 +94,8 @@ contract VestingWallet is Context {
         uint256 releasable = vestedAmount(uint64(block.timestamp)) - released();
         _released += releasable;
         emit EtherReleased(releasable);
-        Address.sendValue(payable(beneficiary()), releasable);
+        //Address.sendValue(payable(beneficiary()), releasable); //>=0.6.0
+        Address.sendValue(beneficiary(), releasable); //0.5.x
     }
 
     /**

@@ -11,10 +11,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity 0.5.7;
+pragma solidity ^0.5.7;
 
 import './BNum.sol';
-import 'OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/token/ERC20/IERC20.sol';
+import 'OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/token/ERC20/IERC20.sol';
 
 // Highly opinionated token implementation
 

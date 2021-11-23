@@ -1,6 +1,7 @@
-pragma solidity ^0.8.0;
+pragma solidity ^0.5.7;
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 
-import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/math/SafeMath.sol";
+import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/math/SafeMath.sol";
 
 contract Simpletoken {
 
@@ -34,7 +35,8 @@ contract Simpletoken {
         emit Transfer(address(0), msg.sender, _totalSupply);
     }
 
-    fallback () external payable {
+    //fallback () external payable { // >= 0.6.0
+    function () external payable { //0.5.x
         revert();
     }
 
