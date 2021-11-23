@@ -85,7 +85,7 @@ def netlist_createLogData(state):
     beneficiary_OCEAN = state.getAgent("beneficiary1").OCEAN()
     s += [f"; beneficiary_OCEAN={beneficiary_OCEAN}"]
     dataheader += ["beneficiary_OCEAN"]
-    datarow += [beneficiary_OCEAN]
+    datarow += [beneficiary_OCEAN] 
     
     #done
     return s, dataheader, datarow
