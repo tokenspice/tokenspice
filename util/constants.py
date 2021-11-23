@@ -30,7 +30,7 @@ if not SAFETY:
 SILENT = config['general'].getboolean('SILENT')
 assert SILENT is not None
 from brownie._config import CONFIG
-CONFIG.argv["silent"] = SILENT
+CONFIG.argv["silent"] = SILENT 
 
 #big numbers
 import math
