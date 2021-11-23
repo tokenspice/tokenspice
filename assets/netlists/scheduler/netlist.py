@@ -74,8 +74,8 @@ def netlist_createLogData(state):
 
     if "vw1" in state.agents:
         vw = state.getAgent("vw1").vesting_wallet
-        OCEAN_vested = vw.vestedAmount(OCEAN_address(), timestamp)
-        OCEAN_released = vw.released(OCEAN_address())
+        OCEAN_vested = vw.vestedAmount(OCEAN_address(), timestamp)/1e18
+        OCEAN_released = vw.released(OCEAN_address())/1e18
     else:
         OCEAN_vested = OCEAN_released = 0
     s += [f"; OCEAN_vested={OCEAN_vested}, OCEAN_released={OCEAN_released}"]
