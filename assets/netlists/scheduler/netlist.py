@@ -5,7 +5,7 @@ from typing import List
 from assets.agents.VestingBeneficiaryAgent import VestingBeneficiaryAgent
 from assets.agents.VestingFunderAgent import VestingFunderAgent
 from engine import KPIsBase, SimStateBase, SimStrategyBase
-from util.constants import S_PER_MIN, S_PER_HOUR
+from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_YEAR
 from web3engine.globaltokens import OCEAN_address
 
 chain = brownie.network.chain
@@ -16,14 +16,14 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         super().__init__()
 
         #==baseline
-        self.setTimeStep(S_PER_MIN)
-        self.setMaxTime(80, 'min')
-        self.setLogInterval(5 * S_PER_MIN)
+        self.setTimeStep(S_PER_YEAR)
+        self.setMaxTime(80, 'years')
+        self.setLogInterval(5 * S_PER_YEAR)
 
         #==attributes specific to this netlist
         self.OCEAN_funded: float = 5.0
-        self.start_timestamp: int = brownie.network.chain.time() + 5
-        self.duration_seconds: int = 60 * S_PER_MIN
+        self.start_timestamp: int = brownie.network.chain[-1].timestamp + 5
+        self.duration_seconds: int = 60 * S_PER_YEAR
 
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
@@ -67,7 +67,7 @@ def netlist_createLogData(state):
     #SimEngine already logs: Tick, Second, Min, Hour, Day, Month, Year
     #So we log other things...
 
-    timestamp = chain.time()
+    timestamp = chain[-1].timestamp
     s += [f"; timestamp={timestamp}"]
     dataheader += ["timestamp"]
     datarow += [timestamp]
@@ -104,7 +104,7 @@ def netlist_plotInstructions(header: List[str], values):
     """
     from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, DOLLAR
     
-    x_label = "Min"
+    x_label = "Year"
     x = arrayToFloatList(values[:,header.index(x_label)])
     
     y_params = [

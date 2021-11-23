@@ -40,7 +40,7 @@ def test1():
         name = "funder1", USD = 0.0, OCEAN = 100.0,
         vesting_wallet_agent_name = "vw1",
         beneficiary_agent_name = "beneficiary1",
-        start_timestamp = chain.time(),
+        start_timestamp = chain[-1].timestamp,
         duration_seconds = 30)
     assert not funder_agent._did_funding
     assert funder_agent.OCEAN() == 100.0
@@ -51,7 +51,7 @@ def test1():
     assert state.getAgent("vw1") is not None
     vw = state.getAgent("vw1").vesting_wallet
     assert vw.beneficiary() == beneficiary_agent.address
-    assert 0 <= vw.vestedAmount(OCEAN_address, chain.time()) < Wei('100 ether')
+    assert 0 <= vw.vestedAmount(OCEAN_address, chain[-1].timestamp) < Wei('100 ether')
     assert vw.released(OCEAN_address) == 0
     assert funder_agent._did_funding
     assert funder_agent.OCEAN() == 0.0
@@ -59,7 +59,7 @@ def test1():
 
     #OCEAN vests
     chain.mine(blocks=1, timedelta=60) 
-    assert vw.vestedAmount(OCEAN_address, chain.time()) == Wei('100 ether')
+    assert vw.vestedAmount(OCEAN_address, chain[-1].timestamp) == Wei('100 ether')
     assert vw.released(OCEAN_address) == 0
     assert OCEAN_token.balanceOf(beneficiary_agent.address) == 0
 

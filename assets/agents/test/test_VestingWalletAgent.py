@@ -13,7 +13,7 @@ chain = brownie.network.chain
 def test1():
     token = globaltokens.OCEANtoken()
     
-    start_timestamp = chain.time() + 5
+    start_timestamp = chain[-1].timestamp + 5
     duration_seconds = 30
     vw_orig = BROWNIE_PROJECT.VestingWallet.deploy(
         accounts[1].address, start_timestamp, duration_seconds,
@@ -30,11 +30,11 @@ def test1():
             
     state = MockState()
     state.takeStep() #pass enough time (10 s) for _some_ vesting
-    assert 0 < vw.vestedAmount(token.address, chain.time()) < Wei("5 ether")
+    assert 0 < vw.vestedAmount(token.address, chain[-1].timestamp) < Wei("5 ether")
     
     for i in range(6): #pass enough time for _all_ vesting
         state.takeStep() 
-    assert vw.vestedAmount(token.address, chain.time()) == Wei("5 ether")
+    assert vw.vestedAmount(token.address, chain[-1].timestamp) == Wei("5 ether")
     assert vw.released() == 0
     assert token.balanceOf(accounts[1].address) == 0
 

@@ -9,7 +9,7 @@ chain = brownie.network.chain
 def test_init():
     vesting_wallet = _vesting_wallet()
     assert vesting_wallet.beneficiary() == accounts[1].address
-    assert vesting_wallet.start() > chain.time()
+    assert vesting_wallet.start() > chain[-1].timestamp
     assert vesting_wallet.duration() == 30
     assert vesting_wallet.released() == 0
 
@@ -33,7 +33,7 @@ def test_ethFunding():
         
     #set up vesting wallet (account). It vests all ETH/tokens that it receives.
     beneficiary_address = accounts[1].address
-    start_timestamp = chain.time() + 5 #magic number
+    start_timestamp = chain[-1].timestamp + 5 #magic number
     duration_seconds = 30 #magic number
     wallet = BROWNIE_PROJECT.VestingWallet.deploy(
         beneficiary_address, start_timestamp, duration_seconds,
@@ -47,12 +47,12 @@ def test_ethFunding():
     accounts[0].transfer(wallet.address, "90 ether")
     assert accounts[0].balance() == 0
     assert accounts[1].balance()/1e18 == approx(110.0)
-    assert wallet.vestedAmount(chain.time()) == 0
+    assert wallet.vestedAmount(chain[1].timestamp) == 0
     assert wallet.released() == 0
 
     #make enough time pass for everything to vest
     chain.mine(blocks=3, timedelta=100)
-    assert wallet.vestedAmount(chain.time())/1e18 == approx(90.0)
+    assert wallet.vestedAmount(chain[-1].timestamp)/1e18 == approx(90.0)
     assert wallet.released() == 0
     assert accounts[1].balance()/1e18 == approx(110.0) #not released yet!
 
@@ -63,7 +63,7 @@ def test_ethFunding():
 
     #put some new ETH into wallet. It's immediately vested, but not released
     accounts[2].transfer(wallet.address, "10 ether")
-    assert wallet.vestedAmount(chain.time())/1e18 == approx(100.0)
+    assert wallet.vestedAmount(chain[-1].timestamp)/1e18 == approx(100.0)
     assert wallet.released()/1e18 == approx(90.0) #not released yet!
 
     #release the new ETH
@@ -90,7 +90,7 @@ def test_tokenFunding():
 
     #set up vesting wallet (account). It vests all ETH/tokens that it receives.
     beneficiary_address = accounts[1].address
-    start_timestamp = chain.time() + 5 #magic number
+    start_timestamp = chain[-1].timestamp + 5 #magic number
     duration_seconds = 30 #magic number
     wallet = BROWNIE_PROJECT.VestingWallet.deploy(
         beneficiary_address, start_timestamp, duration_seconds,
@@ -100,12 +100,12 @@ def test_tokenFunding():
     token.transfer(wallet.address, Wei('90 ether'), {'from': accounts[0]})
     assert token.balanceOf(accounts[0]) == 0
     assert token.balanceOf(accounts[1])/1e18 == approx(110.0)
-    assert wallet.vestedAmount(token.address, chain.time()) == 0
+    assert wallet.vestedAmount(token.address, chain[-1].timestamp) == 0
     assert wallet.released(token.address) == 0
 
     #make enough time pass for everything to vest
     chain.mine(blocks=3, timedelta=100)
-    assert wallet.vestedAmount(token.address, chain.time())/1e18 == approx(90.0)
+    assert wallet.vestedAmount(token.address, chain[-1].timestamp)/1e18 == approx(90.0)
     assert wallet.released(token.address) == 0
     assert token.balanceOf(accounts[1])/1e18 == approx(110.0) #not released yet!
 
@@ -116,7 +116,7 @@ def test_tokenFunding():
 
     #put some new TOK into wallet. It's immediately vested, but not released
     token.transfer(wallet.address, Wei('10 ether'), {'from': accounts[2]})
-    assert wallet.vestedAmount(token.address, chain.time())/1e18 == approx(100.0)
+    assert wallet.vestedAmount(token.address, chain[-1].timestamp)/1e18 == approx(100.0)
     assert wallet.released(token.address)/1e18 == approx(90.0) #not released yet!
 
     #release the new TOK
@@ -128,7 +128,7 @@ def _vesting_wallet():
     #note: eth timestamps are in unix time (seconds since jan 1, 1970)
     beneficiary_address = brownie.network.accounts[1].address
     
-    start_timestamp = brownie.network.chain.time() + 5 #magic number
+    start_timestamp = brownie.network.chain[-1].timestamp + 5 #magic number
     
     duration_seconds = 30 #magic number
     

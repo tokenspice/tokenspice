@@ -55,7 +55,7 @@ def _testRunLonger(max_ticks):
 
 @enforce_types
 def testRunEngine():
-    init_time = chain.time()
+    init_time = chain[-1].timestamp
     
     state = SimState(time_step=10)
     state.ss.setMaxTicks(3)
@@ -65,7 +65,7 @@ def testRunEngine():
     assert engine.state.numAgents() >= 0
     assert engine.state.tick == 3
 
-    elapsed_time = chain.time() - init_time
+    elapsed_time = chain[-1].timestamp - init_time
     assert elapsed_time == (3 * 10) # 3 ticks * 10 s/tick
 
 @enforce_types
