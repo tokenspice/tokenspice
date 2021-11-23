@@ -4,7 +4,6 @@ pragma solidity ^0.5.7;
 
 import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/token/ERC20/SafeERC20.sol";
 import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/utils/Address.sol";
-import "./Context.sol";
 import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/math/SafeMath.sol";
 
 /**
@@ -17,7 +16,7 @@ import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/math/SafeMath.sol";
  * Consequently, if the vesting has already started, any amount of tokens sent to this contract will (at least partly)
  * be immediately releasable.
  */
-contract VestingWallet is Context {
+contract VestingWallet {
     event EtherReleased(uint256 amount);
     event ERC20Released(address token, uint256 amount);
 
@@ -37,7 +36,7 @@ contract VestingWallet is Context {
         address beneficiaryAddress,
         uint64 startTimestamp,
         uint64 durationSeconds
-    ) {
+    ) public {
         require(beneficiaryAddress != address(0), "VestingWallet: beneficiary is zero address");
         _beneficiary = beneficiaryAddress;
         _start = startTimestamp;
@@ -47,41 +46,40 @@ contract VestingWallet is Context {
     /**
      * @dev The contract should be able to receive Eth.
      */
-    //receive() external payable virtual {} // >= 0.6.0
-    function () external payable {} //0.5.x
+    function () external payable {}
 
     /**
      * @dev Getter for the beneficiary address.
      */
-    function beneficiary() public view virtual returns (address) {
+    function beneficiary() public view returns (address) {
         return _beneficiary;
     }
 
     /**
      * @dev Getter for the start timestamp.
      */
-    function start() public view virtual returns (uint256) {
+    function start() public view returns (uint256) {
         return _start;
     }
 
     /**
      * @dev Getter for the vesting duration.
      */
-    function duration() public view virtual returns (uint256) {
+    function duration() public view returns (uint256) {
         return _duration;
     }
 
     /**
      * @dev Amount of eth already released
      */
-    function released() public view virtual returns (uint256) {
+    function released() public view returns (uint256) {
         return _released;
     }
 
     /**
      * @dev Amount of token already released
      */
-    function released(address token) public view virtual returns (uint256) {
+    function released(address token) public view returns (uint256) {
         return _erc20Released[token];
     }
 
@@ -90,12 +88,12 @@ contract VestingWallet is Context {
      *
      * Emits a {TokensReleased} event.
      */
-    function release() public virtual {
+    function release() public {
         uint256 releasable = vestedAmount(uint64(block.timestamp)) - released();
         _released += releasable;
         emit EtherReleased(releasable);
-        //Address.sendValue(payable(beneficiary()), releasable); //>=0.6.0
-        Address.sendValue(beneficiary(), releasable); //0.5.x
+	address payable b = address(uint160(beneficiary()));
+	b.send(releasable);
     }
 
     /**
@@ -103,7 +101,7 @@ contract VestingWallet is Context {
      *
      * Emits a {TokensReleased} event.
      */
-    function release(address token) public virtual {
+    function release(address token) public {
         uint256 releasable = vestedAmount(token, uint64(block.timestamp)) - released(token);
         _erc20Released[token] += releasable;
         emit ERC20Released(token, releasable);
@@ -113,22 +111,22 @@ contract VestingWallet is Context {
     /**
      * @dev Calculates the amount of ether that has already vested. Default implementation is a linear vesting curve.
      */
-    function vestedAmount(uint64 timestamp) public view virtual returns (uint256) {
+    function vestedAmount(uint64 timestamp) public view returns (uint256) {
         return _vestingSchedule(address(this).balance + released(), timestamp);
     }
 
     /**
      * @dev Calculates the amount of tokens that has already vested. Default implementation is a linear vesting curve.
      */
-    function vestedAmount(address token, uint64 timestamp) public view virtual returns (uint256) {
+    function vestedAmount(address token, uint64 timestamp) public view returns (uint256) {
         return _vestingSchedule(IERC20(token).balanceOf(address(this)) + released(token), timestamp);
     }
 
     /**
-     * @dev Virtual implementation of the vesting formula. This returns the amout vested, as a function of time, for
+     * @dev implementation of the vesting formula. This returns the amout vested, as a function of time, for
      * an asset given its total historical allocation.
      */
-    function _vestingSchedule(uint256 totalAllocation, uint64 timestamp) internal view virtual returns (uint256) {
+    function _vestingSchedule(uint256 totalAllocation, uint64 timestamp) internal view returns (uint256) {
         if (timestamp < start()) {
             return 0;
         } else if (timestamp > start() + duration()) {
