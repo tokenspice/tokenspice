@@ -104,7 +104,7 @@ def netlist_plotInstructions(header: List[str], values):
     """
     from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, DOLLAR
     
-    x_label = "Day"
+    x_label = "Min"
     x = arrayToFloatList(values[:,header.index(x_label)])
     
     y_params = [
