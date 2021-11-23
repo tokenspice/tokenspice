@@ -70,8 +70,6 @@ def do_run():
         stats_filename = os.path.join(output_dir, 'stats')
         cProfile.run('engine.run()', stats_filename)
         print(f'Output stats file: {stats_filename}. To see: tsp showstats outdir_csv/stats 20 cumulative')
-    import brownie
-    brownie.network.disconnect()
     print(f'Output directory: {output_dir}')
 
 def _importNetlistModule(netlist_str: str):

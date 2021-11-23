@@ -17,7 +17,7 @@ brownie.network.connect('development') #FIXME: may need to be 'ganache', since b
 
 GOD_ACCOUNT = brownie.network.accounts[0]
 
-SAFETY = config['general'].getboolean('safety')
+SAFETY = config['general'].getboolean('SAFETY')
 assert SAFETY is not None
 
 from enforce_typing import enforce_types
@@ -26,6 +26,11 @@ if not SAFETY:
     def noop(f):
         return f
     enforce_types = noop
+
+SILENT = config['general'].getboolean('SILENT')
+assert SILENT is not None
+from brownie._config import CONFIG
+CONFIG.argv["silent"] = SILENT
 
 #big numbers
 import math
