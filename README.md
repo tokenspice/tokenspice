@@ -105,10 +105,7 @@ cd tokenspice
 source venv/bin/activate
 
 #install 3rd party contracts
-brownie pm install OpenZeppelin/openzeppelin-contracts@2.0.0
 brownie pm install OpenZeppelin/openzeppelin-contracts@2.1.1
-brownie pm install OpenZeppelin/openzeppelin-contracts@3.0.0
-brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
 
 #compile everything in contracts/, including contracts/oceanv3/
 brownie compile
