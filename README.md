@@ -52,6 +52,7 @@ History:
 
 - Linux/MacOS
 - Python 3.8.5+
+- solc 0.5.0+ [[Instructions](https://docs.soliditylang.org/en/v0.8.9/installing-solidity.html)]
 
 ## Install TokenSPICE
 
@@ -103,13 +104,10 @@ Open a new terminal. From it:
 cd tokenspice
 source venv/bin/activate
 
-#install 3rd party contracts:
-#install contracts from openzeppelin and ocean github repos
+#install 3rd party contracts
 brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
 
-#[UNCOMMENT WHEN READY]
-#brownie pm install oceanprotocol/contracts@0.6.9
-
+#compile everything in contracts/, including contracts/oceanv3/
 brownie compile
 ```
 
