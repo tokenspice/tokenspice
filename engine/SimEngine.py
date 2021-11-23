@@ -41,13 +41,7 @@ class SimEngine(object):
             if self.doStop():
                 break
             self.state.tick += 1
-            log.info(f"***************chain.time={chain.time()}")
-            chain.mine(blocks=1, timedelta=self.state.ss.time_step) 
-            log.info(f"***************chain.time={chain.time()}")
-            if chain.time() < 0: #"Year 2038 problem" (!)
-                import pdb; pdb.set_trace()
-            log.info(f"***************")
-            log.info(f"")
+            chain.mine(blocks=1, timedelta=self.state.ss.time_step)
         log.info("Done")
 
     def takeStep(self) -> None:
