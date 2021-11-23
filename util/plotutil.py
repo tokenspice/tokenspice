@@ -5,10 +5,11 @@ import logging
 import matplotlib
 from matplotlib import pyplot
 import numpy
+import os
 from pylab import figure, axes, pie, title, show
 from typing import Any, List, Union
 
-from util.constants import * #S_PER_YEAR etc
+from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_WEEK, S_PER_MONTH, S_PER_YEAR
 
 LINEAR, LOG, BOTH = 0, 1, 2 #pyplot.yscale interprets 1st 2
 MULT1, MULT100, DIV1M, DIV1B = 0, 1, 2, 3 #multiply or divide the value?
