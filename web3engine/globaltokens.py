@@ -4,9 +4,9 @@ from enforce_typing import enforce_types
 
 from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
 
-_OCEAN_TOKEN = BROWNIE_PROJECT.Simpletoken.deploy(
-    'OCEAN', 'OCEAN', 18, Wei('1000000 ether'), #magic number
-    {'from' : GOD_ACCOUNT})
+_OCEAN_TOKEN = GOD_ACCOUNT.deploy(
+    BROWNIE_PROJECT.Simpletoken, 'OCEAN', 'OCEAN', 18, Wei('1000000 ether'),
+    silent=True)
     
 @enforce_types
 def OCEAN_address() -> str:
