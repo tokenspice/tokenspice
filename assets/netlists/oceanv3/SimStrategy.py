@@ -12,6 +12,7 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         #==baseline
         self.setTimeStep(S_PER_HOUR)
         self.setMaxTime(100, 'days')
+        self.setLogInterval(10 * S_PER_HOUR)
                
         #publisher
         self.publisher_init_OCEAN = 10000.0

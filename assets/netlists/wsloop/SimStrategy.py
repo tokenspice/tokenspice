@@ -2,7 +2,7 @@ import math
 from enforce_typing import enforce_types
 
 from engine import SimStrategyBase
-from util.constants import S_PER_HOUR, S_PER_YEAR
+from util.constants import S_PER_HOUR, S_PER_DAY, S_PER_YEAR
 
 @enforce_types
 class SimStrategy(SimStrategyBase.SimStrategyBase):
@@ -11,8 +11,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         super().__init__()
 
         #===set base-class values we want for this netlist====
-        self.setTimeStep(24 * S_PER_HOUR)
+        self.setTimeStep(S_PER_DAY)
         self.setMaxTime(2, 'years') #typical runs: 10 years, 20 years, 150 years
+        self.setLogInterval(10 * S_PER_DAY)
 
         #===new attributes specific to this netlist===
 

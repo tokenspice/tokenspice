@@ -49,7 +49,7 @@ class SimEngine(object):
         log.debug("=============================================")
         log.debug("Tick=%d: begin" % (self.state.tick))
         
-        if (self.elapsedSeconds() % S_PER_DAY) == 0:
+        if (self.elapsedSeconds() % self.state.ss.log_interval) == 0:
             s, dataheader, datarow  = self.createLogData()            
             log.info("".join(s))
             self.logToCsv(dataheader, datarow)

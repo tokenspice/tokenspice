@@ -5,7 +5,7 @@ from typing import List
 from assets.agents.VestingBeneficiaryAgent import VestingBeneficiaryAgent
 from assets.agents.VestingFunderAgent import VestingFunderAgent
 from engine import KPIsBase, SimStateBase, SimStrategyBase
-from util.constants import S_PER_HOUR
+from util.constants import S_PER_MIN, S_PER_HOUR
 from web3engine.globaltokens import OCEAN_address
 
 chain = brownie.network.chain
@@ -16,13 +16,14 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         super().__init__()
 
         #==baseline
-        self.setTimeStep(S_PER_HOUR)
-        self.setMaxTime(3, 'hours')
+        self.setTimeStep(S_PER_MIN)
+        self.setMaxTime(80, 'min')
+        self.setLogInterval(5 * S_PER_MIN)
 
         #==attributes specific to this netlist
         self.OCEAN_funded: float = 5.0
         self.start_timestamp: int = brownie.network.chain.time() + 5
-        self.duration_seconds: int = 1 * S_PER_HOUR
+        self.duration_seconds: int = 60 * S_PER_MIN
 
 @enforce_types
 class SimState(SimStateBase.SimStateBase):

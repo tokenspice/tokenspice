@@ -30,6 +30,7 @@ class SimState(SimStateBase.SimStateBase):
         super().__init__()
         self.ss = SimStrategy()
         self.ss.setTimeStep(time_step)
+        self.ss.setLogInterval(time_step * 10)
         self.kpis = KPIs(time_step)
 
 # ==================================================================
