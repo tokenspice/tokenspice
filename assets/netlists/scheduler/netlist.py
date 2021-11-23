@@ -16,9 +16,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         super().__init__()
 
         #==baseline
-        self.setTimeStep(S_PER_YEAR)
-        self.setMaxTime(80, 'years')
-        self.setLogInterval(5 * S_PER_YEAR)
+        self.setTimeStep(S_PER_MONTH)
+        self.setMaxTime(10, 'years')
+        self.setLogInterval(S_PER_YEAR)
 
         #==attributes specific to this netlist
         self.OCEAN_funded: float = 5.0
