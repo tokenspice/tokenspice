@@ -2,6 +2,7 @@ from enforce_typing import enforce_types
 import random
 
 from agents.PoolAgent import PoolAgent
+from contracts.oceanv3 import oceanv3util
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18
@@ -45,7 +46,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
 
     def _createPoolAgent(self, state) -> PoolAgent:        
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"
-        wallet = self._wallet._web3wallet
+        account = self._wallet._account
         OCEAN = globaltokens.OCEANtoken()
         
         #name
@@ -57,22 +58,21 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         DT = self._createDatatoken(dt_name, mint_amt=1000.0) #magic number
 
         #new pool
-        pool_address = bfactory.BFactory().newBPool(from_wallet=wallet)
-        pool = bpool.BPool(pool_address)
+        pool = oceanv3util.newBPool(account)
 
         #bind tokens & add initial liquidity
         OCEAN_bind_amt = self.OCEAN() #magic number: use all the OCEAN
         DT_bind_amt = 20.0 #magic number
                 
-        DT.approve(pool.address, toBase18(DT_bind_amt), from_wallet=wallet)
-        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt),from_wallet=wallet)
+        DT.approve(pool.address, toBase18(DT_bind_amt), {'from':account})
+        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt),{'from':account})
         
         pool.bind(DT.address, toBase18(DT_bind_amt),
-                  toBase18(state.ss.pool_weight_DT), from_wallet=wallet)
+                  toBase18(state.ss.pool_weight_DT), {'from':account})
         pool.bind(OCEAN.address, toBase18(OCEAN_bind_amt),
-                  toBase18(state.ss.pool_weight_OCEAN), from_wallet=wallet)
+                  toBase18(state.ss.pool_weight_OCEAN), {'from':account})
         
-        pool.finalize(from_wallet=wallet)
+        pool.finalize({'from':account})
 
         #create agent
         pool_agent = PoolAgent(pool_agent_name, pool)
@@ -128,12 +128,11 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         DTs = [pool_agent.datatoken for pool_agent in pool_agents]
         return [DT for DT in DTs if self.DT(DT) > 0.0]
 
-    def _createDatatoken(self,dt_name:str,mint_amt:float):
+    def _createDatatoken(self, dt_name:str, mint_amt:float):
         """Create datatoken contract and mint DTs to self."""
-        wallet = self._wallet._web3wallet
-        DT_address = dtfactory.DTFactory().createToken(
-            '', dt_name, dt_name, toBase18(mint_amt), from_wallet=wallet)
-        DT = datatoken.Datatoken(DT_address)
-        DT.mint(wallet.address, toBase18(mint_amt), from_wallet=wallet)
+        account = self._wallet._account
+        DT = oceanv3util.newDatatoken(
+            '', dt_name, dt_name, toBase18(mint_amt), account)
+        DT.mint(account.address, toBase18(mint_amt), {'from':account})
         self._wallet.resetCachedInfo()
         return DT

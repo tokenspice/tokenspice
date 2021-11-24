@@ -320,13 +320,13 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         return fromBase18(self._DT_base(dt))
 
     def _DT_base(self, dt) -> int: 
-        return dt.balanceOf_base(self.address)
+        return dt.balanceOf(self.address)
     
     def BPT(self, pool) -> float:
         return fromBase18(self._BPT_base(pool))
     
     def _BPT_base(self, pool) -> int:
-        return pool.balanceOf_base(self.address)
+        return pool.balanceOf(self.address)
 
     def sellDT(self, pool, DT, DT_sell_amt:float, min_OCEAN_amt:float=0.0):
         """Swap DT for OCEAN. min_OCEAN_amt>0 protects from slippage."""
