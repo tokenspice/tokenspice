@@ -1,11 +1,11 @@
 import brownie
-from brownie import Wei
 from enforce_typing import enforce_types
 
 from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
+from util.base18 import toBase18
 
 _OCEAN_TOKEN = GOD_ACCOUNT.deploy(
-    BROWNIE_PROJECT.Simpletoken, 'OCEAN', 'OCEAN', 18, Wei('1000000 ether'))
+    BROWNIE_PROJECT.Simpletoken, 'OCEAN', 'OCEAN', 18, toBase18(1e9))
     
 @enforce_types
 def OCEAN_address() -> str:

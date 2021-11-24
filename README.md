@@ -80,11 +80,13 @@ pip install -r requirements.txt
 
 Think of Ganache as local EVM blockchain network, with just one node.
 
-Open a new terminal and:
+If you haven't yet installed Ganache, here's how. Open a new terminal and:
 ```console
-#install Ganache (if you haven't yet)
 npm install ganache-cli --global
+```
 
+To run ganache, in the same terminal:
+```
 #Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
 export NODE_OPTIONS=--openssl-legacy-provider
 
@@ -95,6 +97,13 @@ source venv/bin/activate
 #run ganache.py. It calls ganache cli and fills in many arguments for you.
 ./ganache.py
 ```
+
+TokenSPICE uses brownie. If ganache is running, brownie connects to it. Otherwise brownie starts ganache for its session. Recommendations:
+- For unit tests, let Brownie auto-run ganache. Why: avoid brownie warnings on block height.
+- For simulation runs (`tsp run`), run ganache separately. Why: avoid brownie clutter in stdout
+
+
+
 
 ## Compile & deploy contracts to ganache
 
