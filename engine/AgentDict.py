@@ -1,10 +1,10 @@
 from enforce_typing import enforce_types
 
-from assets.agents.PublisherAgent import PublisherAgent
-from assets.agents.PoolAgent import PoolAgent
-from assets.agents.StakerspeculatorAgent import StakerspeculatorAgent
-from assets.agents.DataconsumerAgent import DataconsumerAgent
-from assets.agents.SpeculatorAgent import SpeculatorAgent
+from agents.PublisherAgent import PublisherAgent
+from agents.PoolAgent import PoolAgent
+from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.DataconsumerAgent import DataconsumerAgent
+from agents.SpeculatorAgent import SpeculatorAgent
 
 @enforce_types
 class AgentDict(dict):

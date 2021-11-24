@@ -15,10 +15,10 @@ import typing
 
 from engine.AgentWallet import AgentWalletAbstract, AgentWalletEvm, \
     AgentWalletNoEvm
-from web3engine import bpool, datatoken, globaltokens
+from util import globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
-from web3tools.web3util import toBase18
+from util.base18 import toBase18
 
 @enforce_types
 class AgentBaseAbstract(ABC):

@@ -1,4 +1,4 @@
-from web3engine import globaltokens
+from util import globaltokens
 
 def test_OCEAN():
     assert globaltokens.OCEANtoken().symbol() == 'OCEAN'

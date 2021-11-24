@@ -1,5 +1,5 @@
 #conftest.py for engine/test
-# -this has some duplicate code with assets.agents.test.conftest.py,
+# -this has some duplicate code with agents.test.conftest.py,
 #  that's ok since they evolve separately over time
 
 from enforce_typing import enforce_types
@@ -7,11 +7,8 @@ import pytest
 from typing import Union
 
 from engine import AgentWallet, AgentBase
-from util import configutil
-from web3tools import web3util, web3wallet
-from web3tools.web3util import fromBase18, toBase18
-from web3engine import bfactory, bpool, datatoken, dtfactory, globaltokens
-
+from util.base18 import fromBase18, toBase18
+from util import globaltokens
 
 #alice:
 # 1. starts with an init OCEAN

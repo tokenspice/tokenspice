@@ -5,8 +5,7 @@ from pytest import approx
 from engine.AgentWallet import *
 from engine.test.conftest import _DT_INIT, _DT_STAKE 
 from util import configutil
-from web3engine import bfactory, bpool, datatoken
-from web3tools.web3util import fromBase18
+from util.base18 import fromBase18
 
 @enforce_types
 def testUsdNoEvmWalletMixIn():

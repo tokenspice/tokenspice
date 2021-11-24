@@ -20,12 +20,11 @@ from brownie import Wei
 from enforce_typing import enforce_types
 import typing
 
-from web3engine import bpool, btoken, datatoken, globaltokens
 from util import constants
+from util import globaltokens
 from util.constants import GOD_ACCOUNT
 from util.strutil import asCurrency
-from web3tools import web3util
-from web3tools.web3util import toBase18, fromBase18
+from util.base18 import toBase18, fromBase18
 
 @enforce_types
 class AgentWalletAbstract(ABC):
