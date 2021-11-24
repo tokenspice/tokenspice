@@ -94,15 +94,15 @@ class AgentBaseEvm(StrMixin,
         return self._wallet.account
     
     #datatoken and pool-related
-    def DT(self, dt:datatoken.Datatoken) -> float:
+    def DT(self, dt) -> float:
         return self._wallet.DT(dt)
     
-    def BPT(self, pool:bpool.BPool) -> float:
+    def BPT(self, pool) -> float:
         return self._wallet.BPT(pool)
 
-    def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
+    def stakeOCEAN(self, OCEAN_stake:float, pool):
         self._wallet.stakeOCEAN(OCEAN_stake, pool)
 
-    def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
+    def unstakeOCEAN(self, BPT_unstake:float, pool):
         self._wallet.unstakeOCEAN(BPT_unstake, pool)
                             
