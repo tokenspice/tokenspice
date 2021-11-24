@@ -28,10 +28,8 @@ def dtAddressFromCreateTokenTx(tx):
     return tx.events['TokenCreated']['newTokenAddress']
 
 def newDatatoken(blob:str, name:str, symbol:str, cap:int, account):
-    dtfactory = DTFactory()
-    tx = dtfactory.createToken(
-        blob, name, symbol, cap,
-        {'from': account})
+    f = DTFactory()
+    tx = f.createToken(blob, name, symbol, cap, {'from': account})
     dt_address = dtAddressFromCreateTokenTx(tx)
     dt = BROWNIE_PROJECT.DataTokenTemplate.at(dt_address)
     return dt
