@@ -478,6 +478,8 @@ def _createPoolWith2Tokens(T1, T2, bal1:float, bal2:float, w1:float, w2:float):
     T1.approve(pool.address, toBase18(bal1), {'from': account0})
     T2.approve(pool.address, toBase18(bal2), {'from': account0})
 
+    assert T1.balanceOf(address0) >= toBase18(bal1)
+    assert T2.balanceOf(address0) >= toBase18(bal2)
     pool.bind(T1.address, toBase18(bal1), toBase18(w1), {'from': account0})
     pool.bind(T2.address, toBase18(bal2), toBase18(w2), {'from': account0})
 
