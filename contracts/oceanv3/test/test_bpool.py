@@ -146,7 +146,6 @@ def test_public_pool(T1, T2):
     assert fromBase18(BPT.balanceOf(pool.address)) == 0
 
     #finalize
-    pool= bpool.BPool(pool.address)
     pool.finalize({'from': account0})
 
     #verify holdings
