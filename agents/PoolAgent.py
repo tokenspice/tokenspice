@@ -4,19 +4,20 @@ import random
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18
+from util.constants import BROWNIE_PROJECT
             
 @enforce_types
 class PoolAgent(AgentBase.AgentBaseEvm):
-    def __init__(self, name: str, pool:bpool.BPool):
+    def __init__(self, name: str, pool):
         super().__init__(name, USD=0.0, OCEAN=0.0)
-        self._pool:bpool.BPool = pool
+        self._pool = pool
         
         self._dt_address = self._datatokenAddress()
-        self._dt = datatoken.Datatoken(self._dt_address)
+        self._dt = BROWNIE_PROJECT.DataTokenTemplate.at(self._dt_address)
         self._controller_address = self._controllerAddress()
 
     @property
-    def pool(self) -> bpool.BPool:
+    def pool(self):
         return self._pool
     
     @property
@@ -24,7 +25,7 @@ class PoolAgent(AgentBase.AgentBaseEvm):
         return self._dt_address
     
     @property
-    def datatoken(self) -> datatoken.Datatoken:
+    def datatoken(self):
         return self._dt
         
     def takeStep(self, state):
