@@ -116,7 +116,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         
         self._wallet.sellDT(pool, DT, DT_sell_amt)
 
-    def _poolsWithDT(self, state, DT:datatoken.Datatoken) -> list:
+    def _poolsWithDT(self, state, DT) -> list:
         """Return a list of pools that have this DT. Typically exactly 1 pool"""
         return [pool_agent.pool
                 for pool_agent in state.agents.filterToPool().values()
@@ -128,7 +128,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         DTs = [pool_agent.datatoken for pool_agent in pool_agents]
         return [DT for DT in DTs if self.DT(DT) > 0.0]
 
-    def _createDatatoken(self,dt_name:str,mint_amt:float)-> datatoken.Datatoken:
+    def _createDatatoken(self,dt_name:str,mint_amt:float):
         """Create datatoken contract and mint DTs to self."""
         wallet = self._wallet._web3wallet
         DT_address = dtfactory.DTFactory().createToken(
