@@ -1,7 +1,7 @@
 import brownie
 import pytest
 
-import contracts.oceanv3.util
+import contracts.oceanv3.oceanv3util
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
 from util.constants import BROWNIE_PROJECT
@@ -35,21 +35,20 @@ def test_setSwapFee_works():
     assert fromBase18(pool.getSwapFee()) == 0.011
     
 def test_setSwapFee_fails():
-    factory = bfactory.BFactory()
-    pool_address = factory.newBPool(alice_wallet)
-    pool= bpool.BPool(pool_address)
+    pool = _deployBPool()
     with pytest.raises(Exception):
-        pool.setSwapFee(toBase18(0.011), {'from': account1}) #not ok, bob isn't controller
-    pool.setController(bob_address, {'from': account0})
-    pool.setSwapFee(toBase18(0.011), {'from': account1}) #ok now
+        #fail, because account1 isn't controller
+        pool.setSwapFee(toBase18(0.011), {'from': account1}) 
+    pool.setController(address1, {'from': account0})
+    pool.setSwapFee(toBase18(0.011), {'from': account1}) #pass now
 
 def test_setController():
     pool = _deployBPool()
-    pool.setController(bob_address, {'from': account0})
-    assert pool.getController() == bob_address
+    pool.setController(address1, {'from': account0})
+    assert pool.getController() == address1
     
-    pool.setController(alice_address, {'from': account1})
-    assert pool.getController() == alice_address
+    pool.setController(address0, {'from': account1})
+    assert pool.getController() == address0
 
 def test_setPublicSwap():
     pool = _deployBPool()
@@ -63,8 +62,8 @@ def test_2tokens_basic(T1, T2):
     assert T1.address != T2.address
     assert T1.address != pool.address
 
-    assert fromBase18(T1.balanceOf(alice_address)) >= 90.0
-    bal2 = fromBase18(T2.balanceOf(alice_address)) >= 10.0
+    assert fromBase18(T1.balanceOf(address0)) >= 90.0
+    bal2 = fromBase18(T2.balanceOf(address0)) >= 10.0
 
     with pytest.raises(Exception): #can't bind until we approve
         pool.bind(T1.address, toBase18(90.0), toBase18(9.0))
@@ -73,8 +72,8 @@ def test_2tokens_basic(T1, T2):
     T1.approve(pool.address, toBase18(90.0), {'from': account0})
     T2.approve(pool.address, toBase18(10.0), {'from': account0})
 
-    assert fromBase18(T1.allowance(alice_address, pool.address)) == 90.0
-    assert fromBase18(T2.allowance(alice_address, pool.address)) == 10.0
+    assert fromBase18(T1.allowance(address0, pool.address)) == 90.0
+    assert fromBase18(T2.allowance(address0, pool.address)) == 10.0
     
     assert not pool.isBound(T1.address) and not pool.isBound(T1.address)
     pool.bind(T1.address,toBase18(90.0),toBase18(9.0),{'from': account0})
@@ -111,16 +110,16 @@ def test_finalize(T1, T2):
     assert not pool.isPublicSwap()
     assert not pool.isFinalized()
     assert pool.totalSupply() == 0
-    assert pool.balanceOf(alice_address) == 0
-    assert pool.allowance(alice_address, pool.address) == 0
+    assert pool.balanceOf(address0) == 0
+    assert pool.allowance(address0, pool.address) == 0
     
     pool.finalize({'from': account0})
     
     assert pool.isPublicSwap()
     assert pool.isFinalized()
     assert pool.totalSupply() == toBase18(100.0)
-    assert pool.balanceOf(alice_address) == toBase18(100.0)
-    assert pool.allowance(alice_address, pool.address) == 0
+    assert pool.balanceOf(address0) == toBase18(100.0)
+    assert pool.allowance(address0, pool.address) == 0
 
     assert pool.getFinalTokens() == [T1.address, T2.address]
     assert pool.getCurrentTokens() == [T1.address, T2.address]
@@ -130,17 +129,17 @@ def test_public_pool(T1, T2):
     BPT = pool
         
     #alice give Bob some tokens
-    T1.transfer(bob_address, toBase18(100.0), {'from': account0})
-    T2.transfer(bob_address, toBase18(100.0), {'from': account0})
+    T1.transfer(address1, toBase18(100.0), {'from': account0})
+    T2.transfer(address1, toBase18(100.0), {'from': account0})
 
     #verify holdings
-    assert fromBase18(T1.balanceOf(alice_address)) == (1000.0-90.0-100.0)
-    assert fromBase18(T2.balanceOf(alice_address)) == (1000.0-10.0-100.0)
-    assert fromBase18(BPT.balanceOf(alice_address)) == 0
+    assert fromBase18(T1.balanceOf(address0)) == (1000.0-90.0-100.0)
+    assert fromBase18(T2.balanceOf(address0)) == (1000.0-10.0-100.0)
+    assert fromBase18(BPT.balanceOf(address0)) == 0
     
-    assert fromBase18(T1.balanceOf(bob_address)) == 100.0
-    assert fromBase18(T2.balanceOf(bob_address)) == 100.0
-    assert fromBase18(BPT.balanceOf(bob_address)) == 0
+    assert fromBase18(T1.balanceOf(address1)) == 100.0
+    assert fromBase18(T2.balanceOf(address1)) == 100.0
+    assert fromBase18(BPT.balanceOf(address1)) == 0
     
     assert fromBase18(T1.balanceOf(pool.address))== 90.0
     assert fromBase18(T2.balanceOf(pool.address)) == 10.0
@@ -151,9 +150,9 @@ def test_public_pool(T1, T2):
     pool.finalize({'from': account0})
 
     #verify holdings
-    assert fromBase18(T1.balanceOf(alice_address)) == (1000.0-90.0-100.0)
-    assert fromBase18(T2.balanceOf(alice_address)) == (1000.0-10.0-100.0)
-    assert fromBase18(BPT.balanceOf(alice_address)) == 100.0 #new!
+    assert fromBase18(T1.balanceOf(address0)) == (1000.0-90.0-100.0)
+    assert fromBase18(T2.balanceOf(address0)) == (1000.0-10.0-100.0)
+    assert fromBase18(BPT.balanceOf(address0)) == 100.0 #new!
     
     assert fromBase18(T1.balanceOf(pool.address))== 90.0
     assert fromBase18(T2.balanceOf(pool.address)) == 10.0
@@ -167,13 +166,13 @@ def test_public_pool(T1, T2):
     pool.joinPool(poolAmountOut, maxAmountsIn, {'from': account1})
 
     #verify holdings
-    assert fromBase18(T1.balanceOf(alice_address)) == (1000.0-90.0-100.0)
-    assert fromBase18(T2.balanceOf(alice_address)) == (1000.0-10.0-100.0)
-    assert fromBase18(BPT.balanceOf(alice_address))== 100.0 
+    assert fromBase18(T1.balanceOf(address0)) == (1000.0-90.0-100.0)
+    assert fromBase18(T2.balanceOf(address0)) == (1000.0-10.0-100.0)
+    assert fromBase18(BPT.balanceOf(address0))== 100.0 
     
-    assert fromBase18(T1.balanceOf(bob_address)) == (100.0-9.0)
-    assert fromBase18(T2.balanceOf(bob_address)) == (100.0-1.0)
-    assert fromBase18(BPT.balanceOf(bob_address)) == 10.0 
+    assert fromBase18(T1.balanceOf(address1)) == (100.0-9.0)
+    assert fromBase18(T2.balanceOf(address1)) == (100.0-1.0)
+    assert fromBase18(BPT.balanceOf(address1)) == 10.0 
     
     assert fromBase18(T1.balanceOf(pool.address)) == (90.0+9.0)
     assert fromBase18(T2.balanceOf(pool.address)) == (10.0+1.0)
@@ -184,21 +183,21 @@ def test_public_pool(T1, T2):
     poolAmountIn = toBase18(2.0)
     minAmountsOut = [toBase18(0.0),toBase18(0.0)]
     pool.exitPool(poolAmountIn, minAmountsOut, {'from': account1})
-    assert fromBase18(T1.balanceOf(bob_address)) == 92.8
-    assert fromBase18(T2.balanceOf(bob_address)) == 99.2
-    assert fromBase18(BPT.balanceOf(bob_address)) == 8.0 
+    assert fromBase18(T1.balanceOf(address1)) == 92.8
+    assert fromBase18(T2.balanceOf(address1)) == 99.2
+    assert fromBase18(BPT.balanceOf(address1)) == 8.0 
     
     #bob buys 5 more BPT
     poolAmountOut = toBase18(5.0)
     maxAmountsIn = [toBase18(90.0),toBase18(90.0)]
     pool.joinPool(poolAmountOut, maxAmountsIn, {'from': account1})
-    assert fromBase18(BPT.balanceOf(bob_address)) == 13.0
+    assert fromBase18(BPT.balanceOf(address1)) == 13.0
     
     #bob fully exits
     poolAmountIn = toBase18(13.0)
     minAmountsOut = [toBase18(0.0),toBase18(0.0)]
     pool.exitPool(poolAmountIn, minAmountsOut, {'from': account1})
-    assert fromBase18(BPT.balanceOf(bob_address)) == 0.0
+    assert fromBase18(BPT.balanceOf(address1)) == 0.0
 
 def test_rebind_more_tokens(T1, T2):
     pool = _createPoolWith2Tokens(T1,T2,90.0,10.0,9.0,1.0)
@@ -283,12 +282,12 @@ def test_joinSwapExternAmountIn(T1, T2):
         tokenAmountOut = toBase18(10.0)
         maxPrice = HUGEINT
         pool.swapExactAmountOut(
-                tokenIn_address,
-                maxAmountIn,
-                tokenOut_address,
-                tokenAmountOut,
-                maxPrice,
-                {'from': account0})
+            tokenIn_address,
+            maxAmountIn,
+            tokenOut_address,
+            tokenAmountOut,
+            maxPrice,
+            {'from': account0})
 
     #pool's public
     pool.setPublicSwap(True, {'from': account0})
@@ -298,138 +297,179 @@ def test_joinSwapExternAmountIn(T1, T2):
     tokenAmountOut = toBase18(1.0)
     maxPrice = HUGEINT
     pool.swapExactAmountOut(
-            tokenIn_address,
-            maxAmountIn,
-            tokenOut_address,
-            tokenAmountOut,
-            maxPrice,
-            {'from': account0})
-    assert 908.94 <= fromBase18(T1.balanceOf(alice_address)) <= 908.95
-    assert fromBase18(T2.balanceOf(alice_address)) == (1000.0 - 9.0)
+        tokenIn_address,
+        maxAmountIn,
+        tokenOut_address,
+        tokenAmountOut,
+        maxPrice,
+        {'from': account0})
+    assert 908.94 <= fromBase18(T1.balanceOf(address0)) <= 908.95
+    assert fromBase18(T2.balanceOf(address0)) == (1000.0 - 9.0)
     
 def test_joinswapPoolAmountOut(T1, T2):
     pool = _createPoolWith2Tokens(T1,T2,90.0,10.0,9.0,1.0)
     BPT = pool    
     pool.finalize({'from': account0})
     T1.approve(pool.address, toBase18(90.0), {'from': account0})
-    assert fromBase18(T1.balanceOf(alice_address)) == 910.0
+    assert fromBase18(T1.balanceOf(address0)) == 910.0
     tokenIn_address = T1.address
     poolAmountOut = toBase18(10.0) #BPT wanted
     maxAmountIn = toBase18(90.0)  #max T1 to spend
     pool.joinswapPoolAmountOut(
-            tokenIn_address,
-            poolAmountOut,
-            maxAmountIn,
-            {'from': account0}) 
-    assert fromBase18(T1.balanceOf(alice_address)) >= (910.0 - 90.0)
-    assert fromBase18(BPT.balanceOf(alice_address)) == (100.0 + 10.0)
+        tokenIn_address,
+        poolAmountOut,
+        maxAmountIn,
+        {'from': account0}) 
+    assert fromBase18(T1.balanceOf(address0)) >= (910.0 - 90.0)
+    assert fromBase18(BPT.balanceOf(address0)) == (100.0 + 10.0)
 
 def test_exitswapPoolAmountIn(T1, T2):
     pool = _createPoolWith2Tokens(T1,T2,90.0,10.0,9.0,1.0)
     BPT = pool    
     pool.finalize({'from': account0})
-    assert fromBase18(T1.balanceOf(alice_address)) == 910.0
+    assert fromBase18(T1.balanceOf(address0)) == 910.0
     tokenOut_address = T1.address
     poolAmountIn = toBase18(10.0) #BPT spent
     minAmountOut = toBase18(1.0)  #min T1 wanted
     pool.exitswapPoolAmountIn(
-            tokenOut_address,
-            poolAmountIn,
-            minAmountOut,
-            {'from': account0})
-    assert fromBase18(T1.balanceOf(alice_address)) >= (910.0 + 1.0)
-    assert fromBase18(BPT.balanceOf(alice_address)) == (100.0 - 10.0)
+        tokenOut_address,
+        poolAmountIn,
+        minAmountOut,
+        {'from': account0})
+    assert fromBase18(T1.balanceOf(address0)) >= (910.0 + 1.0)
+    assert fromBase18(BPT.balanceOf(address0)) == (100.0 - 10.0)
 
 def test_exitswapExternAmountOut(T1, T2):
     pool = _createPoolWith2Tokens(T1,T2,90.0,10.0,9.0,1.0)
     BPT = pool    
     pool.finalize({'from': account0})
-    assert fromBase18(T1.balanceOf(alice_address)) == 910.0
+    assert fromBase18(T1.balanceOf(address0)) == 910.0
     tokenOut_address = T1.address
     tokenAmountOut = toBase18(2.0) #T1 wanted
     maxPoolAmountIn = toBase18(10.0) #max BPT spent 
     pool.exitswapExternAmountOut(
-            tokenOut_address,
-            tokenAmountOut, #T1 wanted
-            maxPoolAmountIn, #max BPT spent 
-            {'from': account0})
-    assert fromBase18(T1.balanceOf(alice_address)) == (910.0 + 2.0)
-    assert fromBase18(BPT.balanceOf(alice_address)) >= (100.0 - 10.0)
+        tokenOut_address,
+        tokenAmountOut, #T1 wanted
+        maxPoolAmountIn, #max BPT spent 
+        {'from': account0})
+    assert fromBase18(T1.balanceOf(address0)) == (910.0 + 2.0)
+    assert fromBase18(BPT.balanceOf(address0)) >= (100.0 - 10.0)
 
 def test_calcSpotPrice(T1, T2):
     pool = _deployBPool()
+    tokenBalanceIn = toBase18(10.0)
+    tokenWeightIn = toBase18(1.0)
+    tokenBalanceOut = toBase18(11.0)
+    tokenWeightOut = toBase18(1.0)
+    swapFee = 0
     x = pool.calcSpotPrice(
-        tokenBalanceIn = toBase18(10.0),
-        tokenWeightIn = toBase18(1.0),
-        tokenBalanceOut = toBase18(11.0),
-        tokenWeightOut = toBase18(1.0),
-        swapFee = 0)
+        tokenBalanceIn,
+        tokenWeightIn,
+        tokenBalanceOut,
+        tokenWeightOut,
+        swapFee)
     assert round(fromBase18(x),3) == 0.909
 
 def test_calcOutGivenIn():
     pool = _deployBPool()
+    tokenBalanceIn = toBase18(10.0)
+    tokenWeightIn = toBase18(1.0)
+    tokenBalanceOut = toBase18(10.1)
+    tokenWeightOut = toBase18(1.0)
+    tokenAmountIn = toBase18(1.0)
+    swapFee = 0
     x = pool.calcOutGivenIn(
-            tokenBalanceIn = toBase18(10.0),
-            tokenWeightIn = toBase18(1.0),
-            tokenBalanceOut = toBase18(10.1),
-            tokenWeightOut = toBase18(1.0),
-            tokenAmountIn = toBase18(1.0),
-            swapFee = 0)
+        tokenBalanceIn,
+        tokenWeightIn,
+        tokenBalanceOut,
+        tokenWeightOut,
+        tokenAmountIn,
+        swapFee)
     assert round(fromBase18(x),3) == 0.918
 
 def test_calcInGivenOut():
     pool = _deployBPool()
+    tokenBalanceIn = toBase18(10.0)
+    tokenWeightIn = toBase18(1.0)
+    tokenBalanceOut = toBase18(10.1)
+    tokenWeightOut = toBase18(1.0)
+    tokenAmountOut = toBase18(1.0)
+    swapFee = 0
     x = pool.calcInGivenOut(
-            tokenBalanceIn = toBase18(10.0),
-            tokenWeightIn = toBase18(1.0),
-            tokenBalanceOut = toBase18(10.1),
-            tokenWeightOut = toBase18(1.0),
-            tokenAmountOut = toBase18(1.0),
-            swapFee = 0)
+        tokenBalanceIn,
+        tokenWeightIn,
+        tokenBalanceOut,
+        tokenWeightOut,
+        tokenAmountOut,
+        swapFee)
     assert round(fromBase18(x),3) == 1.099
 
 def test_calcPoolOutGivenSingleIn():
     pool = _deployBPool()
+    tokenBalanceIn = toBase18(10.0)
+    tokenWeightIn = toBase18(1.0)
+    poolSupply = toBase18(120.0)
+    totalWeight = toBase18(2.0)
+    tokenAmountIn = toBase18(0.1)
+    swapFee = 0
     x = pool.calcPoolOutGivenSingleIn(
-            tokenBalanceIn = toBase18(10.0),
-            tokenWeightIn = toBase18(1.0),
-            poolSupply = toBase18(120.0),
-            totalWeight = toBase18(2.0),
-            tokenAmountIn = toBase18(0.1),
-            swapFee = 0)
+        tokenBalanceIn,
+        tokenWeightIn,
+        poolSupply,
+        totalWeight,
+        tokenAmountIn,
+        swapFee)
     assert round(fromBase18(x),3) == 0.599    
 
 def test_calcSingleInGivenPoolOut():
     pool = _deployBPool()
+    tokenBalanceIn = toBase18(10.0)
+    tokenWeightIn = toBase18(1.0)
+    poolSupply = toBase18(120.0)
+    totalWeight = toBase18(2.0)
+    poolAmountOut = toBase18(10.0)
+    swapFee = 0
     x = pool.calcSingleInGivenPoolOut(
-            tokenBalanceIn = toBase18(10.0),
-            tokenWeightIn = toBase18(1.0),
-            poolSupply = toBase18(120.0),
-            totalWeight = toBase18(2.0),
-            poolAmountOut = toBase18(10.0),
-            swapFee = 0)
+        tokenBalanceIn,
+        tokenWeightIn,
+        poolSupply,
+        totalWeight,
+        poolAmountOut,
+        swapFee)
     assert round(fromBase18(x),3) == 1.736
 
 def test_calcSingleOutGivenPoolIn():
     pool = _deployBPool()
+    tokenBalanceOut = toBase18(10.0)
+    tokenWeightOut = toBase18(1.0)
+    poolSupply = toBase18(120.0)
+    totalWeight = toBase18(2.0)
+    poolAmountIn = toBase18(10.0)
+    swapFee = 0
     x = pool.calcSingleOutGivenPoolIn(
-            tokenBalanceOut = toBase18(10.0),
-            tokenWeightOut = toBase18(1.0),
-            poolSupply = toBase18(120.0),
-            totalWeight = toBase18(2.0),
-            poolAmountIn = toBase18(10.0),
-            swapFee = 0)
+        tokenBalanceOut,
+        tokenWeightOut,
+        poolSupply,
+        totalWeight,
+        poolAmountIn,
+        swapFee)
     assert round(fromBase18(x),3) == 1.597
 
 def test_calcPoolInGivenSingleOut():
     pool = _deployBPool()
+    tokenBalanceOut = toBase18(1000.0)
+    tokenWeightOut = toBase18(5.0)
+    poolSupply = toBase18(100.0)
+    totalWeight = toBase18(10.0)
+    tokenAmountOut = toBase18(0.1)
+    swapFee = 0
     x = pool.calcPoolInGivenSingleOut(
-            tokenBalanceOut = toBase18(1000.0),
-            tokenWeightOut = toBase18(5.0),
-            poolSupply = toBase18(100.0),
-            totalWeight = toBase18(10.0),
-            tokenAmountOut = toBase18(0.1),
-            swapFee = 0)
+        tokenBalanceOut,
+        tokenWeightOut,
+        poolSupply,
+        totalWeight,
+        tokenAmountOut,
+        swapFee)
     assert round(fromBase18(x),3) == 0.005
 
 def _createPoolWith2Tokens(T1, T2, bal1:float, bal2:float, w1:float, w2:float):
@@ -444,5 +484,5 @@ def _createPoolWith2Tokens(T1, T2, bal1:float, bal2:float, w1:float, w2:float):
     return pool
 
 def _deployBPool():
-    return contracts.oceanv3.util.newBPool(account0)
+    return contracts.oceanv3.oceanv3util.newBPool(account0)
 

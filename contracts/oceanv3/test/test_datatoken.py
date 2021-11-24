@@ -1,6 +1,6 @@
 import brownie
 
-import contracts.oceanv3.util
+import contracts.oceanv3.oceanv3util
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT
 
@@ -8,7 +8,7 @@ accounts = brownie.network.accounts
 address0, address1 = accounts[0].address, accounts[1].address
 
 def test_direct():
-    dtfactory = contracts.oceanv3.util.DTFactory()
+    dtfactory = contracts.oceanv3.oceanv3util.DTFactory()
     
     tx = dtfactory.createToken(
         'foo_blob', 'datatoken1', 'DT1', toBase18(100.0),
@@ -32,7 +32,7 @@ def test_direct():
     assert dt.blob() == 'foo_blob'
 
 def test_via_util():
-    dt = contracts.oceanv3.util.newDatatoken(
+    dt = contracts.oceanv3.oceanv3util.newDatatoken(
         'foo_blob', 'datatoken1', 'DT1', toBase18(100.0), accounts[0])
     dt.mint(address0, toBase18(100.0), {'from':accounts[0]})
     assert dt.name() == 'datatoken1'
