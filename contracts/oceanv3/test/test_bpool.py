@@ -238,28 +238,23 @@ def test_gulp(T1):
     assert pool.getBalance(T1.address) == toBase18(2.0+5.0) #records[]
 
 def test_spot_price(T1, T2):
-    (p, p_sans) = _spotPrices(T1, T2, alice_wallet,
-                              1.0, 1.0, 1.0, 1.0)
+    (p, p_sans) = _spotPrices(T1, T2, 1.0, 1.0, 1.0, 1.0)
     assert p_sans == 1.0
     assert round(p,8) == 1.000001
 
-    (p, p_sans) = _spotPrices(T1, T2, alice_wallet,
-                              90.0, 10.0, 9.0, 1.0)
+    (p, p_sans) = _spotPrices(T1, T2, 90.0, 10.0, 9.0, 1.0)
     assert p_sans == 1.0
     assert round(p,8) == 1.000001
     
-    (p, p_sans) = _spotPrices(T1, T2, alice_wallet,
-                              1.0, 2.0, 1.0, 1.0)
+    (p, p_sans) = _spotPrices(T1, T2, 1.0, 2.0, 1.0, 1.0)
     assert p_sans == 0.5
     assert round(p,8) == 0.5000005
     
-    (p, p_sans) = _spotPrices(T1, T2, alice_wallet,
-                              2.0, 1.0, 1.0, 1.0)
+    (p, p_sans) = _spotPrices(T1, T2, 2.0, 1.0, 1.0, 1.0)
     assert p_sans == 2.0
     assert round(p,8) == 2.000002
 
-    (p, p_sans) = _spotPrices(T1, T2, alice_wallet,
-                              9.0, 10.0, 9.0,1.0)
+    (p, p_sans) = _spotPrices(T1, T2, 9.0, 10.0, 9.0,1.0)
     assert p_sans == 0.1
     assert round(p,8) == 0.1000001
 
