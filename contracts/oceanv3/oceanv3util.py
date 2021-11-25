@@ -2,7 +2,7 @@ import brownie
 from enforce_typing import enforce_types
 
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT
+from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
     
 accounts = brownie.network.accounts
 address0 = accounts[0].address
@@ -19,12 +19,17 @@ _DTFACTORY = None
 @enforce_types
 def DTFactory():
     global _DTFACTORY
-    if _DTFACTORY is None: 
+    try:
         dt = templateDatatoken()
-        _DTFACTORY = BROWNIE_PROJECT.DTFactory.deploy(
-            dt.address, address0,
-            {'from' : accounts[0]})
-    return _DTFACTORY
+        factory = _DTFACTORY #may trigger failure
+        if factory is not None:
+            x = factory.address #""
+    except brownie.exceptions.ContractNotFound:
+        factory = None
+    if factory is None:
+        factory = _DTFACTORY = BROWNIE_PROJECT.DTFactory.deploy(
+            dt.address, GOD_ACCOUNT, {'from':GOD_ACCOUNT})
+    return factory
 
 @enforce_types
 def dtAddressFromCreateTokenTx(tx):
@@ -48,12 +53,17 @@ _BFACTORY = None
 @enforce_types
 def BFactory():
     global _BFACTORY
-    if _BFACTORY is None: 
+    try:
         pool = templatePool()
-        _BFACTORY = BROWNIE_PROJECT.BFactory.deploy(
-            pool.address, 
-            {'from' : accounts[0]})
-    return _BFACTORY
+        factory = _BFACTORY #may trigger failure
+        if factory is not None:
+            x = factory.address #""
+    except brownie.exceptions.ContractNotFound:
+        factory = None
+    if factory is None:
+        factory = _BFACTORY = BROWNIE_PROJECT.BFactory.deploy(
+            pool.address, {'from':GOD_ACCOUNT})
+    return factory
 
 @enforce_types
 def poolAddressFromNewBPoolTx(tx):

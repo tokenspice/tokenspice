@@ -1,26 +1,29 @@
 import brownie
 from brownie import Wei
 from enforce_typing import enforce_types
+import pytest
 from pytest import approx
 
 from agents.VestingFunderAgent import VestingFunderAgent
 from agents.VestingWalletAgent import VestingWalletAgent
 from util import globaltokens
 
-accounts = brownie.network.accounts
+#don't use account0, it's GOD_ACCOUNT. don't use account9, it's conftest pool
+account1 = brownie.network.accounts[1]
 chain = brownie.network.chain
     
 @enforce_types
 def test1():
-    OCEAN_address = globaltokens.OCEAN_address()
-    OCEAN_token = globaltokens.OCEANtoken()
+    OCEAN = globaltokens.OCEANtoken()
+    assert OCEAN.balanceOf(account1) == 0
 
     #initialize beneficiary agent
     class MockBeneficiaryAgent:
         def __init__(self, account):
             self.account = account #brownie account
             self.address = account.address
-    beneficiary_agent = MockBeneficiaryAgent(accounts[1])
+    beneficiary_agent = MockBeneficiaryAgent(account1)
+    assert OCEAN.balanceOf(beneficiary_agent.address) == 0
 
     #initialize state
     class MockState:
@@ -51,20 +54,20 @@ def test1():
     assert state.getAgent("vw1") is not None
     vw = state.getAgent("vw1").vesting_wallet
     assert vw.beneficiary() == beneficiary_agent.address
-    assert 0 <= vw.vestedAmount(OCEAN_address, chain[-1].timestamp) < Wei('100 ether')
-    assert vw.released(OCEAN_address) == 0
+    assert 0 <= vw.vestedAmount(OCEAN.address, chain[-1].timestamp) < Wei('100 ether')
+    assert vw.released(OCEAN.address) == 0
     assert funder_agent._did_funding
     assert funder_agent.OCEAN() == 0.0
-    assert OCEAN_token.balanceOf(beneficiary_agent.address) == 0
+    assert OCEAN.balanceOf(beneficiary_agent.address) == 0
 
     #OCEAN vests
     chain.mine(blocks=1, timedelta=60) 
-    assert vw.vestedAmount(OCEAN_address, chain[-1].timestamp) == Wei('100 ether')
-    assert vw.released(OCEAN_address) == 0
-    assert OCEAN_token.balanceOf(beneficiary_agent.address) == 0
+    assert vw.vestedAmount(OCEAN.address, chain[-1].timestamp) == Wei('100 ether')
+    assert vw.released(OCEAN.address) == 0
+    assert OCEAN.balanceOf(beneficiary_agent.address) == 0
 
     #release OCEAN
-    vw.release(OCEAN_address, {'from':accounts[1]})
-    assert vw.released(OCEAN_address) == Wei('100 ether')
-    assert OCEAN_token.balanceOf(beneficiary_agent.address) == Wei('100 ether')
+    vw.release(OCEAN.address, {'from':account1})
+    assert vw.released(OCEAN.address) == Wei('100 ether')
+    assert OCEAN.balanceOf(beneficiary_agent.address) == Wei('100 ether')
     

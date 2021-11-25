@@ -1,3 +1,7 @@
+# account0 --> GOD_ACCOUNT, deploys factories, controls OCEAN
+# account9 --> alice_info, gets some OCEAN in a pool below
+# account2, 3, .., 8 --> not set here, but could use in other tests
+
 import brownie
 from enforce_typing import enforce_types
 import pytest
@@ -9,8 +13,7 @@ from util.base18 import toBase18, fromBase18
 from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
 
 accounts = brownie.network.accounts
-account0, account1 = accounts[0], accounts[1]
-address0, address1 = account0.address, account1.address
+account0, account9 = accounts[0], accounts[9]
 
 _OCEAN_INIT = 1000.0
 _OCEAN_STAKE = 200.0
@@ -22,7 +25,7 @@ _POOL_WEIGHT_OCEAN = 7.0
 
 @pytest.fixture(scope="module", autouse=True)
 def alice_info():
-    return _make_info(account1)
+    return _make_info(account9)
 
 @pytest.fixture(autouse=True)
 def isolation(fn_isolation):
