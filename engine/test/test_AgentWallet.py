@@ -338,7 +338,7 @@ def test_unstakeOCEAN(alice_info):
 #===================================================================
 #helps testing
 
-def _poolToDTaddress(pool:bpool.BPool) -> str:
+def _poolToDTaddress(pool) -> str:
     """Return the address of the datatoken of this pool.
     Don't make this public because it has strong assumptions:
     assumes 2 tokens; assumes one token is OCEAN; assumes other is DT
