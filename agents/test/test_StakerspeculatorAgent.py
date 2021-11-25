@@ -19,7 +19,8 @@ class MockState:
         self.agents[agent.name] = agent
         
 @enforce_types
-def test_doSpeculateAction(alice_pool):
+def test_doSpeculateAction(alice_info):
+    alice_pool = alice_info.pool
     state = MockState()
     
     agent = StakerspeculatorAgent("agent1",USD=0.0,OCEAN=0.0)
@@ -39,7 +40,8 @@ def test_doSpeculateAction(alice_pool):
     assert agent._doSpeculateAction(state) 
 
 @enforce_types
-def test_speculateAction_nopools(alice_pool):
+def test_speculateAction_nopools(alice_info):
+    alice_pool = alice_info.pool
     state = MockState()
     
     agent = StakerspeculatorAgent("agent1",USD=0.0,OCEAN=1000.0)
@@ -48,7 +50,8 @@ def test_speculateAction_nopools(alice_pool):
         agent._speculateAction(state) #error because no pools
 
 @enforce_types
-def test_speculateAction_withpools(alice_pool):
+def test_speculateAction_withpools(alice_info):
+    alice_pool = alice_info.pool
     state = MockState()
     state.agents["pool1"] = PoolAgent("pool1", alice_pool)
     
@@ -61,7 +64,8 @@ def test_speculateAction_withpools(alice_pool):
     assert agent.BPT(alice_pool) > 0.0
 
 @enforce_types
-def test_take_step(alice_pool):
+def test_take_step(alice_info):
+    alice_pool = alice_info.pool
     state = MockState()
     state.agents["pool1"] = PoolAgent("pool1", alice_pool)
     
