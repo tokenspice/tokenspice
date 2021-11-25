@@ -77,20 +77,17 @@ def testReceiveAndSend(use_EVM):
 #===================================================================
 # datatoken and pool-related
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_DT(alice_info):
     agent, DT = alice_info.agent, alice_info.DT
     DT_amt = agent._wallet.DT(DT)
     assert DT_amt == (_DT_INIT - _DT_STAKE)
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_BPT(alice_info):
     agent, pool = alice_info.agent, alice_info.pool
     assert agent.BPT(pool) == 100.0
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_stakeOCEAN(alice_info):
     agent, pool = alice_info.agent, alice_info.pool
     OCEAN_before, BPT_before = agent.OCEAN(), agent.BPT(pool)
@@ -100,7 +97,6 @@ def test_stakeOCEAN(alice_info):
     assert BPT_after > BPT_before
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_unstakeOCEAN(alice_info):
     agent, pool = alice_info.agent, alice_info.pool
     BPT_before = agent.BPT(pool)

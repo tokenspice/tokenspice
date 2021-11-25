@@ -261,8 +261,10 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         if self._cached_OCEAN_base is None:
             self._cached_OCEAN_base = OCEAN_token.balanceOf(self.address)
                    
-        assert self._cached_OCEAN_base == OCEAN_token.balanceOf(self.address)
-            
+        assert self._cached_OCEAN_base == OCEAN_token.balanceOf(self.address),\
+            (self._cached_OCEAN_base, OCEAN_token.balanceOf(self.address),
+             self._account.address)
+        
         return self._cached_OCEAN_base
         
     def depositOCEAN(self, amt: float) -> None:

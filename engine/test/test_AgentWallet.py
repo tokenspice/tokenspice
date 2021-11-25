@@ -5,7 +5,7 @@ from pytest import approx
 from engine.AgentWallet import *
 from engine.test.conftest import _DT_INIT, _DT_STAKE 
 from util import configutil
-from util.base18 import fromBase18
+from util.base18 import fromBase18, toBase18
 
 @enforce_types
 def testUsdNoEvmWalletMixIn():
@@ -245,29 +245,25 @@ def testBurnWallet():
 #===================================================================
 #datatoken and pool-related
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_DT(alice_info):
-    agent_wallet, DT = alice_info.agent_wallet, alice_info.DT
+    agent_wallet, DT = alice_info.agent._wallet, alice_info.DT
     DT_amt = agent_wallet.DT(DT)
     assert DT_amt == (_DT_INIT - _DT_STAKE)
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_BPT(alice_info):
-    agent_wallet, pool = alice_info.agent_wallet, alice_info.pool
+    agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
     assert agent_wallet.BPT(pool) == 100.0
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_poolToDTaddress(alice_info):
     DT, pool = alice_info.DT, alice_info.pool
     assert _poolToDTaddress(pool) == DT.address
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_sellDT(alice_info):
     agent_wallet, DT, pool = \
-        alice_info.agent_wallet, alice_info.DT, alice_info.pool
+        alice_info.agent._wallet, alice_info.DT, alice_info.pool
     assert _poolToDTaddress(pool) == DT.address
     
     DT_before, OCEAN_before = agent_wallet.DT(DT), agent_wallet.OCEAN()
@@ -281,10 +277,9 @@ def test_sellDT(alice_info):
     assert DT_after == (DT_before - DT_sell_amt)
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_buyDT(alice_info):
     agent_wallet, DT, pool = \
-        alice_info.agent_wallet, alice_info.DT, alice_info.pool
+        alice_info.agent._wallet, alice_info.DT, alice_info.pool
     assert _poolToDTaddress(pool) == DT.address
     
     DT_before, OCEAN_before = agent_wallet.DT(DT), agent_wallet.OCEAN()
@@ -298,14 +293,13 @@ def test_buyDT(alice_info):
     assert DT_after == (DT_before + DT_buy_amt)    
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_stakeOCEAN(alice_info):
-    agent_wallet, pool = alice_info.agent_wallet, alice_info.pool
-    OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
+    agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
+    OCEAN = globaltokens.OCEANtoken()
     
     BPT_before, OCEAN1 = agent_wallet.BPT(pool), agent_wallet.OCEAN()
     OCEAN2 = fromBase18(agent_wallet._cached_OCEAN_base)
-    OCEAN3 = fromBase18(OCEAN_bal_base(agent_wallet.address))
+    OCEAN3 = fromBase18(OCEAN.balanceOf(agent_wallet.address))
     assert OCEAN1 == OCEAN2 == OCEAN3
     
     agent_wallet.stakeOCEAN(OCEAN_stake=20.0, pool=pool)
@@ -315,9 +309,8 @@ def test_stakeOCEAN(alice_info):
     assert BPT_after > BPT_before
 
 @enforce_types
-@pytest.mark.skip(reason="reinstate when oceanv3 contracts working again")
 def test_unstakeOCEAN(alice_info):
-    agent_wallet, pool = alice_info.agent_wallet, alice_info.pool
+    agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
     
     BPT_before:float = agent_wallet.BPT(pool)
     
