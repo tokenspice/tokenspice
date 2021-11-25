@@ -231,15 +231,6 @@ def testETH1():
     #super-basic test for ETH
     w = AgentWalletEvm()
     assert isinstance(w.ETH(), float)
-    
-@enforce_types
-def testETH2():
-    #TEST_PRIVATE_KEY1 should get initialized with ETH when ganache starts
-    network = web3util.get_network()
-    private_key = configutil.confFileValue(network, 'TEST_PRIVATE_KEY1')
-    w = AgentWalletEvm(private_key=private_key)
-    assert w.ETH() > 1.0
-
 
 #===================================================================
 #===================================================================
