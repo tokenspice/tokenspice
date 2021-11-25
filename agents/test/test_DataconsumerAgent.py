@@ -1,4 +1,5 @@
 import pytest
+from pytest import approx
 
 from agents.PoolAgent import PoolAgent
 from agents.DataconsumerAgent import DataconsumerAgent
@@ -21,11 +22,12 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 
-class MockAgent(AgentBase.AgentBaseEvm):
+class SimpleAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
 
-def test_doBuyAndConsumeDT(alice_pool):
+def test_doBuyAndConsumeDT(alice_info):
+    alice_pool = alice_info.pool
     state = MockState()
 
     agent = DataconsumerAgent("agent1",USD=0.0,OCEAN=1000.0)
@@ -47,8 +49,8 @@ def test_doBuyAndConsumeDT(alice_pool):
 def test_buyAndConsumeDT(alice_info):
     state = MockState()
 
-    publisher_agent = MockAgent("agent1", USD=0.0, OCEAN=0.0)
-    publisher_agent._wallet = alice_info.agent_wallet
+    publisher_agent = SimpleAgent("agent1", USD=0.0, OCEAN=0.0)
+    publisher_agent._wallet = alice_info.agent._wallet
     state.addAgent(publisher_agent)
 
     OCEAN_before = 1000.0
@@ -73,7 +75,7 @@ def test_buyAndConsumeDT(alice_info):
     
     OCEAN_after = consumer_agent.OCEAN()
     OCEAN_gained = OCEAN_spend * (1.0 + consumer_agent.profit_margin_on_consume)
-    assert OCEAN_after == (OCEAN_before - OCEAN_spend + OCEAN_gained)
+    assert OCEAN_after == approx(OCEAN_before - OCEAN_spend + OCEAN_gained)
     
     assert consumer_agent.DT(dt) == 0.0 #bought 1.0, then consumed it
 
