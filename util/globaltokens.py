@@ -10,7 +10,8 @@ _OCEAN_TOKEN = None
 def OCEANtoken():
     global _OCEAN_TOKEN
     try:
-        token = _OCEAN_TOKEN
+        token = _OCEAN_TOKEN             #may trigger failure
+        x = token.balanceOf(GOD_ACCOUNT) #""
     except brownie.exceptions.ContractNotFound:
         token = None
     if token is None:
