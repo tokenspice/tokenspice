@@ -15,14 +15,16 @@ import logging
 log = logging.getLogger('wallet')
 
 from abc import abstractmethod, ABC
+import brownie
+from brownie import Wei
 from enforce_typing import enforce_types
 import typing
 
-from web3engine import bpool, btoken, datatoken, globaltokens
-from util import constants 
+from util import constants
+from util import globaltokens
+from util.constants import GOD_ACCOUNT
 from util.strutil import asCurrency
-from web3tools import web3util, web3wallet
-from web3tools.web3util import fromBase18, toBase18
+from util.base18 import toBase18, fromBase18
 
 @enforce_types
 class AgentWalletAbstract(ABC):
@@ -34,7 +36,7 @@ class AgentWalletAbstract(ABC):
     @abstractmethod
     def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
         pass
-
+        
     #===================================================================  
     #OCEAN-related
     @abstractmethod
@@ -198,28 +200,37 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
 
     def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
         UsdNoEvmWalletMixIn.__init__(self, USD)
-        
+
+        self._account = None #brownie account
         if private_key is None:
-            self._web3wallet = web3wallet.randomWeb3Wallet()
+            self._account = brownie.network.accounts.add()
         else:
-            self._web3wallet = web3wallet.Web3Wallet(private_key)
+            self._account = brownie.network.accounts.add(private_key=private_key)
 
         #Give the new wallet ETH to pay gas fees (but don't track otherwise)
-        self._web3wallet.fundFromAbove(toBase18(0.01)) #magic number
-        
+        GOD_ACCOUNT.transfer(self._account, "0.01 ether")
+                
         #OCEAN is tracked in EVM, not here. But we cache here for speed
         self._burnOCEAN_nocache() #ensure 0 OCEAN (eg >1 unit tests)
         self._cached_OCEAN_base: typing.Union[int,None] = None
         self._total_OCEAN_in:float = OCEAN
         assert self.OCEAN() == 0.0
-        
-        globaltokens.mintOCEAN(address=self._web3wallet.address,
-                               value_base=toBase18(OCEAN))
+
+        globaltokens.fundOCEANFromAbove(self._account.address, toBase18(OCEAN))
         self._cached_OCEAN_base = None
         
         #postconditions
         assert self.USD() == USD
         assert self.OCEAN() == OCEAN
+
+    @property
+    def account(self):
+        """Returns self's brownie account"""
+        return self._account
+        
+    @property
+    def address(self) -> str:
+         return self._account.address
 
     def _burnOCEAN_nocache(self):
         """
@@ -227,17 +238,13 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         Explicitly don't use caching, so __init__ can safely call this
         """
         OCEAN_token = globaltokens.OCEANtoken()
-        OCEAN_balance_base = OCEAN_token.balanceOf_base(self._address)
+        OCEAN_balance_base = OCEAN_token.balanceOf(self._account)
         if OCEAN_balance_base  > 0:
-            OCEAN_token.transfer(_BURN_WALLET._address, OCEAN_balance_base,
-                                 self._web3wallet)
+            OCEAN_token.transfer(_BURN_WALLET.address, OCEAN_balance_base,
+                                 {'from': self._account})
         
     def resetCachedInfo(self):
         self._cached_OCEAN_base = None
-        
-    @property
-    def _address(self):
-         return self._web3wallet.address
      
     #===================================================================  
     #USD-related 
@@ -250,17 +257,19 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         return fromBase18(self._OCEAN_base())
 
     def _OCEAN_base(self) -> int:
-        OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
+        OCEAN_token = globaltokens.OCEANtoken()
         if self._cached_OCEAN_base is None:
-            self._cached_OCEAN_base = OCEAN_bal_base(self._address)
+            self._cached_OCEAN_base = OCEAN_token.balanceOf(self.address)
                    
-        assert self._cached_OCEAN_base == OCEAN_bal_base(self._address)
-            
+        assert self._cached_OCEAN_base == OCEAN_token.balanceOf(self.address),\
+            (self._cached_OCEAN_base, OCEAN_token.balanceOf(self.address),
+             self._account.address)
+        
         return self._cached_OCEAN_base
         
     def depositOCEAN(self, amt: float) -> None:
         assert amt >= 0.0
-        globaltokens.mintOCEAN(self._address, toBase18(amt))
+        globaltokens.fundOCEANFromAbove(self._account.address, toBase18(amt))
         self._total_OCEAN_in += amt
         self.resetCachedInfo()
         
@@ -270,7 +279,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
     def transferOCEAN(self, dst_wallet, amt: float) -> None:
         assert isinstance(dst_wallet, AgentWalletEvm) or \
             isinstance(dst_wallet, BurnWallet)
-        dst_address = dst_wallet._address
+        dst_address = dst_wallet.address
         
         amt_base = toBase18(amt)
         assert amt_base >= 0
@@ -290,7 +299,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
                              % (fromBase18(amt_base), fromBase18(OCEAN_base)))
 
         globaltokens.OCEANtoken().transfer(
-            dst_address, amt_base, self._web3wallet)
+            dst_address, amt_base, {'from': self._account})
         
         dst_wallet._total_OCEAN_in += amt
         self.resetCachedInfo()
@@ -305,79 +314,93 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
         return fromBase18(self._ETH_base())
 
     def _ETH_base(self) -> int: #i.e. num wei
-        return self._web3wallet.ETH_base()
+        return self._account.balance()
     
     #===================================================================
     #datatoken and pool-related
-    def DT(self, dt:datatoken.Datatoken) -> float:
+    def DT(self, dt) -> float:
         return fromBase18(self._DT_base(dt))
 
-    def _DT_base(self, dt:datatoken.Datatoken) -> int: 
-        return dt.balanceOf_base(self._address)
+    def _DT_base(self, dt) -> int: 
+        return dt.balanceOf(self.address)
     
-    def BPT(self, pool:bpool.BPool) -> float:
+    def BPT(self, pool) -> float:
         return fromBase18(self._BPT_base(pool))
     
-    def _BPT_base(self, pool:bpool.BPool) -> int:
-        return pool.balanceOf_base(self._address)
+    def _BPT_base(self, pool) -> int:
+        return pool.balanceOf(self.address)
 
-    def sellDT(self, pool:bpool.BPool, DT:datatoken.Datatoken,
-               DT_sell_amt:float, min_OCEAN_amt:float=0.0):
+    def sellDT(self, pool, DT, DT_sell_amt:float, min_OCEAN_amt:float=0.0):
         """Swap DT for OCEAN. min_OCEAN_amt>0 protects from slippage."""
         DT.approve(pool.address, toBase18(DT_sell_amt),
-                   from_wallet=self._web3wallet)
+                   {'from':self._account})
 
+        tokenIn_address=DT.address  # entering pool
+        tokenAmountIn_base=toBase18(DT_sell_amt)  # ""
+        tokenOut_address=globaltokens.OCEAN_address()  # leaving pool
+        minAmountOut_base=toBase18(min_OCEAN_amt)  # ""
+        maxPrice_base=2 ** 255 #limit by min_OCEAN_amt, not price
         pool.swapExactAmountIn(
-            tokenIn_address=DT.address,  # entering pool
-            tokenAmountIn_base=toBase18(DT_sell_amt),  # ""
-            tokenOut_address=globaltokens.OCEAN_address(),  # leaving pool
-            minAmountOut_base=toBase18(min_OCEAN_amt),  # ""
-            maxPrice_base=2 ** 255, #limit by min_OCEAN_amt, not price
-            from_wallet=self._web3wallet,
+            tokenIn_address,
+            tokenAmountIn_base,
+            tokenOut_address,
+            minAmountOut_base,
+            maxPrice_base,
+            {'from':self._account},
         )
         self.resetCachedInfo()
     
-    def buyDT(self, pool:bpool.BPool, DT:datatoken.Datatoken,
-              DT_buy_amt:float, max_OCEAN_allow:float):
+    def buyDT(self, pool, DT, DT_buy_amt:float, max_OCEAN_allow:float):
         """Swap OCEAN for DT """
         OCEAN = globaltokens.OCEANtoken()
         OCEAN.approve(pool.address, toBase18(max_OCEAN_allow),
-                      from_wallet=self._web3wallet)
+                      {'from':self._account})
 
+        tokenIn_address=globaltokens.OCEAN_address()
+        maxAmountIn_base=toBase18(max_OCEAN_allow)
+        tokenOut_address=DT.address
+        tokenAmountOut_base=toBase18(DT_buy_amt)
+        maxPrice_base=2 ** 255
         pool.swapExactAmountOut(
-            tokenIn_address=globaltokens.OCEAN_address(),
-            maxAmountIn_base=toBase18(max_OCEAN_allow),
-            tokenOut_address=DT.address,
-            tokenAmountOut_base=toBase18(DT_buy_amt),
-            maxPrice_base=2 ** 255,
-            from_wallet=self._web3wallet,
+            tokenIn_address,
+            maxAmountIn_base,
+            tokenOut_address,
+            tokenAmountOut_base,
+            maxPrice_base,
+            {'from':self._account},
         )
         self.resetCachedInfo()
                         
-    def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
+    def stakeOCEAN(self, OCEAN_stake:float, pool):
         """Convert some OCEAN to DT, then add both as liquidity."""
         OCEAN = globaltokens.OCEANtoken()
         OCEAN.approve(pool.address, toBase18(OCEAN_stake),
-                      from_wallet=self._web3wallet)
+                      {'from':self._account})
+        tokenIn_address=globaltokens.OCEAN_address()
+        tokenAmountIn_base=toBase18(OCEAN_stake)
+        minPoolAmountOut_base=toBase18(0.0)
         pool.joinswapExternAmountIn(
-            tokenIn_address=globaltokens.OCEAN_address(),
-            tokenAmountIn_base=toBase18(OCEAN_stake),
-            minPoolAmountOut_base=toBase18(0.0),
-            from_wallet=self._web3wallet)
+            tokenIn_address,
+            tokenAmountIn_base,
+            minPoolAmountOut_base,
+            {'from':self._account})
         self.resetCachedInfo()
         
-    def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
+    def unstakeOCEAN(self, BPT_unstake:float, pool):
+        tokenOut_address=globaltokens.OCEAN_address()
+        poolAmountIn_base=toBase18(BPT_unstake)
+        minAmountOut_base=toBase18(0.0)
         pool.exitswapPoolAmountIn(
-            tokenOut_address=globaltokens.OCEAN_address(),
-            poolAmountIn_base=toBase18(BPT_unstake),
-            minAmountOut_base=toBase18(0.0),
-            from_wallet=self._web3wallet)
+            tokenOut_address,
+            poolAmountIn_base,
+            minAmountOut_base,
+            {'from':self._account})
         self.resetCachedInfo()
 
-    def transferDT(self, dst_wallet, DT: datatoken.Datatoken, amt: float) -> None:
+    def transferDT(self, dst_wallet, DT, amt: float) -> None:
         assert isinstance(dst_wallet, AgentWalletEvm) or \
             isinstance(dst_wallet, BurnWallet)
-        dst_address = dst_wallet._address
+        dst_address = dst_wallet.address
 
         amt_base = toBase18(amt)
         assert amt_base >= 0
@@ -396,7 +419,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
             raise ValueError("transfer amt (%s) exceeds DT holdings (%s)"
                              % (fromBase18(amt_base), fromBase18(DT_base)))
 
-        DT.transfer(dst_address, amt_base, self._web3wallet) 
+        DT.transfer(dst_address, amt_base, {'from':self._account})
 
 #========================================================================
 #burn-related
@@ -406,7 +429,7 @@ class BurnWallet:
     This is *not* a burner wallet, that's a completely different concept.
     """
     def __init__(self):
-        self._address = constants.BURN_ADDRESS
+        self.address = constants.BURN_ADDRESS
         self._total_OCEAN_in:float = 0.0
         
     def resetCachedInfo(self):

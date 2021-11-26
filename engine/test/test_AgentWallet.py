@@ -3,9 +3,9 @@ import pytest
 from pytest import approx
 
 from engine.AgentWallet import *
-from engine.test.conftest import _DT_INIT, _DT_STAKE 
-from web3engine import bfactory, bpool, datatoken
-from web3tools.web3util import fromBase18
+from agents.test.conftest import _DT_INIT, _DT_STAKE 
+from util import configutil
+from util.base18 import fromBase18, toBase18
 
 @enforce_types
 def testUsdNoEvmWalletMixIn():
@@ -207,19 +207,17 @@ def testStr(_AgentWallet):
 @enforce_types
 def test_initFromPrivateKey():
     private_key = '0xbbfbee4961061d506ffbb11dfea64eba16355cbf1d9c29613126ba7fec0aed5d'
-    address = '0x66aB6D9362d4F35596279692F0251Db635165871'
+    target_address = '0x66aB6D9362d4F35596279692F0251Db635165871'
     
     w = AgentWalletEvm(private_key=private_key)
-    assert w._address == address
-    assert w._web3wallet.address == address
-    assert w._web3wallet.private_key == private_key
+    assert w.address == target_address
+    assert w.account is not None
 
 @enforce_types
-def test_initRandomPrivateKey():
+def test_initFromRandom():
     w1 = AgentWalletEvm()
     w2 = AgentWalletEvm()
-    assert w1._address != w2._address
-    assert w1._web3wallet.private_key != w2._web3wallet.private_key
+    assert w1.address != w2.address
 
 @enforce_types
 def test_gotSomeETHforGas():
@@ -233,26 +231,28 @@ def testETH1():
     #super-basic test for ETH
     w = AgentWalletEvm()
     assert isinstance(w.ETH(), float)
-    
-@enforce_types
-def testETH2():
-    #TEST_PRIVATE_KEY1 should get initialized with ETH when ganache starts
-    network = web3util.get_network()
-    private_key = web3util.confFileValue(network, 'TEST_PRIVATE_KEY1')
-    w = AgentWalletEvm(private_key=private_key)
-    assert w.ETH() > 1.0
 
+#===================================================================
+#===================================================================
+#===================================================================
+#burn-related
+@enforce_types
+def testBurnWallet():
+    w = BurnWallet()
+    assert w.address == constants.BURN_ADDRESS
+    
+    
 #===================================================================
 #datatoken and pool-related
 @enforce_types
 def test_DT(alice_info):
-    agent_wallet, DT = alice_info.agent_wallet, alice_info.DT
+    agent_wallet, DT = alice_info.agent._wallet, alice_info.DT
     DT_amt = agent_wallet.DT(DT)
     assert DT_amt == (_DT_INIT - _DT_STAKE)
 
 @enforce_types
 def test_BPT(alice_info):
-    agent_wallet, pool = alice_info.agent_wallet, alice_info.pool
+    agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
     assert agent_wallet.BPT(pool) == 100.0
 
 @enforce_types
@@ -263,7 +263,7 @@ def test_poolToDTaddress(alice_info):
 @enforce_types
 def test_sellDT(alice_info):
     agent_wallet, DT, pool = \
-        alice_info.agent_wallet, alice_info.DT, alice_info.pool
+        alice_info.agent._wallet, alice_info.DT, alice_info.pool
     assert _poolToDTaddress(pool) == DT.address
     
     DT_before, OCEAN_before = agent_wallet.DT(DT), agent_wallet.OCEAN()
@@ -278,11 +278,13 @@ def test_sellDT(alice_info):
 
 @enforce_types
 def test_buyDT(alice_info):
+    alice_info.agent._wallet.resetCachedInfo()
     agent_wallet, DT, pool = \
-        alice_info.agent_wallet, alice_info.DT, alice_info.pool
+        alice_info.agent._wallet, alice_info.DT, alice_info.pool
     assert _poolToDTaddress(pool) == DT.address
     
-    DT_before, OCEAN_before = agent_wallet.DT(DT), agent_wallet.OCEAN()
+    DT_before = agent_wallet.DT(DT)
+    OCEAN_before = agent_wallet.OCEAN()
 
     DT_buy_amt = 1.0
     agent_wallet.buyDT(pool, DT, DT_buy_amt=DT_buy_amt, max_OCEAN_allow=OCEAN_before)
@@ -294,12 +296,14 @@ def test_buyDT(alice_info):
 
 @enforce_types
 def test_stakeOCEAN(alice_info):
-    agent_wallet, pool = alice_info.agent_wallet, alice_info.pool
-    OCEAN_bal_base = globaltokens.OCEANtoken().balanceOf_base
+    alice_info.agent._wallet.resetCachedInfo()
+    agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
+    OCEAN = globaltokens.OCEANtoken()
     
-    BPT_before, OCEAN1 = agent_wallet.BPT(pool), agent_wallet.OCEAN()
+    BPT_before = agent_wallet.BPT(pool)
+    OCEAN1 = agent_wallet.OCEAN()
     OCEAN2 = fromBase18(agent_wallet._cached_OCEAN_base)
-    OCEAN3 = fromBase18(OCEAN_bal_base(agent_wallet._address))
+    OCEAN3 = fromBase18(OCEAN.balanceOf(agent_wallet.address))
     assert OCEAN1 == OCEAN2 == OCEAN3
     
     agent_wallet.stakeOCEAN(OCEAN_stake=20.0, pool=pool)
@@ -310,7 +314,7 @@ def test_stakeOCEAN(alice_info):
 
 @enforce_types
 def test_unstakeOCEAN(alice_info):
-    agent_wallet, pool = alice_info.agent_wallet, alice_info.pool
+    agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
     
     BPT_before:float = agent_wallet.BPT(pool)
     
@@ -320,18 +324,9 @@ def test_unstakeOCEAN(alice_info):
     assert BPT_after == (BPT_before - 20.0)
 
 #===================================================================
-#===================================================================
-#===================================================================
-#burn-related
-@enforce_types
-def testBurnWallet():
-    w = BurnWallet()
-    assert w._address == constants.BURN_ADDRESS
-    
-#===================================================================
 #helps testing
 
-def _poolToDTaddress(pool:bpool.BPool) -> str:
+def _poolToDTaddress(pool) -> str:
     """Return the address of the datatoken of this pool.
     Don't make this public because it has strong assumptions:
     assumes 2 tokens; assumes one token is OCEAN; assumes other is DT

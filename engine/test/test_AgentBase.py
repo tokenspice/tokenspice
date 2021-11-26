@@ -2,7 +2,7 @@ from enforce_typing import enforce_types
 import pytest
 
 from engine.AgentBase import *
-from engine.test.conftest import _DT_INIT, _DT_STAKE 
+from agents.test.conftest import _DT_INIT, _DT_STAKE 
 
 @enforce_types
 class MyTestAgentEvm(AgentBaseEvm):
@@ -29,7 +29,8 @@ def testInitEvm():
     assert agent.OCEAN() == 1.2
     assert "MyTestAgent" in str(agent)
     assert isinstance(agent.address, str)
-    assert agent.address == agent._wallet._address
+    assert agent.address == agent._wallet.address
+    assert id(agent.account) == id(agent._wallet.account)
 
 @enforce_types
 def testInitNoEvm():

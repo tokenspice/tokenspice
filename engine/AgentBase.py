@@ -15,10 +15,10 @@ import typing
 
 from engine.AgentWallet import AgentWalletAbstract, AgentWalletEvm, \
     AgentWalletNoEvm
-from web3engine import bpool, datatoken, globaltokens
+from util import globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
-from web3tools.web3util import toBase18
+from util.base18 import toBase18
 
 @enforce_types
 class AgentBaseAbstract(ABC):
@@ -87,18 +87,22 @@ class AgentBaseEvm(StrMixin,
 
     @property
     def address(self) -> str:
-        return self._wallet._address
+        return self._wallet.address
+
+    @property
+    def account(self) -> str:
+        return self._wallet.account
     
     #datatoken and pool-related
-    def DT(self, dt:datatoken.Datatoken) -> float:
+    def DT(self, dt) -> float:
         return self._wallet.DT(dt)
     
-    def BPT(self, pool:bpool.BPool) -> float:
+    def BPT(self, pool) -> float:
         return self._wallet.BPT(pool)
 
-    def stakeOCEAN(self, OCEAN_stake:float, pool:bpool.BPool):
+    def stakeOCEAN(self, OCEAN_stake:float, pool):
         self._wallet.stakeOCEAN(OCEAN_stake, pool)
 
-    def unstakeOCEAN(self, BPT_unstake:float, pool:bpool.BPool):
+    def unstakeOCEAN(self, BPT_unstake:float, pool):
         self._wallet.unstakeOCEAN(BPT_unstake, pool)
                             

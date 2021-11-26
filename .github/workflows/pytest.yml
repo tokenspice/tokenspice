@@ -76,7 +76,7 @@ jobs:
 
       - name: Run Pytest (Just one test)
         run: |
-          pytest assets/agents/test/test_DataconsumerAgent.py
+          pytest agents/test/test_DataconsumerAgent.py
 
       - name: Run Entire Suite of Tests Along With Code Coverage Analysis
         run: |

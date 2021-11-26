@@ -9,6 +9,7 @@ def test1():
     ss = SimStrategyBase()
     assert ss.time_step > 0
     assert ss.max_ticks > 0
+    assert ss.log_interval > 0
 
     ss.setTimeStep(7)
     assert ss.time_step == 7
@@ -32,6 +33,9 @@ def test1():
 
     ss.setMaxTime(10, 'years')
     assert ss.max_ticks == (10 * S_PER_YEAR / ss.time_step + 1)
+
+    ss.setLogInterval(32)
+    assert ss.log_interval == 32
 
     with pytest.raises(ValueError):
         ss.setMaxTime(10, 'foo_unit')
