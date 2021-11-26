@@ -3,7 +3,7 @@ import pytest
 from pytest import approx
 
 from engine.AgentWallet import *
-from engine.test.conftest import _DT_INIT, _DT_STAKE 
+from agents.test.conftest import _DT_INIT, _DT_STAKE 
 from util import configutil
 from util.base18 import fromBase18, toBase18
 
@@ -282,7 +282,8 @@ def test_buyDT(alice_info):
         alice_info.agent._wallet, alice_info.DT, alice_info.pool
     assert _poolToDTaddress(pool) == DT.address
     
-    DT_before, OCEAN_before = agent_wallet.DT(DT), agent_wallet.OCEAN()
+    DT_before = agent_wallet.DT(DT)
+    OCEAN_before = agent_wallet.OCEAN()
 
     DT_buy_amt = 1.0
     agent_wallet.buyDT(pool, DT, DT_buy_amt=DT_buy_amt, max_OCEAN_allow=OCEAN_before)
@@ -297,7 +298,8 @@ def test_stakeOCEAN(alice_info):
     agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
     OCEAN = globaltokens.OCEANtoken()
     
-    BPT_before, OCEAN1 = agent_wallet.BPT(pool), agent_wallet.OCEAN()
+    BPT_before = agent_wallet.BPT(pool)
+    OCEAN1 = agent_wallet.OCEAN()
     OCEAN2 = fromBase18(agent_wallet._cached_OCEAN_base)
     OCEAN3 = fromBase18(OCEAN.balanceOf(agent_wallet.address))
     assert OCEAN1 == OCEAN2 == OCEAN3
