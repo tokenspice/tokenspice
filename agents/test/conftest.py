@@ -6,11 +6,11 @@ import brownie
 from enforce_typing import enforce_types
 import pytest
 
-from contracts.oceanv3 import oceanv3util
+from sol057.contracts.oceanv3 import oceanv3util
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
+from util.constants import BROWNIE_PROJECT057, GOD_ACCOUNT
 
 accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]

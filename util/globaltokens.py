@@ -1,7 +1,7 @@
 import brownie
 from enforce_typing import enforce_types
 
-from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
+from util.constants import BROWNIE_PROJECT057, GOD_ACCOUNT
 from util.base18 import toBase18
 
 _OCEAN_TOKEN = None
@@ -15,7 +15,7 @@ def OCEANtoken():
     except brownie.exceptions.ContractNotFound:
         token = None
     if token is None:
-        token = _OCEAN_TOKEN = BROWNIE_PROJECT.Simpletoken.deploy(
+        token = _OCEAN_TOKEN = BROWNIE_PROJECT057.Simpletoken.deploy(
             'OCEAN', 'OCEAN', 18, toBase18(1e9), {'from':GOD_ACCOUNT})
     return token
 

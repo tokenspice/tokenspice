@@ -12,7 +12,8 @@ import logging
 log = logging.getLogger('constants')
 
 import brownie
-BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")
+BROWNIE_PROJECT057 = brownie.project.load('./sol057/', name="Project057")
+BROWNIE_PROJECT080 = brownie.project.load('./sol080/', name="Project080")
 brownie.network.connect('development') #FIXME: may need to be 'ganache', since brownie auto-reverts in 'development'
 
 GOD_ACCOUNT = brownie.network.accounts[9]

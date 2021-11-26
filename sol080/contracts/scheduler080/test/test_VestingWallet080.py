@@ -2,7 +2,7 @@ import brownie
 from brownie import Wei
 from pytest import approx
 
-from util.constants import BROWNIE_PROJECT
+from util.constants import BROWNIE_PROJECT080
 accounts = brownie.network.accounts
 chain = brownie.network.chain
 
@@ -38,7 +38,7 @@ def test_ethFunding():
     beneficiary_address = accounts[1].address
     start_timestamp = chain[-1].timestamp + 5 #magic number
     duration_seconds = 30 #magic number
-    wallet = BROWNIE_PROJECT.VestingWallet080.deploy(
+    wallet = BROWNIE_PROJECT080.VestingWallet080.deploy(
         beneficiary_address, start_timestamp, duration_seconds,
         {'from' : accounts[0]})
 
@@ -76,7 +76,7 @@ def test_ethFunding():
     
 def test_tokenFunding():
     #accounts 0, 1, 2 should each start with 100 TOK
-    token = BROWNIE_PROJECT.Simpletoken.deploy(
+    token = BROWNIE_PROJECT080.Simpletoken.deploy(
         "TOK", "Test Token", 18, Wei('300 ether'),
         {'from' : accounts[0]})
     token.transfer(accounts[1], Wei('100 ether'), {'from': accounts[0]})
@@ -95,7 +95,7 @@ def test_tokenFunding():
     beneficiary_address = accounts[1].address
     start_timestamp = chain[-1].timestamp + 5 #magic number
     duration_seconds = 30 #magic number
-    wallet = BROWNIE_PROJECT.VestingWallet080.deploy(
+    wallet = BROWNIE_PROJECT080.VestingWallet080.deploy(
         beneficiary_address, start_timestamp, duration_seconds,
         {'from' : accounts[0]})
 
@@ -135,7 +135,7 @@ def _vesting_wallet():
     
     duration_seconds = 30 #magic number
     
-    w = BROWNIE_PROJECT.VestingWallet080.deploy(
+    w = BROWNIE_PROJECT080.VestingWallet080.deploy(
         beneficiary_address, start_timestamp, duration_seconds,
         {'from' : brownie.network.accounts[0]})
     return w

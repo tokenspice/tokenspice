@@ -4,7 +4,7 @@ import random
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT
+from util.constants import BROWNIE_PROJECT057
             
 @enforce_types
 class PoolAgent(AgentBase.AgentBaseEvm):
@@ -13,7 +13,7 @@ class PoolAgent(AgentBase.AgentBaseEvm):
         self._pool = pool
         
         self._dt_address = self._datatokenAddress()
-        self._dt = BROWNIE_PROJECT.DataTokenTemplate.at(self._dt_address)
+        self._dt = BROWNIE_PROJECT057.DataTokenTemplate.at(self._dt_address)
         self._controller_address = self._controllerAddress()
 
     @property

@@ -1,7 +1,7 @@
 import brownie
 import pytest
 
-from contracts.oceanv3.oceanv3util import newDatatoken
+from sol057.contracts.oceanv3.oceanv3util import newDatatoken
 from util.base18 import toBase18
 
 account0 = brownie.network.accounts[0]

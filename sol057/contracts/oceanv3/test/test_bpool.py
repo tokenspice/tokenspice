@@ -1,10 +1,10 @@
 import brownie
 import pytest
 
-import contracts.oceanv3.oceanv3util
+import sol057.contracts.oceanv3.oceanv3util
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import BROWNIE_PROJECT
+from util.constants import BROWNIE_PROJECT057
 
 accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]

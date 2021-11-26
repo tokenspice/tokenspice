@@ -150,9 +150,9 @@ Project has been compiled. Build artifacts saved at <your dir>/tokenspice/build/
 If brownie has any compile options set, e.g. if `brownie-config.yaml` has _any_ real content, then brownie will always re-compile before a `tsp` or `pytest` run. This can be time-consuming. To avoid this, comment out the lines `compiler: .. solc .. version: 0.5.7`. But be sure to un-comment them if you want a recompilation, otherwise it will compile at a higher `solc` version and give errors.
 
 When TokenSPICE starts, it imports `util/constants.py`, and:
-- it loads a project via `BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")`. It loads the ABIs in the `build/` directory, which is enough info for brownie to start treating each contract from `contracts/` as a _class_.
+- it loads a project via `BROWNIE_PROJECT057 = brownie.project.load('./', name="MyProject")`. It loads the ABIs in the `build/` directory, which is enough info for brownie to start treating each contract from `contracts/` as a _class_.
 - it connects to a network via: `brownie.network.connect('development')`
-- now, each contract (class) can get deployed (as objects), dynamically as needed, via `BROWNIE_PROJECT.deploy()'. The contracts don't need to get deployed up-front, nor do we need addresses of deployed contract up-front.
+- now, each contract (class) can get deployed (as objects), dynamically as needed, via `BROWNIE_PROJECT057.deploy()'. The contracts don't need to get deployed up-front, nor do we need addresses of deployed contract up-front.
 
 
 # 🏄 Running, Debugging

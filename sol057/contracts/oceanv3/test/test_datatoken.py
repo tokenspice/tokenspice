@@ -1,8 +1,8 @@
 import brownie
 
-import contracts.oceanv3.oceanv3util
+import sol057.contracts.oceanv3.oceanv3util
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT
+from util.constants import BROWNIE_PROJECT057
 
 accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]
@@ -15,7 +15,7 @@ def test_direct():
         'foo_blob', 'datatoken1', 'DT1', toBase18(100.0),
         {'from': account0})
     dt_address = tx.events['TokenCreated']['newTokenAddress']
-    dt = BROWNIE_PROJECT.DataTokenTemplate.at(dt_address)
+    dt = BROWNIE_PROJECT057.DataTokenTemplate.at(dt_address)
     dt.mint(address0, toBase18(100.0), {'from':account0})
 
     #functionality inherited from btoken
