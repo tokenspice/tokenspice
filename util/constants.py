@@ -15,7 +15,7 @@ import brownie
 BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")
 brownie.network.connect('development') #FIXME: may need to be 'ganache', since brownie auto-reverts in 'development'
 
-GOD_ACCOUNT = brownie.network.accounts[0]
+GOD_ACCOUNT = brownie.network.accounts[9]
 
 SAFETY = config['general'].getboolean('SAFETY')
 assert SAFETY is not None

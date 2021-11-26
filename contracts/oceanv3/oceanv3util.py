@@ -3,17 +3,17 @@ from enforce_typing import enforce_types
 
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
-    
-accounts = brownie.network.accounts
-address0 = accounts[0].address
+
+GOD_ADDRESS = GOD_ACCOUNT.address
 
 #===============================================================
 #datatokens: template, factory, creation
 @enforce_types
 def templateDatatoken():
     return BROWNIE_PROJECT.DataTokenTemplate.deploy(
-        "TT", "TemplateToken", address0, toBase18(1e3), "blob", address0,
-        {'from' : accounts[0]})
+        "TT", "TemplateToken", GOD_ADDRESS,
+        toBase18(1e3), "blob", GOD_ADDRESS,
+        {'from' : GOD_ACCOUNT})
 
 _DTFACTORY = None
 @enforce_types
@@ -47,7 +47,7 @@ def newDatatoken(blob:str, name:str, symbol:str, cap:int, account):
 #pools: template, factory, creation
 @enforce_types
 def templatePool():
-    return BROWNIE_PROJECT.BPool.deploy({'from' : accounts[0]})
+    return BROWNIE_PROJECT.BPool.deploy({'from' : GOD_ACCOUNT})
 
 _BFACTORY = None
 @enforce_types

@@ -13,7 +13,7 @@ from util.base18 import toBase18, fromBase18
 from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
 
 accounts = brownie.network.accounts
-account0, account9 = accounts[0], accounts[9]
+account0, account1 = accounts[0], accounts[1]
 
 _OCEAN_INIT = 1000.0
 _OCEAN_STAKE = 200.0
@@ -25,7 +25,7 @@ _POOL_WEIGHT_OCEAN = 7.0
 
 @pytest.fixture(scope="module", autouse=True)
 def alice_info():
-    return _make_info(account9)
+    return _make_info(account0)
 
 @pytest.fixture(autouse=True)
 def isolation(fn_isolation):
@@ -36,10 +36,18 @@ def _make_info(account):
     assert account.address != GOD_ACCOUNT.address
     
     OCEAN = globaltokens.OCEANtoken()
+    
     assert OCEAN.balanceOf(account) == 0
+    for i, a in enumerate(accounts):
+        if a.address != GOD_ACCOUNT.address:
+            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
     
     globaltokens.fundOCEANFromAbove(account.address, toBase18(_OCEAN_INIT))
     assert OCEAN.balanceOf(account) == toBase18(_OCEAN_INIT)
+
+    for i, a in enumerate(accounts): #HACK
+        if a.address not in [GOD_ACCOUNT.address, account.address]:
+            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
     
     class Info:
         pass
@@ -50,7 +58,15 @@ def _make_info(account):
     info.DT = _createDT(account)
     assert info.DT.balanceOf(account) == toBase18(_DT_INIT)
     
+    for i, a in enumerate(accounts): #HACK
+        if a.address not in [GOD_ACCOUNT.address, account.address]:
+            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
+    
     info.pool = _createPool(info.DT, account)
+
+    for i, a in enumerate(accounts): #HACK
+        if a.address not in [GOD_ACCOUNT.address, account.address]:
+            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
 
     class SimpleAgent(AgentBase.AgentBaseEvm):
         def takeStep(self, state):
@@ -59,6 +75,10 @@ def _make_info(account):
     info.agent._wallet._account = account
     info.agent._wallet.resetCachedInfo() #needed b/c we munged the wallet
 
+    for i, a in enumerate(accounts): #HACK
+        if a.address not in [GOD_ACCOUNT.address, account.address]:
+            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
+            
     #postconditions
     w = info.agent._wallet
     OCEAN1 = w.OCEAN()
