@@ -1,5 +1,5 @@
 import brownie
-from util.constants import BROWNIE_PROJECT
+from util.constants import BROWNIE_PROJECT057
 accounts = brownie.network.accounts
 
 def test_transfer():
@@ -29,7 +29,7 @@ def test_transferFrom():
     assert token.allowance(accounts[0], accounts[1]) == 1e18
 
 def _deployToken():
-    return BROWNIE_PROJECT.Simpletoken.deploy(
+    return BROWNIE_PROJECT057.Simpletoken.deploy(
         "TST", "Test Token", 18, 1e21,
         {'from' : accounts[0]})
 

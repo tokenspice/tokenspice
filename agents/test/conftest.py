@@ -6,11 +6,11 @@ import brownie
 from enforce_typing import enforce_types
 import pytest
 
-from contracts.oceanv3 import oceanv3util
+from sol057.contracts.oceanv3 import oceanv3util
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import BROWNIE_PROJECT, GOD_ACCOUNT
+from util.constants import BROWNIE_PROJECT057, GOD_ACCOUNT
 
 accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]
@@ -23,23 +23,26 @@ _DT_STAKE = 20.0
 _POOL_WEIGHT_DT    = 3.0
 _POOL_WEIGHT_OCEAN = 7.0
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture #(scope="function", autouse=True)
 def alice_info():
     return _make_info(account0)
 
-@pytest.fixture(autouse=True)
-def isolation(fn_isolation):
-    pass
+#@pytest.fixture(autouse=True)
+#def isolation(fn_isolation):
+#    pass
 
 @enforce_types
 def _make_info(account):
     assert account.address != GOD_ACCOUNT.address
     
     OCEAN = globaltokens.OCEANtoken()
-    
-    for i, a in enumerate(accounts):
+
+    #reset OCEAN balances on-chain, to avoid relying on brownie chain reverts
+    # -assumes that DT and BPT in each test are new tokens each time, and
+    #  therefore don't need re-setting
+    for i, a in enumerate(accounts): 
         if a.address != GOD_ACCOUNT.address:
-            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
+            OCEAN.transfer(GOD_ACCOUNT, OCEAN.balanceOf(a), {'from':a})
     
     class Info:
         pass
@@ -63,11 +66,6 @@ def _make_info(account):
     info.pool = _createPool(info.DT, account) #create pool, stake DT & OCEAN
     info.agent._wallet.resetCachedInfo() #because OCEAN & DT was staked
 
-    assert OCEAN.balanceOf(account) == toBase18(_OCEAN_INIT - _OCEAN_STAKE)
-    for i, a in enumerate(accounts): #HACK
-        if a.address not in [GOD_ACCOUNT.address, account.address]:
-            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
-            
     #postconditions
     w = info.agent._wallet
     OCEAN1 = w.OCEAN()

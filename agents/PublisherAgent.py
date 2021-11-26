@@ -2,7 +2,7 @@ from enforce_typing import enforce_types
 import random
 
 from agents.PoolAgent import PoolAgent
-from contracts.oceanv3 import oceanv3util
+from sol057.contracts.oceanv3 import oceanv3util
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18

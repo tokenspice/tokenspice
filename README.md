@@ -52,7 +52,8 @@ History:
 
 - Linux/MacOS
 - Python 3.8.5+
-- solc 0.5.0+ [[Instructions](https://docs.soliditylang.org/en/v0.8.9/installing-solidity.html)]
+- solc 0.8.0+ [[Instructions](https://docs.soliditylang.org/en/v0.8.9/installing-solidity.html)]
+- ganache. To install: `npm install ganache-cli --global`
 
 ## Install TokenSPICE
 
@@ -61,9 +62,6 @@ Open a new terminal and:
 #clone repo
 git clone https://github.com/tokenspice/tokenspice
 cd tokenspice
-
-#[ONLY IF NOT MERGED YET] point to 'scheduler' branch
-git checkout scheduler
 
 #create a virtual environment
 python3 -m venv venv
@@ -76,36 +74,7 @@ pip install wheel
 pip install -r requirements.txt
 ```
 
-## Start Ganache
-
-Think of Ganache as local EVM blockchain network, with just one node.
-
-If you haven't yet installed Ganache, here's how. Open a new terminal and:
-```console
-npm install ganache-cli --global
-```
-
-To run ganache, in the same terminal:
-```
-#Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
-export NODE_OPTIONS=--openssl-legacy-provider
-
-#activate env't
-cd tokenspice
-source venv/bin/activate
-
-#run ganache.py. It calls ganache cli and fills in many arguments for you.
-./ganache.py
-```
-
-TokenSPICE uses brownie. If ganache is running, brownie connects to it. Otherwise brownie starts ganache for its session. Recommendations:
-- For unit tests, let Brownie auto-run ganache. Why: avoid brownie warnings on block height.
-- For simulation runs (`tsp run`), run ganache separately. Why: avoid brownie clutter in stdout
-
-
-
-
-## Compile & deploy contracts to ganache
+## Compile the contracts
 
 Open a new terminal. From it:
 ```console
@@ -115,45 +84,17 @@ source venv/bin/activate
 
 #install 3rd party contracts
 brownie pm install OpenZeppelin/openzeppelin-contracts@2.1.1
+brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
+
+#compile: call "brownie.compile" in sol057/ and sol080/
+./compile.sh
 ```
 
-Brownie compiles `.sol` files by calling the `solc` compiler. So, ensure that `solc` is installed and up-to-date.
-
-The file `./brownie-config.yaml` holds compilation options. The `contracts/oceanv3` code (and `./contracts/`) need solc 0.5.7. Therefore open `brownie-config.yaml` and make sure the following lines are un-commented.
-```text
-compiler:
-   solc:
-       version: 0.5.7
-```
-
-Now, let's compile! From the same terminal:
-```console
-#compile everything in contracts/, including contracts/oceanv3/
-brownie compile
-```
-
-It should output something like:
-```text
-Brownie v1.17.1 - Python development framework for Ethereum
-
-Compiling contracts...
-  Solc version: 0.8.10
-  ...
-Generating build data...
- - OpenZeppelin/openzeppelin-contracts@4.0.0/IERC20
- ...
- - VestingWallet
- 
-Project has been compiled. Build artifacts saved at <your dir>/tokenspice/build/contracts
-```
-
-If brownie has any compile options set, e.g. if `brownie-config.yaml` has _any_ real content, then brownie will always re-compile before a `tsp` or `pytest` run. This can be time-consuming. To avoid this, comment out the lines `compiler: .. solc .. version: 0.5.7`. But be sure to un-comment them if you want a recompilation, otherwise it will compile at a higher `solc` version and give errors.
-
-When TokenSPICE starts, it imports `util/constants.py`, and:
-- it loads a project via `BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")`. It loads the ABIs in the `build/` directory, which is enough info for brownie to start treating each contract from `contracts/` as a _class_.
-- it connects to a network via: `brownie.network.connect('development')`
-- now, each contract (class) can get deployed (as objects), dynamically as needed, via `BROWNIE_PROJECT.deploy()'. The contracts don't need to get deployed up-front, nor do we need addresses of deployed contract up-front.
-
+Here's how TokenSPICE sees smart contracts as classes. When it starts:
+- it calls `brownie.project.load('./sol057', name="MyProject")` to load the ABIs in `./sol057/build/`. That's enough info to treat each contract in `sol057/contracts/` as a _class_ (!).
+- it connects to a network via: `brownie.network.connect()`
+- now, each contract (class) can get deployed (as objects), _dynamically_ as needed, via `deploy()`. They don't need to be deployed up-front (!).
+- The above was for Solidity 0.5.7; it's similar for 0.8.0.
 
 # 🏄 Running, Debugging
 
@@ -163,7 +104,7 @@ Note: this will fail if there is a `contracts` directory side-by-side with token
 
 From terminal:
 ```console
-#run single test
+#run single test. It uses brownie, which auto-starts Ganache local blockchain node.
 pytest contracts/test/test_Simpletoken.py::test_transfer
 
 #run all of a directory's tests
@@ -196,7 +137,22 @@ tsp plot netlists/scheduler/netlist.py outdir_csv outdir_png
 eog outdir_png
 ```
 
-The [wsloop netlist](netlists/wsloop/about.md) is more complex. Below are sample results.
+In `tsp run`, it will dump all the ganache txs to stdout. To make this cleaner, open a new terminal and:
+```console
+#Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
+export NODE_OPTIONS=--openssl-legacy-provider
+
+#activate env't
+cd tokenspice
+source venv/bin/activate
+
+#run ganache.py. It calls ganache cli and fills in many arguments for you.
+./ganache.py
+
+#now TokenSPICE runs will auto-connect to your separately-running ganache.
+```
+
+The [wsloop netlist](netlists/wsloop/about.md) is a more complex netlist. Below are sample results.
 
 <img src="images/wsloop-example-small.png">
 
@@ -281,7 +237,7 @@ Here are some existing netlists.
 
 - [simplegrant](netlists/simplegrant/about.md) - granter plus receiver, that's all. No EVM.
 - [simplepool](netlists/simplepool/about.md) - publisher that periodically creates new pools. EVM.
-- [scheduler](netlists/scheduler/about.md) - scheduled vesting from a wallet. EVM.
+- [scheduler](netlists/scheduler/about.md) - scheduled vesting from a wallet. EVM. 
 - [wsloop](netlists/wsloop/about.md) - Web3 Sustainability Loop. No EVM.
 - (WIP) [oceanv3](netlists/oceanv3/about.md) - Ocean Market V3 - initial design. EVM.
 - (WIP) [oceanv4](netlists/oceanv4/about.md) - Ocean Market V4 - solves rug pulls. EVM.

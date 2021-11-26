@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts v4.3.2 (finance/VestingWallet.sol)
-pragma solidity ^0.5.7;
+// OpenZeppelin Contracts v4.4.0 (finance/VestingWallet.sol)
+pragma solidity ^0.8.0;
 
-import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/token/ERC20/SafeERC20.sol";
-import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/utils/Address.sol";
-import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/math/SafeMath.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/token/ERC20/utils/SafeERC20.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/Address.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/Context.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.0.0/contracts/utils/math/SafeMath.sol";
 
 /**
- * @title VestingWallet
+ * @title VestingWallet080
  * @dev This contract handles the vesting of Eth and ERC20 tokens for a given beneficiary. Custody of multiple tokens
  * can be given to this contract, which will release the token to the beneficiary following a given vesting schedule.
  * The vesting schedule is customizable through the {vestedAmount} function.
@@ -16,18 +17,15 @@ import "OpenZeppelin/openzeppelin-contracts@2.1.1/contracts/math/SafeMath.sol";
  * Consequently, if the vesting has already started, any amount of tokens sent to this contract will (at least partly)
  * be immediately releasable.
  */
-contract VestingWallet {
+contract VestingWallet080 is Context {
     event EtherReleased(uint256 amount);
-    event ERC20Released(address token, uint256 amount);
+    event ERC20Released(address indexed token, uint256 amount);
 
     uint256 private _released;
     mapping(address => uint256) private _erc20Released;
-    //address private immutable _beneficiary; //>=0.6.5. Makes them read-only
-    address private _beneficiary;
-    //uint64 private immutable _start; //>=0.6.5
-    uint64 private _start;
-    //uint64 private immutable _duration; //>=0.6.5
-    uint64 private _duration;
+    address private immutable _beneficiary;
+    uint64 private immutable _start;
+    uint64 private immutable _duration;
 
     /**
      * @dev Set the beneficiary, start timestamp and vesting duration of the vesting wallet.
@@ -36,8 +34,8 @@ contract VestingWallet {
         address beneficiaryAddress,
         uint64 startTimestamp,
         uint64 durationSeconds
-    ) public {
-        require(beneficiaryAddress != address(0), "VestingWallet: beneficiary is zero address");
+    ) {
+        require(beneficiaryAddress != address(0), "VestingWallet080: beneficiary is zero address");
         _beneficiary = beneficiaryAddress;
         _start = startTimestamp;
         _duration = durationSeconds;
@@ -46,40 +44,40 @@ contract VestingWallet {
     /**
      * @dev The contract should be able to receive Eth.
      */
-    function () external payable {}
+    receive() external payable virtual {}
 
     /**
      * @dev Getter for the beneficiary address.
      */
-    function beneficiary() public view returns (address) {
+    function beneficiary() public view virtual returns (address) {
         return _beneficiary;
     }
 
     /**
      * @dev Getter for the start timestamp.
      */
-    function start() public view returns (uint256) {
+    function start() public view virtual returns (uint256) {
         return _start;
     }
 
     /**
      * @dev Getter for the vesting duration.
      */
-    function duration() public view returns (uint256) {
+    function duration() public view virtual returns (uint256) {
         return _duration;
     }
 
     /**
      * @dev Amount of eth already released
      */
-    function released() public view returns (uint256) {
+    function released() public view virtual returns (uint256) {
         return _released;
     }
 
     /**
      * @dev Amount of token already released
      */
-    function released(address token) public view returns (uint256) {
+    function released(address token) public view virtual returns (uint256) {
         return _erc20Released[token];
     }
 
@@ -88,12 +86,11 @@ contract VestingWallet {
      *
      * Emits a {TokensReleased} event.
      */
-    function release() public {
+    function release() public virtual {
         uint256 releasable = vestedAmount(uint64(block.timestamp)) - released();
         _released += releasable;
         emit EtherReleased(releasable);
-	address payable b = address(uint160(beneficiary()));
-	b.send(releasable);
+        Address.sendValue(payable(beneficiary()), releasable);
     }
 
     /**
@@ -101,7 +98,7 @@ contract VestingWallet {
      *
      * Emits a {TokensReleased} event.
      */
-    function release(address token) public {
+    function release(address token) public virtual {
         uint256 releasable = vestedAmount(token, uint64(block.timestamp)) - released(token);
         _erc20Released[token] += releasable;
         emit ERC20Released(token, releasable);
@@ -111,22 +108,22 @@ contract VestingWallet {
     /**
      * @dev Calculates the amount of ether that has already vested. Default implementation is a linear vesting curve.
      */
-    function vestedAmount(uint64 timestamp) public view returns (uint256) {
+    function vestedAmount(uint64 timestamp) public view virtual returns (uint256) {
         return _vestingSchedule(address(this).balance + released(), timestamp);
     }
 
     /**
      * @dev Calculates the amount of tokens that has already vested. Default implementation is a linear vesting curve.
      */
-    function vestedAmount(address token, uint64 timestamp) public view returns (uint256) {
+    function vestedAmount(address token, uint64 timestamp) public view virtual returns (uint256) {
         return _vestingSchedule(IERC20(token).balanceOf(address(this)) + released(token), timestamp);
     }
 
     /**
-     * @dev implementation of the vesting formula. This returns the amout vested, as a function of time, for
+     * @dev Virtual implementation of the vesting formula. This returns the amout vested, as a function of time, for
      * an asset given its total historical allocation.
      */
-    function _vestingSchedule(uint256 totalAllocation, uint64 timestamp) internal view returns (uint256) {
+    function _vestingSchedule(uint256 totalAllocation, uint64 timestamp) internal view virtual returns (uint256) {
         if (timestamp < start()) {
             return 0;
         } else if (timestamp > start() + duration()) {

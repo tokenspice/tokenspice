@@ -5,7 +5,6 @@ import pytest
 from pytest import approx
 
 from agents.VestingFunderAgent import VestingFunderAgent
-from agents.VestingWalletAgent import VestingWalletAgent
 from util import globaltokens
 
 #don't use account0, it's GOD_ACCOUNT. don't use account9, it's conftest pool

@@ -1,10 +1,10 @@
 import brownie
 import pytest
 
-import contracts.oceanv3.oceanv3util
+import sol057.contracts.oceanv3.oceanv3util
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import BROWNIE_PROJECT
+from util.constants import BROWNIE_PROJECT057
 
 accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]
@@ -480,5 +480,5 @@ def _createPoolWith2Tokens(T1, T2, bal1:float, bal2:float, w1:float, w2:float):
     return pool
 
 def _deployBPool():
-    return contracts.oceanv3.oceanv3util.newBPool(account0)
+    return sol057.contracts.oceanv3.oceanv3util.newBPool(account0)
 

@@ -1,21 +1,21 @@
 import brownie
 
-import contracts.oceanv3.oceanv3util
+import sol057.contracts.oceanv3.oceanv3util
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT
+from util.constants import BROWNIE_PROJECT057
 
 accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]
 address0, address1 = account0.address, account1.address
 
 def test_direct():
-    dtfactory = contracts.oceanv3.oceanv3util.DTFactory()
+    dtfactory = sol057.contracts.oceanv3.oceanv3util.DTFactory()
     
     tx = dtfactory.createToken(
         'foo_blob', 'datatoken1', 'DT1', toBase18(100.0),
         {'from': account0})
     dt_address = tx.events['TokenCreated']['newTokenAddress']
-    dt = BROWNIE_PROJECT.DataTokenTemplate.at(dt_address)
+    dt = BROWNIE_PROJECT057.DataTokenTemplate.at(dt_address)
     dt.mint(address0, toBase18(100.0), {'from':account0})
 
     #functionality inherited from btoken
@@ -33,7 +33,7 @@ def test_direct():
     assert dt.blob() == 'foo_blob'
 
 def test_via_util():
-    dt = contracts.oceanv3.oceanv3util.newDatatoken(
+    dt = sol057.contracts.oceanv3.oceanv3util.newDatatoken(
         'foo_blob', 'datatoken1', 'DT1', toBase18(100.0), account0)
     dt.mint(address0, toBase18(100.0), {'from':account0})
     assert dt.name() == 'datatoken1'
