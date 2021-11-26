@@ -4,7 +4,7 @@ log = logging.getLogger('simstrategy')
 
 from enforce_typing import enforce_types
 
-from util.constants import S_PER_HOUR, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
+from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 from util.strutil import StrMixin
     
 @enforce_types
@@ -16,6 +16,9 @@ class SimStrategyBase(StrMixin):
         
         #max # time steps (ticks) to run until
         self.max_ticks = 1
+
+        #how often to log to stdout and to csv (seconds)
+        self.log_interval = S_PER_DAY
 
     def setTimeStep(self, time_step: int):
         """How many seconds are there in each time step (tick)?"""
@@ -35,6 +38,9 @@ class SimStrategyBase(StrMixin):
         if unit == 'ticks':
             max_ticks = val
             self.max_ticks = max_ticks
+        elif (unit == 'min' or unit == 'minutes'):
+            max_hours = val
+            self.max_ticks = (max_hours * S_PER_MIN / self.time_step + 1)
         elif unit == 'hours':
             max_hours = val
             self.max_ticks = (max_hours * S_PER_HOUR / self.time_step + 1)
@@ -49,6 +55,10 @@ class SimStrategyBase(StrMixin):
             self.max_ticks = (max_years * S_PER_YEAR / self.time_step + 1)
         else:
             raise ValueError(unit)
+        
+    def setLogInterval(self, log_interval: int):
+        """How often to log to stdout and to csv? (seconds)"""
+        self.log_interval = log_interval
         
             
 

@@ -1,0 +1,8 @@
+# have this so that config is never empty
+project_structure:
+    build: build
+
+#comment out, otherwise it compiles every time
+# compiler:
+#    solc:
+#        version: 0.5.7

@@ -2,28 +2,38 @@
 # numbers for running TokenSPICE. Magic numbers have been
 # moved into netlists.
 
-CONF_FILE_PATH = './tokenspice.ini'
+from util.configutil import CONF_FILE_PATH
 
 import configparser, os
 config = configparser.ConfigParser()
 config.read(os.path.expanduser(CONF_FILE_PATH))
 
-SAFETY = config['general'].getboolean('safety')
-assert SAFETY is not None
-
 import logging
 log = logging.getLogger('constants')
 
-import math
+import brownie
+BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")
+brownie.network.connect('development') #FIXME: may need to be 'ganache', since brownie auto-reverts in 'development'
 
-from  enforce_typing import enforce_types
+GOD_ACCOUNT = brownie.network.accounts[9]
+
+SAFETY = config['general'].getboolean('SAFETY')
+assert SAFETY is not None
+
+from enforce_typing import enforce_types
 if not SAFETY:
     # do nothing, just return the original function
     def noop(f):
         return f
     enforce_types = noop
 
+SILENT = config['general'].getboolean('SILENT')
+assert SILENT is not None
+from brownie._config import CONFIG
+CONFIG.argv["silent"] = SILENT 
+
 #big numbers
+import math
 INF = math.inf
 HUGEINT = 2**255 #biggest int that can be passed into contracts
  
