@@ -278,6 +278,7 @@ def test_sellDT(alice_info):
 
 @enforce_types
 def test_buyDT(alice_info):
+    alice_info.agent._wallet.resetCachedInfo()
     agent_wallet, DT, pool = \
         alice_info.agent._wallet, alice_info.DT, alice_info.pool
     assert _poolToDTaddress(pool) == DT.address
@@ -295,6 +296,7 @@ def test_buyDT(alice_info):
 
 @enforce_types
 def test_stakeOCEAN(alice_info):
+    alice_info.agent._wallet.resetCachedInfo()
     agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
     OCEAN = globaltokens.OCEANtoken()
     
