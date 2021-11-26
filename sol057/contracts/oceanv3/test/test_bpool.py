@@ -480,5 +480,5 @@ def _createPoolWith2Tokens(T1, T2, bal1:float, bal2:float, w1:float, w2:float):
     return pool
 
 def _deployBPool():
-    return contracts.oceanv3.oceanv3util.newBPool(account0)
+    return sol057.contracts.oceanv3.oceanv3util.newBPool(account0)
 

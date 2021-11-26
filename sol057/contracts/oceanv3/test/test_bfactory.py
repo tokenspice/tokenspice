@@ -19,10 +19,10 @@ def test_direct():
     assert pool.isFinalized() in [False, True]
 
 def test_via_BFactory_util():
-    bfactory = contracts.oceanv3.oceanv3util.BFactory()
+    bfactory = sol057.contracts.oceanv3.oceanv3util.BFactory()
     tx = bfactory.newBPool({'from': account0})
     
-    pool_address = contracts.oceanv3.oceanv3util.poolAddressFromNewBPoolTx(tx)
+    pool_address = sol057.contracts.oceanv3.oceanv3util.poolAddressFromNewBPoolTx(tx)
     assert pool_address == tx.events['BPoolCreated']['newBPoolAddress']
 
     pool = BROWNIE_PROJECT057.BPool.at(pool_address)
@@ -30,6 +30,6 @@ def test_via_BFactory_util():
     assert pool.isFinalized() in [False, True]
 
 def test_via_newBPool_util():
-    pool = contracts.oceanv3.oceanv3util.newBPool(account0)
+    pool = sol057.contracts.oceanv3.oceanv3util.newBPool(account0)
     assert pool.isFinalized() in [False, True]
 
