@@ -281,7 +281,7 @@ Here are some existing netlists.
 
 - [simplegrant](netlists/simplegrant/about.md) - granter plus receiver, that's all. No EVM.
 - [simplepool](netlists/simplepool/about.md) - publisher that periodically creates new pools. EVM.
-- [scheduler](netlists/scheduler/about.md) - scheduled vesting from a wallet. EVM.
+- [scheduler](netlists/scheduler/about.md) - scheduled vesting from a wallet. EVM. 
 - [wsloop](netlists/wsloop/about.md) - Web3 Sustainability Loop. No EVM.
 - (WIP) [oceanv3](netlists/oceanv3/about.md) - Ocean Market V3 - initial design. EVM.
 - (WIP) [oceanv4](netlists/oceanv4/about.md) - Ocean Market V4 - solves rug pulls. EVM.
