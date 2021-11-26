@@ -2,7 +2,7 @@ from enforce_typing import enforce_types
 import pytest
 
 from engine.AgentBase import *
-from engine.test.conftest import _DT_INIT, _DT_STAKE 
+from agents.test.conftest import _DT_INIT, _DT_STAKE 
 
 @enforce_types
 class MyTestAgentEvm(AgentBaseEvm):
