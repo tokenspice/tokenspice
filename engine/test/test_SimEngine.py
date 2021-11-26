@@ -66,7 +66,7 @@ def testRunEngine():
     assert engine.state.tick == 3
 
     elapsed_time = chain[-1].timestamp - init_time
-    assert elapsed_time == (3 * 10) # 3 ticks * 10 s/tick
+    assert elapsed_time in [30, 31] # 3 ticks * 10 s/tick
 
 @enforce_types
 def tearDown():
