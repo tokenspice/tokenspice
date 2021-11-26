@@ -19,7 +19,7 @@ def test1():
     
     start_timestamp = chain[-1].timestamp + 5
     duration_seconds = 30
-    vw_orig = BROWNIE_PROJECT.VestingWallet.deploy(
+    vw_orig = BROWNIE_PROJECT.VestingWallet057.deploy(
         account2.address, start_timestamp, duration_seconds,
         {'from' : account1})
 

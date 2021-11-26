@@ -37,7 +37,7 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
         beneficiary_agent = state.getAgent(self._beneficiary_agent_name)
         start_timestamp = brownie.network.chain[-1].timestamp < + 5 #magic number
         duration_seconds = 30 #magic number
-        vw_contract = BROWNIE_PROJECT.VestingWallet.deploy(
+        vw_contract = BROWNIE_PROJECT.VestingWallet057.deploy(
             beneficiary_agent.address,
             self._start_timestamp,
             self._duration_seconds,
