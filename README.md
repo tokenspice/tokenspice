@@ -115,7 +115,19 @@ source venv/bin/activate
 
 #install 3rd party contracts
 brownie pm install OpenZeppelin/openzeppelin-contracts@2.1.1
+```
 
+Brownie compiles `.sol` files by calling the `solc` compiler. So, ensure that `solc` is installed and up-to-date.
+
+The file `./brownie-config.yaml` holds compilation options. The `contracts/oceanv3` code (and `./contracts/`) need solc 0.5.7. Therefore open `brownie-config.yaml` and make sure the following lines are un-commented.
+```text
+compiler:
+   solc:
+       version: 0.5.7
+```
+
+Now, let's compile! From the same terminal:
+```console
 #compile everything in contracts/, including contracts/oceanv3/
 brownie compile
 ```
@@ -134,6 +146,8 @@ Generating build data...
  
 Project has been compiled. Build artifacts saved at <your dir>/tokenspice/build/contracts
 ```
+
+If brownie has any compile options set, e.g. if `brownie-config.yaml` has _any_ real content, then brownie will always re-compile before a `tsp` or `pytest` run. This can be time-consuming. To avoid this, comment out the lines `compiler: .. solc .. version: 0.5.7`. But be sure to un-comment them if you want a recompilation, otherwise it will compile at a higher `solc` version and give errors.
 
 When TokenSPICE starts, it imports `util/constants.py`, and:
 - it loads a project via `BROWNIE_PROJECT = brownie.project.load('./', name="MyProject")`. It loads the ABIs in the `build/` directory, which is enough info for brownie to start treating each contract from `contracts/` as a _class_.
