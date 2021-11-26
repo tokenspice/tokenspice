@@ -2,7 +2,7 @@ import brownie
 from brownie import Wei
 from pytest import approx
 
-from util.constants import BROWNIE_PROJECT080
+from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080
 accounts = brownie.network.accounts
 chain = brownie.network.chain
 
@@ -76,7 +76,7 @@ def test_ethFunding():
     
 def test_tokenFunding():
     #accounts 0, 1, 2 should each start with 100 TOK
-    token = BROWNIE_PROJECT080.Simpletoken.deploy(
+    token = BROWNIE_PROJECT057.Simpletoken.deploy(
         "TOK", "Test Token", 18, Wei('300 ether'),
         {'from' : accounts[0]})
     token.transfer(accounts[1], Wei('100 ether'), {'from': accounts[0]})
