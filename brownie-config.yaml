@@ -3,6 +3,6 @@ project_structure:
     build: build
 
 #comment out, otherwise it compiles every time
-# compiler:
-#    solc:
-#        version: 0.5.7
+compiler:
+   solc:
+       version: 0.5.7
