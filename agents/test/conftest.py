@@ -64,8 +64,8 @@ def _make_info(account):
     OCEAN1 = w.OCEAN()
     assert w._cached_OCEAN_base is not None
     OCEAN2 = fromBase18(int(w._cached_OCEAN_base))
-    #OCEAN3 = fromBase18(OCEAN.balanceOf(account))
-    #assert OCEAN1 == OCEAN2 == OCEAN3, (OCEAN1, OCEAN2, OCEAN3) #FIXME
+    OCEAN3 = fromBase18(OCEAN.balanceOf(account))
+    assert OCEAN1 == OCEAN2 == OCEAN3, (OCEAN1, OCEAN2, OCEAN3) 
     
     return info
 
