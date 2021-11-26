@@ -37,44 +37,33 @@ def _make_info(account):
     
     OCEAN = globaltokens.OCEANtoken()
     
-    assert OCEAN.balanceOf(account) == 0
     for i, a in enumerate(accounts):
         if a.address != GOD_ACCOUNT.address:
-            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
-    
-    globaltokens.fundOCEANFromAbove(account.address, toBase18(_OCEAN_INIT))
-    assert OCEAN.balanceOf(account) == toBase18(_OCEAN_INIT)
-
-    for i, a in enumerate(accounts): #HACK
-        if a.address not in [GOD_ACCOUNT.address, account.address]:
             assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
     
     class Info:
         pass
     info = Info()
-
     info.account = account
-    
-    info.DT = _createDT(account)
-    assert info.DT.balanceOf(account) == toBase18(_DT_INIT)
-    
-    for i, a in enumerate(accounts): #HACK
-        if a.address not in [GOD_ACCOUNT.address, account.address]:
-            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
-    
-    info.pool = _createPool(info.DT, account)
-
-    for i, a in enumerate(accounts): #HACK
-        if a.address not in [GOD_ACCOUNT.address, account.address]:
-            assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
 
     class SimpleAgent(AgentBase.AgentBaseEvm):
         def takeStep(self, state):
             pass
-    info.agent = SimpleAgent("agent1",USD=0.0,OCEAN=0.0)
-    info.agent._wallet._account = account
-    info.agent._wallet.resetCachedInfo() #needed b/c we munged the wallet
+    info.agent = SimpleAgent("agent1", USD=0.0, OCEAN=0.0)
+    info.agent._wallet._account = account #force agent to use this account
+    info.agent._wallet.resetCachedInfo() #because account changed wallet
 
+    info.DT = _createDT(account)
+    info.agent._wallet.resetCachedInfo() #because DT was deposited to account
+    assert info.DT.balanceOf(account) == toBase18(_DT_INIT)
+
+    globaltokens.fundOCEANFromAbove(account.address, toBase18(_OCEAN_INIT))
+    info.agent._wallet.resetCachedInfo() #because OCEAN was deposited to account
+    
+    info.pool = _createPool(info.DT, account) #create pool, stake DT & OCEAN
+    info.agent._wallet.resetCachedInfo() #because OCEAN & DT was staked
+
+    assert OCEAN.balanceOf(account) == toBase18(_OCEAN_INIT - _OCEAN_STAKE)
     for i, a in enumerate(accounts): #HACK
         if a.address not in [GOD_ACCOUNT.address, account.address]:
             assert OCEAN.balanceOf(a) == 0, (OCEAN.balanceOf(a), i, a.address)
