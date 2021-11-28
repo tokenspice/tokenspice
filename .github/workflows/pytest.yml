@@ -37,6 +37,10 @@ jobs:
           pwd
           tree
 
+      - name: compile
+        run: |
+          ./compile.sh
+
       - name: Run Pytest (Just one test)
         run: |
           pytest agents/test/test_DataconsumerAgent.py
