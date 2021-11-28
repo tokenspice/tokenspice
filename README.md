@@ -270,6 +270,6 @@ Art:
 
 # 🏛 License
 
-The license is MIT. [Details](LICENSE) 
+The license is MIT. [Details](LICENSE)
 
 <img src="images/fishnado2-crop.jpeg" width="100%">
