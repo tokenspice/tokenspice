@@ -37,8 +37,10 @@ jobs:
           pwd
           tree
 
-      - name: compile
+      - name: Compile the contracts
         run: |
+	  brownie pm install OpenZeppelin/openzeppelin-contracts@2.1.1
+	  brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
           ./compile.sh
 
       - name: Run Pytest (Just one test)
