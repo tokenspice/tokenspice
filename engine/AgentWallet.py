@@ -17,6 +17,7 @@ log = logging.getLogger('wallet')
 from abc import abstractmethod, ABC
 import brownie
 from brownie import Wei
+from brownie.network.account import Account
 from enforce_typing import enforce_types
 import typing
 
@@ -201,7 +202,7 @@ class AgentWalletEvm(UsdNoEvmWalletMixIn,
     def __init__(self, USD:float=0.0, OCEAN:float=0.0, private_key=None):
         UsdNoEvmWalletMixIn.__init__(self, USD)
 
-        self._account = None #brownie account
+        self._account:Account = None
         if private_key is None:
             self._account = brownie.network.accounts.add()
         else:

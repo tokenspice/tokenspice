@@ -1,3 +1,5 @@
 eth-brownie
 matplotlib
 enforce-typing
+mypy
+
