@@ -76,25 +76,15 @@ pip install -r requirements.txt
 
 ## Compile the contracts
 
-Open a new terminal. From it:
+From the same terminal:
 ```console
-#activate env't
-cd tokenspice
-source venv/bin/activate
-
-#install 3rd party contracts
-brownie pm install OpenZeppelin/openzeppelin-contracts@2.1.1
-brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
-
-#compile: call "brownie.compile" in sol057/ and sol080/
+#install 3rd party libs, then call "brownie compile" in sol057/ and sol080/
 ./compile.sh
 ```
 
-Here's how TokenSPICE sees smart contracts as classes. When it starts:
-- it calls `brownie.project.load('./sol057', name="MyProject")` to load the ABIs in `./sol057/build/`. That's enough info to treat each contract in `sol057/contracts/` as a _class_ (!).
-- it connects to a network via: `brownie.network.connect()`
-- now, each contract (class) can get deployed (as objects), _dynamically_ as needed, via `deploy()`. They don't need to be deployed up-front (!).
-- The above was for Solidity 0.5.7; it's similar for 0.8.0.
+TokenSPICE sees smart contracts as classes. How:
+- When it starts, it calls `brownie.project.load('./sol057', name="MyProject")` to load the ABIs in `./sol057/build/`. Similar for `sol080`.
+- That's enough info to treat each contract in `sol057/contracts/` as a _class_. Then, call `deploy()` deploy on it to create a new _object_.
 
 # 🏄 Running, Debugging
 
@@ -280,6 +270,6 @@ Art:
 
 # 🏛 License
 
-The license is MIT. [Details](LICENSE)
+The license is MIT. [Details](LICENSE) 
 
 <img src="images/fishnado2-crop.jpeg" width="100%">

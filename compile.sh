@@ -1,3 +1,7 @@
+echo "compile.sh: Install 3rd party libs"
+brownie pm install OpenZeppelin/openzeppelin-contracts@2.1.1
+brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
+
 echo "compile.sh: Compile sol057/..."
 cd sol057
 echo """compiler:

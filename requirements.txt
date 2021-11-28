@@ -1,5 +1,6 @@
+coverage
+enforce-typing
 eth-brownie
 matplotlib
-enforce-typing
 mypy
-
+pytest
