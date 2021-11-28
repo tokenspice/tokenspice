@@ -25,7 +25,7 @@ def test_noFunding():
     assert vesting_wallet.released() == 0 #wallet never got funds _to_ release!
 
 def test_ethFunding():
-    #each account has exactly 100 ETH 
+    #each account has exactly 100 ETH
     for i in range(3):
         accounts[i].transfer(GOD_ACCOUNT, accounts[i].balance())
         GOD_ACCOUNT.transfer(accounts[i], toBase18(100.0))
