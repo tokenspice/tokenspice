@@ -113,8 +113,8 @@ pytest contracts/test
 #run all tests [FIXME!]
 pytest
 
-#run static type-checking. (pytest does dynamic type-checking.)
-mypy --config-file mypy.ini ./
+#run static type-checking. By default, uses config mypy.ini. Note: pytest does dynamic type-checking.
+mypy ./
 ```
 
 ## TokenSPICE Command Line
