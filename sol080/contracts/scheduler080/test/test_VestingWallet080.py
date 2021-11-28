@@ -2,7 +2,8 @@ import brownie
 from brownie import Wei
 from pytest import approx
 
-from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080
+from util.base18 import toBase18
+from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080, GOD_ACCOUNT
 accounts = brownie.network.accounts
 chain = brownie.network.chain
 
@@ -24,10 +25,10 @@ def test_noFunding():
     assert vesting_wallet.released() == 0 #wallet never got funds _to_ release!
 
 def test_ethFunding():
-    #account 0, 1, 2 should each start with 100 ETH (how ganache works)
-    assert accounts[0].balance()/1e18 == approx(100.0)
-    assert accounts[1].balance()/1e18 == approx(100.0)
-    assert accounts[2].balance()/1e18 == approx(100.0)
+    #each account has exactly 100 ETH 
+    for i in range(3):
+        accounts[i].transfer(GOD_ACCOUNT, accounts[i].balance())
+        GOD_ACCOUNT.transfer(accounts[i], toBase18(100.0))
 
     #account0 should be able to freely transfer ETH
     accounts[0].transfer(accounts[1], "10 ether")
