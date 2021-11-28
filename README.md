@@ -78,11 +78,7 @@ pip install -r requirements.txt
 
 From the same terminal:
 ```console
-#install 3rd party contracts
-brownie pm install OpenZeppelin/openzeppelin-contracts@2.1.1
-brownie pm install OpenZeppelin/openzeppelin-contracts@4.0.0
-
-#compile: call "brownie.compile" in sol057/ and sol080/
+#install 3rd party libs, then call "brownie compile" in sol057/ and sol080/
 ./compile.sh
 ```
 
