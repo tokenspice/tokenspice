@@ -82,10 +82,9 @@ From the same terminal:
 ./compile.sh
 ```
 
-Here's how TokenSPICE sees smart contracts as classes. When it starts:
-- It calls `brownie.project.load('./sol057', name="MyProject")` to load the ABIs in `./sol057/build/`. Similar for `sol080`.
+TokenSPICE sees smart contracts as classes. How:
+- When it starts, it calls `brownie.project.load('./sol057', name="MyProject")` to load the ABIs in `./sol057/build/`. Similar for `sol080`.
 - That's enough info to treat each contract in `sol057/contracts/` as a _class_. Then, call `deploy()` deploy on it to create a new _object_.
-- It connects to a network via: `brownie.network.connect()`
 
 # 🏄 Running, Debugging
 
