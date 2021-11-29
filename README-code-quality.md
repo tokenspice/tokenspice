@@ -65,7 +65,7 @@ Found [Metrics] in SimStateBase.py:
 ## Local Fixes
 
 There are a couple approaches to making fixes:
-1. Use automated tools like `black`
+1. Use automated tools like [`black`](https://pypi.org/project/black/)
 2. Manually
 
 We recommend to start with (1), then clean the rest with (2).
