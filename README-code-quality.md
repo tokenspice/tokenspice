@@ -1,11 +1,42 @@
 # Code Quality Tests
 
- Contents
+## Table of Contents
 
+- [Style Guide](#style-guide)
 - [Remote Tests](#remote-tests)
 - [Local Install](#local-install)
 - [Local Tests](#local-tests)
 - [Local Fixes](#local-fixes)
+
+## Style Guide
+
+We strive to follow:
+- [PEP 8](https://www.python.org/dev/peps/pep-0008/) Style Guide
+- [PEP 20](https://www.python.org/dev/peps/pep-0020/) The Zen of Python
+- [PEP 484](https://www.python.org/dev/peps/pep-0484/) Type Hints
+- [PEP 257](https://www.python.org/dev/peps/pep-0257/) Docstring conventions
+- [Google-docstring](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html) with types, because they are a good mix of compact, readable, and specific. Types can in docs can be skipped if they are type hints in the function declaration.
+
+```python
+def function_with_types_in_docstring(param1, param2):
+    """Example function with types documented in the docstring.
+
+    `PEP 484`_ type annotations are supported. If attribute, parameter, and
+    return types are annotated according to `PEP 484`_, they do not need to be
+    included in the docstring:
+
+    Args:
+        param1 (int): The first parameter.
+        param2 (str): The second parameter.
+
+    Returns:
+        bool: The return value. True for success, False otherwise.
+
+    .. _PEP 484:
+        https://www.python.org/dev/peps/pep-0484/
+
+    """
+```
 
 ## Remote Tests
 
