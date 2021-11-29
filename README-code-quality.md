@@ -5,6 +5,7 @@
 - [Remote Tests](#remote-tests)
 - [Local Install](#local-install)
 - [Local Tests](#local-tests)
+- [Local Fixes](#local-fixes)
 
 ## Remote Tests
 
@@ -59,4 +60,27 @@ Found [Metrics] in SimStateBase.py:
 ```
 
 (C)LOC = (Commented) Lines Of Code.
+
+
+## Local Fixes
+
+There are a couple approaches to making fixes:
+1. Use automated tools like `black`
+2. Manually
+
+We recommend to start with (1), then clean the rest with (2).
+
+Example usage of black:
+```console
+black netlists/simplepool/test/test_netlist.py
+```
+
+It will output:
+```console
+reformatted netlists/simplepool/test/test_netlist.py
+All done! ✨ 🍰 ✨
+1 file reformatted.
+```
+
+
 
