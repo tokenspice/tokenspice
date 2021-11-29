@@ -107,6 +107,8 @@ pytest
 mypy ./
 ```
 
+**[Go here](README-code-quality.md)** if you wish to run code quality tests.
+
 ## TokenSPICE Command Line
 
 Use `tsp`. From terminal:
