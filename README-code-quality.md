@@ -70,7 +70,7 @@ There are a couple approaches to making fixes:
 
 We recommend to start with (1), then clean the rest with (2).
 
-Example usage of black:
+Usage of black on one file:
 ```console
 black netlists/simplepool/test/test_netlist.py
 ```
@@ -82,5 +82,9 @@ All done! ✨ 🍰 ✨
 1 file reformatted.
 ```
 
+For maximum productivity, use black on everything:
+```console
+black ./
+```
 
 
