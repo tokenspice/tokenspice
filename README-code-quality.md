@@ -63,8 +63,8 @@ Found [Metrics] in SimStateBase.py:
 
 **[Here are "Code Patterns" settings](https://app.codacy.com/gh/tokenspice/tokenspice/patterns/list)**. They specify what checks are run.
 
-To replicate the settings locally, you need to [specify](https://github.com/codacy/codacy-analysis-cli#project-token) the "Project Token" or "API Token". Here's an example. You need to provide your own token and username.
+To replicate the settings locally, you need to [specify](https://github.com/codacy/codacy-analysis-cli#project-token) the "Project API Token" listed [here](https://app.codacy.com/gh/tokenspice/tokenspice/settings/integrations). Here's an example. 
 ```console
-codacy-analysis-cli analyze --api-token FOO --username BAR --project tokenspice
+codacy-analysis-cli analyze --project-token Fk29iaf3sdp4JDSKpjp9rw --project tokenspice
 ```
 
