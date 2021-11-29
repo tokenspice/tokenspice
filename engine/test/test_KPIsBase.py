@@ -2,8 +2,10 @@ from enforce_typing import enforce_types
 
 from engine.KPIsBase import KPIsBase
 
+
 class MyKPIs(KPIsBase):
     pass
+
 
 def test1():
     kpis = MyKPIs(time_step=12)

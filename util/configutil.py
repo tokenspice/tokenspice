@@ -1,7 +1,8 @@
 import configparser
 import os
 
-CONF_FILE_PATH = './tokenspice.ini'
+CONF_FILE_PATH = "./tokenspice.ini"
+
 
 def confFileValue(section: str, key: str) -> str:
     conf = configparser.ConfigParser()
