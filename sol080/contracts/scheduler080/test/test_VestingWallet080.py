@@ -7,8 +7,9 @@ from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080, GOD_ACCOUNT
 accounts = brownie.network.accounts
 chain = brownie.network.chain
 
-#FIXME: this is 99% a copy-and-paste of test_VestingWallet057.py, so,
-# find a way to avoid this DRY violation. Eg parameterize the unit tests?
+#Q: this is a copy-and-paste of test_VestingWallet057.py. Fix?
+#A: no, because we'll be modifying VestingWallet080 and derivatives a _lot_, for
+#   for Bitcoin-exponential and ratchet. They could evolve differently. Leave it.
 
 def test_init():
     vesting_wallet = _vesting_wallet()
