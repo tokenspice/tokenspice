@@ -25,22 +25,23 @@ def test_noFunding():
     assert vesting_wallet.released() == 0 #wallet never got funds _to_ release!
 
 def test_ethFunding():
-    #each account has exactly 100 ETH
+    #ensure each account has exactly 30 ETH
     for i in range(3):
         accounts[i].transfer(GOD_ACCOUNT, accounts[i].balance())
-        GOD_ACCOUNT.transfer(accounts[i], toBase18(100.0))
+        GOD_ACCOUNT.transfer(accounts[i], toBase18(30.0))
 
     #account0 should be able to freely transfer ETH
-    accounts[0].transfer(accounts[1], "10 ether")
-    assert accounts[0].balance()/1e18 == approx(90.0)
-    assert accounts[1].balance()/1e18 == approx(110.0)
+    accounts[0].transfer(accounts[1], "1 ether")
+    accounts[1].transfer(accounts[0], "1 ether")
+    assert accounts[0].balance()/1e18 == approx(30.0)
+    assert accounts[1].balance()/1e18 == approx(30.0)
         
     #set up vesting wallet (account). It vests all ETH/tokens that it receives.
-    beneficiary_address = accounts[1].address
+    # where beneficiary is accounts[1]
     start_timestamp = chain[-1].timestamp + 5 #magic number
     duration_seconds = 30 #magic number
     wallet = BROWNIE_PROJECT080.VestingWallet080.deploy(
-        beneficiary_address, start_timestamp, duration_seconds,
+        accounts[1].address, start_timestamp, duration_seconds,
         {'from' : accounts[0]})
 
     #send ETH to the wallet. It has a function:
@@ -48,32 +49,32 @@ def test_ethFunding():
     #which allows it to receive ETH. It's called for plain ETH transfers,
     #ie every call with empty calldata.
     #https://medium.com/coinmonks/solidity-v0-6-0-is-here-things-you-should-know-7d4ab5bca5f1
-    accounts[0].transfer(wallet.address, "90 ether")
-    assert accounts[0].balance() == 0
-    assert accounts[1].balance()/1e18 == approx(110.0)
+    accounts[0].transfer(wallet.address, "30 ether")
+    assert accounts[0].balance()/1e18 == approx(0.0)
+    assert accounts[1].balance()/1e18 == approx(30.0) #unchanged so far
     assert wallet.vestedAmount(chain[1].timestamp) == 0
     assert wallet.released() == 0
 
     #make enough time pass for everything to vest
     chain.mine(blocks=3, timedelta=100)
-    assert wallet.vestedAmount(chain[-1].timestamp)/1e18 == approx(90.0)
+    assert wallet.vestedAmount(chain[-1].timestamp)/1e18 == approx(30.0)
     assert wallet.released() == 0
-    assert accounts[1].balance()/1e18 == approx(110.0) #not released yet!
+    assert accounts[1].balance()/1e18 == approx(30.0) #not released yet!
 
     #release the ETH. Anyone can call it
     wallet.release({'from': accounts[2]})
-    assert wallet.released()/1e18 == approx(90.0) #now it's released!
-    assert accounts[1].balance()/1e18 == approx(200.0) #beneficiary is richer
-
+    assert wallet.released()/1e18 == approx(30.0) #now it's released!
+    assert accounts[1].balance()/1e18 == approx(30.0+30.0) #beneficiary is richer
+    
     #put some new ETH into wallet. It's immediately vested, but not released
     accounts[2].transfer(wallet.address, "10 ether")
-    assert wallet.vestedAmount(chain[-1].timestamp)/1e18 == approx(100.0)
-    assert wallet.released()/1e18 == approx(90.0) #not released yet!
+    assert wallet.vestedAmount(chain[-1].timestamp)/1e18 == approx(30.0+10.0)
+    assert wallet.released()/1e18 == approx(30.0+0.0) #not released yet!
 
     #release the new ETH
     wallet.release({'from': accounts[3]})
-    assert wallet.released()/1e18 == approx(100.0) #now new ETH is released!
-    assert accounts[1].balance()/1e18 == approx(210.0) #beneficiary got +10 ETH
+    assert wallet.released()/1e18 == approx(30.0+10.0) #now new ETH is released!
+    assert accounts[1].balance()/1e18 == approx(30.0+30.0+10.0) #beneficiary got +10 ETH
     
 def test_tokenFunding():
     #accounts 0, 1, 2 should each start with 100 TOK
