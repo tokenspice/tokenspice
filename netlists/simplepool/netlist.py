@@ -17,8 +17,8 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.setMaxTime(20, 'days')
 
         #==attributes specific to this netlist
-        
-        #publisher 
+
+        #publisher
         self.pub_init_OCEAN = 10000.0
 
         #pool
@@ -26,11 +26,11 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.OCEAN_stake = 200.0
         self.DT_init = 100.0
         self.DT_stake = 20.0
-        
+
         self.pool_weight_DT = 3.0
         self.pool_weight_OCEAN = 7.0
         assert (self.pool_weight_DT + self.pool_weight_OCEAN) == 10.0
-    
+
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
     def __init__(self, ss=None):
@@ -46,7 +46,7 @@ class SimState(SimStateBase.SimStateBase):
         self.agents[pub_agent.name] = pub_agent
 
         #kpis is defined in this netlist module
-        self.kpis = KPIs(self.ss.time_step) 
+        self.kpis = KPIs(self.ss.time_step)
 
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
@@ -90,10 +90,10 @@ def netlist_plotInstructions(header: List[str], values):
     """
     from util.plotutil import YParam, arrayToFloatList, \
         LINEAR, MULT1, COUNT, DOLLAR
-    
+
     x_label = "Day"
     x = arrayToFloatList(values[:,header.index(x_label)])
-    
+
     y_params = [
         YParam(["publisher_OCEAN"],["OCEAN"],"publisher_OCEAN",LINEAR,MULT1,DOLLAR),
         YParam(["n_pools"],  ["# pools"],  "n_pools",  LINEAR,MULT1,COUNT)
