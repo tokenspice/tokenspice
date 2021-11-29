@@ -10,12 +10,12 @@
 
 ## Remote
 
-[Codacy](https://www.codacy.com) is automatically run remotely for each commit of each PR.
-- **[Here's the Codacy TokenSPICE dashboard](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main)**, including links to tests. (You need special permissions. Ask Trent if you need them.)
+[Codacy](https://www.codacy.com) is automatically run _remotely_ for each commit of each PR.
+- **[Here's the Codacy TokenSPICE dashboard](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main)**, including links to tests. To access this, you need special permissions; ask Trent.
 
 ## Local
 
-To iterate quickly, run Codacy locally with [codacy-analysis-cli](https://github.com/codacy/codacy-analysis-cli).
+To iterate quickly, run Codacy _locally_ with [codacy-analysis-cli](https://github.com/codacy/codacy-analysis-cli).
 
 ### Local Install
 
