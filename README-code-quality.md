@@ -10,8 +10,8 @@
 
 ## Remote
 
-Codacy is automatically run remotely each PR's commit.
-- **[Here](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main)** are results tests. (You need special permissions. Ask Trent if you need them.)
+[Codacy](https://www.codacy.com) is automatically run remotely for each commit of each PR.
+- **[Here's the Codacy TokenSPICE dashboard](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main)**, including links to tests. (You need special permissions. Ask Trent if you need them.)
 
 ## Local
 
@@ -61,9 +61,9 @@ Found [Metrics] in SimStateBase.py:
 
 ### Local Runs Like Remote
 
-The remote tests have specific settings, where each potential check (rule) is toggled on or off.
+**[Here are "Code Patterns" settings](https://app.codacy.com/gh/tokenspice/tokenspice/patterns/list)**. They specify what checks are run.
 
-To replicate those settings locally, [specify](https://github.com/codacy/codacy-analysis-cli#project-token) the "Project Token" or "API Token". Here's an example (you need to give your own token and username)
+To replicate the settings locally, you need to [specify](https://github.com/codacy/codacy-analysis-cli#project-token) the "Project Token" or "API Token". Here's an example. You need to provide your own token and username.
 ```console
 codacy-analysis-cli analyze --api-token FOO --username BAR --project tokenspice
 ```
