@@ -1,8 +1,23 @@
-## Code Quality Tests
+# Code Quality Tests
 
-### 7.2 Code quality tests
+ Contents
 
-Use [codacy-analysis-cli](https://github.com/codacy/codacy-analysis-cli).
+- [Remote](#remote)
+- [Local](#local)
+  - [Local Install](#local-install)
+  - [Local Basic Runs](#local-basic-runs)
+  - [Local Runs Like Remote](#local-runs-like-remote)
+
+## Remote
+
+Codacy is automatically run remotely each PR's commit.
+- **[Here](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main)** are results tests. (You need special permissions. Ask Trent if you need them.)
+
+## Local
+
+To iterate quickly, run Codacy locally with [codacy-analysis-cli](https://github.com/codacy/codacy-analysis-cli).
+
+### Local Install
 
 First, install once. In a new console:
 
@@ -11,9 +26,13 @@ curl -L https://github.com/codacy/codacy-analysis-cli/archive/master.tar.gz | ta
 cd codacy-analysis-cli-* && sudo make install
 ```
 
-In main console (with venv on):
+### Local Basic Runs
+
+Here's how to run it. (See below to check the same things as remote runs.)
 
 ```console
+source venv/bin/activate
+
 #run all tools, plus Metrics and Clones data.
 codacy-analysis-cli analyze --directory ~/code/tokenspice
 
@@ -40,4 +59,12 @@ Found [Metrics] in SimStateBase.py:
 
 (C)LOC = (Commented) Lines Of Code.
 
-Finally, you can [go here](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main) to see results of remotely-run tests. (You may need special permissions.)
+### Local Runs Like Remote
+
+The remote tests have specific settings, where each potential check (rule) is toggled on or off.
+
+To replicate those settings locally, [specify](https://github.com/codacy/codacy-analysis-cli#project-token) the "Project Token" or "API Token". Here's an example (you need to give your own token and username)
+```console
+codacy-analysis-cli analyze --api-token FOO --username BAR --project tokenspice
+```
+
