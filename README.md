@@ -100,7 +100,7 @@ pytest contracts/test/test_Simpletoken.py::test_transfer
 #run all of a directory's tests
 pytest contracts/test
 
-#run all tests [FIXME!]
+#run all tests
 pytest
 
 #run static type-checking. By default, uses config mypy.ini. Note: pytest does dynamic type-checking.
