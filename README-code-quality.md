@@ -10,9 +10,11 @@
 
 ## Style Guide
 
-We strive to follow:
-- [PEP 8](https://www.python.org/dev/peps/pep-0008/) Style Guide, [PEP 20](https://www.python.org/dev/peps/pep-0020/) The Zen of Python, [PEP 484](https://www.python.org/dev/peps/pep-0484/) Type Hints, [PEP 257](https://www.python.org/dev/peps/pep-0257/) Docstring conventions, and [Google-docstring](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html) with types
-- Overall: strive for a good balance of compact, readable, and specific. Types can in docs can be skipped if they are type hints in the function declaration.
+Code and checks in TokenSPICE should strive to follow:
+- [PEP 8](https://www.python.org/dev/peps/pep-0008/) Style Guide, [PEP 20](https://www.python.org/dev/peps/pep-0020/) The Zen of Python, [PEP 484](https://www.python.org/dev/peps/pep-0484/) Type Hints, [PEP 257](https://www.python.org/dev/peps/pep-0257/) Docstring conventions
+- And, most specifically, [`google` docstring convention](https://google.github.io/styleguide/pyguide.html) [[2](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html)]. It's a good balance of compact, readable, and specific. Docstrings should include variable types if they are not explicitly type hints in code itself.
+- pydocstyle v4.0.0 supports `google` docstring convention [[ref](http://www.pydocstyle.org/en/stable/error_codes.html#default-conventions)]. This means checks for all the errors except D203, D204, D213, D215, D400, D401, D404, D406, D407, D408, D409 and D413 . 
+
 
 ```python
 def myfunction(param1, param2):
