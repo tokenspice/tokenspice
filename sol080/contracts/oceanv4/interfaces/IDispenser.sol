@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Unknown
 pragma solidity >=0.5.7;
 
 interface IDispenser {
@@ -16,3 +17,4 @@ interface IDispenser {
     function ownerWithdraw(address datatoken) external;
     function setAllowedSwapper(address datatoken, address newAllowedSwapper) external;
 }
+

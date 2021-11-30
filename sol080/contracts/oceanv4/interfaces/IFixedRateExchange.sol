@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Unknown
 pragma solidity >=0.5.7;
 
 interface IFixedRateExchange {

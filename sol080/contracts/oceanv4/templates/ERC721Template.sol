@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Unknown
 pragma solidity >=0.6.0;
 
 import "../utils/ERC721/ERC721.sol";
