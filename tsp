@@ -72,7 +72,7 @@ def do_run():
         print(f'Output stats file: {stats_filename}. To see: tsp showstats outdir_csv/stats 20 cumulative')
     print(f'Output directory: {output_dir}')
     import brownie
-    if brownie.network_is_connected():
+    if brownie.network.is_connected():
         brownie.network.disconnect()
 
 def _importNetlistModule(netlist_str: str):
