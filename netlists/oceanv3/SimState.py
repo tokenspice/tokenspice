@@ -1,15 +1,11 @@
 from enforce_typing import enforce_types
 from typing import Set
 
-from netlists.oceanv3.modifiedAgents.maliciousPublisherAgent import (
-    maliciousPublisherAgent,
-)
-from netlists.oceanv3.modifiedAgents.v3DataconsumerAgent import v3DataconsumerAgent
-from netlists.oceanv3.modifiedAgents.v3PublisherAgent import v3PublisherAgent
-from netlists.oceanv3.modifiedAgents.v3SpeculatorAgent import v3SpeculatorAgent
-from netlists.oceanv3.modifiedAgents.v3StakerspeculatorAgent import (
-    v3StakerspeculatorAgent,
-)
+from agents.maliciousPublisherAgent import maliciousPublisherAgent)
+from agents.v3DataconsumerAgent import v3DataconsumerAgent
+from agents.v3PublisherAgent import v3PublisherAgent
+from agents.v3SpeculatorAgent import v3SpeculatorAgent
+from agents.v3StakerspeculatorAgent import v3StakerspeculatorAgent
 
 from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
