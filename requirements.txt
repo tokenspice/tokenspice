@@ -1,4 +1,6 @@
-black
+black==21.9b0
+regex==2021.10.23
+typing-extensions==3.10.0.2
 coverage
 enforce-typing
 eth-brownie
