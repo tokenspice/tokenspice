@@ -1,7 +1,7 @@
 from enforce_typing import enforce_types
 from typing import Set
 
-from agents.maliciousPublisherAgent import maliciousPublisherAgent)
+from agents.maliciousPublisherAgent import maliciousPublisherAgent
 from agents.v3DataconsumerAgent import v3DataconsumerAgent
 from agents.v3PublisherAgent import v3PublisherAgent
 from agents.v3SpeculatorAgent import v3SpeculatorAgent
