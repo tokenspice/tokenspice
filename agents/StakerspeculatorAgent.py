@@ -4,17 +4,18 @@ import random
 from engine import AgentBase
 from util.base18 import toBase18
 from util import constants
-                    
+
+
 @enforce_types
 class StakerspeculatorAgent(AgentBase.AgentBaseEvm):
     """Speculates by staking and unstaking"""
-    
+
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
 
         self._s_since_speculate = 0
-        self._s_between_speculates = 8 * constants.S_PER_HOUR #magic number
-        
+        self._s_between_speculates = 8 * constants.S_PER_HOUR  # magic number
+
     def takeStep(self, state):
         self._s_since_speculate += state.ss.time_step
 
@@ -32,16 +33,14 @@ class StakerspeculatorAgent(AgentBase.AgentBaseEvm):
     def _speculateAction(self, state):
         pool_agents = state.agents.filterToPool().values()
         assert pool_agents, "need pools to be able to speculate"
-        
+
         pool = random.choice(list(pool_agents)).pool
         BPT = self.BPT(pool)
-        
-        if BPT > 0.0 and random.random() < 0.50: #magic number
-            BPT_sell = 0.10 * BPT #magic number
+
+        if BPT > 0.0 and random.random() < 0.50:  # magic number
+            BPT_sell = 0.10 * BPT  # magic number
             self.unstakeOCEAN(BPT_sell, pool)
-            
+
         else:
-            OCEAN_stake = 0.10 * self.OCEAN() #magic number
+            OCEAN_stake = 0.10 * self.OCEAN()  # magic number
             self.stakeOCEAN(OCEAN_stake, pool)
-        
-            

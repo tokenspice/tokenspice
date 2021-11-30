@@ -10,40 +10,54 @@ import os
 from pylab import figure, axes, pie, title, show
 from typing import Any, List, Union
 
-from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_WEEK, S_PER_MONTH, S_PER_YEAR
+from util.constants import (
+    S_PER_MIN,
+    S_PER_HOUR,
+    S_PER_DAY,
+    S_PER_WEEK,
+    S_PER_MONTH,
+    S_PER_YEAR,
+)
 
-LINEAR, LOG, BOTH = 0, 1, 2 #pyplot.yscale interprets 1st 2
-MULT1, MULT100, DIV1M, DIV1B = 0, 1, 2, 3 #multiply or divide the value?
+LINEAR, LOG, BOTH = 0, 1, 2  # pyplot.yscale interprets 1st 2
+MULT1, MULT100, DIV1M, DIV1B = 0, 1, 2, 3  # multiply or divide the value?
 COUNT, DOLLAR, PERCENT = 0, 1, 2
+
 
 @enforce_types
 class YParam:
-    """Defines what to plot for y-values. 
+    """Defines what to plot for y-values.
     See example usage in netlist_headerValuesToXY.
     """
+
     def __init__(
-            self,
-            y_header_names: List[str],
-            labels: List[str],
-            y_pretty_name: str,
-            y_scale: int, #one of LINEAR, LOG, BOTH
-            mult: int,    #one of MULT1, MULT100, DIV1M, DIV1B
-            unit: int     #one of COUNT, DOLLAR, PERCENT
+        self,
+        y_header_names: List[str],
+        labels: List[str],
+        y_pretty_name: str,
+        y_scale: int,  # one of LINEAR, LOG, BOTH
+        mult: int,  # one of MULT1, MULT100, DIV1M, DIV1B
+        unit: int,  # one of COUNT, DOLLAR, PERCENT
     ):
-        
+
         self.y_header_names = y_header_names
         self.labels = labels
         self.y_pretty_name = y_pretty_name
-        self.y_scale = y_scale 
-        self.mult = mult 
-        self.unit = unit 
+        self.y_scale = y_scale
+        self.mult = mult
+        self.unit = unit
 
     @property
     def y_scale_str(self):
-        if   self.y_scale == LINEAR:  return "LINEAR"
-        elif self.y_scale == LOG:     return "LOG"
-        elif self.y_scale == BOTH:    return "BOTH"
-        else: raise ValueError(self.y_scale)
+        if self.y_scale == LINEAR:
+            return "LINEAR"
+        elif self.y_scale == LOG:
+            return "LOG"
+        elif self.y_scale == BOTH:
+            return "BOTH"
+        else:
+            raise ValueError(self.y_scale)
+
 
 @enforce_types
 def arrayToFloatList(x_array) -> List[float]:
@@ -53,8 +67,9 @@ def arrayToFloatList(x_array) -> List[float]:
     """
     return [float(x_item) for x_item in x_array]
 
+
 @enforce_types
-def _applyMult(y: List[float], mult:int) -> List[float]:
+def _applyMult(y: List[float], mult: int) -> List[float]:
     """
     Apply multiplier according to enum specified by 'mult'
 
@@ -73,8 +88,9 @@ def _applyMult(y: List[float], mult:int) -> List[float]:
     else:
         raise ValueError(mult)
 
+
 @enforce_types
-def _multUnitStr(mult:int, unit:int) -> str:
+def _multUnitStr(mult: int, unit: int) -> str:
     """
     String describing units of a given enum multiplier
 
@@ -100,6 +116,7 @@ def _multUnitStr(mult:int, unit:int) -> str:
         raise ValueError(f"can't handle mult={mult} with unit={unit}")
     return
 
+
 @enforce_types
 def _expandBOTHinY(y_params: List[YParam]) -> List[YParam]:
     """
@@ -108,7 +125,7 @@ def _expandBOTHinY(y_params: List[YParam]) -> List[YParam]:
     :param: y_params -- incoming list of what to plot
     :return: y_params2 -- revised list
     """
-    #replace BOTH with 2 entries
+    # replace BOTH with 2 entries
     y_params2 = []
     for p in y_params:
         if p.y_scale in [LINEAR, BOTH]:
@@ -121,10 +138,16 @@ def _expandBOTHinY(y_params: List[YParam]) -> List[YParam]:
             y_params2.append(p2)
     return y_params2
 
+
 @enforce_types
-def _xyToPngs(header: List[str], values,
-              x_label: str, x: List[float], y_params: List[YParam],
-              output_png_dir: str):
+def _xyToPngs(
+    header: List[str],
+    values,
+    x_label: str,
+    x: List[float],
+    y_params: List[YParam],
+    output_png_dir: str,
+):
     """
     Given actual data (header, values) and what to plot (x, y_params),
     create plots and store as .png files in output_png_dir
@@ -137,20 +160,21 @@ def _xyToPngs(header: List[str], values,
     :param: output_png_dir: path of output png to be created and filled
     :return: <None> but creates png directory
     """
-    
+
     assert not os.path.exists(output_png_dir)
     os.mkdir(output_png_dir)
 
     for p in y_params:
-        ys = [arrayToFloatList(values[:,header.index(name)])
-              for name in p.y_header_names]
+        ys = [
+            arrayToFloatList(values[:, header.index(name)]) for name in p.y_header_names
+        ]
 
         ys = [_applyMult(y, p.mult) for y in ys]
 
         fig, ax = pyplot.subplots()
-        
+
         ax.set_xlabel(x_label)
-        
+
         for y, label in zip(ys, p.labels):
             if label == "":
                 ax.plot(x, y)
@@ -161,46 +185,53 @@ def _xyToPngs(header: List[str], values,
 
         mult_unit_s = _multUnitStr(p.mult, p.unit)
         ax.set_ylabel(f"{p.y_pretty_name} ({mult_unit_s})")
-        
+
         ax.set_title(f"{p.y_pretty_name}" + f" ({p.y_scale_str})")
-        
+
         pyplot.yscale(p.y_scale_str)
-        
-        if p.y_scale == LOG: #turn off exponential notation 
+
+        if p.y_scale == LOG:  # turn off exponential notation
             ax.get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
 
-        ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.2g'))
+        ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.2g"))
         max_y = max([max(y) for y in ys])
         if max_y < 1000.0:
-            ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('%.2f'))
-        
+            ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.2f"))
+
         max_x = max(10, math.ceil(max(x)))
         if max_x < 12:
-            xticks = list(range(max_x+1))
+            xticks = list(range(max_x + 1))
         elif max_x < 22:
-            xticks = [i for i in range(max_x+1) if (i%2)==0]
+            xticks = [i for i in range(max_x + 1) if (i % 2) == 0]
         elif max_x < 52:
-            xticks = [i for i in range(max_x+1) if (i%5)==0]
+            xticks = [i for i in range(max_x + 1) if (i % 5) == 0]
         elif max_x < 152:
-            xticks = [i for i in range(max_x+1) if (i%10)==0]
+            xticks = [i for i in range(max_x + 1) if (i % 10) == 0]
         elif max_x < 202:
-            xticks = [i for i in range(max_x+1) if (i%20)==0]
+            xticks = [i for i in range(max_x + 1) if (i % 20) == 0]
         elif max_x < 1000:
-            xticks = [i for i in range(max_x+1) if (i%100)==0]            
+            xticks = [i for i in range(max_x + 1) if (i % 100) == 0]
         elif max_x < 5000:
-            xticks = [i for i in range(max_x+1) if (i%500)==0]
+            xticks = [i for i in range(max_x + 1) if (i % 500) == 0]
         else:
             raise ValueError(f"don't yet have behavior for max_x={max_x}")
         pyplot.xticks(xticks)
 
-        #pyplot.show() #popup
+        # pyplot.show() #popup
 
-        base_output_filename = f"{p.y_pretty_name}_{p.y_scale_str}.png".replace('/',"_per_").replace(" ","_").replace(",","_").replace("'","").replace("__","_")
+        base_output_filename = (
+            f"{p.y_pretty_name}_{p.y_scale_str}.png".replace("/", "_per_")
+            .replace(" ", "_")
+            .replace(",", "_")
+            .replace("'", "")
+            .replace("__", "_")
+        )
         full_output_filename = os.path.join(output_png_dir, base_output_filename)
-        pyplot.savefig(full_output_filename,bbox_inches='tight') 
+        pyplot.savefig(full_output_filename, bbox_inches="tight")
         print(f"Created '{full_output_filename}'")
 
     return
+
 
 @enforce_types
 def _csvToHeaderValues(input_csv_filename: str):
@@ -211,27 +242,27 @@ def _csvToHeaderValues(input_csv_filename: str):
     :param: output_png_dir: path of output png to be created and filled
     :param: netlist_headerValuesToXY: function defined by netlist that
       converts (header, values) to (x, y_params)
-     
+
     :return: header -- List[str] holding 'Tick', 'Second', ...
     :return: values -- 2d array of float [tick_i, valuetype_i]
-    """    
+    """
     assert os.path.exists(input_csv_filename)
     header: Any = None
     values: Any = []
-    with open(input_csv_filename, newline='') as csvfile:
-        csvreader = csv.reader(csvfile, delimiter=',')
-        for row in csvreader: #row = ['Tick', 'Second', ..] or [1.0, 100.0, ..]
+    with open(input_csv_filename, newline="") as csvfile:
+        csvreader = csv.reader(csvfile, delimiter=",")
+        for row in csvreader:  # row = ['Tick', 'Second', ..] or [1.0, 100.0, ..]
             if header is None:
                 header = row
                 header = [param.strip() for param in header]
             else:
                 values.append(row)
-    values = numpy.array(values) #[tick_i, valuetype_i]
+    values = numpy.array(values)  # [tick_i, valuetype_i]
     return (header, values)
-        
+
+
 @enforce_types
-def csvToPngs(input_csv_filename: str, output_png_dir: str,
-              netlist_plot_instrs_func):
+def csvToPngs(input_csv_filename: str, output_png_dir: str, netlist_plot_instrs_func):
     """
     Main plotting routine, delegates subtasks to worker routines.
 
@@ -239,7 +270,7 @@ def csvToPngs(input_csv_filename: str, output_png_dir: str,
     :param: output_png_dir: path of output png to be created and filled
     :param: netlist_headerValuesToXY: function defined by netlist that
       converts (header, values) to (x, y_params)
-     
+
     :return: <None> but creates png directory
     """
     (header, values) = _csvToHeaderValues(input_csv_filename)
@@ -248,4 +279,3 @@ def csvToPngs(input_csv_filename: str, output_png_dir: str,
     y_params = _expandBOTHinY(y_params)
 
     _xyToPngs(header, values, x_label, x, y_params, output_png_dir)
-

@@ -1,3 +1,4 @@
+black
 coverage
 enforce-typing
 eth-brownie

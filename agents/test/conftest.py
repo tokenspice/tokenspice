@@ -20,85 +20,96 @@ _OCEAN_STAKE = 200.0
 _DT_INIT = 100.0
 _DT_STAKE = 20.0
 
-_POOL_WEIGHT_DT    = 3.0
+_POOL_WEIGHT_DT = 3.0
 _POOL_WEIGHT_OCEAN = 7.0
 
-@pytest.fixture #(scope="function", autouse=True)
+
+@pytest.fixture  # (scope="function", autouse=True)
 def alice_info():
     return _make_info(account0)
 
-#@pytest.fixture(autouse=True)
-#def isolation(fn_isolation):
+
+# @pytest.fixture(autouse=True)
+# def isolation(fn_isolation):
 #    pass
+
 
 @enforce_types
 def _make_info(account):
     assert account.address != GOD_ACCOUNT.address
-    
+
     OCEAN = globaltokens.OCEANtoken()
 
-    #reset OCEAN balances on-chain, to avoid relying on brownie chain reverts
+    # reset OCEAN balances on-chain, to avoid relying on brownie chain reverts
     # -assumes that DT and BPT in each test are new tokens each time, and
     #  therefore don't need re-setting
-    for i, a in enumerate(accounts): 
+    for i, a in enumerate(accounts):
         if a.address != GOD_ACCOUNT.address:
-            OCEAN.transfer(GOD_ACCOUNT, OCEAN.balanceOf(a), {'from':a})
-    
+            OCEAN.transfer(GOD_ACCOUNT, OCEAN.balanceOf(a), {"from": a})
+
     class Info:
         pass
+
     info = Info()
     info.account = account
 
     class SimpleAgent(AgentBase.AgentBaseEvm):
         def takeStep(self, state):
             pass
+
     info.agent = SimpleAgent("agent1", USD=0.0, OCEAN=0.0)
-    info.agent._wallet._account = account #force agent to use this account
-    info.agent._wallet.resetCachedInfo() #because account changed wallet
+    info.agent._wallet._account = account  # force agent to use this account
+    info.agent._wallet.resetCachedInfo()  # because account changed wallet
 
     info.DT = _createDT(account)
-    info.agent._wallet.resetCachedInfo() #because DT was deposited to account
+    info.agent._wallet.resetCachedInfo()  # because DT was deposited to account
     assert info.DT.balanceOf(account) == toBase18(_DT_INIT)
 
     globaltokens.fundOCEANFromAbove(account.address, toBase18(_OCEAN_INIT))
-    info.agent._wallet.resetCachedInfo() #because OCEAN was deposited to account
-    
-    info.pool = _createPool(info.DT, account) #create pool, stake DT & OCEAN
-    info.agent._wallet.resetCachedInfo() #because OCEAN & DT was staked
+    info.agent._wallet.resetCachedInfo()  # because OCEAN was deposited to account
 
-    #postconditions
+    info.pool = _createPool(info.DT, account)  # create pool, stake DT & OCEAN
+    info.agent._wallet.resetCachedInfo()  # because OCEAN & DT was staked
+
+    # postconditions
     w = info.agent._wallet
     OCEAN1 = w.OCEAN()
     assert w._cached_OCEAN_base is not None
     OCEAN2 = fromBase18(int(w._cached_OCEAN_base))
     OCEAN3 = fromBase18(OCEAN.balanceOf(account))
-    assert OCEAN1 == OCEAN2 == OCEAN3, (OCEAN1, OCEAN2, OCEAN3) 
-    
+    assert OCEAN1 == OCEAN2 == OCEAN3, (OCEAN1, OCEAN2, OCEAN3)
+
     return info
+
 
 @enforce_types
 def _createDT(account):
-    DT = oceanv3util.newDatatoken(
-        'foo', 'DT1', 'DT1', toBase18(_DT_INIT), account)
-    DT.mint(account.address, toBase18(_DT_INIT), {'from':account})
+    DT = oceanv3util.newDatatoken("foo", "DT1", "DT1", toBase18(_DT_INIT), account)
+    DT.mint(account.address, toBase18(_DT_INIT), {"from": account})
     return DT
+
 
 @enforce_types
 def _createPool(DT, account):
-    #Create OCEAN-DT pool
+    # Create OCEAN-DT pool
     OCEAN = globaltokens.OCEANtoken()
     pool = oceanv3util.newBPool(account)
-    
-    DT.approve(pool.address, toBase18(_DT_STAKE), {'from':account})
-    OCEAN.approve(pool.address, toBase18(_OCEAN_STAKE),{'from':account})
+
+    DT.approve(pool.address, toBase18(_DT_STAKE), {"from": account})
+    OCEAN.approve(pool.address, toBase18(_OCEAN_STAKE), {"from": account})
 
     assert OCEAN.balanceOf(account) >= toBase18(_DT_STAKE)
     assert OCEAN.balanceOf(account) >= toBase18(_OCEAN_STAKE)
-    pool.bind(DT.address, toBase18(_DT_STAKE),
-              toBase18(_POOL_WEIGHT_DT), {'from':account})
-    pool.bind(OCEAN.address, toBase18(_OCEAN_STAKE),
-              toBase18(_POOL_WEIGHT_OCEAN), {'from':account})
+    pool.bind(
+        DT.address, toBase18(_DT_STAKE), toBase18(_POOL_WEIGHT_DT), {"from": account}
+    )
+    pool.bind(
+        OCEAN.address,
+        toBase18(_OCEAN_STAKE),
+        toBase18(_POOL_WEIGHT_OCEAN),
+        {"from": account},
+    )
 
-    pool.finalize({'from':account})
-    
+    pool.finalize({"from": account})
+
     return pool
