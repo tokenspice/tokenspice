@@ -3,6 +3,7 @@ import pytest
 
 from agents.OCEANBurnerAgent import OCEANBurnerAgent
 
+
 @enforce_types
 def test_fixedOCEANprice():
     class DummySimState:
@@ -12,6 +13,7 @@ def test_fixedOCEANprice():
 
         def OCEANprice(self) -> float:
             return 2.0
+
     state = DummySimState()
     a = OCEANBurnerAgent("foo", USD=10.0, OCEAN=0.0)
 
@@ -26,6 +28,7 @@ def test_fixedOCEANprice():
     assert a.USD() == 0.0
     assert state._total_OCEAN_burned_USD == 30.0
     assert state._total_OCEAN_burned == 15.0
+
 
 @enforce_types
 def test_changingOCEANprice():
@@ -46,15 +49,15 @@ def test_changingOCEANprice():
 
     state = DummySimState()
     a = OCEANBurnerAgent("foo", USD=10.0, OCEAN=0.0)
-    assert state.OCEANprice() == 2.0 #(val 200)/(supply 100)
+    assert state.OCEANprice() == 2.0  # (val 200)/(supply 100)
 
     a.takeStep(state)
     assert 0.0 < state.OCEANsupply() < 100.0
-    assert state.OCEANprice() > 2.0 
+    assert state.OCEANprice() > 2.0
     assert state.OCEANprice() == 200.0 / state.OCEANsupply()
     assert a.USD() == 0.0
     assert pytest.approx(state._total_OCEAN_burned_USD) == 10.0
-    assert 4.0 < state._total_OCEAN_burned < 5.0 
+    assert 4.0 < state._total_OCEAN_burned < 5.0
 
     price1 = state.OCEANprice()
     a.receiveUSD(20.0)
@@ -63,7 +66,3 @@ def test_changingOCEANprice():
     assert state.OCEANprice() > price1
     assert pytest.approx(state._total_OCEAN_burned_USD) == 30.0
     assert 13.0 < state._total_OCEAN_burned < 15.0
-        
-                          
-                         
-                         

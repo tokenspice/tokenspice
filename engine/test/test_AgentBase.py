@@ -2,17 +2,20 @@ from enforce_typing import enforce_types
 import pytest
 
 from engine.AgentBase import *
-from agents.test.conftest import _DT_INIT, _DT_STAKE 
+from agents.test.conftest import _DT_INIT, _DT_STAKE
+
 
 @enforce_types
 class MyTestAgentEvm(AgentBaseEvm):
     def takeStep(self, state):
         pass
 
+
 @enforce_types
 class MyTestAgentNoEvm(AgentBaseNoEvm):
     def takeStep(self, state):
         pass
+
 
 @enforce_types
 def _MyTestAgent(use_EVM):
@@ -20,6 +23,7 @@ def _MyTestAgent(use_EVM):
         return MyTestAgentEvm
     else:
         return MyTestAgentNoEvm
+
 
 @enforce_types
 def testInitEvm():
@@ -32,6 +36,7 @@ def testInitEvm():
     assert agent.address == agent._wallet.address
     assert id(agent.account) == id(agent._wallet.account)
 
+
 @enforce_types
 def testInitNoEvm():
     agent = MyTestAgentNoEvm("agent1", USD=1.1, OCEAN=1.2)
@@ -40,14 +45,15 @@ def testInitNoEvm():
     assert agent.OCEAN() == 1.2
     assert "MyTestAgent" in str(agent)
 
+
 @enforce_types
 @pytest.mark.parametrize("use_EVM", [True, False])
 def testReceiveAndSend(use_EVM):
-    #agents are of arbitary classes
+    # agents are of arbitary classes
     agent = _MyTestAgent(use_EVM)("agent1", USD=0.0, OCEAN=3.30)
     agent2 = _MyTestAgent(use_EVM)("agent2", USD=0.0, OCEAN=3.30)
 
-    #USD
+    # USD
     assert pytest.approx(agent.USD()) == 0.00
     agent.receiveUSD(13.25)
     assert pytest.approx(agent.USD()) == 13.25
@@ -60,7 +66,7 @@ def testReceiveAndSend(use_EVM):
     assert pytest.approx(agent.USD()) == (12.15 - 1.00)
     assert pytest.approx(agent2.USD()) == (0.00 + 1.00)
 
-    #OCEAN
+    # OCEAN
     assert pytest.approx(agent.OCEAN()) == 3.30
     agent.receiveOCEAN(2.01)
     assert pytest.approx(agent.OCEAN()) == 5.31
@@ -72,9 +78,9 @@ def testReceiveAndSend(use_EVM):
     agent._transferOCEAN(agent2, 0.10)
     assert pytest.approx(agent.OCEAN()) == (5.11 - 0.10)
     assert pytest.approx(agent2.OCEAN()) == (3.30 + 0.10)
-    
 
-#===================================================================
+
+# ===================================================================
 # datatoken and pool-related
 @enforce_types
 def test_DT(alice_info):
@@ -82,10 +88,12 @@ def test_DT(alice_info):
     DT_amt = agent._wallet.DT(DT)
     assert DT_amt == (_DT_INIT - _DT_STAKE)
 
+
 @enforce_types
 def test_BPT(alice_info):
     agent, pool = alice_info.agent, alice_info.pool
     assert agent.BPT(pool) == 100.0
+
 
 @enforce_types
 def test_stakeOCEAN(alice_info):
@@ -96,6 +104,7 @@ def test_stakeOCEAN(alice_info):
     assert OCEAN_after == (OCEAN_before - 20.0)
     assert BPT_after > BPT_before
 
+
 @enforce_types
 def test_unstakeOCEAN(alice_info):
     agent, pool = alice_info.agent, alice_info.pool
@@ -103,5 +112,3 @@ def test_unstakeOCEAN(alice_info):
     agent.unstakeOCEAN(BPT_unstake=20.0, pool=pool)
     BPT_after = agent.BPT(pool)
     assert BPT_after == (BPT_before - 20.0)
-    
-

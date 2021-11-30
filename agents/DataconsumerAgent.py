@@ -8,6 +8,7 @@ from util import globaltokens
 from util.base18 import fromBase18, toBase18
 from util import constants
 
+
 @enforce_types
 class DataconsumerAgent(AgentBase.AgentBaseEvm):
     def __init__(self, name: str, USD: float, OCEAN: float):
@@ -32,7 +33,7 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
 
     def _candPoolAgents(self, state) -> List[PoolAgent]:
         """Pools that this agent can afford to buy 1.0 datatokens from,
-        at least based on a first approximation. 
+        at least based on a first approximation.
         """
         OCEAN_address = globaltokens.OCEAN_address()
         OCEAN = self.OCEAN()
@@ -51,25 +52,24 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
 
             DT_amount_out_base = toBase18(1.0)
 
-            tokenIn_address=OCEAN_address
-            tokenOut_address=DT_address
-            spotPriceBefore_base = pool.getSpotPrice(
-                tokenIn_address,
-                tokenOut_address)
-            
-            tokenBalanceIn_base=pool_OCEAN_balance_base
-            tokenWeightIn_base=pool_OCEAN_weight_base
-            tokenBalanceOut_base=pool.getBalance(DT_address)
-            tokenWeightOut_base=pool_DT_weight_base
-            tokenAmountOut_base=DT_amount_out_base
-            swapFee_base=pool_swapFee_base
+            tokenIn_address = OCEAN_address
+            tokenOut_address = DT_address
+            spotPriceBefore_base = pool.getSpotPrice(tokenIn_address, tokenOut_address)
+
+            tokenBalanceIn_base = pool_OCEAN_balance_base
+            tokenWeightIn_base = pool_OCEAN_weight_base
+            tokenBalanceOut_base = pool.getBalance(DT_address)
+            tokenWeightOut_base = pool_DT_weight_base
+            tokenAmountOut_base = DT_amount_out_base
+            swapFee_base = pool_swapFee_base
             OCEANamountIn_base = pool.calcInGivenOut(
                 tokenBalanceIn_base,
                 tokenWeightIn_base,
                 tokenBalanceOut_base,
                 tokenWeightOut_base,
                 tokenAmountOut_base,
-                swapFee_base)
+                swapFee_base,
+            )
 
             if OCEANamountIn_base < OCEAN_base:
                 cand_pool_agents.append(pool_agent)
@@ -104,8 +104,7 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         OCEAN_spend = OCEAN_before - OCEAN_after
 
         # consume
-        publisher_agent = state.agents.agentByAddress(
-            pool_agent.controller_address)
+        publisher_agent = state.agents.agentByAddress(pool_agent.controller_address)
         self._wallet.transferDT(publisher_agent._wallet, DT, DT_buy_amt)
 
         # get business value due to consume

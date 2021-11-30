@@ -3,14 +3,13 @@ from enforce_typing import enforce_types
 
 from agents.MinterAgents import *
 from netlists.wsloop import SimState, SimStrategy
-from util.constants import BITCOIN_NUM_HALF_LIVES, \
-    S_PER_DAY, S_PER_MONTH, S_PER_YEAR
+from util.constants import BITCOIN_NUM_HALF_LIVES, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 
 
 @enforce_types
 def testOCEANLinearMinterAgent():
     ss = SimStrategy.SimStrategy()
-    assert hasattr(ss, 'time_step')
+    assert hasattr(ss, "time_step")
     ss.time_step = 2
 
     state = SimState.SimState(ss)
@@ -18,6 +17,7 @@ def testOCEANLinearMinterAgent():
     class SimpleAgent(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass
+
     state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
 
     # default
@@ -25,7 +25,9 @@ def testOCEANLinearMinterAgent():
         "minter",
         receiving_agent_name="a1",
         total_OCEAN_to_mint=20.0,
-        s_between_mints=4, n_mints=2)
+        s_between_mints=4,
+        n_mints=2,
+    )
     assert minter.USD() == 0.0
     assert minter.OCEAN() == 0.0
     assert state._total_OCEAN_minted == 0.0
@@ -70,9 +72,9 @@ def test_funcMinter_exp():
 
 @enforce_types
 def test_funcMinter_rampedExp():
-    func = RampedExpFunc(H=4.0,
-                         T0=0.0, T1=0.5, T2=1.0, T3=2.0,
-                         M1=0.10, M2=0.25, M3=0.50)
+    func = RampedExpFunc(
+        H=4.0, T0=0.0, T1=0.5, T2=1.0, T3=2.0, M1=0.10, M2=0.25, M3=0.50
+    )
     _test_funcMinter(func)
 
 
@@ -89,7 +91,7 @@ def _test_funcMinter(func):
     max_year = 5  # if manual_test, stop earlier?
 
     ss = SimStrategy.SimStrategy()
-    assert hasattr(ss, 'time_step')
+    assert hasattr(ss, "time_step")
     if manual_test:
         ss.time_step = S_PER_DAY
         s_between_mints = S_PER_DAY
@@ -102,6 +104,7 @@ def _test_funcMinter(func):
     class SimpleAgent2(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass
+
     state.agents["a1"] = a1 = SimpleAgent2("a1", 0.0, 0.0)
 
     # base
@@ -110,7 +113,8 @@ def _test_funcMinter(func):
         receiving_agent_name="a1",
         total_OCEAN_to_mint=700e6,
         s_between_mints=s_between_mints,
-        func=func)
+        func=func,
+    )
 
     assert minter.USD() == 0.0
     assert minter.OCEAN() == 0.0
@@ -142,9 +146,16 @@ def _test_funcMinter(func):
 
         mo = state.tick * ss.time_step / S_PER_MONTH
         if manual_test:
-            print(f"tick=%d (mo=%.2f,yr=%.3f), OCEAN_left=%.4g,minted=%.4f"
-                  % (state.tick, mo, year, minter._OCEAN_left_to_mint,
-                     minter.OCEANminted()))
+            print(
+                f"tick=%d (mo=%.2f,yr=%.3f), OCEAN_left=%.4g,minted=%.4f"
+                % (
+                    state.tick,
+                    mo,
+                    year,
+                    minter._OCEAN_left_to_mint,
+                    minter.OCEANminted(),
+                )
+            )
 
         if minter._OCEAN_left_to_mint == 0.0:
             break
@@ -169,17 +180,18 @@ def _test_funcMinter(func):
     fig, ax = pyplot.subplots()
     ax.set_xlabel("Year")
 
-    #ax.plot(years, OCEAN_left, label="OCEAN left")
+    # ax.plot(years, OCEAN_left, label="OCEAN left")
     # ax.set_ylabel("# OCEAN left")
 
     ax.plot(years, OCEAN_minted, label="OCEAN minted")
     ax.set_ylabel("# OCEAN minted")
 
     if do_log_plot:
-        pyplot.yscale('log')
+        pyplot.yscale("log")
         ax.get_yaxis().set_major_formatter(
-            ticker.ScalarFormatter())  # turn off exponential notation
+            ticker.ScalarFormatter()
+        )  # turn off exponential notation
 
-    ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%.2g'))
+    ax.yaxis.set_major_formatter(ticker.FormatStrFormatter("%.2g"))
 
     pyplot.show()  # popup

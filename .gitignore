@@ -16,3 +16,5 @@ outdir_csv/
 outdir_png/
 out.txt
 build/
+.coverage
+codacy-analysis-cli-master/

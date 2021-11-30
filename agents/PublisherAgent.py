@@ -8,25 +8,26 @@ from util import globaltokens
 from util.base18 import toBase18
 from util.constants import S_PER_DAY
 
+
 @enforce_types
 class PublisherAgent(AgentBase.AgentBaseEvm):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
-        
+
         self._s_since_create = 0
-        self._s_between_create = 7 * S_PER_DAY #magic number
-        
+        self._s_between_create = 7 * S_PER_DAY  # magic number
+
         self._s_since_unstake = 0
-        self._s_between_unstake = 3 * S_PER_DAY #magic number
-        
+        self._s_between_unstake = 3 * S_PER_DAY  # magic number
+
         self._s_since_sellDT = 0
-        self._s_between_sellDT = 15 * S_PER_DAY #magic number
-        
+        self._s_between_sellDT = 15 * S_PER_DAY  # magic number
+
     def takeStep(self, state) -> None:
         self._s_since_create += state.ss.time_step
         self._s_since_unstake += state.ss.time_step
         self._s_since_sellDT += state.ss.time_step
-        
+
         if self._doCreatePool():
             self._s_since_create = 0
             self._createPoolAgent(state)
@@ -40,45 +41,53 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
             self._sellDTsomewhere(state)
 
     def _doCreatePool(self) -> bool:
-        if self.OCEAN() < 200.0: #magic number
+        if self.OCEAN() < 200.0:  # magic number
             return False
         return self._s_since_create >= self._s_between_create
 
-    def _createPoolAgent(self, state) -> PoolAgent:        
+    def _createPoolAgent(self, state) -> PoolAgent:
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"
         account = self._wallet._account
         OCEAN = globaltokens.OCEANtoken()
-        
-        #name
-        pool_i = len(state.agents.filterToPool())
-        dt_name = f'DT{pool_i}'
-        pool_agent_name = f'pool{pool_i}'
-        
-        #new DT
-        DT = self._createDatatoken(dt_name, mint_amt=1000.0) #magic number
 
-        #new pool
+        # name
+        pool_i = len(state.agents.filterToPool())
+        dt_name = f"DT{pool_i}"
+        pool_agent_name = f"pool{pool_i}"
+
+        # new DT
+        DT = self._createDatatoken(dt_name, mint_amt=1000.0)  # magic number
+
+        # new pool
         pool = oceanv3util.newBPool(account)
 
-        #bind tokens & add initial liquidity
-        OCEAN_bind_amt = self.OCEAN() #magic number: use all the OCEAN
-        DT_bind_amt = 20.0 #magic number
-                
-        DT.approve(pool.address, toBase18(DT_bind_amt), {'from':account})
-        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt),{'from':account})
-        
-        pool.bind(DT.address, toBase18(DT_bind_amt),
-                  toBase18(state.ss.pool_weight_DT), {'from':account})
-        pool.bind(OCEAN.address, toBase18(OCEAN_bind_amt),
-                  toBase18(state.ss.pool_weight_OCEAN), {'from':account})
-        
-        pool.finalize({'from':account})
+        # bind tokens & add initial liquidity
+        OCEAN_bind_amt = self.OCEAN()  # magic number: use all the OCEAN
+        DT_bind_amt = 20.0  # magic number
 
-        #create agent
+        DT.approve(pool.address, toBase18(DT_bind_amt), {"from": account})
+        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt), {"from": account})
+
+        pool.bind(
+            DT.address,
+            toBase18(DT_bind_amt),
+            toBase18(state.ss.pool_weight_DT),
+            {"from": account},
+        )
+        pool.bind(
+            OCEAN.address,
+            toBase18(OCEAN_bind_amt),
+            toBase18(state.ss.pool_weight_OCEAN),
+            {"from": account},
+        )
+
+        pool.finalize({"from": account})
+
+        # create agent
         pool_agent = PoolAgent(pool_agent_name, pool)
         state.addAgent(pool_agent)
         self._wallet.resetCachedInfo()
-        
+
         return pool_agent
 
     def _doUnstakeOCEAN(self, state) -> bool:
@@ -91,7 +100,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         pool_agents = state.agents.filterByNonzeroStake(self)
         pool_agent = random.choice(list(pool_agents.values()))
         BPT = self.BPT(pool_agent.pool)
-        BPT_unstake = 0.10 * BPT #magic number
+        BPT_unstake = 0.10 * BPT  # magic number
         self.unstakeOCEAN(BPT_unstake, pool_agent.pool)
 
     def _doSellDT(self, state) -> bool:
@@ -99,40 +108,41 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
             return False
         return self._s_since_sellDT >= self._s_between_sellDT
 
-    def _sellDTsomewhere(self, state, perc_sell:float=0.01):
+    def _sellDTsomewhere(self, state, perc_sell: float = 0.01):
         """Choose what DT to sell and by how much. Then do the action."""
-        
+
         cand_DTs = self._DTsWithNonzeroBalance(state)
         assert cand_DTs, "only call this method if have DTs w >0 balance"
         DT = random.choice(cand_DTs)
-        
+
         DT_balance_amt = self.DT(DT)
         assert DT_balance_amt > 0.0
-        DT_sell_amt = perc_sell * DT_balance_amt #magic number
-                
+        DT_sell_amt = perc_sell * DT_balance_amt  # magic number
+
         cand_pools = self._poolsWithDT(state, DT)
         assert cand_pools, "there should be at least 1 pool with this DT"
         pool = random.choice(cand_pools)
-        
+
         self._wallet.sellDT(pool, DT, DT_sell_amt)
 
     def _poolsWithDT(self, state, DT) -> list:
         """Return a list of pools that have this DT. Typically exactly 1 pool"""
-        return [pool_agent.pool
-                for pool_agent in state.agents.filterToPool().values()
-                if pool_agent.datatoken.address == DT.address]
+        return [
+            pool_agent.pool
+            for pool_agent in state.agents.filterToPool().values()
+            if pool_agent.datatoken.address == DT.address
+        ]
 
     def _DTsWithNonzeroBalance(self, state) -> list:
-        """Return a list of Datatokens that this agent has >0 balance of""" 
+        """Return a list of Datatokens that this agent has >0 balance of"""
         pool_agents = state.agents.filterToPool().values()
         DTs = [pool_agent.datatoken for pool_agent in pool_agents]
         return [DT for DT in DTs if self.DT(DT) > 0.0]
 
-    def _createDatatoken(self, dt_name:str, mint_amt:float):
+    def _createDatatoken(self, dt_name: str, mint_amt: float):
         """Create datatoken contract and mint DTs to self."""
         account = self._wallet._account
-        DT = oceanv3util.newDatatoken(
-            '', dt_name, dt_name, toBase18(mint_amt), account)
-        DT.mint(account.address, toBase18(mint_amt), {'from':account})
+        DT = oceanv3util.newDatatoken("", dt_name, dt_name, toBase18(mint_amt), account)
+        DT.mint(account.address, toBase18(mint_amt), {"from": account})
         self._wallet.resetCachedInfo()
         return DT
