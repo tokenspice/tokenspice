@@ -27,6 +27,23 @@ def test_doCreatePool():
     c = agent._doCreatePool()
     assert c in [False, True]
 
+@enforce_types
+def test_constructor_args1():
+    agent = PublisherAgent("agent1", USD=0.0, OCEAN=0.0,
+                           DT_init = 1.1,
+                           DT_stake = 2.2,
+                           pool_weight_DT = 3.3,
+                           pool_weight_OCEAN = 4.4,
+                           s_between_create = 50,
+                           s_between_unstake = 60, 
+                           s_between_sellDT = 70)
+    assert agent._DT_init == 1.1
+    assert agent._DT_stake == 2.2
+    assert agent._pool_weight_DT == 3.3
+    assert agent._pool_weight_OCEAN == 4.4
+    assert agent._s_between_create == 50
+    assert agent._s_between_unstake == 60
+    assert agent._s_between_sellDT == 70
 
 @enforce_types
 def test_createPoolAgent():

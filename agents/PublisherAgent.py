@@ -11,17 +11,30 @@ from util.constants import S_PER_DAY
 
 @enforce_types
 class PublisherAgent(AgentBase.AgentBaseEvm):
-    def __init__(self, name: str, USD: float, OCEAN: float):
+    def __init__(self, name: str, USD: float, OCEAN: float,
+                 DT_init:float = 1000.0, #magic numbers, this line & below
+                 DT_stake:float = 20.0,
+                 pool_weight_DT:float = 3.0,
+                 pool_weight_OCEAN:float = 7.0,
+                 s_between_create:int = 7 * S_PER_DAY,
+                 s_between_unstake:int = 3 * S_PER_DAY,
+                 s_between_sellDT:int = 15 * S_PER_DAY
+    ):
         super().__init__(name, USD, OCEAN)
 
-        self._s_since_create = 0
-        self._s_between_create = 7 * S_PER_DAY  # magic number
+        self._DT_init:float = DT_init
+        self._DT_stake:float = DT_stake
+        self._pool_weight_DT:float = pool_weight_DT
+        self._pool_weight_OCEAN:float = pool_weight_OCEAN
 
-        self._s_since_unstake = 0
-        self._s_between_unstake = 3 * S_PER_DAY  # magic number
+        self._s_since_create:int = 0
+        self._s_between_create:int = s_between_create 
 
-        self._s_since_sellDT = 0
-        self._s_between_sellDT = 15 * S_PER_DAY  # magic number
+        self._s_since_unstake:int = 0
+        self._s_between_unstake:int = s_between_unstake
+
+        self._s_since_sellDT:int = 0
+        self._s_between_sellDT:int = s_between_sellDT
 
     def takeStep(self, state) -> None:
         self._s_since_create += state.ss.time_step
@@ -56,14 +69,14 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         pool_agent_name = f"pool{pool_i}"
 
         # new DT
-        DT = self._createDatatoken(dt_name, mint_amt=1000.0)  # magic number
+        DT = self._createDatatoken(dt_name, mint_amt=self._DT_init)
 
         # new pool
         pool = oceanv3util.newBPool(account)
 
         # bind tokens & add initial liquidity
         OCEAN_bind_amt = self.OCEAN()  # magic number: use all the OCEAN
-        DT_bind_amt = 20.0  # magic number
+        DT_bind_amt = self._DT_stake 
 
         DT.approve(pool.address, toBase18(DT_bind_amt), {"from": account})
         OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt), {"from": account})
@@ -71,13 +84,13 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         pool.bind(
             DT.address,
             toBase18(DT_bind_amt),
-            toBase18(state.ss.pool_weight_DT),
+            toBase18(self._pool_weight_DT),
             {"from": account},
         )
         pool.bind(
             OCEAN.address,
             toBase18(OCEAN_bind_amt),
-            toBase18(state.ss.pool_weight_OCEAN),
+            toBase18(self._pool_weight_OCEAN),
             {"from": account},
         )
 

@@ -3,7 +3,7 @@ from typing import Set
 
 from agents.maliciousPublisherAgent import maliciousPublisherAgent
 from agents.v3DataconsumerAgent import v3DataconsumerAgent
-from agents.v3PublisherAgent import v3PublisherAgent
+from agents.PublisherAgent import PublisherAgent
 from agents.v3SpeculatorAgent import v3SpeculatorAgent
 from agents.v3StakerspeculatorAgent import v3StakerspeculatorAgent
 
@@ -14,13 +14,12 @@ from .KPIs import KPIs
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
     def __init__(self, ss=None):
-        # assert ss is None
+        # initialize self.tick, ss, agents, kpis
         super().__init__(ss)
 
-        # ss is defined in this netlist module
+        # now, fill in actual values for ss, agents, kpis
         if self.ss is None:
             from .SimStrategy import SimStrategy
-
             self.ss = SimStrategy()
         ss = self.ss  # for convenience as we go forward
 
@@ -28,8 +27,9 @@ class SimState(SimStateBase.SimStateBase):
         new_agents: Set[AgentBase.AgentBase] = set()
 
         new_agents.add(
-            v3PublisherAgent(
-                name="publisher", USD=0.0, OCEAN=self.ss.publisher_init_OCEAN
+            PublisherAgent(
+                name="publisher", USD=0.0, OCEAN=self.ss.publisher_init_OCEAN,
+                DT_init=self.ss.DT_init, DT_stake=self.ss.DT_stake
             )
         )
         new_agents.add(
