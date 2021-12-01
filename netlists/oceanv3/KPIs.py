@@ -21,7 +21,7 @@ def get_OCEAN_in_DTs(state, agent):
 
         # get spot price of datatoken over OCEAN
         datatoken_sp = (
-            pool.pool.getSpotPrice_base(OCEAN_address, datatoken.address) / 1e18
+            pool.pool.getSpotPrice(OCEAN_address, datatoken.address) / 1e18
         )
         agent_OCEAN_in_DTs += agent.DT(datatoken) * datatoken_sp
     return agent_OCEAN_in_DTs
@@ -62,13 +62,13 @@ def get_OCEAN_in_BPTs(state, agent):
     for pool in pool_agents_list:
         percent_BPT = agent.BPT(pool.pool) / get_pool_BPTs(state, pool.pool)
         agent_OCEAN_in_BPTs += (
-            percent_BPT * pool.pool.getBalance_base(OCEAN_address) / 1e18
+            percent_BPT * pool.pool.getBalance(OCEAN_address) / 1e18
         )
         agent_OCEAN_in_BPTs += (
             percent_BPT
-            * pool.pool.getBalance_base(pool.datatoken.address)
+            * pool.pool.getBalance(pool.datatoken.address)
             / 1e18
-            * pool.pool.getSpotPrice_base(OCEAN_address, pool.datatoken.address)
+            * pool.pool.getSpotPrice(OCEAN_address, pool.datatoken.address)
             / 1e18
         )
     return agent_OCEAN_in_BPTs

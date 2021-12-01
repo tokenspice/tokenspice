@@ -34,20 +34,20 @@ class v3DataconsumerAgent(DataconsumerAgent):
             pool = pool_agent.pool
             DT_address = pool_agent.datatoken_address
 
-            pool_OCEAN_balance_base = pool.getBalance_base(OCEAN_address)
-            pool_DT_weight_base = pool.getDenormalizedWeight_base(DT_address)
-            pool_OCEAN_weight_base = pool.getDenormalizedWeight_base(OCEAN_address)
-            pool_swapFee_base = pool.getSwapFee_base()
+            tokenBalanceIn = pool.getBalance(OCEAN_address)
+            tokenWeightIn = pool.getDenormalizedWeight(OCEAN_address)
+            tokenBalanceOut = pool.getBalance(DT_address)
+            tokenWeightOut = pool.getDenormalizedWeight(DT_address)
+            tokenAmountOut = toBase18(1.0) #number of DTs
+            swapFee = pool.getSwapFee()
 
-            DT_amount_out_base = toBase18(1.0)
-
-            OCEANamountIn_base = pool.calcInGivenOut_base(
-                tokenBalanceIn_base=pool_OCEAN_balance_base,
-                tokenWeightIn_base=pool_OCEAN_weight_base,
-                tokenBalanceOut_base=pool.getBalance_base(DT_address),
-                tokenWeightOut_base=pool_DT_weight_base,
-                tokenAmountOut_base=DT_amount_out_base,
-                swapFee_base=pool_swapFee_base,
+            OCEANamountIn_base = pool.calcInGivenOut(
+                tokenBalanceIn,
+                tokenWeightIn,
+                tokenBalanceOut,
+                tokenWeightOut,
+                tokenAmountOut,
+                swapFee
             )
 
             if OCEANamountIn_base < OCEAN_base:
