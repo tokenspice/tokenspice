@@ -27,10 +27,11 @@ def test_doSpeculateAction(alice_info):
     alice_pool = alice_info.pool
     state = MockState()
 
-    agent = StakerspeculatorAgent("agent1", USD=0.0, OCEAN=0.0)
+    agent = StakerspeculatorAgent("agent1", USD=0.0, OCEAN=0.0,
+                                  s_between_speculates=1000)
 
     assert agent._s_since_speculate == 0
-    assert agent._s_between_speculates > 0
+    assert agent._s_between_speculates == 1000
 
     assert not agent._doSpeculateAction(state)
 

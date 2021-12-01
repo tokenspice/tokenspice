@@ -10,11 +10,12 @@ from util import constants
 class StakerspeculatorAgent(AgentBase.AgentBaseEvm):
     """Speculates by staking and unstaking"""
 
-    def __init__(self, name: str, USD: float, OCEAN: float):
+    def __init__(self, name: str, USD: float, OCEAN: float,
+                 s_between_speculates:int = 8 * constants.S_PER_HOUR):
         super().__init__(name, USD, OCEAN)
 
         self._s_since_speculate = 0
-        self._s_between_speculates = 8 * constants.S_PER_HOUR  # magic number
+        self._s_between_speculates:int = s_between_speculates
 
     def takeStep(self, state):
         self._s_since_speculate += state.ss.time_step
