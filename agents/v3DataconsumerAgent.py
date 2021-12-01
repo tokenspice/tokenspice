@@ -25,7 +25,7 @@ class v3DataconsumerAgent(DataconsumerAgent):
 
         pool_agents = state.agents.filterToPool()
         # exclude rugged pool
-        for pool_name in state.ss.rugged_pools:
+        for pool_name in state.rugged_pools:
             del pool_agents[pool_name]
         all_pool_agents = pool_agents.values()
 

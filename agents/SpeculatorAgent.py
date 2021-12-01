@@ -1,10 +1,10 @@
 from enforce_typing import enforce_types
 import random
+from typing import List
 
 from engine import AgentBase
 from util.base18 import toBase18
 from util import constants
-
 
 @enforce_types
 class SpeculatorAgent(AgentBase.AgentBaseEvm):
@@ -24,14 +24,14 @@ class SpeculatorAgent(AgentBase.AgentBaseEvm):
             self._speculateAction(state)
 
     def _doSpeculateAction(self, state):
-        pool_agents = state.agents.filterToPool().values()
+        pool_agents = self._poolsForSpeculate(state)
         if not pool_agents:
             return False
         else:
             return self._s_since_speculate >= self._s_between_speculates
 
     def _speculateAction(self, state):
-        pool_agents = state.agents.filterToPool().values()
+        pool_agents = self._poolsForSpeculate(state)
         assert pool_agents, "need pools to be able to speculate"
 
         pool_agent = random.choice(list(pool_agents))
@@ -48,3 +48,13 @@ class SpeculatorAgent(AgentBase.AgentBaseEvm):
         else:
             DT_buy_amt = 1.0  # magic number
             self._wallet.buyDT(pool, datatoken, DT_buy_amt, max_OCEAN_allow)
+
+    def _poolsForSpeculate(self, state) -> List[AgentBase.AgentBaseAbstract]:
+        pool_agents = state.agents.filterToPool()
+
+        if hasattr(state, 'rugged_pools'):
+            for pool_name in state.rugged_pools:
+                del pool_agents[pool_name]
+
+        pool_agents = pool_agents.values()
+        return pool_agents

@@ -2,13 +2,12 @@ from enforce_typing import enforce_types
 import random
 from agents.SpeculatorAgent import SpeculatorAgent
 
-
 @enforce_types
 class v3SpeculatorAgent(SpeculatorAgent):
     def _speculateAction(self, state):
         pool_agents = state.agents.filterToPool()
         # exclude rugged pool
-        for pool_name in state.ss.rugged_pools:
+        for pool_name in state.rugged_pools:
             del pool_agents[pool_name]
 
         pool_agents = pool_agents.values()

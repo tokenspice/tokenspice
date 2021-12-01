@@ -15,7 +15,7 @@ class v3StakerspeculatorAgent(StakerspeculatorAgent):
     def _speculateAction(self, state):
         pool_agents = state.agents.filterToPool()
         # exclude rugged pool
-        for pool_name in state.ss.rugged_pools:
+        for pool_name in state.rugged_pools:
             del pool_agents[pool_name]
 
         pool_agents = pool_agents.values()

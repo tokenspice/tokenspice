@@ -62,3 +62,6 @@ class SimState(SimStateBase.SimStateBase):
 
         # kpis is defined in this netlist module
         self.kpis = KPIs(self.ss.time_step)
+
+        # pools that were rug-pulled by a malicious publisher
+        self.rugged_pools:List[str] = []

@@ -46,7 +46,7 @@ class maliciousPublisherAgent(PublisherAgent):
 
         if self._s_since_create == self._s_wait_to_rug:
             if len(self.pools) > 0:
-                state.ss.rugged_pools.append(self.pools[-1])
+                state.rugged_pools.append(self.pools[-1])
 
     def _createPoolAgent(self, state) -> PoolAgent:
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"

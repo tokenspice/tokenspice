@@ -121,7 +121,7 @@ def netlist_createLogData(state):
     dataheader += ["n_pools"]
     datarow += [n_pools]
 
-    rugged_pool = state.ss.rugged_pools
+    rugged_pool = state.rugged_pools
     n_rugged = len(rugged_pool)
     s += ["; # rugged pools=%d" % n_rugged]
     dataheader += ["n_rugged"]

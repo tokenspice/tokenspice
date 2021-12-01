@@ -40,4 +40,3 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.maliciousPublisher_init_OCEAN = 10000.0
         self.m_DT_init = 100.0
         self.m_DT_stake = 50.0
-        self.rugged_pools = []  # type: List[str]
