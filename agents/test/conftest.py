@@ -23,16 +23,9 @@ _DT_STAKE = 20.0
 _POOL_WEIGHT_DT = 3.0
 _POOL_WEIGHT_OCEAN = 7.0
 
-
-@pytest.fixture  # (scope="function", autouse=True)
+@pytest.fixture
 def alice_info():
     return _make_info(account0)
-
-
-# @pytest.fixture(autouse=True)
-# def isolation(fn_isolation):
-#    pass
-
 
 @enforce_types
 def _make_info(account):
