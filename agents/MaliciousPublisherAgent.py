@@ -93,6 +93,7 @@ class MaliciousPublisherAgent(PublisherAgent):
 
     def _sellDTsomewhere(self, state, perc_sell: float = 0.20):
         """Choose what DT to sell and by how much. Then do the action."""
+        #this agent unstakes the newest pool
         pool_agent = state.getAgent(self.pools[-1])
         pool = pool_agent.pool
         DT = pool_agent.datatoken
