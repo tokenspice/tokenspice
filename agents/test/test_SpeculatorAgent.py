@@ -49,9 +49,7 @@ def test_speculateAction_nopools(alice_info):
     agent = SpeculatorAgent("agent1", USD=0.0, OCEAN=1000.0)
 
     assert not agent._poolsForSpeculate(state)
-    
     assert not agent._doSpeculateAction(state)
-
     with pytest.raises(AssertionError):
         agent._speculateAction(state)  # error because no pools
 
@@ -65,9 +63,7 @@ def test_speculateAction_with_rugged_pools(alice_info):
     agent = SpeculatorAgent("agent1", USD=0.0, OCEAN=500.0)
 
     assert not agent._poolsForSpeculate(state)
-    
     assert not agent._doSpeculateAction(state)
-
     with pytest.raises(AssertionError):
         agent._speculateAction(state)  # error because no good pools
 
