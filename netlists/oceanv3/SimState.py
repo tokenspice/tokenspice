@@ -2,7 +2,7 @@ from enforce_typing import enforce_types
 from typing import Set
 
 from agents.DataconsumerAgent import DataconsumerAgent
-from agents.maliciousPublisherAgent import maliciousPublisherAgent
+from agents.MaliciousPublisherAgent import MaliciousPublisherAgent
 from agents.PublisherAgent import PublisherAgent
 from agents.SpeculatorAgent import SpeculatorAgent
 from agents.StakerspeculatorAgent import StakerspeculatorAgent
@@ -52,7 +52,7 @@ class SimState(SimStateBase.SimStateBase):
 
         # malicious agents
         new_agents.add(
-            maliciousPublisherAgent(
+            MaliciousPublisherAgent(
                 name="maliciousPublisher",
                 USD=0.0,
                 OCEAN=self.ss.maliciousPublisher_init_OCEAN,

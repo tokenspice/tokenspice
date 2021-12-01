@@ -7,9 +7,8 @@ from util import globaltokens
 from util.base18 import toBase18
 from util.constants import S_PER_DAY, S_PER_HOUR
 
-
 @enforce_types
-class maliciousPublisherAgent(PublisherAgent):
+class MaliciousPublisherAgent(PublisherAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
 
