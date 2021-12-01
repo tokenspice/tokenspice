@@ -47,7 +47,8 @@ class MaliciousPublisherAgent(PublisherAgent):
 
         if self._doCreatePool():
             self._s_since_create = 0
-            self._createPoolAgent(state)
+            pool_agent = self._createPoolAgent(state)
+            self.pools.append(pool_agent.name)
 
         if self._doUnstakeOCEAN(state):
             self._s_since_unstake = 0
@@ -60,53 +61,6 @@ class MaliciousPublisherAgent(PublisherAgent):
         if self._doRug(state):
             if len(self.pools) > 0:
                 state.rugged_pools.append(self.pools[-1])
-
-    def _createPoolAgent(self, state) -> PoolAgent:
-        assert self.OCEAN() > 0.0, "should not call if no OCEAN"
-        account = self._wallet._account
-        OCEAN = globaltokens.OCEANtoken()
-
-        # name
-        pool_i = len(state.agents.filterToPool())
-        dt_name = f"DT{pool_i}"
-        pool_agent_name = f"pool{pool_i}"
-
-        # new DT
-        DT = self._createDatatoken(dt_name, mint_amt=self._DT_init)
-
-        # new pool
-        pool = oceanv3util.newBPool(account)
-
-        # bind tokens & add initial liquidity
-        OCEAN_bind_amt = self.OCEAN()  # magic number: use all the OCEAN
-        DT_bind_amt = self._DT_stake
-
-        DT.approve(pool.address, toBase18(DT_bind_amt), {"from": account})
-        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt), {"from": account})
-
-        pool.bind(
-            DT.address,
-            toBase18(DT_bind_amt),
-            toBase18(state.ss.pool_weight_DT),
-            {"from": account},
-        )
-        pool.bind(
-            OCEAN.address,
-            toBase18(OCEAN_bind_amt),
-            toBase18(state.ss.pool_weight_OCEAN),
-            {"from": account},
-        )
-
-        pool.finalize({"from": account})
-
-        # create agent
-        pool_agent = PoolAgent(pool_agent_name, pool)
-        state.addAgent(pool_agent)
-        self._wallet.resetCachedInfo()
-
-        self.pools.append(pool_agent_name)
-
-        return pool_agent
 
     def _doUnstakeOCEAN(self, state) -> bool:
         if not state.agents.filterByNonzeroStake(self):
