@@ -4,8 +4,8 @@ from typing import Set
 from agents.maliciousPublisherAgent import maliciousPublisherAgent
 from agents.PublisherAgent import PublisherAgent
 from agents.SpeculatorAgent import SpeculatorAgent
+from agents.StakerspeculatorAgent import StakerspeculatorAgent
 from agents.v3DataconsumerAgent import v3DataconsumerAgent
-from agents.v3StakerspeculatorAgent import v3StakerspeculatorAgent
 
 from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
@@ -38,8 +38,10 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
         new_agents.add(
-            v3StakerspeculatorAgent(
-                name="stakerSpeculator", USD=0.0, OCEAN=self.ss.staker_init_OCEAN
+            StakerspeculatorAgent(
+                name="stakerSpeculator",
+                USD=0.0, OCEAN=self.ss.staker_init_OCEAN,
+                s_between_speculates=self.ss.staker_s_between_speculates
             )
         )
         new_agents.add(

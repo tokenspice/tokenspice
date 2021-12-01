@@ -30,8 +30,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         # consumer
         self.consumer_init_OCEAN = 10000.0
 
-        # staker
+        # staker-speculator
         self.staker_init_OCEAN = 10000.0
+        self.staker_s_between_speculates = 8 * S_PER_HOUR
 
         # speculator
         self.speculator_init_OCEAN = 10000.0
