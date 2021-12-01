@@ -47,8 +47,7 @@ class MaliciousPublisherAgent(PublisherAgent):
 
         if self._doCreatePool():
             self._s_since_create = 0
-            pool_agent = self._createPoolAgent(state)
-            self.pools.append(pool_agent.name)
+            self._createPoolAgent(state)
 
         if self._doUnstakeOCEAN(state):
             self._s_since_unstake = 0
@@ -61,6 +60,10 @@ class MaliciousPublisherAgent(PublisherAgent):
         if self._doRug(state):
             if len(self.pools) > 0:
                 state.rugged_pools.append(self.pools[-1])
+
+    def _createPoolAgent(state):
+        pool_agent = super()._createPoolAgent(state)
+        self.pools.append(pool_agent.name)        
 
     def _doUnstakeOCEAN(self, state) -> bool:
         if not state.agents.filterByNonzeroStake(self):
