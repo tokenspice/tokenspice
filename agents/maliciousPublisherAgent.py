@@ -105,7 +105,8 @@ class maliciousPublisherAgent(PublisherAgent):
         )
 
     def _unstakeOCEANsomewhere(self, state):
-        """unstake the lastest create pool"""
+        """Choose what pool to unstake and by how much. Then do the action."""
+        #this agent unstakes the newest pool
         pool_agent = state.getAgent(self.pools[-1])
         BPT = self.BPT(pool_agent.pool)
         BPT_unstake = 0.20 * BPT  # magic number
