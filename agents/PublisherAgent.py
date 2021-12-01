@@ -8,16 +8,26 @@ from util import globaltokens
 from util.base18 import toBase18
 from util.constants import S_PER_DAY
 
+#magic numbers
+DEFAULT_DT_init = 1000.0 
+DEFAULT_DT_stake = 20.0
+DEFAULT_pool_weight_DT = 3.0
+DEFAULT_pool_weight_OCEAN = 7.0
+DEFAULT_s_between_create = 7 * S_PER_DAY
+DEFAULT_s_between_unstake = 3 * S_PER_DAY
+DEFAULT_s_between_sellDT = 15 * S_PER_DAY
+PERCENT_UNSTAKE = 0.10 
+
 @enforce_types
 class PublisherAgent(AgentBase.AgentBaseEvm):
     def __init__(self, name:str, USD:float, OCEAN:float,
-                 DT_init:float = 1000.0, #magic numbers, this line & below
-                 DT_stake:float = 20.0,
-                 pool_weight_DT:float = 3.0,
-                 pool_weight_OCEAN:float = 7.0,
-                 s_between_create:int = 7 * S_PER_DAY,
-                 s_between_unstake:int = 3 * S_PER_DAY,
-                 s_between_sellDT:int = 15 * S_PER_DAY
+                 DT_init:float = DEFAULT_DT_init,
+                 DT_stake:float = DEFAULT_DT_stake,
+                 pool_weight_DT:float = DEFAULT_pool_weight_DT,
+                 pool_weight_OCEAN:float = DEFAULT_pool_weight_OCEAN,
+                 s_between_create:int = DEFAULT_s_between_create,
+                 s_between_unstake:int = DEFAULT_s_between_unstake,
+                 s_between_sellDT:int = DEFAULT_s_between_sellDT
     ):
         super().__init__(name, USD, OCEAN)
 
@@ -112,7 +122,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         pool_agents = state.agents.filterByNonzeroStake(self)
         pool_agent = random.choice(list(pool_agents.values()))
         BPT = self.BPT(pool_agent.pool)
-        BPT_unstake = 0.10 * BPT  # magic number
+        BPT_unstake = PERCENT_UNSTAKE * BPT  # magic number
         self.unstakeOCEAN(BPT_unstake, pool_agent.pool)
 
     def _doSellDT(self, state) -> bool:

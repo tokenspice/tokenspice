@@ -1,28 +1,29 @@
 from enforce_typing import enforce_types
 from typing import List
-from agents.PublisherAgent import PublisherAgent
-from agents.PoolAgent import PoolAgent
-from sol057.contracts.oceanv3 import oceanv3util
-from util import globaltokens
-from util.base18 import toBase18
-from util.constants import S_PER_DAY, S_PER_HOUR
+
+from agents import PublisherAgent
+
+#magic numbers
+DEFAULT_s_wait_to_rug:int = PublisherAgent.DEFAULT_s_between_create/2
+DEFAULT_s_rug_time:int = DEFAULT_s_wait_to_rug/5
+PERCENT_UNSTAKE = 0.20
 
 @enforce_types
-class MaliciousPublisherAgent(PublisherAgent):
+class MaliciousPublisherAgent(PublisherAgent.PublisherAgent):
     def __init__(
             self, name:str, USD:float, OCEAN:float,
             #parameters like regular publisher
-            DT_init:float,
-            DT_stake:float,
-            pool_weight_DT:float,
-            pool_weight_OCEAN:float,
-            s_between_create:int,
-            s_between_unstake:int,
-            s_between_sellDT:int,
+            DT_init:float = PublisherAgent.DEFAULT_DT_init,
+            DT_stake:float = PublisherAgent.DEFAULT_DT_stake,
+            pool_weight_DT:float = PublisherAgent.DEFAULT_pool_weight_DT,
+            pool_weight_OCEAN:float = PublisherAgent.DEFAULT_pool_weight_OCEAN,
+            s_between_create:int = PublisherAgent.DEFAULT_s_between_create,
+            s_between_unstake:int = PublisherAgent.DEFAULT_s_between_unstake,
+            s_between_sellDT:int = PublisherAgent.DEFAULT_s_between_sellDT,
                  
             #parameters new to malicous agent
-            s_wait_to_rug:int,
-            s_rug_time:int,
+            s_wait_to_rug:int = DEFAULT_s_wait_to_rug,
+            s_rug_time:int = DEFAULT_s_rug_time,
     ):
         super().__init__(
             name, USD=USD, OCEAN=OCEAN,
@@ -61,9 +62,10 @@ class MaliciousPublisherAgent(PublisherAgent):
             if len(self.pools) > 0:
                 state.rugged_pools.append(self.pools[-1])
 
-    def _createPoolAgent(state):
+    def _createPoolAgent(self, state):
         pool_agent = super()._createPoolAgent(state)
-        self.pools.append(pool_agent.name)        
+        self.pools.append(pool_agent.name)
+        return pool_agent
 
     def _doUnstakeOCEAN(self, state) -> bool:
         if not state.agents.filterByNonzeroStake(self):
@@ -79,7 +81,7 @@ class MaliciousPublisherAgent(PublisherAgent):
         #this agent unstakes the newest pool
         pool_agent = state.getAgent(self.pools[-1])
         BPT = self.BPT(pool_agent.pool)
-        BPT_unstake = 0.20 * BPT  # magic number
+        BPT_unstake = PERCENT_UNSTAKE * BPT  # magic number
         self.unstakeOCEAN(BPT_unstake, pool_agent.pool)
 
     def _doSellDT(self, state) -> bool:
