@@ -55,7 +55,16 @@ class SimState(SimStateBase.SimStateBase):
             MaliciousPublisherAgent(
                 name="maliciousPublisher",
                 USD=0.0,
-                OCEAN=self.ss.maliciousPublisher_init_OCEAN,
+                OCEAN=self.ss.mal_init_OCEAN,
+                DT_init=self.ss.mal_DT_init,
+                DT_stake=self.ss.mal_DT_stake,
+                pool_weight_DT=self.ss.mal_pool_weight_DT,
+                pool_weight_OCEAN=self.ss.mal_pool_weight_OCEAN,
+                s_between_create=self.ss.mal_s_between_create,
+                s_between_unstake=self.ss.mal_s_between_unstake,
+                s_between_sellDT=self.ss.mal_s_between_sellDT,
+                s_wait_to_rug=self.ss.mal_s_wait_to_rug,
+                s_rug_time=self.ss.mal_s_rug_time,
             )
         )
 

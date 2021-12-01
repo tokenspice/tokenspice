@@ -8,10 +8,9 @@ from util import globaltokens
 from util.base18 import toBase18
 from util.constants import S_PER_DAY
 
-
 @enforce_types
 class PublisherAgent(AgentBase.AgentBaseEvm):
-    def __init__(self, name: str, USD: float, OCEAN: float,
+    def __init__(self, name:str, USD:float, OCEAN:float,
                  DT_init:float = 1000.0, #magic numbers, this line & below
                  DT_stake:float = 20.0,
                  pool_weight_DT:float = 3.0,
