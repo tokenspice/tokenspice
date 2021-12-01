@@ -2,9 +2,9 @@ from enforce_typing import enforce_types
 from typing import Set
 
 from agents.maliciousPublisherAgent import maliciousPublisherAgent
-from agents.v3DataconsumerAgent import v3DataconsumerAgent
 from agents.PublisherAgent import PublisherAgent
-from agents.v3SpeculatorAgent import v3SpeculatorAgent
+from agents.SpeculatorAgent import SpeculatorAgent
+from agents.v3DataconsumerAgent import v3DataconsumerAgent
 from agents.v3StakerspeculatorAgent import v3StakerspeculatorAgent
 
 from engine import SimStateBase, AgentBase
@@ -43,7 +43,7 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
         new_agents.add(
-            v3SpeculatorAgent(
+            SpeculatorAgent(
                 name="speculator", USD=0.0, OCEAN=self.ss.speculator_init_OCEAN
             )
         )
