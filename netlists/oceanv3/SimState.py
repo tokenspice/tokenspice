@@ -1,11 +1,11 @@
 from enforce_typing import enforce_types
 from typing import Set
 
+from agents.DataconsumerAgent import DataconsumerAgent
 from agents.maliciousPublisherAgent import maliciousPublisherAgent
 from agents.PublisherAgent import PublisherAgent
 from agents.SpeculatorAgent import SpeculatorAgent
 from agents.StakerspeculatorAgent import StakerspeculatorAgent
-from agents.v3DataconsumerAgent import v3DataconsumerAgent
 
 from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
@@ -33,7 +33,7 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
         new_agents.add(
-            v3DataconsumerAgent(
+            DataconsumerAgent(
                 name="consumer", USD=0.0, OCEAN=self.ss.consumer_init_OCEAN
             )
         )
