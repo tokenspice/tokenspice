@@ -6,15 +6,18 @@ from engine import AgentBase
 from util.base18 import toBase18
 from util import constants
 
+#magic numbers
+DEFAULT_s_between_speculates = 8 * constants.S_PER_HOUR
+
 @enforce_types
 class StakerspeculatorAgent(AgentBase.AgentBaseEvm):
     """Speculates by staking and unstaking"""
 
     def __init__(self, name: str, USD: float, OCEAN: float,
-                 s_between_speculates:int = 8 * constants.S_PER_HOUR):
+                 s_between_speculates:int = DEFAULT_s_between_speculates):
         super().__init__(name, USD, OCEAN)
 
-        self._s_since_speculate = 0
+        self._s_since_speculate:int = 0
         self._s_between_speculates:int = s_between_speculates
 
     def takeStep(self, state):

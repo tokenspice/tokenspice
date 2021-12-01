@@ -28,29 +28,47 @@ class SimState(SimStateBase.SimStateBase):
 
         new_agents.add(
             PublisherAgent(
-                name="publisher", USD=0.0, OCEAN=self.ss.publisher_init_OCEAN,
-                DT_init=self.ss.DT_init, DT_stake=self.ss.DT_stake
+                name = "publisher",
+                USD = 0.0,
+                OCEAN = self.ss.publisher_init_OCEAN,
+                DT_init = self.ss.publisher_DT_init,
+                DT_stake = self.ss.publisher_DT_stake,
+                pool_weight_DT = self.ss.publisher_pool_weight_DT,
+                pool_weight_OCEAN = self.ss.publisher_pool_weight_OCEAN,
+                s_between_create = self.ss.publisher_s_between_create,
+                s_between_unstake = self.ss.publisher_s_between_unstake,
+                s_between_sellDT = self.ss.publisher_s_between_sellDT
             )
         )
+        
         new_agents.add(
             DataconsumerAgent(
-                name="consumer", USD=0.0, OCEAN=self.ss.consumer_init_OCEAN
+                name = "consumer",
+                USD = 0.0,
+                OCEAN = self.ss.consumer_init_OCEAN,
+                s_between_buys = self.ss.consumer_s_between_buys,
+                profit_margin_on_consume = self.ss.consumer_profit_margin_on_consume,
             )
         )
+        
         new_agents.add(
             StakerspeculatorAgent(
-                name="stakerSpeculator",
-                USD=0.0, OCEAN=self.ss.staker_init_OCEAN,
-                s_between_speculates=self.ss.staker_s_between_speculates
+                name = "stakerSpeculator",
+                USD = 0.0,
+                OCEAN = self.ss.staker_init_OCEAN,
+                s_between_speculates = self.ss.staker_s_between_speculates,
             )
         )
+        
         new_agents.add(
             SpeculatorAgent(
-                name="speculator", USD=0.0, OCEAN=self.ss.speculator_init_OCEAN
+                name = "speculator",
+                USD = 0.0,
+                OCEAN = self.ss.speculator_init_OCEAN,
+                s_between_speculates = self.ss.speculator_s_between_speculates,
             )
         )
 
-        # malicious agents
         new_agents.add(
             MaliciousPublisherAgent(
                 name="maliciousPublisher",
@@ -74,5 +92,6 @@ class SimState(SimStateBase.SimStateBase):
         # kpis is defined in this netlist module
         self.kpis = KPIs(self.ss.time_step)
 
-        # pools that were rug-pulled by a malicious publisher
+        # pools that were rug-pulled by a malicious publisher. Some agents
+        # watch for 'state.rugged_pools' and act accordingly.
         self.rugged_pools:List[str] = []

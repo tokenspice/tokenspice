@@ -8,15 +8,21 @@ from util import globaltokens
 from util.base18 import fromBase18, toBase18
 from util import constants
 
+#magic numbers
+DEFAULT_s_between_buys = 3 * constants.S_PER_DAY
+DEFAULT_profit_margin_on_consume = 0.2
 
 @enforce_types
 class DataconsumerAgent(AgentBase.AgentBaseEvm):
-    def __init__(self, name: str, USD: float, OCEAN: float):
+    def __init__(self, name: str, USD: float, OCEAN: float,
+                 s_between_buys:int = DEFAULT_s_between_buys,
+                 profit_margin_on_consume:float = DEFAULT_profit_margin_on_consume,
+    ):
         super().__init__(name, USD, OCEAN)
 
         self._s_since_buy = 0
-        self._s_between_buys = 3 * constants.S_PER_DAY  # magic number
-        self.profit_margin_on_consume = 0.2  # magic number
+        self._s_between_buys = s_between_buys
+        self._profit_margin_on_consume = profit_margin_on_consume
 
     def takeStep(self, state) -> None:
         self._s_since_buy += state.ss.time_step
@@ -107,7 +113,7 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         self._wallet.transferDT(publisher_agent._wallet, DT, DT_buy_amt)
 
         # get business value due to consume
-        OCEAN_returned = OCEAN_spend * (1.0 + self.profit_margin_on_consume)
+        OCEAN_returned = OCEAN_spend * (1.0 + self._profit_margin_on_consume)
         self.receiveOCEAN(OCEAN_returned)
 
         return OCEAN_spend

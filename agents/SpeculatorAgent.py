@@ -6,15 +6,19 @@ from engine import AgentBase
 from util.base18 import toBase18
 from util import constants
 
+#magic numbers
+DEFAULT_s_between_speculates = 1 * constants.S_PER_DAY
+
 @enforce_types
 class SpeculatorAgent(AgentBase.AgentBaseEvm):
     """Speculates by buying and selling DT"""
 
-    def __init__(self, name: str, USD: float, OCEAN: float):
+    def __init__(self, name: str, USD: float, OCEAN: float,
+                 s_between_speculates:int = DEFAULT_s_between_speculates):
         super().__init__(name, USD, OCEAN)
 
-        self._s_since_speculate = 0
-        self._s_between_speculates = 1 * constants.S_PER_DAY  # magic number
+        self._s_since_speculate:int = 0
+        self._s_between_speculates:int = s_between_speculates
 
     def takeStep(self, state):
         self._s_since_speculate += state.ss.time_step

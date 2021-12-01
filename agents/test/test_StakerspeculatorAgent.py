@@ -21,6 +21,17 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 
+@enforce_types
+def test_constructor1():
+    agent = StakerspeculatorAgent("agent1", 0.1, 0.2)
+    assert agent.USD() == 0.1
+    assert agent.OCEAN() == 0.2
+    assert agent._s_between_speculates > 0
+
+@enforce_types
+def test_constructor2():
+    agent = StakerspeculatorAgent("agent1", 0.1, 0.2, 3)
+    assert agent._s_between_speculates == 3
 
 @enforce_types
 def test_doSpeculateAction(alice_info):
