@@ -22,7 +22,6 @@ class SimState(SimStateBase.SimStateBase):
         # now, fill in actual values for ss, agents, kpis
         if self.ss is None:
             from .SimStrategy import SimStrategy
-
             self.ss = SimStrategy()
         ss = self.ss  # for convenience as we go forward
 

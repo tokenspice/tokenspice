@@ -1,3 +1,4 @@
+from enforce_typing import enforce_types
 import pytest
 from pytest import approx
 
@@ -8,14 +9,12 @@ from engine import AgentBase
 from engine.AgentDict import AgentDict
 from util.constants import S_PER_HOUR
 
-
 class MockSS:
     def __init__(self):
         # seconds per tick
         self.time_step: int = S_PER_HOUR
         self.pool_weight_DT: float = 1.0
         self.pool_weight_OCEAN: float = 1.0
-
 
 class MockState:
     def __init__(self):
@@ -25,13 +24,26 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 
-
 class SimpleAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
 
+@enforce_types
+def test_constructor1():
+    agent = DataconsumerAgent("agent1", 0.1, 0.2)
+    assert agent.USD() == 0.1
+    assert agent.OCEAN() == 0.2
+    assert agent._s_between_buys > 0
+    assert agent._profit_margin_on_consume > 0.0
 
-def test_doBuyAndConsumeDT(alice_info):
+@enforce_types
+def test_constructor2():
+    agent = DataconsumerAgent("agent1", 0.1, 0.2, 3, 0.4)
+    assert agent._s_between_buys == 3
+    assert agent._profit_margin_on_consume == 0.4
+    
+@enforce_types
+def test_doBuyAndConsumeDT_happy_path(alice_info):
     alice_pool = alice_info.pool
     state = MockState()
 
@@ -51,7 +63,21 @@ def test_doBuyAndConsumeDT(alice_info):
     assert agent._candPoolAgents(state)  # have useful pools
     assert agent._doBuyAndConsumeDT(state)
 
+@enforce_types
+def test_doBuyAndConsumeDT_have_rugged_pools(alice_info):
+    alice_pool = alice_info.pool
+    state = MockState()
+    agent = DataconsumerAgent("agent1", USD=0.0, OCEAN=1000.0)
 
+    agent._s_since_buy += agent._s_between_buys
+
+    state.agents["pool1"] = PoolAgent("pool1", alice_pool)
+    assert agent._candPoolAgents(state) # have useful pools
+
+    state.rugged_pools = ["pool1"]
+    assert not agent._candPoolAgents(state) # do _not_ have useful pools
+
+@enforce_types
 def test_buyAndConsumeDT(alice_info):
     state = MockState()
 
@@ -80,7 +106,7 @@ def test_buyAndConsumeDT(alice_info):
     OCEAN_spend = consumer_agent._buyAndConsumeDT(state)
 
     OCEAN_after = consumer_agent.OCEAN()
-    OCEAN_gained = OCEAN_spend * (1.0 + consumer_agent.profit_margin_on_consume)
+    OCEAN_gained = OCEAN_spend * (1.0 + consumer_agent._profit_margin_on_consume)
     assert OCEAN_after == approx(OCEAN_before - OCEAN_spend + OCEAN_gained)
 
     assert consumer_agent.DT(dt) == 0.0  # bought 1.0, then consumed it

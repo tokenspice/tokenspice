@@ -3,76 +3,65 @@ from typing import List
 
 from engine import KPIsBase
 from util import globaltokens
-
+from util.base18 import fromBase18
 
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
     pass
 
+@enforce_types
+def get_OCEAN_in_DTs(state, agent) -> float:
+    """Value of DT that this agent staked across all pools, denominated in OCEAN
+    
+    Args:
+        state: SimState -- SimState, holds all pool agents (& their pools)
+        agent:  AgentBase -- agent of interest
+
+    Returns:
+        value_held: float -- value staked, denominated in OCEAN
+    """
+    OCEAN_address = globaltokens.OCEAN_address()
+    value_held = 0.0
+
+    for pool_agent in state.agents.filterToPool().values():
+        pool = pool_agent._pool
+        DT = pool_agent._dt
+        price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address))
+        amt_DT = agent.DT(DT)
+        value_held += amt_DT * price
+        
+    return value_held
 
 @enforce_types
-def get_OCEAN_in_DTs(state, agent):
-    pool_agents_list = list(state.agents.filterToPool().values())
-    agent_OCEAN_in_DTs = 0
-
-    for pool in pool_agents_list:
-        OCEAN_address = globaltokens.OCEAN_address()
-        datatoken = pool.datatoken
-
-        # get spot price of datatoken over OCEAN
-        datatoken_sp = (
-            pool.pool.getSpotPrice_base(OCEAN_address, datatoken.address) / 1e18
-        )
-        agent_OCEAN_in_DTs += agent.DT(datatoken) * datatoken_sp
-    return agent_OCEAN_in_DTs
-
-
-@enforce_types
-def get_pool_BPTs(state, pool):
-    # get all agents list, except pool agents
-    publisher_agents_list = list(state.agents.filterToPublisher().values())
-    stakerspeculator_agents_list = list(
-        state.agents.filterToStakerspeculator().values()
-    )
-    consumer_agents_list = list(state.agents.filterToDataconsumer().values())
-    speculator_agents_list = list(state.agents.filterToSpeculator().values())
-
-    agents_list = (
-        publisher_agents_list
-        + stakerspeculator_agents_list
-        + consumer_agents_list
-        + speculator_agents_list
-    )
-
-    _BPTs = 0
-    for agent in agents_list:
-        _BPTs += agent.BPT(pool)
-    return _BPTs
-
-
 @enforce_types
 def get_OCEAN_in_BPTs(state, agent):
+    """Value of BPTs that this agent owns across all pools, denominated in OCEAN
+    
+    Args:
+        state: SimState -- SimState, holds all pool agents (& their pools)
+        agent:  AgentBase -- agent of interest
+
+    Returns:
+        value_held: float -- value of BPTs, denominated in OCEAN
+    """
     OCEAN_address = globaltokens.OCEAN_address()
-    agent_OCEAN_in_BPTs = 0
-    pool_agents_list = list(state.agents.filterToPool().values())
+    value_held = 0
 
-    # each pool, agent might has some BPT, get fraction of that amount over BPTs hold by all agents
-    # multiple by OCEANs and DTs values of the pool
-    # aggerate for all pools
-    for pool in pool_agents_list:
-        percent_BPT = agent.BPT(pool.pool) / get_pool_BPTs(state, pool.pool)
-        agent_OCEAN_in_BPTs += (
-            percent_BPT * pool.pool.getBalance_base(OCEAN_address) / 1e18
-        )
-        agent_OCEAN_in_BPTs += (
-            percent_BPT
-            * pool.pool.getBalance_base(pool.datatoken.address)
-            / 1e18
-            * pool.pool.getSpotPrice_base(OCEAN_address, pool.datatoken.address)
-            / 1e18
-        )
-    return agent_OCEAN_in_BPTs
+    for pool_agent in state.agents.filterToPool().values():
+        pool = pool_agent._pool
+        DT = pool_agent._dt
+        
+        price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address))
+        pool_value_DT = price * fromBase18(pool.getBalance(DT.address))
+        pool_value_OCEAN = fromBase18(pool.getBalance(OCEAN_address))
+        pool_value = pool_value_DT + pool_value_OCEAN
+        
+        amt_pool_BPTs = pool.totalSupply() #from BPool, inheriting from BToken
+        agent_percent_pool = agent.BPT(pool) / amt_pool_BPTs
 
+        value_held += agent_percent_pool * pool_value
+        
+    return value_held
 
 @enforce_types
 def netlist_createLogData(state):
@@ -121,14 +110,13 @@ def netlist_createLogData(state):
     dataheader += ["n_pools"]
     datarow += [n_pools]
 
-    rugged_pool = state.ss.rugged_pools
+    rugged_pool = state.rugged_pools
     n_rugged = len(rugged_pool)
     s += ["; # rugged pools=%d" % n_rugged]
     dataheader += ["n_rugged"]
     datarow += [n_rugged]
 
     return s, dataheader, datarow
-
 
 @enforce_types
 def netlist_plotInstructions(header: List[str], values):

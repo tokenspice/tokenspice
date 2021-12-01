@@ -1,15 +1,11 @@
 from enforce_typing import enforce_types
 from typing import Set
 
-from netlists.oceanv3.modifiedAgents.maliciousPublisherAgent import (
-    maliciousPublisherAgent,
-)
-from netlists.oceanv3.modifiedAgents.v3DataconsumerAgent import v3DataconsumerAgent
-from netlists.oceanv3.modifiedAgents.v3PublisherAgent import v3PublisherAgent
-from netlists.oceanv3.modifiedAgents.v3SpeculatorAgent import v3SpeculatorAgent
-from netlists.oceanv3.modifiedAgents.v3StakerspeculatorAgent import (
-    v3StakerspeculatorAgent,
-)
+from agents.DataconsumerAgent import DataconsumerAgent
+from agents.MaliciousPublisherAgent import MaliciousPublisherAgent
+from agents.PublisherAgent import PublisherAgent
+from agents.SpeculatorAgent import SpeculatorAgent
+from agents.StakerspeculatorAgent import StakerspeculatorAgent
 
 from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
@@ -18,13 +14,12 @@ from .KPIs import KPIs
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
     def __init__(self, ss=None):
-        # assert ss is None
+        # initialize self.tick, ss, agents, kpis
         super().__init__(ss)
 
-        # ss is defined in this netlist module
+        # now, fill in actual values for ss, agents, kpis
         if self.ss is None:
             from .SimStrategy import SimStrategy
-
             self.ss = SimStrategy()
         ss = self.ss  # for convenience as we go forward
 
@@ -32,32 +27,62 @@ class SimState(SimStateBase.SimStateBase):
         new_agents: Set[AgentBase.AgentBase] = set()
 
         new_agents.add(
-            v3PublisherAgent(
-                name="publisher", USD=0.0, OCEAN=self.ss.publisher_init_OCEAN
+            PublisherAgent(
+                name = "publisher",
+                USD = 0.0,
+                OCEAN = self.ss.publisher_init_OCEAN,
+                DT_init = self.ss.publisher_DT_init,
+                DT_stake = self.ss.publisher_DT_stake,
+                pool_weight_DT = self.ss.publisher_pool_weight_DT,
+                pool_weight_OCEAN = self.ss.publisher_pool_weight_OCEAN,
+                s_between_create = self.ss.publisher_s_between_create,
+                s_between_unstake = self.ss.publisher_s_between_unstake,
+                s_between_sellDT = self.ss.publisher_s_between_sellDT
             )
         )
+        
         new_agents.add(
-            v3DataconsumerAgent(
-                name="consumer", USD=0.0, OCEAN=self.ss.consumer_init_OCEAN
+            DataconsumerAgent(
+                name = "consumer",
+                USD = 0.0,
+                OCEAN = self.ss.consumer_init_OCEAN,
+                s_between_buys = self.ss.consumer_s_between_buys,
+                profit_margin_on_consume = self.ss.consumer_profit_margin_on_consume,
             )
         )
+        
         new_agents.add(
-            v3StakerspeculatorAgent(
-                name="stakerSpeculator", USD=0.0, OCEAN=self.ss.staker_init_OCEAN
+            StakerspeculatorAgent(
+                name = "stakerSpeculator",
+                USD = 0.0,
+                OCEAN = self.ss.staker_init_OCEAN,
+                s_between_speculates = self.ss.staker_s_between_speculates,
             )
         )
+        
         new_agents.add(
-            v3SpeculatorAgent(
-                name="speculator", USD=0.0, OCEAN=self.ss.speculator_init_OCEAN
+            SpeculatorAgent(
+                name = "speculator",
+                USD = 0.0,
+                OCEAN = self.ss.speculator_init_OCEAN,
+                s_between_speculates = self.ss.speculator_s_between_speculates,
             )
         )
 
-        # malicious agents
         new_agents.add(
-            maliciousPublisherAgent(
+            MaliciousPublisherAgent(
                 name="maliciousPublisher",
                 USD=0.0,
-                OCEAN=self.ss.maliciousPublisher_init_OCEAN,
+                OCEAN=self.ss.mal_init_OCEAN,
+                DT_init=self.ss.mal_DT_init,
+                DT_stake=self.ss.mal_DT_stake,
+                pool_weight_DT=self.ss.mal_pool_weight_DT,
+                pool_weight_OCEAN=self.ss.mal_pool_weight_OCEAN,
+                s_between_create=self.ss.mal_s_between_create,
+                s_between_unstake=self.ss.mal_s_between_unstake,
+                s_between_sellDT=self.ss.mal_s_between_sellDT,
+                s_wait_to_rug=self.ss.mal_s_wait_to_rug,
+                s_rug_time=self.ss.mal_s_rug_time,
             )
         )
 
@@ -66,3 +91,7 @@ class SimState(SimStateBase.SimStateBase):
 
         # kpis is defined in this netlist module
         self.kpis = KPIs(self.ss.time_step)
+
+        # pools that were rug-pulled by a malicious publisher. Some agents
+        # watch for 'state.rugged_pools' and act accordingly.
+        self.rugged_pools:List[str] = []

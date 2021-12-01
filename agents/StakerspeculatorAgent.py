@@ -1,20 +1,24 @@
 from enforce_typing import enforce_types
 import random
+from typing import List
 
 from engine import AgentBase
 from util.base18 import toBase18
 from util import constants
 
+#magic numbers
+DEFAULT_s_between_speculates = 8 * constants.S_PER_HOUR
 
 @enforce_types
 class StakerspeculatorAgent(AgentBase.AgentBaseEvm):
     """Speculates by staking and unstaking"""
 
-    def __init__(self, name: str, USD: float, OCEAN: float):
+    def __init__(self, name: str, USD: float, OCEAN: float,
+                 s_between_speculates:int = DEFAULT_s_between_speculates):
         super().__init__(name, USD, OCEAN)
 
-        self._s_since_speculate = 0
-        self._s_between_speculates = 8 * constants.S_PER_HOUR  # magic number
+        self._s_since_speculate:int = 0
+        self._s_between_speculates:int = s_between_speculates
 
     def takeStep(self, state):
         self._s_since_speculate += state.ss.time_step
@@ -24,14 +28,14 @@ class StakerspeculatorAgent(AgentBase.AgentBaseEvm):
             self._speculateAction(state)
 
     def _doSpeculateAction(self, state):
-        pool_agents = state.agents.filterToPool().values()
+        pool_agents = self._poolsForSpeculate(state)
         if not pool_agents:
             return False
         else:
             return self._s_since_speculate >= self._s_between_speculates
 
     def _speculateAction(self, state):
-        pool_agents = state.agents.filterToPool().values()
+        pool_agents = self._poolsForSpeculate(state)
         assert pool_agents, "need pools to be able to speculate"
 
         pool = random.choice(list(pool_agents)).pool
@@ -44,3 +48,13 @@ class StakerspeculatorAgent(AgentBase.AgentBaseEvm):
         else:
             OCEAN_stake = 0.10 * self.OCEAN()  # magic number
             self.stakeOCEAN(OCEAN_stake, pool)
+
+    def _poolsForSpeculate(self, state) -> List[AgentBase.AgentBaseAbstract]:
+        pool_agents = state.agents.filterToPool()
+
+        if hasattr(state, 'rugged_pools'):
+            for pool_name in state.rugged_pools:
+                del pool_agents[pool_name]
+
+        pool_agents = pool_agents.values()
+        return pool_agents

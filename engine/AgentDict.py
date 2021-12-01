@@ -44,7 +44,8 @@ class AgentDict(dict):
 
     def filterByClass(self, _class):
         return AgentDict(
-            {agent.name: agent for agent in self.values() if isinstance(agent, _class)}
+            {agent.name: agent for agent in self.values()
+             if isinstance(agent, _class)}
         )
 
     def agentByAddress(self, address):

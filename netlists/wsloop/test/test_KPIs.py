@@ -4,7 +4,7 @@ import pytest
 from ..KPIs import KPIs
 from util.constants import S_PER_DAY
 
-
+@enforce_types
 class DummySS:
     def __init__(self, time_step: int):
         self.time_step: int = time_step
@@ -16,7 +16,6 @@ class DummySS:
         # here since it's tested elsewhere
         return consume_sales * self._percent_consume_sales_for_network
 
-
 @enforce_types
 class BaseDummyMarketplacesAgent:
     def numMarketplaces(self) -> float:
@@ -24,7 +23,6 @@ class BaseDummyMarketplacesAgent:
 
     def consumeSalesPerMarketplacePerSecond(self) -> float:
         return 0.0
-
 
 @enforce_types
 class BaseDummySimState:
@@ -52,21 +50,17 @@ class BaseDummySimState:
     def totalOCEANburnedUSD(self) -> float:
         return 0.0
 
-
 @enforce_types
 def testKPIs__Ratio_happypath():
     _testKPIs_Ratio(monthly_RND=10.0, monthly_sales=20.0, target=0.5)
-
 
 @enforce_types
 def testKPIs__Ratio_zero_RND():
     _testKPIs_Ratio(monthly_RND=0.0, monthly_sales=20.0, target=0.0)
 
-
 @enforce_types
 def testKPIs__Ratio_do_not_rail_to_less_than_1():
     _testKPIs_Ratio(monthly_RND=1000.0, monthly_sales=20.0, target=50.0)
-
 
 @enforce_types
 def _testKPIs_Ratio(monthly_RND, monthly_sales, target):
@@ -75,7 +69,6 @@ def _testKPIs_Ratio(monthly_RND, monthly_sales, target):
     kpis.grantTakersMonthlyRevenueNow = lambda: monthly_RND
     kpis.monthlyNetworkRevenueNow = lambda: monthly_sales
     assert kpis.mktsRNDToSalesRatio() == target
-
 
 @enforce_types
 def testKPIs_GrantTakersRevenue():
@@ -194,7 +187,6 @@ def testKPIs__mktsConsumeSalesAndValuation():
     assert kpis.onemktMonthlyConsumeSalesNow() == (240.0)
     assert kpis.allmktsMonthlyConsumeSalesNow() == (1200.0)
     assert kpis.monthlyNetworkRevenueNow() == (120.0)
-
 
 @enforce_types
 def testKPIs__mintAndBurn():

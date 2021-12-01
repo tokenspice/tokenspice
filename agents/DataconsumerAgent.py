@@ -8,15 +8,21 @@ from util import globaltokens
 from util.base18 import fromBase18, toBase18
 from util import constants
 
+#magic numbers
+DEFAULT_s_between_buys = 3 * constants.S_PER_DAY
+DEFAULT_profit_margin_on_consume = 0.2
 
 @enforce_types
 class DataconsumerAgent(AgentBase.AgentBaseEvm):
-    def __init__(self, name: str, USD: float, OCEAN: float):
+    def __init__(self, name: str, USD: float, OCEAN: float,
+                 s_between_buys:int = DEFAULT_s_between_buys,
+                 profit_margin_on_consume:float = DEFAULT_profit_margin_on_consume,
+    ):
         super().__init__(name, USD, OCEAN)
 
         self._s_since_buy = 0
-        self._s_between_buys = 3 * constants.S_PER_DAY  # magic number
-        self.profit_margin_on_consume = 0.2  # magic number
+        self._s_between_buys = s_between_buys
+        self._profit_margin_on_consume = profit_margin_on_consume
 
     def takeStep(self, state) -> None:
         self._s_since_buy += state.ss.time_step
@@ -38,41 +44,40 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         OCEAN_address = globaltokens.OCEAN_address()
         OCEAN = self.OCEAN()
         OCEAN_base = toBase18(OCEAN)
-        all_pool_agents = state.agents.filterToPool().values()
+        all_pool_agents = state.agents.filterToPool()
+        
         cand_pool_agents = []
-        for pool_agent in all_pool_agents:
+        for pool_name, pool_agent in all_pool_agents.items():
+            #filter 1: pool rugged?
+            if hasattr(state, 'rugged_pools') \
+               and pool_name in state.rugged_pools:
+                continue
+
+            #filter 2: agent has enough funds?
             pool = pool_agent.pool
             DT_address = pool_agent.datatoken_address
 
-            pool_DT_balance_base = pool.getBalance(DT_address)
-            pool_OCEAN_balance_base = pool.getBalance(OCEAN_address)
-            pool_DT_weight_base = pool.getDenormalizedWeight(DT_address)
-            pool_OCEAN_weight_base = pool.getDenormalizedWeight(OCEAN_address)
-            pool_swapFee_base = pool.getSwapFee()
+            tokenBalanceIn = pool.getBalance(OCEAN_address)
+            tokenWeightIn = pool.getDenormalizedWeight(OCEAN_address)
+            tokenBalanceOut = pool.getBalance(DT_address)
+            tokenWeightOut = pool.getDenormalizedWeight(DT_address)
+            tokenAmountOut = toBase18(1.0) #number of DTs
+            swapFee = pool.getSwapFee()
 
-            DT_amount_out_base = toBase18(1.0)
-
-            tokenIn_address = OCEAN_address
-            tokenOut_address = DT_address
-            spotPriceBefore_base = pool.getSpotPrice(tokenIn_address, tokenOut_address)
-
-            tokenBalanceIn_base = pool_OCEAN_balance_base
-            tokenWeightIn_base = pool_OCEAN_weight_base
-            tokenBalanceOut_base = pool.getBalance(DT_address)
-            tokenWeightOut_base = pool_DT_weight_base
-            tokenAmountOut_base = DT_amount_out_base
-            swapFee_base = pool_swapFee_base
             OCEANamountIn_base = pool.calcInGivenOut(
-                tokenBalanceIn_base,
-                tokenWeightIn_base,
-                tokenBalanceOut_base,
-                tokenWeightOut_base,
-                tokenAmountOut_base,
-                swapFee_base,
+                tokenBalanceIn,
+                tokenWeightIn,
+                tokenBalanceOut,
+                tokenWeightOut,
+                tokenAmountOut,
+                swapFee
             )
 
-            if OCEANamountIn_base < OCEAN_base:
-                cand_pool_agents.append(pool_agent)
+            if OCEANamountIn_base >= OCEAN_base:
+                continue
+
+            #passed all filters! Add this agent
+            cand_pool_agents.append(pool_agent)
 
         return cand_pool_agents
 
@@ -108,7 +113,7 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         self._wallet.transferDT(publisher_agent._wallet, DT, DT_buy_amt)
 
         # get business value due to consume
-        OCEAN_returned = OCEAN_spend * (1.0 + self.profit_margin_on_consume)
+        OCEAN_returned = OCEAN_spend * (1.0 + self._profit_margin_on_consume)
         self.receiveOCEAN(OCEAN_returned)
 
         return OCEAN_spend
