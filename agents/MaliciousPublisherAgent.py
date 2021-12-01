@@ -4,8 +4,8 @@ from typing import List
 from agents import PublisherAgent
 
 #magic numbers
-DEFAULT_s_wait_to_rug:int = PublisherAgent.DEFAULT_s_between_create/2
-DEFAULT_s_rug_time:int = DEFAULT_s_wait_to_rug/5
+DEFAULT_s_wait_to_rug = PublisherAgent.DEFAULT_s_between_create/2
+DEFAULT_s_rug_time = DEFAULT_s_wait_to_rug/5
 PERCENT_UNSTAKE = 0.20
 
 @enforce_types
