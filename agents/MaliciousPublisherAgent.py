@@ -72,7 +72,7 @@ class MaliciousPublisherAgent(PublisherAgent):
         pool_agent_name = f"pool{pool_i}"
 
         # new DT
-        DT = self._createDatatoken(dt_name, mint_amt=self._DT_init)  # magic number
+        DT = self._createDatatoken(dt_name, mint_amt=self._DT_init)
 
         # new pool
         pool = oceanv3util.newBPool(account)
