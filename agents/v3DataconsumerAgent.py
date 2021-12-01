@@ -12,9 +12,6 @@ class v3DataconsumerAgent(DataconsumerAgent):
     def __init__(self, name: str, USD: float, OCEAN: float):
         super().__init__(name, USD, OCEAN)
 
-        self._s_since_speculate = 0
-        self._s_between_speculates = 8 * S_PER_HOUR  # magic number
-
     def _candPoolAgents(self, state) -> List[PoolAgent]:
         """Pools that this agent can afford to buy 1.0 datatokens from,
         at least based on a first approximation.
