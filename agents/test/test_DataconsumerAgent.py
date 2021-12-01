@@ -8,14 +8,12 @@ from engine import AgentBase
 from engine.AgentDict import AgentDict
 from util.constants import S_PER_HOUR
 
-
 class MockSS:
     def __init__(self):
         # seconds per tick
         self.time_step: int = S_PER_HOUR
         self.pool_weight_DT: float = 1.0
         self.pool_weight_OCEAN: float = 1.0
-
 
 class MockState:
     def __init__(self):
@@ -25,13 +23,11 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 
-
 class SimpleAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
 
-
-def test_doBuyAndConsumeDT(alice_info):
+def test_doBuyAndConsumeDT_happy_path(alice_info):
     alice_pool = alice_info.pool
     state = MockState()
 
@@ -51,6 +47,18 @@ def test_doBuyAndConsumeDT(alice_info):
     assert agent._candPoolAgents(state)  # have useful pools
     assert agent._doBuyAndConsumeDT(state)
 
+def test_doBuyAndConsumeDT_have_rugged_pools(alice_info):
+    alice_pool = alice_info.pool
+    state = MockState()
+    agent = DataconsumerAgent("agent1", USD=0.0, OCEAN=1000.0)
+
+    agent._s_since_buy += agent._s_between_buys
+
+    state.agents["pool1"] = PoolAgent("pool1", alice_pool)
+    assert agent._candPoolAgents(state) # have useful pools
+
+    state.rugged_pools = ["pool1"]
+    assert not agent._candPoolAgents(state) # do _not_ have useful pools
 
 def test_buyAndConsumeDT(alice_info):
     state = MockState()

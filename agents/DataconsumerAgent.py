@@ -38,9 +38,16 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         OCEAN_address = globaltokens.OCEAN_address()
         OCEAN = self.OCEAN()
         OCEAN_base = toBase18(OCEAN)
-        all_pool_agents = state.agents.filterToPool().values()
+        all_pool_agents = state.agents.filterToPool()
+        
         cand_pool_agents = []
-        for pool_agent in all_pool_agents:
+        for pool_name, pool_agent in all_pool_agents.items():
+            #filter 1: pool rugged?
+            if hasattr(state, 'rugged_pools') \
+               and pool_name in state.rugged_pools:
+                continue
+
+            #filter 2: agent has enough funds?
             pool = pool_agent.pool
             DT_address = pool_agent.datatoken_address
 
@@ -71,8 +78,11 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
                 swapFee_base,
             )
 
-            if OCEANamountIn_base < OCEAN_base:
-                cand_pool_agents.append(pool_agent)
+            if OCEANamountIn_base >= OCEAN_base:
+                continue
+
+            #passed all filters! Add this agent
+            cand_pool_agents.append(pool_agent)
 
         return cand_pool_agents
 
