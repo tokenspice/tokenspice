@@ -34,7 +34,6 @@ class SpeculatorAgent(AgentBase.AgentBaseEvm):
         pool_agents = state.agents.filterToPool().values()
         assert pool_agents, "need pools to be able to speculate"
 
-        # pool = random.choice(list(pool_agents)).pool
         pool_agent = random.choice(list(pool_agents))
         pool = pool_agent.pool
 
