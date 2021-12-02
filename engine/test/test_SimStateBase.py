@@ -2,15 +2,12 @@ from enforce_typing import enforce_types
 
 from engine import SimStateBase, SimStrategyBase, KPIsBase
 from engine import AgentBase
-from util.constants import S_PER_DAY
 
 # ==================================================================
 # testing stubs
 
-
 class SimStrategy(SimStrategyBase.SimStrategyBase):
     pass
-
 
 class KPIs(KPIsBase.KPIsBase):
     def takeStep(self, state):
@@ -20,11 +17,9 @@ class KPIs(KPIsBase.KPIsBase):
     def tick():
         pass
 
-
 class SimpleAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
-
 
 class SimState(SimStateBase.SimStateBase):
     def __init__(self):
@@ -36,10 +31,8 @@ class SimState(SimStateBase.SimStateBase):
         self.addAgent(SimpleAgent("agent1", 0.0, 0.0))
         self.addAgent(SimpleAgent("agent2", 0.0, 0.0))
 
-
 # ==================================================================
 # actual tests
-
 
 @enforce_types
 def test1():
