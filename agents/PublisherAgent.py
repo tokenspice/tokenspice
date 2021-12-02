@@ -16,7 +16,11 @@ DEFAULT_pool_weight_OCEAN = 7.0
 DEFAULT_s_between_create = 7 * S_PER_DAY
 DEFAULT_s_between_unstake = 3 * S_PER_DAY
 DEFAULT_s_between_sellDT = 15 * S_PER_DAY
-PERCENT_UNSTAKE = 0.10 
+PERCENT_UNSTAKE = 0.10
+
+DEFAULT_is_malicious = False
+DEFAULT_s_wait_to_rug = int(DEFAULT_s_between_create/2)
+DEFAULT_s_rug_time = int(DEFAULT_s_wait_to_rug/5)
 
 @enforce_types
 class PublisherAgent(AgentBase.AgentBaseEvm):
@@ -27,7 +31,11 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
                  pool_weight_OCEAN:float = DEFAULT_pool_weight_OCEAN,
                  s_between_create:int = DEFAULT_s_between_create,
                  s_between_unstake:int = DEFAULT_s_between_unstake,
-                 s_between_sellDT:int = DEFAULT_s_between_sellDT
+                 s_between_sellDT:int = DEFAULT_s_between_sellDT,
+
+                 is_malicious:bool = DEFAULT_is_malicious,
+                 s_wait_to_rug:int = DEFAULT_s_wait_to_rug,
+                 s_rug_time:int = DEFAULT_s_rug_time,
     ):
         super().__init__(name, USD, OCEAN)
 
@@ -45,6 +53,12 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         self._s_since_sellDT:int = 0
         self._s_between_sellDT:int = s_between_sellDT
 
+        self._is_malicious:bool = is_malicious
+        self._s_wait_to_rug:int = s_wait_to_rug
+        self._s_rug_time:int = s_rug_time
+        
+        self.pools: List[str] = []  # pools created by this agent
+
     def takeStep(self, state) -> None:
         self._s_since_create += state.ss.time_step
         self._s_since_unstake += state.ss.time_step
@@ -61,6 +75,10 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         if self._doSellDT(state):
             self._s_since_sellDT = 0
             self._sellDTsomewhere(state)
+
+        if self._doRug(state):
+            if len(self.pools) > 0:
+                state.rugged_pools.append(self.pools[-1])
 
     def _doCreatePool(self) -> bool:
         if self.OCEAN() < 200.0:  # magic number
@@ -110,42 +128,75 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         state.addAgent(pool_agent)
         self._wallet.resetCachedInfo()
 
+        # update self.pools
+        self.pools.append(pool_agent.name)
+
         return pool_agent
 
     def _doUnstakeOCEAN(self, state) -> bool:
         if not state.agents.filterByNonzeroStake(self):
             return False
-        return self._s_since_unstake >= self._s_between_unstake
+        
+        if self._is_malicious:
+            return (
+                (self._s_since_unstake >= self._s_between_unstake)
+                & (self._s_since_create >= self._s_wait_to_rug)
+                & (self._s_since_create <= self._s_wait_to_rug + self._s_rug_time)
+            )
+        else:
+            return self._s_since_unstake >= self._s_between_unstake
 
     def _unstakeOCEANsomewhere(self, state):
         """Choose what pool to unstake and by how much. Then do the action."""
         pool_agents = state.agents.filterByNonzeroStake(self)
         pool_agent = random.choice(list(pool_agents.values()))
         BPT = self.BPT(pool_agent.pool)
-        BPT_unstake = PERCENT_UNSTAKE * BPT  # magic number
+        BPT_unstake = PERCENT_UNSTAKE * BPT
         self.unstakeOCEAN(BPT_unstake, pool_agent.pool)
 
     def _doSellDT(self, state) -> bool:
         if not self._DTsWithNonzeroBalance(state):
             return False
-        return self._s_since_sellDT >= self._s_between_sellDT
+        if self._is_malicious:
+            return (
+                (self._s_since_sellDT >= self._s_between_sellDT)
+                & (self._s_since_create >= self._s_wait_to_rug)
+                & (self._s_since_create <= self._s_wait_to_rug + self._s_rug_time)
+            )
+        else:
+            return self._s_since_sellDT >= self._s_between_sellDT
 
     def _sellDTsomewhere(self, state, perc_sell: float = 0.01):
         """Choose what DT to sell and by how much. Then do the action."""
-
-        cand_DTs = self._DTsWithNonzeroBalance(state)
-        assert cand_DTs, "only call this method if have DTs w >0 balance"
-        DT = random.choice(cand_DTs)
+        if self._is_malicious:
+            #unstakes the newest pool
+            pool_agent = state.getAgent(self.pools[-1])
+            DT = pool_agent.datatoken
+            pool = pool_agent.pool
+        else:
+            #random by DT, then pool (could be something else)
+            cand_DTs = self._DTsWithNonzeroBalance(state)
+            DT = random.choice(cand_DTs)
+            cand_pools = self._poolsWithDT(state, DT)
+            pool = random.choice(cand_pools)
 
         DT_balance_amt = self.DT(DT)
         assert DT_balance_amt > 0.0
-        DT_sell_amt = perc_sell * DT_balance_amt  # magic number
-
-        cand_pools = self._poolsWithDT(state, DT)
-        assert cand_pools, "there should be at least 1 pool with this DT"
-        pool = random.choice(cand_pools)
-
+        DT_sell_amt = perc_sell * DT_balance_amt
         self._wallet.sellDT(pool, DT, DT_sell_amt)
+
+    def _doRug(self, state):
+        if not self._is_malicious:
+            return False
+        if not self.pools:
+            return False
+        return self._s_since_create >= self._s_wait_to_rug
+
+    def _rug(self, state):
+        assert self._is_malicious, "should only call if malicious"
+        assert self.pools, "can't rug if no pools"
+        assert hasattr(state, "rugged_pools"), "state needs 'rugged_pools attr"
+        state.rugged_pools.append(self.pools[-1])
 
     def _poolsWithDT(self, state, DT) -> list:
         """Return a list of pools that have this DT. Typically exactly 1 pool"""
