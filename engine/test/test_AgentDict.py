@@ -36,7 +36,7 @@ def test2():
         def __init__(self, name):
             self.name = name
 
-        def BPT(self, pool):
+        def BPT(self, pool): # pylint: disable=unused-argument
             return 0.0
 
     d = AgentDict({"foo1": FooAgent("foo1")})
