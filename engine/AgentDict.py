@@ -9,13 +9,10 @@ from agents.SpeculatorAgent import SpeculatorAgent
 
 @enforce_types
 class AgentDict(dict):
-    """Dict of Agent"""
 
-    def __init__(self, *arg, **kw):
-        """
-        Extend the dict object to get the best of both worlds (object/dict)
-        """
-        super(AgentDict, self).__init__(*arg, **kw)
+    def __init__(self, *arg, **kw): # pylint: disable=useless-super-delegation
+        """Extend the dict object to get the best of both worlds (object/dict)"""
+        super().__init__(*arg, **kw)
 
     def filterByNonzeroStake(self, agent):
         """Which pools has 'agent' staked on?"""
