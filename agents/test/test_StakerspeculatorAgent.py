@@ -21,6 +21,7 @@ class MockState:
     def addAgent(self, agent):
         self.agents[agent.name] = agent
 
+
 @enforce_types
 def test_constructor1():
     agent = StakerspeculatorAgent("agent1", 0.1, 0.2)
@@ -28,18 +29,21 @@ def test_constructor1():
     assert agent.OCEAN() == 0.2
     assert agent._s_between_speculates > 0
 
+
 @enforce_types
 def test_constructor2():
     agent = StakerspeculatorAgent("agent1", 0.1, 0.2, 3)
     assert agent._s_between_speculates == 3
+
 
 @enforce_types
 def test_doSpeculateAction(alice_info):
     alice_pool = alice_info.pool
     state = MockState()
 
-    agent = StakerspeculatorAgent("agent1", USD=0.0, OCEAN=0.0,
-                                  s_between_speculates=1000)
+    agent = StakerspeculatorAgent(
+        "agent1", USD=0.0, OCEAN=0.0, s_between_speculates=1000
+    )
 
     assert agent._s_since_speculate == 0
     assert agent._s_between_speculates == 1000
@@ -55,6 +59,7 @@ def test_doSpeculateAction(alice_info):
 
     assert agent._doSpeculateAction(state)
 
+
 @enforce_types
 def test_speculateAction_nopools(alice_info):
     alice_pool = alice_info.pool
@@ -66,7 +71,8 @@ def test_speculateAction_nopools(alice_info):
     assert not agent._doSpeculateAction(state)
     with pytest.raises(AssertionError):
         agent._speculateAction(state)  # error because no pools
-        
+
+
 @enforce_types
 def test_speculateAction_with_rugged_pools(alice_info):
     alice_pool = alice_info.pool
@@ -79,7 +85,8 @@ def test_speculateAction_with_rugged_pools(alice_info):
     assert not agent._poolsForSpeculate(state)
     assert not agent._doSpeculateAction(state)
     with pytest.raises(AssertionError):
-        agent._speculateAction(state)  # error because no good pools    
+        agent._speculateAction(state)  # error because no good pools
+
 
 @enforce_types
 def test_speculateAction_with_good_pools(alice_info):
@@ -91,10 +98,10 @@ def test_speculateAction_with_good_pools(alice_info):
 
     assert agent._poolsForSpeculate(state)
 
-    assert not agent._doSpeculateAction(state) #not enough time passsed
-    agent._s_since_speculate += agent._s_between_speculates #make time pass
-    assert agent._doSpeculateAction(state) #now, enough time passed 
-    
+    assert not agent._doSpeculateAction(state)  # not enough time passsed
+    agent._s_since_speculate += agent._s_between_speculates  # make time pass
+    assert agent._doSpeculateAction(state)  # now, enough time passed
+
     assert agent.OCEAN() == 500.0
     assert agent.BPT(alice_pool) == 0.0
 

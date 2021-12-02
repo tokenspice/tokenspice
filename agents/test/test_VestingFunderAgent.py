@@ -1,15 +1,13 @@
 import brownie
-from brownie import Wei
 from enforce_typing import enforce_types
-import pytest
-from pytest import approx
 
 from agents.VestingFunderAgent import VestingFunderAgent
 from util import globaltokens
+from util.base18 import toBase18
 
 # don't use account0, it's GOD_ACCOUNT. don't use account9, it's conftest pool
-account1 = brownie.network.accounts[1]
-chain = brownie.network.chain
+account1 = brownie.network.accounts[1]  # pylint: disable=no-member
+chain = brownie.network.chain  # pylint: disable=no-member
 
 
 @enforce_types
@@ -38,7 +36,7 @@ def test1():
             self.agents[agent.name] = agent
 
         def takeStep(self):
-            for agent in self.agent.values():
+            for agent in self.agents.values():
                 agent.takeStep(self)
 
     state = MockState(beneficiary_agent)
@@ -62,7 +60,7 @@ def test1():
     assert state.getAgent("vw1") is not None
     vw = state.getAgent("vw1").vesting_wallet
     assert vw.beneficiary() == beneficiary_agent.address
-    assert 0 <= vw.vestedAmount(OCEAN.address, chain[-1].timestamp) < Wei("100 ether")
+    assert 0 <= vw.vestedAmount(OCEAN.address, chain[-1].timestamp) < toBase18(100.0)
     assert vw.released(OCEAN.address) == 0
     assert funder_agent._did_funding
     assert funder_agent.OCEAN() == 0.0
@@ -70,11 +68,11 @@ def test1():
 
     # OCEAN vests
     chain.mine(blocks=1, timedelta=60)
-    assert vw.vestedAmount(OCEAN.address, chain[-1].timestamp) == Wei("100 ether")
+    assert vw.vestedAmount(OCEAN.address, chain[-1].timestamp) == toBase18(100.0)
     assert vw.released(OCEAN.address) == 0
     assert OCEAN.balanceOf(beneficiary_agent.address) == 0
 
     # release OCEAN
     vw.release(OCEAN.address, {"from": account1})
-    assert vw.released(OCEAN.address) == Wei("100 ether")
-    assert OCEAN.balanceOf(beneficiary_agent.address) == Wei("100 ether")
+    assert vw.released(OCEAN.address) == toBase18(100.0)
+    assert OCEAN.balanceOf(beneficiary_agent.address) == toBase18(100.0)
