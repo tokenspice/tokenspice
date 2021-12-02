@@ -1,7 +1,6 @@
-from engine.AgentDict import AgentDict
-
 from enforce_typing import enforce_types
 
+from engine.AgentDict import AgentDict
 
 @enforce_types
 def test1():
@@ -30,7 +29,6 @@ def test1():
 
     bah_d = d.filterByClass(BahAgent)
     assert sorted(bah_d.keys()) == []
-
 
 @enforce_types
 def test2():
