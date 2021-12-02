@@ -50,8 +50,8 @@ Therefore, we _only_ use pylint. It's 80% of the benefit with 20% of the effort.
 ## Remote Tests
 
 [Codacy](https://www.codacy.com) is automatically run _remotely_ for each commit of each PR.
-- **[Here's the Codacy TokenSPICE dashboard](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main)**, including links to tests. To access this, you need special permissions; ask Trent.
-- **[These "Code Patterns" settings](https://app.codacy.com/gh/tokenspice/tokenspice/patterns/list)** specify what checks are run vs ignored.
+- [Here's the Codacy TokenSPICE dashboard](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main), including links to tests. To access this, you need special permissions; ask Trent.
+- [These "Code Patterns" settings](https://app.codacy.com/gh/tokenspice/tokenspice/patterns/list) specify what checks are run vs ignored.
 
 ## Local Install
 
@@ -68,7 +68,9 @@ Here's an example. In the terminal:
 pylint *
 ```
 
-Example output:
+Pylint auto-loads `./pylintrc` and uses its options, such as ignoring D203, D204. 
+
+Example pylint output:
 ```text
 engine/SimEngine.py:9:0: W0611: Unused valuation imported from util (unused-import)
 engine/AgentWallet.py:419:4: C0116: Missing function or method docstring (missing-function-docstring)
