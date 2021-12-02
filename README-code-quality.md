@@ -72,7 +72,15 @@ Example output:
 ```text
 engine/SimEngine.py:9:0: W0611: Unused valuation imported from util (unused-import)
 engine/AgentWallet.py:419:4: C0116: Missing function or method docstring (missing-function-docstring)
-engine/AgentWallet.py:430:8: C0103: Variable name "DT_base" doesn't conform to snake_case naming style (invalid-name)
+...
+-----------------------------------
+Your code has been rated at 8.07/10
+```
+
+To learn more about a complaint, some examples:
+```console
+pylint --help-msg=unused-import
+pylint --help-msg=missing-function-docstring
 ```
 
 ## Local Fixes
