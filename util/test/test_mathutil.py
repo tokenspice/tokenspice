@@ -1,10 +1,8 @@
 from enforce_typing import enforce_types
 
-import numpy
 import pytest
 
-from util.mathutil import *
-
+from util.mathutil import * # pylint: disable=wildcard-import
 
 @enforce_types
 def testIsNumber():
@@ -13,7 +11,6 @@ def testIsNumber():
 
     for x in [[], [1, 2], {}, {1: 2, 2: 3}, None, "", "foo"]:
         assert not isNumber(x)
-
 
 @enforce_types
 def testIntInStr():
@@ -40,7 +37,7 @@ def testRange():
     assert p == 2.2
 
     r = Range(-1.5, 2.5)
-    for i in range(20):
+    for _ in range(20):
         p = r.drawRandomPoint()
         assert -1.5 <= p <= 2.5
 
@@ -62,7 +59,6 @@ def testRange():
     with pytest.raises(TypeError):
         Range(3.0, "foo")
 
-
 @enforce_types
 def testRangeStr():
     r = Range(2.2)
@@ -72,10 +68,9 @@ def testRangeStr():
     assert "2.2" in s
     assert "Range}" in s
 
-
 @enforce_types
 def testRandunif():
-    for i in range(20):
+    for _ in range(20):
         # happy path
         p = randunif(-1.5, 2.5)
         assert -1.5 <= p <= 2.5
@@ -106,7 +101,6 @@ def testRandunif():
         randunif(0, 3.0)
     with pytest.raises(TypeError):
         randunif(3.0, "foo")
-
 
 @enforce_types
 def test_round_sig():

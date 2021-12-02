@@ -1,8 +1,7 @@
 import random
 
 from util import mathutil
-from util.strutil import *
-
+from util.strutil import * # pylint: disable=wildcard-import
 
 def testStrMixin():
     class Foo(StrMixin):
@@ -27,9 +26,8 @@ def testStrMixin():
     assert "'a':3" in s2
     assert "'b':4" in s2
     assert "Foo}" in s
-    assert not "ignoreVal" in s
-    assert not "ignoreMethod" in s
-
+    assert "ignoreVal" not in s
+    assert "ignoreMethod" not in s
 
 def testDictStr():
     d = {"a": 3, "b": 4}
@@ -40,12 +38,10 @@ def testDictStr():
     assert "'b':4" in s2
     assert "dict}" in s
 
-
 def testEmptyDictStr():
     d = {}
     s = dictStr(d)
     assert s == ("{}")
-
 
 def testAsCurrency():
     assert asCurrency(0) == "$0.00"
@@ -64,9 +60,7 @@ def testAsCurrency():
     assert asCurrency(2e6, False) == "$2,000,000"
     assert asCurrency(2e6 + 0.03, False) == "$2,000,000"
 
-
-def testPrettyBigNum1_DoRemoveZeros():
-    # decimals needed
+def testPrettyBigNum1_DoRemoveZeros_decimalsNeeded():
     assert prettyBigNum(1.23456e13) == "1.23e13"
     assert prettyBigNum(1.23456e12) == "1.23e12"
     assert prettyBigNum(1.23456e11) == "123B"
@@ -86,7 +80,7 @@ def testPrettyBigNum1_DoRemoveZeros():
     assert prettyBigNum(1.23456e-3) == "1.23e-3"
     assert prettyBigNum(1.23456e-10) == "1.23e-10"
 
-    # decimals not needed
+def testPrettyBigNum1_DoRemoveZeros_decimalsNotNeeded():
     assert prettyBigNum(1e13) == "1e13"
     assert prettyBigNum(1e12) == "1e12"
     assert prettyBigNum(1e11) == "100B"
@@ -106,7 +100,7 @@ def testPrettyBigNum1_DoRemoveZeros():
     assert prettyBigNum(1e-3) == "1e-3"
     assert prettyBigNum(1e-10) == "1e-10"
 
-    # catch roundoff properly
+def testPrettyBigNum1_DoRemoveZeros_catchRoundoff():
     assert prettyBigNum(57.02e10) == "570B"
     assert prettyBigNum(57.02e9) == "57B"
     assert prettyBigNum(57.02e8) == "5.7B"
@@ -118,11 +112,11 @@ def testPrettyBigNum1_DoRemoveZeros():
     assert prettyBigNum(57.02) == "57"
     assert prettyBigNum(27.02) == "27"
 
-    # zero
+def testPrettyBigNum1_DoRemoveZeros_zero():
     assert prettyBigNum(0) == "0"
     assert prettyBigNum(0.0) == "0"
 
-    # negative
+def testPrettyBigNum1_DoRemoveZeros_negative():
     assert prettyBigNum(-1.23456e13) == "-1.23e13"
     assert prettyBigNum(-1.23456e11) == "-123B"
     assert prettyBigNum(-1.23456e7) == "-12.3M"
@@ -139,9 +133,8 @@ def testPrettyBigNum1_DoRemoveZeros():
     assert prettyBigNum(-1e-1) == "-0.1"
     assert prettyBigNum(-1e-10) == "-1e-10"
 
-
 def generatePairsForPrettyBigNum2_Random_DoRemoveZeroes():
-    for i in range(100):
+    for _ in range(100):
         power = random.choice(list(range(-4, 14)))
         sigfigs = random.choice([1, 2, 3, 4, 5])
         x = random.random() * pow(10, power)
@@ -149,7 +142,6 @@ def generatePairsForPrettyBigNum2_Random_DoRemoveZeroes():
 
         s = prettyBigNum(x)  # prettyBigNum(x, remove_zeroes=False)
         print("            (%15s, '%s')," % (x, s))
-
 
 def testPrettyBigNum2_Random_DoRemoveZeroes():
     # these are generated via method above, then manually fixed as needed
@@ -236,7 +228,6 @@ def testPrettyBigNum2_Random_DoRemoveZeroes():
     ]
     for (x, target_s) in x_s_pairs:
         assert prettyBigNum(x) == target_s
-
 
 def testPrettyBigNum3_Random_DontRemoveZeros():
     # these are generated via method above, then manually fixed as needed
