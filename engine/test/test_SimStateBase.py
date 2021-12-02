@@ -27,7 +27,6 @@ class SimState(SimStateBase.SimStateBase):
         self.ss = SimStrategy()
         self.kpis = KPIs(time_step=3)
 
-        # FIXME: BUG: it's creating a dict of dict of dict...
         self.addAgent(SimpleAgent("agent1", 0.0, 0.0))
         self.addAgent(SimpleAgent("agent2", 0.0, 0.0))
 
