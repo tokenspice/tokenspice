@@ -13,10 +13,7 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
     they will go to the specified beneficiary agent."""
 
     def __init__(
-        self,
-        name: str,
-        USD: float,
-        OCEAN: float,
+        self, name: str, USD: float, OCEAN: float,
         vesting_wallet_agent_name: str,
         beneficiary_agent_name: str,
         start_timestamp: int,
