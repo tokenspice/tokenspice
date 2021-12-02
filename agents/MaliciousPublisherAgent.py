@@ -76,14 +76,6 @@ class MaliciousPublisherAgent(PublisherAgent.PublisherAgent):
             & (self._s_since_create <= self._s_wait_to_rug + self._s_rug_time)
         )
 
-    def _unstakeOCEANsomewhere(self, state):
-        """Choose what pool to unstake and by how much. Then do the action."""
-        #this agent unstakes the newest pool
-        pool_agent = state.getAgent(self.pools[-1])
-        BPT = self.BPT(pool_agent.pool)
-        BPT_unstake = PERCENT_UNSTAKE * BPT  # magic number
-        self.unstakeOCEAN(BPT_unstake, pool_agent.pool)
-
     def _doSellDT(self, state) -> bool:
         if not self._DTsWithNonzeroBalance(state):
             return False
