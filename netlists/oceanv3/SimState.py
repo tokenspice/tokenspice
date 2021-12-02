@@ -4,12 +4,10 @@ from typing import Set
 from agents.DataconsumerAgent import DataconsumerAgent
 from agents.MaliciousPublisherAgent import MaliciousPublisherAgent
 from agents.PublisherAgent import PublisherAgent
-from agents.SpeculatorAgent import SpeculatorAgent
-from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
 from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
-
 
 @enforce_types
 class SimState(SimStateBase.SimStateBase):

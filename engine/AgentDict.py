@@ -2,9 +2,8 @@ from enforce_typing import enforce_types
 
 from agents.PublisherAgent import PublisherAgent
 from agents.PoolAgent import PoolAgent
-from agents.StakerspeculatorAgent import StakerspeculatorAgent
 from agents.DataconsumerAgent import DataconsumerAgent
-from agents.SpeculatorAgent import SpeculatorAgent
+from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
 
 @enforce_types

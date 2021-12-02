@@ -1,16 +1,11 @@
-import logging
-
-log = logging.getLogger("marketagents")
-
 from enforce_typing import enforce_types
 import random
 
 from agents.PublisherAgent import PublisherAgent
-from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.SpeculatorAgent import StakerspeculatorAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 from engine import AgentBase
 from util.base18 import toBase18
-
 
 @enforce_types
 class DataecosystemAgent(AgentBase.AgentBaseNoEvm):

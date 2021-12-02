@@ -1,11 +1,9 @@
-#This module tests both SpeculatorAgent *and* StakerspeculatorAgent.py
-#If their macro behavior diverges, then expand test_StakerspeculatorAgent.py
+"""Test SpeculatorAgent *and* StakerspeculatorAgent.py"""
 from enforce_typing import enforce_types
 import pytest
 
 from agents.PoolAgent import PoolAgent
-from agents.SpeculatorAgent import SpeculatorAgent
-from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 from engine.AgentDict import AgentDict
 from util.constants import S_PER_HOUR
 

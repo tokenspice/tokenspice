@@ -5,7 +5,7 @@ from ..SimState import SimState
 from ..SimStrategy import SimStrategy
 from agents.PublisherAgent import PublisherAgent
 from agents.DataconsumerAgent import DataconsumerAgent
-from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 from agents.MaliciousPublisherAgent import MaliciousPublisherAgent
 
 @enforce_types
@@ -15,6 +15,7 @@ def test1():
     assert hasattr(state.ss, "publisher_init_OCEAN")
     assert isinstance(state.getAgent("publisher"), PublisherAgent)
     assert isinstance(state.getAgent("consumer"), DataconsumerAgent)
+    assert isinstance(state.getAgent("speculator"), SpeculatorAgent)
     assert isinstance(state.getAgent("stakerSpeculator"), StakerspeculatorAgent)
     assert isinstance(state.getAgent("maliciousPublisher"),
                       MaliciousPublisherAgent)
