@@ -6,4 +6,5 @@ enforce-typing
 eth-brownie
 matplotlib
 mypy
+pylint
 pytest

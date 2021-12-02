@@ -5,7 +5,6 @@
 - [Style Guide](#style-guide)
 - [On Tests](#tests)
 - [Remote Tests](#remote-tests)
-- [Local Install](#local-install)
 - [Local Tests](#local-tests)
 - [Local Fixes](#local-fixes)
 
@@ -52,12 +51,6 @@ Therefore, we _only_ use pylint. It's 80% of the benefit with 20% of the effort.
 [Codacy](https://www.codacy.com) is automatically run _remotely_ for each commit of each PR.
 - [Here's the Codacy TokenSPICE dashboard](https://app.codacy.com/gh/tokenspice/tokenspice/dashboard?branch=main), including links to tests. To access this, you need special permissions; ask Trent.
 - [These "Code Patterns" settings](https://app.codacy.com/gh/tokenspice/tokenspice/patterns/list) specify what checks are run vs ignored.
-
-## Local Install
-
-No work needed.
-
-Why: You should already have `pylint` in your virtual environment. If not, add it to requirements.txt for the future.
 
 ## Local Tests
 
