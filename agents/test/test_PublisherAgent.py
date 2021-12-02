@@ -110,16 +110,16 @@ def test_unstakeOCEANsomewhere(_AgentClass):
 
     state.addAgent(pub_agent)
     assert len(state.agents.filterByNonzeroStake(pub_agent)) == 0
-    assert pub_agent._doUnstakeOCEAN(state) == False
+    assert not pub_agent._doUnstakeOCEAN(state)
 
     pool_agent = pub_agent._createPoolAgent(state)
     assert len(state.agents.filterByNonzeroStake(pub_agent)) == 1
-    assert pub_agent._doUnstakeOCEAN(state) == False
+    assert not pub_agent._doUnstakeOCEAN(state)
 
     pub_agent._s_since_unstake += pub_agent._s_between_unstake  # force unstake
     if _AgentClass == MaliciousPublisherAgent:
         pub_agent._s_since_create += pub_agent._s_wait_to_rug  # ""
-    assert pub_agent._doUnstakeOCEAN(state) == True
+    assert pub_agent._doUnstakeOCEAN(state)
 
     BPT_before = pub_agent.BPT(pool_agent.pool)
     pub_agent._unstakeOCEANsomewhere(state)
@@ -135,16 +135,16 @@ def test_sellDTsomewhere(_AgentClass):
 
     state.addAgent(pub_agent)
     assert len(state.agents.filterByNonzeroStake(pub_agent)) == 0
-    assert pub_agent._doSellDT(state) == False
+    assert not pub_agent._doSellDT(state)
 
     pool_agent = pub_agent._createPoolAgent(state)
     assert len(pub_agent._DTsWithNonzeroBalance(state)) == 1
-    assert pub_agent._doSellDT(state) == False
+    assert not pub_agent._doSellDT(state)
 
     pub_agent._s_since_sellDT += pub_agent._s_between_sellDT  # force sell
     if _AgentClass == MaliciousPublisherAgent:
         pub_agent._s_since_create += pub_agent._s_wait_to_rug  # ""
-    assert pub_agent._doSellDT(state) == True
+    assert pub_agent._doSellDT(state)
 
     DT_before = pub_agent.DT(pool_agent.datatoken)
     perc_sell = 0.01

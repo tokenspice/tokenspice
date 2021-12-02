@@ -4,23 +4,14 @@ from agents.GrantGivingAgent import GrantGivingAgent
 from engine import AgentBase, SimStateBase, SimStrategyBase
 from util.constants import S_PER_DAY
 
-
-class SimStrategy(SimStrategyBase.SimStrategyBase):
-    pass
-
-
-class SimState(SimStateBase.SimStateBase):
-    pass
-
+SimStrategy = SimStrategyBase.SimStrategyBase
+SimState = SimStateBase.SimStateBase
 
 @enforce_types
-def test1():
+def test1(): #pylint: disable=too-many-statements
     ss = SimStrategy()
-    assert hasattr(ss, "time_step")
     ss.time_step = S_PER_DAY
-
     state = SimState(ss)
-
     class SimpleAgent(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass

@@ -4,28 +4,20 @@ from agents.RouterAgent import RouterAgent
 from engine import AgentBase, SimStateBase, SimStrategyBase
 from util.constants import S_PER_DAY, S_PER_MONTH
 
-
-class SimStrategy(SimStrategyBase.SimStrategyBase):
-    pass
-
-
-class SimState(SimStateBase.SimStateBase):
-    pass
-
+SimState = SimStateBase.SimStateBase
+SimStrategy = SimStrategyBase.SimStrategyBase
 
 @enforce_types
-def test1():
-    # getting "tickOneMonthAgo" is tricky, so test it well
+def test_RouterAgent():
     ss = SimStrategy()
     ss.time_step = S_PER_DAY
     state = SimState(ss)
-
-    class SimpleAgent(AgentBase.AgentBaseNoEvm):
+    class FooAgent(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass
 
-    state.agents["a1"] = a1 = SimpleAgent("a1", 0.0, 0.0)
-    state.agents["a2"] = a2 = SimpleAgent("a2", 0.0, 0.0)
+    state.agents["a1"] = a1 = FooAgent("a1", 0.0, 0.0)
+    state.agents["a2"] = a2 = FooAgent("a2", 0.0, 0.0)
 
     def perc_f1():
         return 0.2
@@ -67,7 +59,7 @@ def test1():
 
     # make a month pass, give $
     ticks_per_mo = int(S_PER_MONTH / float(state.ss.time_step))
-    for i in range(ticks_per_mo):
+    for _ in range(ticks_per_mo):
         am.receiveUSD(2.0)
         am.receiveOCEAN(3.0)
         am.takeStep(state)
@@ -77,7 +69,7 @@ def test1():
     assert am.monthlyOCEANreceived(state) == (3.0 * ticks_per_mo)
 
     # make another month pass, don't give $ this time
-    for i in range(ticks_per_mo + 1):
+    for _ in range(ticks_per_mo + 1):
         am.takeStep(state)
         state.tick += 1
     assert am._tickOneMonthAgo(state) > (1 + ticks_per_mo)

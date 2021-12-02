@@ -16,8 +16,8 @@ class MockSS:
 
 class MockState:
     def __init__(self):
-        self.agents = AgentDict({})
         self.ss = MockSS()
+        self.agents = AgentDict({})
 
     def addAgent(self, agent):
         self.agents[agent.name] = agent
@@ -62,12 +62,9 @@ def test_doSpeculateAction(alice_info, _AgentClass):
 
 @enforce_types
 @pytest.mark.parametrize("_AgentClass",[SpeculatorAgent,StakerspeculatorAgent])
-def test_speculateAction_nopools(alice_info, _AgentClass):
-    alice_pool = alice_info.pool
+def test_speculateAction_nopools(_AgentClass):
     state = MockState()
-
     agent = _AgentClass("agent1", USD=0.0, OCEAN=1000.0)
-
     assert not agent._poolsForSpeculate(state)
     assert not agent._doSpeculateAction(state)
     with pytest.raises(AssertionError):
@@ -79,7 +76,7 @@ def test_speculateAction_with_rugged_pools(alice_info, _AgentClass):
     alice_pool = alice_info.pool
     state = MockState()
     state.agents["pool1"] = PoolAgent("pool1", alice_pool)
-    state.rugged_pools = ["pool1"]
+    state.rugged_pools = ["pool1"] #pylint: disable=attribute-defined-outside-init
 
     agent = _AgentClass("agent1", USD=0.0, OCEAN=500.0)
 
