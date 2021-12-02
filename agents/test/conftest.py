@@ -44,10 +44,10 @@ def _make_info(account):
 
     class Info:
         def __init__(self):
-            info.account = None
-            info.agent = None
-            info.DT = None
-            info.pool = None
+            self.account = None
+            self.agent = None
+            self.DT = None
+            self.pool = None
 
     info = Info()
     info.account = account
