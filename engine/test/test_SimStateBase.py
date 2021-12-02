@@ -6,26 +6,27 @@ from engine import AgentBase
 # ==================================================================
 # testing stubs
 
-class SimStrategy(SimStrategyBase.SimStrategyBase):
-    pass
+SimStrategy = SimStrategyBase.SimStrategyBase
 
-class KPIs(KPIsBase.KPIsBase):
+@enforce_types
+class MockKPIs(KPIsBase.KPIsBase):
     def takeStep(self, state):
         pass
 
-    @staticmethod
-    def tick():
+    def tick(self):
         pass
 
+@enforce_types
 class SimpleAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
 
-class SimState(SimStateBase.SimStateBase):
+@enforce_types
+class MockSimState(SimStateBase.SimStateBase):
     def __init__(self):
         super().__init__()
         self.ss = SimStrategy()
-        self.kpis = KPIs(time_step=3)
+        self.kpis = MockKPIs(time_step=3)
 
         self.addAgent(SimpleAgent("agent1", 0.0, 0.0))
         self.addAgent(SimpleAgent("agent2", 0.0, 0.0))
@@ -35,10 +36,10 @@ class SimState(SimStateBase.SimStateBase):
 
 @enforce_types
 def test1():
-    state = SimState()
+    state = MockSimState()
     assert state.tick == 0
     assert state.numAgents() == 2
-    assert isinstance(state.kpis, KPIs)
+    assert isinstance(state.kpis, MockKPIs)
 
     state.takeStep()
 

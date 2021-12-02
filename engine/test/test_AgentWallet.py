@@ -2,11 +2,11 @@ from enforce_typing import enforce_types
 import pytest
 from pytest import approx
 
-from engine.AgentWallet import *
 from agents.test.conftest import _DT_INIT, _DT_STAKE
-from util import configutil
-from util.base18 import fromBase18, toBase18
-
+from engine.AgentWallet import AgentWalletNoEvm, AgentWalletEvm, BurnWallet, \
+    UsdNoEvmWalletMixIn, OceanNoEvmWalletMixIn
+from util import constants, globaltokens
+from util.base18 import fromBase18
 
 @enforce_types
 def testUsdNoEvmWalletMixIn():
