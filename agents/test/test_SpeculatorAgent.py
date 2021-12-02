@@ -1,5 +1,5 @@
 #This module tests both SpeculatorAgent *and* StakerspeculatorAgent.py
-#If their macro behavior diverges, then flesh out test_StakerspeculatorAgent.py
+#If their macro behavior diverges, then expand test_StakerspeculatorAgent.py
 from enforce_typing import enforce_types
 import pytest
 
