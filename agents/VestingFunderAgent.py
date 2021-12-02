@@ -1,14 +1,10 @@
-import brownie
-from brownie import Wei
 from enforce_typing import enforce_types
-import random
 
 from agents.VestingWalletAgent import VestingWalletAgent
 from engine import AgentBase
-from util.constants import BROWNIE_PROJECT057, S_PER_DAY
+from util.constants import BROWNIE_PROJECT057
 from util import globaltokens
 from util.base18 import toBase18
-
 
 @enforce_types
 class VestingFunderAgent(AgentBase.AgentBaseEvm):
@@ -25,7 +21,7 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
         beneficiary_agent_name: str,
         start_timestamp: int,
         duration_seconds: int,
-    ):
+    ): # pylint: disable=too-many-arguments
         super().__init__(name, USD, OCEAN)
 
         self._vesting_wallet_agent_name: str = vesting_wallet_agent_name
@@ -42,8 +38,6 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
 
         # create vesting wallet
         beneficiary_agent = state.getAgent(self._beneficiary_agent_name)
-        start_timestamp = brownie.network.chain[-1].timestamp < +5  # magic number
-        duration_seconds = 30  # magic number
         vw_contract = BROWNIE_PROJECT057.VestingWallet057.deploy(
             beneficiary_agent.address,
             self._start_timestamp,
