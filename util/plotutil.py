@@ -23,7 +23,6 @@ LINEAR, LOG, BOTH = 0, 1, 2  # pyplot.yscale interprets 1st 2
 MULT1, MULT100, DIV1M, DIV1B = 0, 1, 2, 3  # multiply or divide the value?
 COUNT, DOLLAR, PERCENT = 0, 1, 2
 
-
 @enforce_types
 class YParam:
     """Defines what to plot for y-values.
@@ -58,7 +57,6 @@ class YParam:
         else:
             raise ValueError(self.y_scale)
 
-
 @enforce_types
 def arrayToFloatList(x_array) -> List[float]:
     """
@@ -66,7 +64,6 @@ def arrayToFloatList(x_array) -> List[float]:
     :return: List[float]
     """
     return [float(x_item) for x_item in x_array]
-
 
 @enforce_types
 def _applyMult(y: List[float], mult: int) -> List[float]:
@@ -87,7 +84,6 @@ def _applyMult(y: List[float], mult: int) -> List[float]:
         return list(numpy.array(y) / 1e9)
     else:
         raise ValueError(mult)
-
 
 @enforce_types
 def _multUnitStr(mult: int, unit: int) -> str:
@@ -116,7 +112,6 @@ def _multUnitStr(mult: int, unit: int) -> str:
         raise ValueError(f"can't handle mult={mult} with unit={unit}")
     return
 
-
 @enforce_types
 def _expandBOTHinY(y_params: List[YParam]) -> List[YParam]:
     """
@@ -137,7 +132,6 @@ def _expandBOTHinY(y_params: List[YParam]) -> List[YParam]:
             p2.y_scale = LOG
             y_params2.append(p2)
     return y_params2
-
 
 @enforce_types
 def _xyToPngs(
@@ -259,7 +253,6 @@ def _csvToHeaderValues(input_csv_filename: str):
                 values.append(row)
     values = numpy.array(values)  # [tick_i, valuetype_i]
     return (header, values)
-
 
 @enforce_types
 def csvToPngs(input_csv_filename: str, output_png_dir: str, netlist_plot_instrs_func):

@@ -1,11 +1,6 @@
-import logging
-
-log = logging.getLogger("agents")
-
 from enforce_typing import enforce_types
 
 from engine import AgentBase
-
 
 @enforce_types
 class GrantGivingAgent(AgentBase.AgentBaseNoEvm):

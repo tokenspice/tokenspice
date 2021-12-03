@@ -1,9 +1,10 @@
 from enforce_typing import enforce_types
 import pytest
 
-from util.plotutil import *
-from util.plotutil import _applyMult, _multUnitStr, _expandBOTHinY
-
+from util.plotutil import YParam, _applyMult, _multUnitStr, _expandBOTHinY, \
+    LINEAR, LOG, BOTH, \
+    MULT1, MULT100, DIV1M, DIV1B, \
+    COUNT, DOLLAR, PERCENT
 
 @enforce_types
 def test_yparam1():
@@ -24,7 +25,6 @@ def test_yparam1():
     assert yparam.unit == COUNT
     assert yparam.y_scale_str == "LINEAR"
 
-
 def test_yparam2_yscale():
     for (y_scale, y_scale_str) in [(LINEAR, "LINEAR"), (LOG, "LOG"), (BOTH, "BOTH")]:
 
@@ -35,8 +35,7 @@ def test_yparam2_yscale():
     BAD_VALUE = 99
     yparam = YParam(["foo1"], ["foo 1"], "Foo 1", BAD_VALUE, MULT1, COUNT)
     with pytest.raises(ValueError):
-        x = yparam.y_scale_str
-
+        yparam.y_scale_str
 
 @enforce_types
 def test_applyMult():
@@ -46,7 +45,6 @@ def test_applyMult():
     assert pytest.approx(_applyMult([1.201], MULT100)[0]) == 120.1
     assert pytest.approx(_applyMult([1.201], DIV1M)[0]) == 1.201e-6
     assert pytest.approx(_applyMult([1.201], DIV1B)[0]) == 1.201e-9
-
 
 @enforce_types
 def test_multUnitStr():
@@ -58,13 +56,11 @@ def test_multUnitStr():
     assert _multUnitStr(DIV1B, COUNT) == "count, in billions"
     assert _multUnitStr(MULT100, PERCENT) == "%"
 
-
 def test_expandBOTHinY():
     yparams = [YParam(["foo1"], ["foo 1"], "Foo 1", BOTH, MULT1, COUNT)]
     yparams2 = _expandBOTHinY(yparams)
     assert len(yparams2) == 2
     assert sorted([yparams2[0].y_scale, yparams2[1].y_scale]) == sorted([LINEAR, LOG])
-
 
 # not currently tested:
 # _xyToPngs()

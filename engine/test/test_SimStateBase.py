@@ -2,51 +2,44 @@ from enforce_typing import enforce_types
 
 from engine import SimStateBase, SimStrategyBase, KPIsBase
 from engine import AgentBase
-from util.constants import S_PER_DAY
 
 # ==================================================================
 # testing stubs
 
+SimStrategy = SimStrategyBase.SimStrategyBase
 
-class SimStrategy(SimStrategyBase.SimStrategyBase):
-    pass
-
-
-class KPIs(KPIsBase.KPIsBase):
+@enforce_types
+class MockKPIs(KPIsBase.KPIsBase):
     def takeStep(self, state):
         pass
 
-    @staticmethod
-    def tick():
+    def tick(self):
         pass
 
-
+@enforce_types
 class SimpleAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
 
-
-class SimState(SimStateBase.SimStateBase):
+@enforce_types
+class MockSimState(SimStateBase.SimStateBase):
     def __init__(self):
         super().__init__()
         self.ss = SimStrategy()
-        self.kpis = KPIs(time_step=3)
+        self.kpis = MockKPIs(time_step=3)
 
-        # FIXME: BUG: it's creating a dict of dict of dict...
         self.addAgent(SimpleAgent("agent1", 0.0, 0.0))
         self.addAgent(SimpleAgent("agent2", 0.0, 0.0))
-
 
 # ==================================================================
 # actual tests
 
-
 @enforce_types
 def test1():
-    state = SimState()
+    state = MockSimState()
     assert state.tick == 0
     assert state.numAgents() == 2
-    assert isinstance(state.kpis, KPIs)
+    assert isinstance(state.kpis, MockKPIs)
 
     state.takeStep()
 

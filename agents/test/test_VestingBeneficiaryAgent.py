@@ -1,7 +1,7 @@
-from brownie import Wei
 from enforce_typing import enforce_types
 
 from agents.VestingBeneficiaryAgent import VestingBeneficiaryAgent
+from util.base18 import toBase18
 from util.globaltokens import fundOCEANFromAbove
 
 
@@ -18,8 +18,8 @@ def test1():
             self._released = False
             self._beneficiary_address = beneficiary_address
 
-        def release(self, token_address, from_dict):
-            fundOCEANFromAbove(self._beneficiary_address, Wei("100 ether"))
+        def release(self, token_address, from_dict):  # pylint: disable=unused-argument
+            fundOCEANFromAbove(self._beneficiary_address, toBase18(100.0))
             self._released = True
 
     vw = MockVestingWallet(beneficiary_agent.address)
@@ -34,7 +34,7 @@ def test1():
         def __init__(self, vw_agent):
             self.vw_agent = vw_agent
 
-        def getAgent(self, name):
+        def getAgent(self, name):  # pylint: disable=unused-argument
             return self.vw_agent
 
     state = MockSimState(vw_agent)

@@ -61,6 +61,14 @@ confidence=
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable=D203, D204, D213, D215, D400, D401, D404, D406, D407, D408, D409, D413,
+	missing-class-docstring,
+	missing-function-docstring,
+	missing-module-docstring,
+	invalid-name,
+	too-few-public-methods,
+	import-error,
+	unused-wildcard-import,
+	protected-access,
         print-statement,
         parameter-unpacking,
         unpacking-in-except,

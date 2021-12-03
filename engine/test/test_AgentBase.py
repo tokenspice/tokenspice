@@ -1,29 +1,24 @@
 from enforce_typing import enforce_types
 import pytest
 
-from engine.AgentBase import *
+from engine.AgentBase import AgentBaseEvm, AgentBaseNoEvm
 from agents.test.conftest import _DT_INIT, _DT_STAKE
-
 
 @enforce_types
 class MyTestAgentEvm(AgentBaseEvm):
     def takeStep(self, state):
         pass
 
-
 @enforce_types
 class MyTestAgentNoEvm(AgentBaseNoEvm):
     def takeStep(self, state):
         pass
 
-
 @enforce_types
 def _MyTestAgent(use_EVM):
     if use_EVM:
         return MyTestAgentEvm
-    else:
-        return MyTestAgentNoEvm
-
+    return MyTestAgentNoEvm
 
 @enforce_types
 def testInitEvm():

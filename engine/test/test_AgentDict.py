@@ -1,7 +1,6 @@
-from engine.AgentDict import AgentDict
-
 from enforce_typing import enforce_types
 
+from engine.AgentDict import AgentDict
 
 @enforce_types
 def test1():
@@ -31,14 +30,13 @@ def test1():
     bah_d = d.filterByClass(BahAgent)
     assert sorted(bah_d.keys()) == []
 
-
 @enforce_types
 def test2():
     class FooAgent:
         def __init__(self, name):
             self.name = name
 
-        def BPT(self, pool):
+        def BPT(self, pool): # pylint: disable=unused-argument, no-self-use
             return 0.0
 
     d = AgentDict({"foo1": FooAgent("foo1")})

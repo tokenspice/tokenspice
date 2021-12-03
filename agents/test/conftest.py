@@ -10,9 +10,9 @@ from sol057.contracts.oceanv3 import oceanv3util
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import BROWNIE_PROJECT057, GOD_ACCOUNT
+from util.constants import GOD_ACCOUNT
 
-accounts = brownie.network.accounts
+accounts = brownie.network.accounts # pylint: disable=no-member
 account0, account1 = accounts[0], accounts[1]
 
 _OCEAN_INIT = 1000.0
@@ -23,9 +23,11 @@ _DT_STAKE = 20.0
 _POOL_WEIGHT_DT = 3.0
 _POOL_WEIGHT_OCEAN = 7.0
 
+
 @pytest.fixture
 def alice_info():
     return _make_info(account0)
+
 
 @enforce_types
 def _make_info(account):
@@ -36,12 +38,16 @@ def _make_info(account):
     # reset OCEAN balances on-chain, to avoid relying on brownie chain reverts
     # -assumes that DT and BPT in each test are new tokens each time, and
     #  therefore don't need re-setting
-    for i, a in enumerate(accounts):
+    for a in accounts:
         if a.address != GOD_ACCOUNT.address:
             OCEAN.transfer(GOD_ACCOUNT, OCEAN.balanceOf(a), {"from": a})
 
     class Info:
-        pass
+        def __init__(self):
+            self.account = None
+            self.agent = None
+            self.DT = None
+            self.pool = None
 
     info = Info()
     info.account = account

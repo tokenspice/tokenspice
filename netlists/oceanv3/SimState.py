@@ -2,14 +2,11 @@ from enforce_typing import enforce_types
 from typing import Set
 
 from agents.DataconsumerAgent import DataconsumerAgent
-from agents.MaliciousPublisherAgent import MaliciousPublisherAgent
 from agents.PublisherAgent import PublisherAgent
-from agents.SpeculatorAgent import SpeculatorAgent
-from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
 from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
-
 
 @enforce_types
 class SimState(SimStateBase.SimStateBase):
@@ -37,7 +34,8 @@ class SimState(SimStateBase.SimStateBase):
                 pool_weight_OCEAN = self.ss.publisher_pool_weight_OCEAN,
                 s_between_create = self.ss.publisher_s_between_create,
                 s_between_unstake = self.ss.publisher_s_between_unstake,
-                s_between_sellDT = self.ss.publisher_s_between_sellDT
+                s_between_sellDT = self.ss.publisher_s_between_sellDT,
+                is_malicious = False
             )
         )
         
@@ -70,19 +68,20 @@ class SimState(SimStateBase.SimStateBase):
         )
 
         new_agents.add(
-            MaliciousPublisherAgent(
-                name="maliciousPublisher",
-                USD=0.0,
-                OCEAN=self.ss.mal_init_OCEAN,
-                DT_init=self.ss.mal_DT_init,
-                DT_stake=self.ss.mal_DT_stake,
-                pool_weight_DT=self.ss.mal_pool_weight_DT,
-                pool_weight_OCEAN=self.ss.mal_pool_weight_OCEAN,
-                s_between_create=self.ss.mal_s_between_create,
-                s_between_unstake=self.ss.mal_s_between_unstake,
-                s_between_sellDT=self.ss.mal_s_between_sellDT,
-                s_wait_to_rug=self.ss.mal_s_wait_to_rug,
-                s_rug_time=self.ss.mal_s_rug_time,
+            PublisherAgent(
+                name = "maliciousPublisher",
+                USD = 0.0,
+                OCEAN = self.ss.mal_init_OCEAN,
+                DT_init = self.ss.mal_DT_init,
+                DT_stake = self.ss.mal_DT_stake,
+                pool_weight_DT = self.ss.mal_pool_weight_DT,
+                pool_weight_OCEAN = self.ss.mal_pool_weight_OCEAN,
+                s_between_create = self.ss.mal_s_between_create,
+                s_between_unstake = self.ss.mal_s_between_unstake,
+                s_between_sellDT = self.ss.mal_s_between_sellDT,
+                is_malicious = True,
+                s_wait_to_rug = self.ss.mal_s_wait_to_rug,
+                s_rug_time = self.ss.mal_s_rug_time,
             )
         )
 

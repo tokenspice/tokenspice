@@ -1,10 +1,11 @@
-from engine import AgentBase
 from enforce_typing import enforce_types
+from matplotlib import pyplot, ticker
 
-from agents.MinterAgents import *
+from agents.MinterAgents import OCEANLinearMinterAgent, ExpFunc, \
+    RampedExpFunc, OCEANFuncMinterAgent
+from engine import AgentBase
 from netlists.wsloop import SimState, SimStrategy
-from util.constants import BITCOIN_NUM_HALF_LIVES, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
-
+from util.constants import S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 
 @enforce_types
 def testOCEANLinearMinterAgent():
@@ -56,19 +57,17 @@ def testOCEANLinearMinterAgent():
     assert a1.OCEAN() == 20.0
     assert state._total_OCEAN_minted == 20.0
 
-    for i in range(10):
+    for _ in range(10):
         minter.takeStep(state)
         state.tick += 1  # tick=14 (28 s elapsed), noop
     assert minter.OCEAN() == 0.0
     assert a1.OCEAN() == 20.0
     assert state._total_OCEAN_minted == 20.0
 
-
 @enforce_types
 def test_funcMinter_exp():
     func = ExpFunc(H=4.0)
     _test_funcMinter(func)
-
 
 @enforce_types
 def test_funcMinter_rampedExp():
@@ -77,9 +76,8 @@ def test_funcMinter_rampedExp():
     )
     _test_funcMinter(func)
 
-
 @enforce_types
-def _test_funcMinter(func):
+def _test_funcMinter(func): #pylint: disable=too-many-statements, too-many-locals
     # Simulate with realistic conditions: half-life, OCEAN to mint,
     #  target num half-lives (34, like Bitcoin).
     # Main check is to see whether we hit expected # years passed.
@@ -105,7 +103,7 @@ def _test_funcMinter(func):
         def takeStep(self, state):
             pass
 
-    state.agents["a1"] = a1 = SimpleAgent2("a1", 0.0, 0.0)
+    state.agents["a1"] = SimpleAgent2("a1", 0.0, 0.0)
 
     # base
     minter = OCEANFuncMinterAgent(
@@ -120,7 +118,7 @@ def _test_funcMinter(func):
     assert minter.OCEAN() == 0.0
     assert minter._receiving_agent_name == "a1"
     assert minter._total_OCEAN_to_mint == 700e6
-    assert minter._tick_previous_mint == None
+    assert minter._tick_previous_mint is None
     assert minter._OCEAN_left_to_mint == 700e6
     assert minter._func._H == 4.0
 
@@ -147,14 +145,9 @@ def _test_funcMinter(func):
         mo = state.tick * ss.time_step / S_PER_MONTH
         if manual_test:
             print(
-                f"tick=%d (mo=%.2f,yr=%.3f), OCEAN_left=%.4g,minted=%.4f"
-                % (
-                    state.tick,
-                    mo,
-                    year,
-                    minter._OCEAN_left_to_mint,
-                    minter.OCEANminted(),
-                )
+                "tick=%d (mo=%.2f,yr=%.3f), OCEAN_left=%.4g,minted=%.4f",
+                state.tick, mo, year, minter._OCEAN_left_to_mint,
+                minter.OCEANminted()
             )
 
         if minter._OCEAN_left_to_mint == 0.0:
@@ -175,9 +168,7 @@ def _test_funcMinter(func):
         return
 
     # plot
-    from matplotlib import pyplot, ticker
-
-    fig, ax = pyplot.subplots()
+    _, ax = pyplot.subplots()
     ax.set_xlabel("Year")
 
     # ax.plot(years, OCEAN_left, label="OCEAN left")

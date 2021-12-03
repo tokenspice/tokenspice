@@ -11,23 +11,21 @@ Support classes include:
 -BurnWallet - special wallet to burn to
 """
 
-import logging
-
-log = logging.getLogger("wallet")
-
 from abc import abstractmethod, ABC
-import brownie
-from brownie import Wei
-from brownie.network.account import Account
-from enforce_typing import enforce_types
+import logging
 import typing
+
+import brownie
+from brownie.network.account import Account #pylint: disable=no-name-in-module
+from enforce_typing import enforce_types
 
 from util import constants
 from util import globaltokens
+from util.base18 import toBase18, fromBase18
 from util.constants import GOD_ACCOUNT
 from util.strutil import asCurrency
-from util.base18 import toBase18, fromBase18
 
+log = logging.getLogger("wallet")
 
 @enforce_types
 class AgentWalletAbstract(ABC):
@@ -187,6 +185,7 @@ class AgentWalletNoEvm(
 
     def __init__(self, USD: float = 0.0, OCEAN: float = 0.0, private_key=None):
         assert private_key is None, "if no evm, no private key"
+        AgentWalletAbstract.__init__(self, USD, OCEAN, private_key)
         UsdNoEvmWalletMixIn.__init__(self, USD)
         OceanNoEvmWalletMixIn.__init__(self, OCEAN)
 
@@ -212,13 +211,16 @@ class AgentWalletEvm(
     """
 
     def __init__(self, USD: float = 0.0, OCEAN: float = 0.0, private_key=None):
+        AgentWalletAbstract.__init__(self, USD, OCEAN, private_key)
         UsdNoEvmWalletMixIn.__init__(self, USD)
 
         self._account: Account = None
+
+        accounts = brownie.network.accounts # pylint: disable=no-member
         if private_key is None:
-            self._account = brownie.network.accounts.add()
+            self._account = accounts.add()
         else:
-            self._account = brownie.network.accounts.add(private_key=private_key)
+            self._account = accounts.add(private_key=private_key)
 
         # Give the new wallet ETH to pay gas fees (but don't track otherwise)
         GOD_ACCOUNT.transfer(self._account, "0.01 ether")
@@ -293,9 +295,7 @@ class AgentWalletEvm(
         self.transferOCEAN(_BURN_WALLET, amt)
 
     def transferOCEAN(self, dst_wallet, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWalletEvm) or isinstance(
-            dst_wallet, BurnWallet
-        )
+        assert isinstance(dst_wallet, (AgentWalletEvm, BurnWallet))
         dst_address = dst_wallet.address
 
         amt_base = toBase18(amt)
@@ -417,9 +417,7 @@ class AgentWalletEvm(
         self.resetCachedInfo()
 
     def transferDT(self, dst_wallet, DT, amt: float) -> None:
-        assert isinstance(dst_wallet, AgentWalletEvm) or isinstance(
-            dst_wallet, BurnWallet
-        )
+        assert isinstance(dst_wallet, (AgentWalletEvm, BurnWallet))
         dst_address = dst_wallet.address
 
         amt_base = toBase18(amt)

@@ -1,21 +1,13 @@
-import logging
-
-log = logging.getLogger("agents")
-
-from enforce_typing import enforce_types
 import math
+from enforce_typing import enforce_types
 
 from engine import AgentBase
 from util.constants import S_PER_YEAR
 
-
 @enforce_types
 class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
     def __init__(
-        self,
-        name: str,
-        USD: float,
-        OCEAN: float,
+        self, name: str, USD: float, OCEAN: float,
         toll_agent_name: str,
         n_marketplaces: float,
         sales_per_marketplace_per_s: float,
