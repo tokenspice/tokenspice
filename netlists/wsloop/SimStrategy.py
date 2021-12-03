@@ -6,7 +6,9 @@ from util.constants import S_PER_DAY, S_PER_YEAR
 
 
 @enforce_types
-class SimStrategy(SimStrategyBase.SimStrategyBase): #pylint: disable=too-many-instance-attributes
+class SimStrategy(
+    SimStrategyBase.SimStrategyBase
+):  # pylint: disable=too-many-instance-attributes
     def __init__(self):
         # ===initialize self.time_step, max_ticks====
         super().__init__()

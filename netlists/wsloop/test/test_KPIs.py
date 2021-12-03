@@ -21,10 +21,12 @@ class DummySS:
 
 @enforce_types
 class BaseDummyMarketplacesAgent:
-    def numMarketplaces(self) -> float: #pylint: disable=no-self-use
+    def numMarketplaces(self) -> float:  # pylint: disable=no-self-use
         return 0.0
 
-    def consumeSalesPerMarketplacePerSecond(self) -> float: #pylint: disable=no-self-use
+    def consumeSalesPerMarketplacePerSecond(
+        self,
+    ) -> float:  # pylint: disable=no-self-use
         return 0.0
 
 
@@ -33,25 +35,25 @@ class BaseDummySimState:
     def __init__(self):
         self._marketplaces1_agent = None
 
-    def takeStep(self) -> None: #pylint: disable=no-self-use
+    def takeStep(self) -> None:  # pylint: disable=no-self-use
         pass
 
-    def getAgent(self, name: str): #pylint: disable=unused-argument
+    def getAgent(self, name: str):  # pylint: disable=unused-argument
         return self._marketplaces1_agent
 
-    def grantTakersSpentAtTick(self) -> float: #pylint: disable=no-self-use
+    def grantTakersSpentAtTick(self) -> float:  # pylint: disable=no-self-use
         return 0.0
 
-    def OCEANprice(self) -> float: #pylint: disable=no-self-use
+    def OCEANprice(self) -> float:  # pylint: disable=no-self-use
         return 0.0
 
-    def totalOCEANminted(self) -> float: #pylint: disable=no-self-use
+    def totalOCEANminted(self) -> float:  # pylint: disable=no-self-use
         return 0.0
 
-    def totalOCEANburned(self) -> float: #pylint: disable=no-self-use
+    def totalOCEANburned(self) -> float:  # pylint: disable=no-self-use
         return 0.0
 
-    def totalOCEANburnedUSD(self) -> float: #pylint: disable=no-self-use
+    def totalOCEANburnedUSD(self) -> float:  # pylint: disable=no-self-use
         return 0.0
 
 

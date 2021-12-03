@@ -16,7 +16,9 @@ from .SimStrategy import SimStrategy
 
 
 @enforce_types
-class SimState(SimStateBase.SimStateBase): #pylint: disable=too-many-instance-attributes
+class SimState(
+    SimStateBase.SimStateBase
+):  # pylint: disable=too-many-instance-attributes
     def __init__(self, ss=None):
         # initialize self.tick, ss, agents, kpis
         super().__init__(ss)

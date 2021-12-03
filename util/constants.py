@@ -2,31 +2,29 @@
 # numbers for running TokenSPICE. Magic numbers have been
 # moved into netlists.
 
-from util.configutil import CONF_FILE_PATH
+import configparser
+import math
+import os
 
-import configparser, os
+import brownie
+from brownie._config import CONFIG # pylint: disable=no-name-in-module
+from enforce_typing import enforce_types  # pylint: disable=unused-import
+
+from util.configutil import CONF_FILE_PATH
 
 config = configparser.ConfigParser()
 config.read(os.path.expanduser(CONF_FILE_PATH))
 
-import logging
-
-log = logging.getLogger("constants")
-
-import brownie
-
 BROWNIE_PROJECT057 = brownie.project.load("./sol057/", name="Project057")
 BROWNIE_PROJECT080 = brownie.project.load("./sol080/", name="Project080")
-brownie.network.connect(
-    "development"
-)  # FIXME: may need to be 'ganache', since brownie auto-reverts in 'development'
+
+# brownie auto-reverts in "development". If needed, set to "ganache"
+brownie.network.connect("development")
 
 GOD_ACCOUNT = brownie.network.accounts[9]
 
 SAFETY = config["general"].getboolean("SAFETY")
 assert SAFETY is not None
-
-from enforce_typing import enforce_types
 
 if not SAFETY:
     # do nothing, just return the original function
@@ -37,12 +35,10 @@ if not SAFETY:
 
 SILENT = config["general"].getboolean("SILENT")
 assert SILENT is not None
-from brownie._config import CONFIG
 
-CONFIG.argv["silent"] = SILENT
+CONFIG.argv["silent"] = SILENT #brownie config
 
 # big numbers
-import math
 
 INF = math.inf
 HUGEINT = 2 ** 255  # biggest int that can be passed into contracts

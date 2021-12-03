@@ -7,11 +7,24 @@ from engine import KPIsBase
 from util.constants import S_PER_YEAR, S_PER_MONTH, INF
 from util.strutil import prettyBigNum
 
-from util.plotutil import YParam, arrayToFloatList, LOG, BOTH, \
-    MULT1, MULT100, DIV1M, COUNT, DOLLAR, PERCENT
+from util.plotutil import (
+    YParam,
+    arrayToFloatList,
+    LOG,
+    BOTH,
+    MULT1,
+    MULT100,
+    DIV1M,
+    COUNT,
+    DOLLAR,
+    PERCENT,
+)
+
 
 @enforce_types
-class KPIs(KPIsBase.KPIsBase): #pylint: disable=too-many-public-methods, too-many-instance-attributes
+class KPIs(
+    KPIsBase.KPIsBase
+):  # pylint: disable=too-many-public-methods, too-many-instance-attributes
     def __init__(self, ss):
         super().__init__(ss.time_step)
         self.ss = ss
@@ -234,7 +247,9 @@ class KPIs(KPIsBase.KPIsBase): #pylint: disable=too-many-public-methods, too-man
 
 
 @enforce_types
-def netlist_createLogData(state): #pylint: disable=too-many-statements, too-many-locals
+def netlist_createLogData(
+    state,
+):  # pylint: disable=too-many-statements, too-many-locals
     """pass this to SimEngine.__init__() as argument `netlist_createLogData`"""
     F = False
     ss = state.ss

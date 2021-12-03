@@ -49,7 +49,7 @@ def test_yparam2_yscale():
     BAD_VALUE = 99
     yparam = YParam(["foo1"], ["foo 1"], "Foo 1", BAD_VALUE, MULT1, COUNT)
     with pytest.raises(ValueError):
-        yparam.y_scale_str
+        yparam.y_scale_str  # pylint: disable=pointless-statement
 
 
 @enforce_types
