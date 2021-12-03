@@ -1,15 +1,17 @@
-from enforce_typing import enforce_types
 import math
 from typing import List
 
+from enforce_typing import enforce_types
+
 from engine import KPIsBase
-from util import valuation
 from util.constants import S_PER_YEAR, S_PER_MONTH, INF
 from util.strutil import prettyBigNum
 
+from util.plotutil import YParam, arrayToFloatList, LOG, BOTH, \
+    MULT1, MULT100, DIV1M, COUNT, DOLLAR, PERCENT
 
 @enforce_types
-class KPIs(KPIsBase.KPIsBase):
+class KPIs(KPIsBase.KPIsBase): #pylint: disable=too-many-public-methods, too-many-instance-attributes
     def __init__(self, ss):
         super().__init__(ss.time_step)
         self.ss = ss
@@ -199,13 +201,6 @@ class KPIs(KPIsBase.KPIsBase):
         g = rev2 / rev1 - 1.0
         return g
 
-    @enforce_types
-    def valuationPS(self, p_s_ratio: float) -> float:
-        """Use Price/Sales ratio to compute valuation."""
-        sales = self.annualNetworkRevenueNow()
-        v = self.ss.fundamentalsValuation(sales)
-        return v
-
     # =======================================================================
     # OCEAN minted & burned per month, as a count (#) and as USD ($)
     def OCEANmintedPrevMonth(self) -> float:
@@ -239,7 +234,7 @@ class KPIs(KPIsBase.KPIsBase):
 
 
 @enforce_types
-def netlist_createLogData(state):
+def netlist_createLogData(state): #pylint: disable=too-many-statements, too-many-locals
     """pass this to SimEngine.__init__() as argument `netlist_createLogData`"""
     F = False
     ss = state.ss
@@ -374,27 +369,13 @@ def netlist_plotInstructions(header: List[str], values):
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
-    from util.plotutil import (
-        YParam,
-        arrayToFloatList,
-        LINEAR,
-        LOG,
-        BOTH,
-        MULT1,
-        MULT100,
-        DIV1M,
-        DIV1B,
-        COUNT,
-        DOLLAR,
-        PERCENT,
-    )
-
     x_label = "Year"
     x = arrayToFloatList(values[:, header.index(x_label)])
 
     y_params = [
         YParam(["OCEAN_price"], [""], "OCEAN Price", LOG, MULT1, DOLLAR),
-        # YParam(["network_rev_growth/yr"], [""], "Annual Network Revenue Growth", BOTH, MULT100, PERCENT),
+        # YParam(["network_rev_growth/yr"], [""],
+        #        "Annual Network Revenue Growth", BOTH, MULT100, PERCENT),
         YParam(
             ["overall_valuation", "fundamentals_valuation", "speculation_valuation"],
             ["Overall", "Fundamentals (P/S=30)", "Speculation"],

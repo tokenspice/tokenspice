@@ -1,17 +1,14 @@
-from enforce_typing import enforce_types
 import inspect
-import pytest
+
+from enforce_typing import enforce_types
 
 from .. import netlist
-from util.constants import S_PER_DAY
 
 
 def test_scope():
-    # example usage
-    ss = netlist.SimStrategy()
-    ss = netlist.SimState()
+    netlist.SimStrategy()
+    netlist.SimState()
 
-    # test that it's all there
     assert inspect.isclass(netlist.SimStrategy)
     assert inspect.isclass(netlist.SimState)
     assert inspect.isclass(netlist.KPIs)
@@ -46,7 +43,7 @@ def test_SimState():
 
     assert state.getAgent("pub1").OCEAN() == state.ss.pub_init_OCEAN
 
-    for i in range(1000):
+    for _ in range(1000):
         state.takeStep()
         if len(state.agents) > 1:
             break

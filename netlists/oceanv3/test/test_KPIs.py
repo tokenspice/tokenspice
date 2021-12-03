@@ -1,17 +1,17 @@
-from enforce_typing import enforce_types
-import pytest
 from pytest import approx
 
-from .. import KPIs
+from enforce_typing import enforce_types
+
 from agents.PoolAgent import PoolAgent
 from util import globaltokens
 from util.base18 import fromBase18
+from .. import KPIs
 
 
 @enforce_types
 class MockAgentDict(dict):  # subset of engine.AgentDict
-    def __init__(self, *arg, **kw):
-        super(MockAgentDict, self).__init__(*arg, **kw)
+    def __init__(self, *arg, **kw):  # pylint: disable=useless-super-delegation
+        super().__init__(*arg, **kw)
 
     def filterToPool(self):
         return self.filterByClass(PoolAgent)
@@ -38,10 +38,10 @@ class FooAgent:
         self._DT = 3.0  # magic number
         self._BPT = 5.0  # ""
 
-    def DT(self, dt) -> float:
+    def DT(self, dt) -> float:  # pylint: disable=unused-argument
         return self._DT
 
-    def BPT(self, pool) -> float:
+    def BPT(self, pool) -> float:  # pylint: disable=unused-argument
         return self._BPT
 
 

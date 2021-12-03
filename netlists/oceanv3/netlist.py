@@ -1,3 +1,4 @@
+#pylint: disable=unused-import
 """
 Netlist to simulate oceanV3
 """

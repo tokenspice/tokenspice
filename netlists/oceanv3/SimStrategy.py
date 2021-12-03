@@ -1,4 +1,3 @@
-from typing import List
 from enforce_typing import enforce_types
 
 from engine import SimStrategyBase
@@ -6,7 +5,7 @@ from util.constants import S_PER_HOUR, S_PER_DAY
 
 
 @enforce_types
-class SimStrategy(SimStrategyBase.SimStrategyBase):
+class SimStrategy(SimStrategyBase.SimStrategyBase): #pylint: disable=too-many-instance-attributes
     def __init__(self):
         super().__init__()
 

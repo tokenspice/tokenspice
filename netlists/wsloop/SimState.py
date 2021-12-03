@@ -1,5 +1,6 @@
-from enforce_typing import enforce_types
 from typing import Set
+
+from enforce_typing import enforce_types
 
 from agents import MinterAgents
 from agents.GrantGivingAgent import GrantGivingAgent
@@ -8,21 +9,20 @@ from agents.MarketplacesAgent import MarketplacesAgent
 from agents.OCEANBurnerAgent import OCEANBurnerAgent
 from agents.RouterAgent import RouterAgent
 from engine import AgentBase, SimStateBase
-from .KPIs import KPIs
 from util import valuation
-from util.constants import S_PER_YEAR, S_PER_MONTH, S_PER_DAY
+from util.constants import S_PER_MONTH, S_PER_DAY
+from .KPIs import KPIs
+from .SimStrategy import SimStrategy
 
 
 @enforce_types
-class SimState(SimStateBase.SimStateBase):
+class SimState(SimStateBase.SimStateBase): #pylint: disable=too-many-instance-attributes
     def __init__(self, ss=None):
         # initialize self.tick, ss, agents, kpis
         super().__init__(ss)
 
         # now, fill in actual values for ss, agents, kpis
         if self.ss is None:
-            from .SimStrategy import SimStrategy
-
             self.ss = SimStrategy()
         ss = self.ss  # for convenience as we go forward
 

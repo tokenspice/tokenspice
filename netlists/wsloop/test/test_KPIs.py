@@ -1,8 +1,9 @@
-from enforce_typing import enforce_types
 import pytest
 
-from ..KPIs import KPIs
+from enforce_typing import enforce_types
+
 from util.constants import S_PER_DAY
+from ..KPIs import KPIs
 
 
 @enforce_types
@@ -20,10 +21,10 @@ class DummySS:
 
 @enforce_types
 class BaseDummyMarketplacesAgent:
-    def numMarketplaces(self) -> float:
+    def numMarketplaces(self) -> float: #pylint: disable=no-self-use
         return 0.0
 
-    def consumeSalesPerMarketplacePerSecond(self) -> float:
+    def consumeSalesPerMarketplacePerSecond(self) -> float: #pylint: disable=no-self-use
         return 0.0
 
 
@@ -32,25 +33,25 @@ class BaseDummySimState:
     def __init__(self):
         self._marketplaces1_agent = None
 
-    def takeStep(state) -> None:
+    def takeStep(self) -> None: #pylint: disable=no-self-use
         pass
 
-    def getAgent(self, name: str):
+    def getAgent(self, name: str): #pylint: disable=unused-argument
         return self._marketplaces1_agent
 
-    def grantTakersSpentAtTick(self) -> float:
+    def grantTakersSpentAtTick(self) -> float: #pylint: disable=no-self-use
         return 0.0
 
-    def OCEANprice(self) -> float:
+    def OCEANprice(self) -> float: #pylint: disable=no-self-use
         return 0.0
 
-    def totalOCEANminted(self) -> float:
+    def totalOCEANminted(self) -> float: #pylint: disable=no-self-use
         return 0.0
 
-    def totalOCEANburned(self) -> float:
+    def totalOCEANburned(self) -> float: #pylint: disable=no-self-use
         return 0.0
 
-    def totalOCEANburnedUSD(self) -> float:
+    def totalOCEANburnedUSD(self) -> float: #pylint: disable=no-self-use
         return 0.0
 
 
@@ -82,6 +83,7 @@ def _testKPIs_Ratio(monthly_RND, monthly_sales, target):
 def testKPIs_GrantTakersRevenue():
     class DummySimState(BaseDummySimState):
         def __init__(self):
+            super().__init__()
             self.ss = DummySS(time_step=S_PER_DAY * 10)  # 1 tick = 10/30 = 0.33 mos
             self._marketplaces1_agent = BaseDummyMarketplacesAgent()
 
@@ -123,7 +125,7 @@ def testKPIs_GrantTakersRevenue():
     )  # NOT 4e3. NOT 3e3*S_PER_DAY*10
 
     # many more steps
-    for i in range(20):
+    for _ in range(20):
         kpis.takeStep(state)
     assert pytest.approx(kpis.grantTakersMonthlyRevenueNow()) == 3e3
 
@@ -139,6 +141,7 @@ def testKPIs__mktsConsumeSalesAndValuation():
 
     class DummySimState(BaseDummySimState):
         def __init__(self):
+            super().__init__()
             self._marketplaces1_agent = DummyMarketplacesAgent()
             self.ss = DummySS(time_step=3)
 
@@ -159,7 +162,7 @@ def testKPIs__mktsConsumeSalesAndValuation():
     assert kpis.oceanAnnualRevenueOneYearAgo() == 0.0
 
     # let time pass
-    for i in range(8):
+    for _ in range(8):
         kpis.takeStep(state)
 
     # key numbers:
@@ -203,11 +206,12 @@ def testKPIs__mintAndBurn():
         def numMarketplaces(self) -> float:
             return 0.0
 
-        def consumeSalesPerMarketpgglacePerSecond(self) -> float:
+        def consumeSalesPerMarketplacePerSecond(self) -> float:
             return 0.0
 
     class DummySimState(BaseDummySimState):
         def __init__(self):
+            super().__init__()
             self.ss = DummySS(time_step=S_PER_DAY * 10)
             self._marketplaces1_agent = DummyMarketplacesAgent()
 

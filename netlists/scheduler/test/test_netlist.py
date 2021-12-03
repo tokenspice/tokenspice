@@ -1,16 +1,15 @@
-from enforce_typing import enforce_types
 import inspect
+
+from enforce_typing import enforce_types
 
 from .. import netlist
 
 
 @enforce_types
 def test_scope():
-    # example usage
-    ss = netlist.SimStrategy()
-    ss = netlist.SimState()
+    netlist.SimStrategy()
+    netlist.SimState()
 
-    # test that it's all there
     assert inspect.isclass(netlist.SimStrategy)
     assert inspect.isclass(netlist.SimState)
     assert inspect.isclass(netlist.KPIs)

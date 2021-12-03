@@ -1,11 +1,10 @@
 from enforce_typing import enforce_types
 
-from ..SimState import KPIs
-from ..SimState import SimState
-from ..SimStrategy import SimStrategy
 from agents.PublisherAgent import PublisherAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
+from ..SimState import KPIs
+from ..SimState import SimState
 
 
 @enforce_types

@@ -1,9 +1,11 @@
-from enforce_typing import enforce_types
 from typing import List
+
+from enforce_typing import enforce_types
 
 from engine import KPIsBase
 from util import globaltokens
 from util.base18 import fromBase18
+from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, COUNT, DOLLAR
 
 
 @enforce_types
@@ -135,8 +137,6 @@ def netlist_plotInstructions(header: List[str], values):
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
-    from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, COUNT, DOLLAR
-
     x_label = "Year"
     x = arrayToFloatList(values[:, header.index(x_label)])
 

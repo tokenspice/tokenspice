@@ -265,7 +265,9 @@ def test_spot_price(T1, T2):
     assert round(p, 8) == 0.1000001
 
 
-def _spotPrices(T1, T2, bal1: float, bal2: float, w1: float, w2: float): #pylint: disable=too-many-arguments
+def _spotPrices(
+    T1, T2, bal1: float, bal2: float, w1: float, w2: float
+):  # pylint: disable=too-many-arguments
     pool = _createPoolWith2Tokens(T1, T2, bal1, bal2, w1, w2)
     a1, a2 = T1.address, T2.address
     return (
@@ -474,7 +476,9 @@ def test_calcPoolInGivenSingleOut():
     assert round(fromBase18(x), 3) == 0.005
 
 
-def _createPoolWith2Tokens(T1, T2, bal1: float, bal2: float, w1: float, w2: float): #pylint: disable=too-many-arguments
+def _createPoolWith2Tokens(
+    T1, T2, bal1: float, bal2: float, w1: float, w2: float
+):  # pylint: disable=too-many-arguments
     pool = _deployBPool()
 
     T1.approve(pool.address, toBase18(bal1), {"from": account0})

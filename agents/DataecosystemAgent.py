@@ -26,7 +26,7 @@ class DataecosystemAgent(AgentBase.AgentBaseNoEvm):
         # magic number: rule - only create if no agents so far
         return not state.publisherAgents()
 
-    def _createPublisherAgent(self, state) -> None: #pylint: disable=no-self-use
+    def _createPublisherAgent(self, state) -> None:  # pylint: disable=no-self-use
         name = "foo_publisher"
         USD = 0.0  # magic number
         OCEAN = 1000.0  # magic number
@@ -38,7 +38,9 @@ class DataecosystemAgent(AgentBase.AgentBaseNoEvm):
         # magic number: rule - only create if no agents so far
         return not state.stakerspeculatorAgents()
 
-    def _createStakerspeculatorAgent(self, state) -> None: #pylint: disable=no-self-use
+    def _createStakerspeculatorAgent(
+        self, state
+    ) -> None:  # pylint: disable=no-self-use
         name = "foo_stakerspeculator"
         USD = 0.0  # magic number
         OCEAN = 1000.0  # magic number
@@ -50,7 +52,7 @@ class DataecosystemAgent(AgentBase.AgentBaseNoEvm):
         # magic number: rule - only create if no agents so far
         return not state.dataconumerAgents()
 
-    def _createDataconsumerAgent(self, state) -> None: #pylint: disable=no-self-use
+    def _createDataconsumerAgent(self, state) -> None:  # pylint: disable=no-self-use
         name = "foo_dataconsumer"
         USD = 0.0  # magic number
         OCEAN = 1000.0  # magic number

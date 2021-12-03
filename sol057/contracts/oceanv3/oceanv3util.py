@@ -26,7 +26,7 @@ _DTFACTORY = None
 
 @enforce_types
 def DTFactory():
-    global _DTFACTORY #pylint: disable=global-statement
+    global _DTFACTORY  # pylint: disable=global-statement
     try:
         dt = templateDatatoken()
         factory = _DTFACTORY  # may trigger failure
@@ -67,7 +67,7 @@ _BFACTORY = None
 
 @enforce_types
 def BFactory():
-    global _BFACTORY #pylint: disable=global-statement
+    global _BFACTORY  # pylint: disable=global-statement
     try:
         pool = templatePool()
         factory = _BFACTORY  # may trigger failure

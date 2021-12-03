@@ -1,5 +1,6 @@
+from typing import Set, List
+
 from enforce_typing import enforce_types
-from typing import Set
 
 from agents.DataconsumerAgent import DataconsumerAgent
 from agents.PublisherAgent import PublisherAgent, PublisherStrategy
@@ -7,6 +8,7 @@ from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
 from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
+from .SimStrategy import SimStrategy
 
 
 @enforce_types
@@ -17,8 +19,6 @@ class SimState(SimStateBase.SimStateBase):
 
         # now, fill in actual values for ss, agents, kpis
         if self.ss is None:
-            from .SimStrategy import SimStrategy
-
             self.ss = SimStrategy()
         ss = self.ss  # for convenience as we go forward
 

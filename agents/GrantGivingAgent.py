@@ -18,7 +18,7 @@ class GrantGivingAgent(AgentBase.AgentBaseNoEvm):
         receiving_agent_name: str,
         s_between_grants: int,
         n_actions: int,
-    ): #pylint: disable=too-many-arguments
+    ):  # pylint: disable=too-many-arguments
         super().__init__(name, USD, OCEAN)
         self._receiving_agent_name: str = receiving_agent_name
         self._s_between_grants: int = s_between_grants
