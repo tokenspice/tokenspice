@@ -23,7 +23,7 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         OCEAN: float,
         s_between_buys: int = DEFAULT_s_between_buys,
         profit_margin_on_consume: float = DEFAULT_profit_margin_on_consume,
-    ): #pylint: disable=too-many-arguments
+    ):  # pylint: disable=too-many-arguments
         super().__init__(name, USD, OCEAN)
 
         self._s_since_buy = 0
@@ -42,7 +42,9 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
             return False
         return self._s_since_buy >= self._s_between_buys
 
-    def _candPoolAgents(self, state) -> List[PoolAgent]: #pylint: disable=too-many-locals
+    def _candPoolAgents(  # pylint: disable=too-many-locals
+        self, state
+    ) -> List[PoolAgent]:
         """Pools that this agent can afford to buy 1.0 datatokens from,
         at least based on a first approximation.
         """

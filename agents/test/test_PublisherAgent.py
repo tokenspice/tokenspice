@@ -2,8 +2,7 @@ from enforce_typing import enforce_types
 import pytest
 
 from agents.PoolAgent import PoolAgent
-from agents.PublisherAgent import PublisherStrategy, PublisherAgent, \
-    PERCENT_UNSTAKE
+from agents.PublisherAgent import PublisherStrategy, PublisherAgent, PERCENT_UNSTAKE
 from engine import AgentDict
 
 
@@ -28,16 +27,16 @@ class MockState:
 @enforce_types
 def test_PublisherStrategy():
     pub_ss = PublisherStrategy(
-        DT_init = 1.1,
-        DT_stake = 2.2,
-        pool_weight_DT = 3.3,
-        pool_weight_OCEAN = 4.4,
-        s_between_create = 50,
-        s_between_unstake = 60,
-        s_between_sellDT = 70,
-        is_malicious = True,
-        s_wait_to_rug = 80,
-        s_rug_time = 90,
+        DT_init=1.1,
+        DT_stake=2.2,
+        pool_weight_DT=3.3,
+        pool_weight_OCEAN=4.4,
+        s_between_create=50,
+        s_between_unstake=60,
+        s_between_sellDT=70,
+        is_malicious=True,
+        s_wait_to_rug=80,
+        s_rug_time=90,
     )
 
     assert pub_ss.DT_init == 1.1
@@ -74,7 +73,7 @@ def test_constructor():
     assert agent._s_since_create == 0
     assert agent._s_since_unstake == 0
     assert agent._s_since_sellDT == 0
-    
+
     assert agent.pools == []
 
 
@@ -86,7 +85,7 @@ def test_createPoolAgent(is_malicious):
 
     pub_ss = PublisherStrategy(is_malicious=is_malicious)
     pub_agent = PublisherAgent(name="a", USD=0.0, OCEAN=1000.0, pub_ss=pub_ss)
-    
+
     state.addAgent(pub_agent)
     assert len(state.agents) == 1
     assert len(state.agents.filterToPool()) == 0
@@ -102,7 +101,7 @@ def test_createPoolAgent(is_malicious):
 @pytest.mark.parametrize("is_malicious", [False, True])
 def test_unstakeOCEANsomewhere(is_malicious):
     state = MockState()
-    
+
     pub_ss = PublisherStrategy(is_malicious=is_malicious)
     pub_agent = PublisherAgent(name="a", USD=0.0, OCEAN=1000.0, pub_ss=pub_ss)
 
@@ -128,7 +127,7 @@ def test_unstakeOCEANsomewhere(is_malicious):
 @pytest.mark.parametrize("is_malicious", [False, True])
 def test_sellDTsomewhere(is_malicious):
     state = MockState()
-    
+
     pub_ss = PublisherStrategy(is_malicious=is_malicious)
     pub_agent = PublisherAgent(name="a", USD=0.0, OCEAN=1000.0, pub_ss=pub_ss)
 
@@ -149,4 +148,3 @@ def test_sellDTsomewhere(is_malicious):
     pub_agent._sellDTsomewhere(state, perc_sell=perc_sell)
     DT_after = pub_agent.DT(pool_agent.datatoken)
     assert DT_after == (1.0 - perc_sell) * DT_before
-

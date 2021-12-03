@@ -24,20 +24,21 @@ DEFAULT_is_malicious = False
 DEFAULT_s_wait_to_rug = int(DEFAULT_s_between_create / 2)
 DEFAULT_s_rug_time = int(DEFAULT_s_wait_to_rug / 5)
 
-class PublisherStrategy:
+
+class PublisherStrategy:  # pylint: disable=too-many-instance-attributes
     def __init__(
-            self,
-            DT_init: float = DEFAULT_DT_init,
-            DT_stake: float = DEFAULT_DT_stake,
-            pool_weight_DT: float = DEFAULT_pool_weight_DT,
-            pool_weight_OCEAN: float = DEFAULT_pool_weight_OCEAN,
-            s_between_create: int = DEFAULT_s_between_create,
-            s_between_unstake: int = DEFAULT_s_between_unstake,
-            s_between_sellDT: int = DEFAULT_s_between_sellDT,
-            is_malicious: bool = DEFAULT_is_malicious,
-            s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
-            s_rug_time: int = DEFAULT_s_rug_time
-    ):
+        self,
+        DT_init: float = DEFAULT_DT_init,
+        DT_stake: float = DEFAULT_DT_stake,
+        pool_weight_DT: float = DEFAULT_pool_weight_DT,
+        pool_weight_OCEAN: float = DEFAULT_pool_weight_OCEAN,
+        s_between_create: int = DEFAULT_s_between_create,
+        s_between_unstake: int = DEFAULT_s_between_unstake,
+        s_between_sellDT: int = DEFAULT_s_between_sellDT,
+        is_malicious: bool = DEFAULT_is_malicious,
+        s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
+        s_rug_time: int = DEFAULT_s_rug_time,
+    ):  # pylint: disable=too-many-arguments
         self.DT_init: float = DT_init
         self.DT_stake: float = DT_stake
         self.pool_weight_DT: float = pool_weight_DT
@@ -49,23 +50,23 @@ class PublisherStrategy:
         self.is_malicious: bool = is_malicious
         self.s_wait_to_rug: int = s_wait_to_rug
         self.s_rug_time: int = s_rug_time
-        
+
 
 @enforce_types
 class PublisherAgent(AgentBase.AgentBaseEvm):
     def __init__(
-            self,
-            name: str,
-            USD: float,
-            OCEAN: float,
-            pub_ss: PublisherStrategy = None,
+        self,
+        name: str,
+        USD: float,
+        OCEAN: float,
+        pub_ss: PublisherStrategy = None,
     ):
         super().__init__(name, USD, OCEAN)
         if pub_ss is None:
             pub_ss = PublisherStrategy()
 
         self.pub_ss: PublisherStrategy = pub_ss
-        
+
         self._s_since_create: int = 0
         self._s_since_unstake: int = 0
         self._s_since_sellDT: int = 0
@@ -154,10 +155,12 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
             return (
                 (self._s_since_unstake >= self.pub_ss.s_between_unstake)
                 & (self._s_since_create >= self.pub_ss.s_wait_to_rug)
-                & (self._s_since_create <=
-                   self.pub_ss.s_wait_to_rug + self.pub_ss.s_rug_time)
+                & (
+                    self._s_since_create
+                    <= self.pub_ss.s_wait_to_rug + self.pub_ss.s_rug_time
+                )
             )
-        
+
         return self._s_since_unstake >= self.pub_ss.s_between_unstake
 
     def _unstakeOCEANsomewhere(self, state):
@@ -171,13 +174,15 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
     def _doSellDT(self, state) -> bool:
         if not self._DTsWithNonzeroBalance(state):
             return False
-        
+
         if self.pub_ss.is_malicious:
             return (
                 (self._s_since_sellDT >= self.pub_ss.s_between_sellDT)
                 & (self._s_since_create >= self.pub_ss.s_wait_to_rug)
-                & (self._s_since_create <=
-                   self.pub_ss.s_wait_to_rug + self.pub_ss.s_rug_time)
+                & (
+                    self._s_since_create
+                    <= self.pub_ss.s_wait_to_rug + self.pub_ss.s_rug_time
+                )
             )
 
         return self._s_since_sellDT >= self.pub_ss.s_between_sellDT

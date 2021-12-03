@@ -2,7 +2,7 @@ from agents.DataecosystemAgent import DataecosystemAgent
 
 
 def test_createPublisherAgent():
-    a = DataecosystemAgent("a", 0.0, 0.0)  #pylint: disable=unused-variable
+    a = DataecosystemAgent("a", 0.0, 0.0)  # pylint: disable=unused-variable
 
 
 def test_createStakerspeculatorAgent():

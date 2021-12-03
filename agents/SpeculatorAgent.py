@@ -5,12 +5,12 @@
 """
 
 from abc import abstractmethod
-from enforce_typing import enforce_types
 import random
 from typing import List
 
+from enforce_typing import enforce_types
+
 from engine import AgentBase
-from util.base18 import toBase18
 from util import constants
 
 # magic numbers
@@ -42,14 +42,15 @@ class SpeculatorAgentBase(AgentBase.AgentBaseEvm):
         pool_agents = self._poolsForSpeculate(state)
         if not pool_agents:
             return False
-        else:
-            return self._s_since_speculate >= self._s_between_speculates
+
+        return self._s_since_speculate >= self._s_between_speculates
 
     @abstractmethod
     def _speculateAction(self, state):
         pass
 
-    def _poolsForSpeculate(self, state) -> List[AgentBase.AgentBaseAbstract]:
+    @staticmethod
+    def _poolsForSpeculate(state) -> List[AgentBase.AgentBaseAbstract]:
         pool_agents = state.agents.filterToPool()
 
         if hasattr(state, "rugged_pools"):
