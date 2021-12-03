@@ -24,9 +24,9 @@ class BaseDummyMarketplacesAgent:
     def numMarketplaces(self) -> float:  # pylint: disable=no-self-use
         return 0.0
 
-    def consumeSalesPerMarketplacePerSecond(
+    def consumeSalesPerMarketplacePerSecond(  # pylint: disable=no-self-use
         self,
-    ) -> float:  # pylint: disable=no-self-use
+    ) -> float:
         return 0.0
 
 

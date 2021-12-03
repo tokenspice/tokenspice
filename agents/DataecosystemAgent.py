@@ -38,9 +38,9 @@ class DataecosystemAgent(AgentBase.AgentBaseNoEvm):
         # magic number: rule - only create if no agents so far
         return not state.stakerspeculatorAgents()
 
-    def _createStakerspeculatorAgent(
+    def _createStakerspeculatorAgent(  # pylint: disable=no-self-use
         self, state
-    ) -> None:  # pylint: disable=no-self-use
+    ) -> None:
         name = "foo_stakerspeculator"
         USD = 0.0  # magic number
         OCEAN = 1000.0  # magic number

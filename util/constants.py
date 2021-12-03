@@ -7,7 +7,7 @@ import math
 import os
 
 import brownie
-from brownie._config import CONFIG # pylint: disable=no-name-in-module
+from brownie._config import CONFIG  # pylint: disable=no-name-in-module
 from enforce_typing import enforce_types  # pylint: disable=unused-import
 
 from util.configutil import CONF_FILE_PATH
@@ -36,7 +36,7 @@ if not SAFETY:
 SILENT = config["general"].getboolean("SILENT")
 assert SILENT is not None
 
-CONFIG.argv["silent"] = SILENT #brownie config
+CONFIG.argv["silent"] = SILENT  # brownie config
 
 # big numbers
 

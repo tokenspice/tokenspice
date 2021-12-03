@@ -7,6 +7,7 @@ import numpy
 # ===========================================================
 # Routines for importing / exporting to simple ascii files
 
+
 @enforce_types
 def asciiRowToStrings(filename: str) -> List[str]:
     """Extract and returns a list of strings from the first row of the file.

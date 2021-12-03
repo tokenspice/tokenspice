@@ -9,7 +9,7 @@ _OCEAN_TOKEN = None
 
 @enforce_types
 def OCEANtoken():
-    global _OCEAN_TOKEN #pylint: disable=global-statement
+    global _OCEAN_TOKEN  # pylint: disable=global-statement
     try:
         token = _OCEAN_TOKEN  # may trigger failure
         if token is not None:

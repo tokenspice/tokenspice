@@ -1,8 +1,16 @@
 #!/usr/bin/env python
 
+import cProfile
+import importlib
 import logging
+import pstats
 import os
 import sys
+
+import brownie
+
+from engine.SimEngine import SimEngine
+from util.plotutil import csvToPngs
 
 INFO = logging.INFO
 DEBUG = logging.DEBUG
@@ -22,7 +30,6 @@ Usage: tsp run|plot|showstats
 
 # ========================================================================
 # tsp run
-import importlib
 
 HELP_RUN = """
 Usage: tsp run NETLIST OUTPUT_DIR [DO_PROFILE]
@@ -64,21 +71,18 @@ def do_run():
     netlist_state = netlist_module.SimState()
     netlist_log_func = netlist_module.netlist_createLogData
 
-    from engine.SimEngine import SimEngine
 
     engine = SimEngine(netlist_state, output_dir, netlist_log_func)
     if not do_profile:
         engine.run()
     else:
-        import cProfile
-
         stats_filename = os.path.join(output_dir, "stats")
         cProfile.run("engine.run()", stats_filename)
         print(
-            f"Output stats file: {stats_filename}. To see: tsp showstats outdir_csv/stats 20 cumulative"
+            f"Output stats file: {stats_filename}. To see: tsp showstats "
+            "outdir_csv/stats 20 cumulative"
         )
     print(f"Output directory: {output_dir}")
-    import brownie
 
     if brownie.network.is_connected():
         brownie.network.disconnect()
@@ -144,8 +148,6 @@ def do_plot():
     netlist_plot_instrs_func = netlist_module.netlist_plotInstructions
 
     # main work
-    from util.plotutil import csvToPngs
-
     csvToPngs(input_csv_filename, output_png_dir, netlist_plot_instrs_func)
 
     print("Done")
@@ -176,7 +178,7 @@ def do_showstats():
     # extract inputs
     assert sys.argv[1] == "showstats"
     filename = sys.argv[2]
-    num_show = int(eval(sys.argv[3]))
+    num_show = int(eval(sys.argv[3])) # pylint: disable=eval-used
     sort_by = sys.argv[4]
 
     print(f"Argument FILENAME: '{filename}'")
@@ -189,14 +191,11 @@ def do_showstats():
         print(f"Input file '{filename}' does not exist. Exiting.")
         sys.exit(0)
     if num_show < 1:
-        print(f"Input NUM_SHOW is invalid. Exiting.")
+        print("Input NUM_SHOW is invalid. Exiting.")
         sys.exit(0)
 
     # do work
     # Note: assumes python3.6. Different in 3.7+.
-
-    import pstats
-
     p = pstats.Stats(filename)
 
     print("=" * 80)
@@ -216,7 +215,7 @@ def do_showstats():
         p.sort_stats("time").print_stats(num_show).print_callers(num_show)
 
     else:
-        print(f"Input sort_by is invalid. Exiting.")
+        print("Input sort_by is invalid. Exiting.")
         sys.exit(0)
 
     print("Done")

@@ -84,7 +84,7 @@ def _applyMult(y: List[float], mult: int) -> List[float]:
 
 
 @enforce_types
-def _multUnitStr(# pylint: disable=too-many-return-statements
+def _multUnitStr(  # pylint: disable=too-many-return-statements
     mult: int, unit: int
 ) -> str:
     """String describing units of a given enum multiplier
