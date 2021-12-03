@@ -5,10 +5,12 @@ from agents.PoolAgent import PoolAgent
 from agents.PublisherAgent import PublisherAgent, PERCENT_UNSTAKE
 from engine import AgentDict
 
+
 class MockSS:
     def __init__(self):
         self.pool_weight_DT = 3.0
         self.pool_weight_OCEAN = 7.0
+
 
 class MockState:
     def __init__(self):
@@ -21,12 +23,14 @@ class MockState:
     def getAgent(self, name):
         return self.agents[name]
 
+
 @enforce_types
-@pytest.mark.parametrize("mal",  [False, True])
+@pytest.mark.parametrize("mal", [False, True])
 def test_doCreatePool(mal):
     agent = PublisherAgent("a", USD=0.0, OCEAN=0.0, is_malicious=mal)
     c = agent._doCreatePool()
     assert c in [False, True]
+
 
 @enforce_types
 def test_constructor_args():
@@ -42,7 +46,6 @@ def test_constructor_args():
         s_between_create=50,
         s_between_unstake=60,
         s_between_sellDT=70,
-        
         is_malicious=True,
         s_wait_to_rug=80,
         s_rug_time=90,
@@ -55,12 +58,13 @@ def test_constructor_args():
     assert agent._s_between_create == 50
     assert agent._s_between_unstake == 60
     assert agent._s_between_sellDT == 70
-    
+
     assert agent._is_malicious
     assert agent._s_wait_to_rug == 80
     assert agent._s_rug_time == 90
 
     assert agent.pools == []
+
 
 @enforce_types
 @pytest.mark.parametrize("mal", [False, True])
@@ -78,6 +82,7 @@ def test_createPoolAgent(mal):
     assert len(state.agents.filterToPool()) == 1
     pool_agent2 = state.agents[pool_agent.name]
     assert isinstance(pool_agent2, PoolAgent)
+
 
 @enforce_types
 @pytest.mark.parametrize("mal", [False, True])
@@ -101,6 +106,7 @@ def test_unstakeOCEANsomewhere(mal):
     pub_agent._unstakeOCEANsomewhere(state)
     BPT_after = pub_agent.BPT(pool_agent.pool)
     assert BPT_after == (1.0 - PERCENT_UNSTAKE) * BPT_before
+
 
 @enforce_types
 @pytest.mark.parametrize("mal", [False, True])

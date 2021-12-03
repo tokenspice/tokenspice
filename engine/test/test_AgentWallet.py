@@ -3,10 +3,16 @@ import pytest
 from pytest import approx
 
 from agents.test.conftest import _DT_INIT, _DT_STAKE
-from engine.AgentWallet import AgentWalletNoEvm, AgentWalletEvm, BurnWallet, \
-    UsdNoEvmWalletMixIn, OceanNoEvmWalletMixIn
+from engine.AgentWallet import (
+    AgentWalletNoEvm,
+    AgentWalletEvm,
+    BurnWallet,
+    UsdNoEvmWalletMixIn,
+    OceanNoEvmWalletMixIn,
+)
 from util import constants, globaltokens
 from util.base18 import fromBase18
+
 
 @enforce_types
 def testUsdNoEvmWalletMixIn():

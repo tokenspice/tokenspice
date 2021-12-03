@@ -1,12 +1,13 @@
 import logging
 import os
 
-from brownie.network import chain # pylint: disable=no-name-in-module
+from brownie.network import chain  # pylint: disable=no-name-in-module
 from enforce_typing import enforce_types
 
 from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 
 log = logging.getLogger("master")
+
 
 @enforce_types
 class SimEngine:
@@ -34,7 +35,7 @@ class SimEngine:
            <<none>> but it continually generates an output csv output_dir
         """
         log.info("Begin.")
-        log.info(str(self.state.ss) + "\n") #pylint: disable=logging-not-lazy
+        log.info(str(self.state.ss) + "\n")  # pylint: disable=logging-not-lazy
 
         while True:
             self.takeStep()

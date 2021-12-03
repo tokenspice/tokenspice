@@ -8,15 +8,20 @@ from util import globaltokens
 from util.base18 import fromBase18, toBase18
 from util import constants
 
-#magic numbers
+# magic numbers
 DEFAULT_s_between_buys = 3 * constants.S_PER_DAY
 DEFAULT_profit_margin_on_consume = 0.2
 
+
 @enforce_types
 class DataconsumerAgent(AgentBase.AgentBaseEvm):
-    def __init__(self, name: str, USD: float, OCEAN: float,
-                 s_between_buys:int = DEFAULT_s_between_buys,
-                 profit_margin_on_consume:float = DEFAULT_profit_margin_on_consume,
+    def __init__(
+        self,
+        name: str,
+        USD: float,
+        OCEAN: float,
+        s_between_buys: int = DEFAULT_s_between_buys,
+        profit_margin_on_consume: float = DEFAULT_profit_margin_on_consume,
     ):
         super().__init__(name, USD, OCEAN)
 
@@ -45,15 +50,14 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         OCEAN = self.OCEAN()
         OCEAN_base = toBase18(OCEAN)
         all_pool_agents = state.agents.filterToPool()
-        
+
         cand_pool_agents = []
         for pool_name, pool_agent in all_pool_agents.items():
-            #filter 1: pool rugged?
-            if hasattr(state, 'rugged_pools') \
-               and pool_name in state.rugged_pools:
+            # filter 1: pool rugged?
+            if hasattr(state, "rugged_pools") and pool_name in state.rugged_pools:
                 continue
 
-            #filter 2: agent has enough funds?
+            # filter 2: agent has enough funds?
             pool = pool_agent.pool
             DT_address = pool_agent.datatoken_address
 
@@ -61,7 +65,7 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
             tokenWeightIn = pool.getDenormalizedWeight(OCEAN_address)
             tokenBalanceOut = pool.getBalance(DT_address)
             tokenWeightOut = pool.getDenormalizedWeight(DT_address)
-            tokenAmountOut = toBase18(1.0) #number of DTs
+            tokenAmountOut = toBase18(1.0)  # number of DTs
             swapFee = pool.getSwapFee()
 
             OCEANamountIn_base = pool.calcInGivenOut(
@@ -70,13 +74,13 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
                 tokenBalanceOut,
                 tokenWeightOut,
                 tokenAmountOut,
-                swapFee
+                swapFee,
             )
 
             if OCEANamountIn_base >= OCEAN_base:
                 continue
 
-            #passed all filters! Add this agent
+            # passed all filters! Add this agent
             cand_pool_agents.append(pool_agent)
 
         return cand_pool_agents

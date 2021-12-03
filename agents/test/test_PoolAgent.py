@@ -2,6 +2,7 @@ from enforce_typing import enforce_types
 
 from agents import PoolAgent
 
+
 @enforce_types
 def test1(alice_info):
     alice_pool, alice_DT = alice_info.pool, alice_info.DT

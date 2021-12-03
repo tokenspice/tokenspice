@@ -9,8 +9,8 @@ from util import globaltokens
 from util.base18 import toBase18
 from util.constants import S_PER_DAY
 
-#magic numbers
-DEFAULT_DT_init = 1000.0 
+# magic numbers
+DEFAULT_DT_init = 1000.0
 DEFAULT_DT_stake = 20.0
 DEFAULT_pool_weight_DT = 3.0
 DEFAULT_pool_weight_OCEAN = 7.0
@@ -20,44 +20,48 @@ DEFAULT_s_between_sellDT = 15 * S_PER_DAY
 PERCENT_UNSTAKE = 0.10
 
 DEFAULT_is_malicious = False
-DEFAULT_s_wait_to_rug = int(DEFAULT_s_between_create/2)
-DEFAULT_s_rug_time = int(DEFAULT_s_wait_to_rug/5)
+DEFAULT_s_wait_to_rug = int(DEFAULT_s_between_create / 2)
+DEFAULT_s_rug_time = int(DEFAULT_s_wait_to_rug / 5)
+
 
 @enforce_types
 class PublisherAgent(AgentBase.AgentBaseEvm):
-    def __init__(self, name:str, USD:float, OCEAN:float,
-                 DT_init:float = DEFAULT_DT_init,
-                 DT_stake:float = DEFAULT_DT_stake,
-                 pool_weight_DT:float = DEFAULT_pool_weight_DT,
-                 pool_weight_OCEAN:float = DEFAULT_pool_weight_OCEAN,
-                 s_between_create:int = DEFAULT_s_between_create,
-                 s_between_unstake:int = DEFAULT_s_between_unstake,
-                 s_between_sellDT:int = DEFAULT_s_between_sellDT,
-
-                 is_malicious:bool = DEFAULT_is_malicious,
-                 s_wait_to_rug:int = DEFAULT_s_wait_to_rug,
-                 s_rug_time:int = DEFAULT_s_rug_time,
+    def __init__(
+        self,
+        name: str,
+        USD: float,
+        OCEAN: float,
+        DT_init: float = DEFAULT_DT_init,
+        DT_stake: float = DEFAULT_DT_stake,
+        pool_weight_DT: float = DEFAULT_pool_weight_DT,
+        pool_weight_OCEAN: float = DEFAULT_pool_weight_OCEAN,
+        s_between_create: int = DEFAULT_s_between_create,
+        s_between_unstake: int = DEFAULT_s_between_unstake,
+        s_between_sellDT: int = DEFAULT_s_between_sellDT,
+        is_malicious: bool = DEFAULT_is_malicious,
+        s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
+        s_rug_time: int = DEFAULT_s_rug_time,
     ):
         super().__init__(name, USD, OCEAN)
 
-        self._DT_init:float = DT_init
-        self._DT_stake:float = DT_stake
-        self._pool_weight_DT:float = pool_weight_DT
-        self._pool_weight_OCEAN:float = pool_weight_OCEAN
+        self._DT_init: float = DT_init
+        self._DT_stake: float = DT_stake
+        self._pool_weight_DT: float = pool_weight_DT
+        self._pool_weight_OCEAN: float = pool_weight_OCEAN
 
-        self._s_since_create:int = 0
-        self._s_between_create:int = s_between_create 
+        self._s_since_create: int = 0
+        self._s_between_create: int = s_between_create
 
-        self._s_since_unstake:int = 0
-        self._s_between_unstake:int = s_between_unstake
+        self._s_since_unstake: int = 0
+        self._s_between_unstake: int = s_between_unstake
 
-        self._s_since_sellDT:int = 0
-        self._s_between_sellDT:int = s_between_sellDT
+        self._s_since_sellDT: int = 0
+        self._s_between_sellDT: int = s_between_sellDT
 
-        self._is_malicious:bool = is_malicious
-        self._s_wait_to_rug:int = s_wait_to_rug
-        self._s_rug_time:int = s_rug_time
-        
+        self._is_malicious: bool = is_malicious
+        self._s_wait_to_rug: int = s_wait_to_rug
+        self._s_rug_time: int = s_rug_time
+
         self.pools: List[str] = []  # pools created by this agent
 
     def takeStep(self, state) -> None:
@@ -104,7 +108,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
 
         # bind tokens & add initial liquidity
         OCEAN_bind_amt = self.OCEAN()  # magic number: use all the OCEAN
-        DT_bind_amt = self._DT_stake 
+        DT_bind_amt = self._DT_stake
 
         DT.approve(pool.address, toBase18(DT_bind_amt), {"from": account})
         OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt), {"from": account})
@@ -137,7 +141,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
     def _doUnstakeOCEAN(self, state) -> bool:
         if not state.agents.filterByNonzeroStake(self):
             return False
-        
+
         if self._is_malicious:
             return (
                 (self._s_since_unstake >= self._s_between_unstake)
@@ -170,12 +174,12 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
     def _sellDTsomewhere(self, state, perc_sell: float = 0.01):
         """Choose what DT to sell and by how much. Then do the action."""
         if self._is_malicious:
-            #unstakes the newest pool
+            # unstakes the newest pool
             pool_agent = state.getAgent(self.pools[-1])
             DT = pool_agent.datatoken
             pool = pool_agent.pool
         else:
-            #random by DT, then pool (could be something else)
+            # random by DT, then pool (could be something else)
             cand_DTs = self._DTsWithNonzeroBalance(state)
             DT = random.choice(cand_DTs)
             cand_pools = self._poolsWithDT(state, DT)

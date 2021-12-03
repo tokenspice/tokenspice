@@ -17,6 +17,7 @@ from util.strutil import StrMixin
 
 log = logging.getLogger("baseagent")
 
+
 @enforce_types
 class AgentBaseAbstract(ABC):
     def __init__(self, name: str):

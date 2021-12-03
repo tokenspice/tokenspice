@@ -7,6 +7,7 @@ from agents.PublisherAgent import PublisherAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
+
 @enforce_types
 def test1():
     state = SimState()
@@ -19,5 +20,5 @@ def test1():
     assert isinstance(state.getAgent("maliciousPublisher"), PublisherAgent)
 
     assert isinstance(state.kpis, KPIs)
-    
+
     assert state.rugged_pools == []

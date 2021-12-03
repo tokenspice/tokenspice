@@ -2,6 +2,7 @@ from enforce_typing import enforce_types
 
 from engine import AgentBase
 
+
 @enforce_types
 class VestingWalletAgent(AgentBase.AgentBaseEvm):
     # this vesting wallet never owns stuff itself, therefore USD=OCEAN=0

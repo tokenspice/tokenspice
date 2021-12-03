@@ -12,7 +12,7 @@ from util import globaltokens
 from util.base18 import toBase18, fromBase18
 from util.constants import GOD_ACCOUNT
 
-accounts = brownie.network.accounts # pylint: disable=no-member
+accounts = brownie.network.accounts  # pylint: disable=no-member
 account0, account1 = accounts[0], accounts[1]
 
 _OCEAN_INIT = 1000.0

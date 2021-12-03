@@ -13,18 +13,23 @@ from engine import AgentBase
 from util.base18 import toBase18
 from util import constants
 
-#magic numbers
+# magic numbers
 DEFAULT_s_between_speculates = 1 * constants.S_PER_DAY
+
 
 @enforce_types
 class SpeculatorAgentBase(AgentBase.AgentBaseEvm):
-    
-    def __init__(self, name: str, USD: float, OCEAN: float,
-                 s_between_speculates:int = DEFAULT_s_between_speculates):
+    def __init__(
+        self,
+        name: str,
+        USD: float,
+        OCEAN: float,
+        s_between_speculates: int = DEFAULT_s_between_speculates,
+    ):
         super().__init__(name, USD, OCEAN)
 
-        self._s_since_speculate:int = 0
-        self._s_between_speculates:int = s_between_speculates
+        self._s_since_speculate: int = 0
+        self._s_between_speculates: int = s_between_speculates
 
     def takeStep(self, state):
         self._s_since_speculate += state.ss.time_step
@@ -39,7 +44,7 @@ class SpeculatorAgentBase(AgentBase.AgentBaseEvm):
             return False
         else:
             return self._s_since_speculate >= self._s_between_speculates
-        
+
     @abstractmethod
     def _speculateAction(self, state):
         pass
@@ -47,12 +52,13 @@ class SpeculatorAgentBase(AgentBase.AgentBaseEvm):
     def _poolsForSpeculate(self, state) -> List[AgentBase.AgentBaseAbstract]:
         pool_agents = state.agents.filterToPool()
 
-        if hasattr(state, 'rugged_pools'):
+        if hasattr(state, "rugged_pools"):
             for pool_name in state.rugged_pools:
                 del pool_agents[pool_name]
 
         pool_agents = pool_agents.values()
         return pool_agents
+
 
 class SpeculatorAgent(SpeculatorAgentBase):
     """Speculates by buying and selling DT"""
@@ -75,6 +81,7 @@ class SpeculatorAgent(SpeculatorAgentBase):
         else:
             DT_buy_amt = 1.0  # magic number
             self._wallet.buyDT(pool, datatoken, DT_buy_amt, max_OCEAN_allow)
+
 
 @enforce_types
 class StakerspeculatorAgent(SpeculatorAgentBase):

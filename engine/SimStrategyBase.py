@@ -8,6 +8,7 @@ from util.strutil import StrMixin
 
 log = logging.getLogger("simstrategy")
 
+
 @enforce_types
 class SimStrategyBase(StrMixin):
     def __init__(self):

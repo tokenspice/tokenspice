@@ -4,6 +4,7 @@ from enforce_typing import enforce_types
 from engine import SimStrategyBase
 from util.constants import S_PER_HOUR, S_PER_DAY
 
+
 @enforce_types
 class SimStrategy(SimStrategyBase.SimStrategyBase):
     def __init__(self):
@@ -20,8 +21,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.publisher_DT_stake = 50.0
         self.publisher_pool_weight_DT = 3.0
         self.publisher_pool_weight_OCEAN = 7.0
-        assert (self.publisher_pool_weight_DT +
-                self.publisher_pool_weight_OCEAN) == 10.0
+        assert (
+            self.publisher_pool_weight_DT + self.publisher_pool_weight_OCEAN
+        ) == 10.0
         self.publisher_s_between_create = 7 * S_PER_DAY
         self.publisher_s_between_unstake = 3 * S_PER_DAY
         self.publisher_s_between_sellDT = 15 * S_PER_DAY
@@ -45,8 +47,7 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.mal_DT_stake = 50.0
         self.mal_pool_weight_DT = 3.0
         self.mal_pool_weight_OCEAN = 7.0
-        assert (self.mal_pool_weight_DT +
-                self.mal_pool_weight_OCEAN) == 10.0
+        assert (self.mal_pool_weight_DT + self.mal_pool_weight_OCEAN) == 10.0
         self.mal_s_between_create = 10 * S_PER_DAY
         self.mal_s_between_unstake = 1 * S_PER_HOUR
         self.mal_s_between_sellDT = 1 * S_PER_HOUR

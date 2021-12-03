@@ -7,11 +7,13 @@ from util.constants import S_PER_DAY, S_PER_MONTH
 SimState = SimStateBase.SimStateBase
 SimStrategy = SimStrategyBase.SimStrategyBase
 
+
 @enforce_types
 def test_RouterAgent():
     ss = SimStrategy()
     ss.time_step = S_PER_DAY
     state = SimState(ss)
+
     class FooAgent(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass

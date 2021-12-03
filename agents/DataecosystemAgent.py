@@ -7,6 +7,7 @@ from agents.DataconsumerAgent import DataconsumerAgent
 from engine import AgentBase
 from util.base18 import toBase18
 
+
 @enforce_types
 class DataecosystemAgent(AgentBase.AgentBaseNoEvm):
     """Will operate as a high-fidelity replacement for MarketplacesAgents,

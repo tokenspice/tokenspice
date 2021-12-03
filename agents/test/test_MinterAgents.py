@@ -1,11 +1,16 @@
 from enforce_typing import enforce_types
 from matplotlib import pyplot, ticker
 
-from agents.MinterAgents import OCEANLinearMinterAgent, ExpFunc, \
-    RampedExpFunc, OCEANFuncMinterAgent
+from agents.MinterAgents import (
+    OCEANLinearMinterAgent,
+    ExpFunc,
+    RampedExpFunc,
+    OCEANFuncMinterAgent,
+)
 from engine import AgentBase
 from netlists.wsloop import SimState, SimStrategy
 from util.constants import S_PER_DAY, S_PER_MONTH, S_PER_YEAR
+
 
 @enforce_types
 def testOCEANLinearMinterAgent():
@@ -64,10 +69,12 @@ def testOCEANLinearMinterAgent():
     assert a1.OCEAN() == 20.0
     assert state._total_OCEAN_minted == 20.0
 
+
 @enforce_types
 def test_funcMinter_exp():
     func = ExpFunc(H=4.0)
     _test_funcMinter(func)
+
 
 @enforce_types
 def test_funcMinter_rampedExp():
@@ -76,8 +83,9 @@ def test_funcMinter_rampedExp():
     )
     _test_funcMinter(func)
 
+
 @enforce_types
-def _test_funcMinter(func): #pylint: disable=too-many-statements, too-many-locals
+def _test_funcMinter(func):  # pylint: disable=too-many-statements, too-many-locals
     # Simulate with realistic conditions: half-life, OCEAN to mint,
     #  target num half-lives (34, like Bitcoin).
     # Main check is to see whether we hit expected # years passed.
@@ -146,8 +154,11 @@ def _test_funcMinter(func): #pylint: disable=too-many-statements, too-many-local
         if manual_test:
             print(
                 "tick=%d (mo=%.2f,yr=%.3f), OCEAN_left=%.4g,minted=%.4f",
-                state.tick, mo, year, minter._OCEAN_left_to_mint,
-                minter.OCEANminted()
+                state.tick,
+                mo,
+                year,
+                minter._OCEAN_left_to_mint,
+                minter.OCEANminted(),
             )
 
         if minter._OCEAN_left_to_mint == 0.0:

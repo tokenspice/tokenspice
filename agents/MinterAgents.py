@@ -93,6 +93,7 @@ class ExpFunc:
         num_half_lives = t / self._H
         return num_half_lives <= BITCOIN_NUM_HALF_LIVES
 
+
 @enforce_types
 class RampedExpFunc:
     """

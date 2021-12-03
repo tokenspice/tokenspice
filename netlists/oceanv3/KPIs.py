@@ -5,14 +5,16 @@ from engine import KPIsBase
 from util import globaltokens
 from util.base18 import fromBase18
 
+
 @enforce_types
 class KPIs(KPIsBase.KPIsBase):
     pass
 
+
 @enforce_types
 def get_OCEAN_in_DTs(state, agent) -> float:
     """Value of DT that this agent staked across all pools, denominated in OCEAN
-    
+
     Args:
         state: SimState -- SimState, holds all pool agents (& their pools)
         agent:  AgentBase -- agent of interest
@@ -29,14 +31,15 @@ def get_OCEAN_in_DTs(state, agent) -> float:
         price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address))
         amt_DT = agent.DT(DT)
         value_held += amt_DT * price
-        
+
     return value_held
+
 
 @enforce_types
 @enforce_types
 def get_OCEAN_in_BPTs(state, agent):
     """Value of BPTs that this agent owns across all pools, denominated in OCEAN
-    
+
     Args:
         state: SimState -- SimState, holds all pool agents (& their pools)
         agent:  AgentBase -- agent of interest
@@ -50,18 +53,19 @@ def get_OCEAN_in_BPTs(state, agent):
     for pool_agent in state.agents.filterToPool().values():
         pool = pool_agent._pool
         DT = pool_agent._dt
-        
+
         price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address))
         pool_value_DT = price * fromBase18(pool.getBalance(DT.address))
         pool_value_OCEAN = fromBase18(pool.getBalance(OCEAN_address))
         pool_value = pool_value_DT + pool_value_OCEAN
-        
-        amt_pool_BPTs = pool.totalSupply() #from BPool, inheriting from BToken
+
+        amt_pool_BPTs = pool.totalSupply()  # from BPool, inheriting from BToken
         agent_percent_pool = agent.BPT(pool) / amt_pool_BPTs
 
         value_held += agent_percent_pool * pool_value
-        
+
     return value_held
+
 
 @enforce_types
 def netlist_createLogData(state):
@@ -117,6 +121,7 @@ def netlist_createLogData(state):
     datarow += [n_rugged]
 
     return s, dataheader, datarow
+
 
 @enforce_types
 def netlist_plotInstructions(header: List[str], values):
