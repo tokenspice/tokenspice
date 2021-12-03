@@ -1,8 +1,22 @@
 from enforce_typing import enforce_types
 import pytest
 
-from util.plotutil import *
-from util.plotutil import _applyMult, _multUnitStr, _expandBOTHinY
+from util.plotutil import (
+    YParam,
+    _applyMult,
+    _multUnitStr,
+    _expandBOTHinY,
+    LINEAR,
+    LOG,
+    BOTH,
+    MULT1,
+    MULT100,
+    DIV1M,
+    DIV1B,
+    COUNT,
+    DOLLAR,
+    PERCENT,
+)
 
 
 @enforce_types
@@ -35,7 +49,7 @@ def test_yparam2_yscale():
     BAD_VALUE = 99
     yparam = YParam(["foo1"], ["foo 1"], "Foo 1", BAD_VALUE, MULT1, COUNT)
     with pytest.raises(ValueError):
-        x = yparam.y_scale_str
+        yparam.y_scale_str  # pylint: disable=pointless-statement
 
 
 @enforce_types

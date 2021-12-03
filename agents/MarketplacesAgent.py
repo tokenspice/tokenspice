@@ -1,9 +1,5 @@
-import logging
-
-log = logging.getLogger("agents")
-
-from enforce_typing import enforce_types
 import math
+from enforce_typing import enforce_types
 
 from engine import AgentBase
 from util.constants import S_PER_YEAR
@@ -20,7 +16,7 @@ class MarketplacesAgent(AgentBase.AgentBaseNoEvm):
         n_marketplaces: float,
         sales_per_marketplace_per_s: float,
         time_step: int,
-    ):
+    ):  # pylint: disable=too-many-arguments
         super().__init__(name, USD, OCEAN)
         self._toll_agent_name: str = toll_agent_name
 

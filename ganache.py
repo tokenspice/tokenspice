@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import eth_utils
 import argparse
 import os
+
+import eth_utils
 
 from util.configutil import confFileValue
 
@@ -31,7 +32,7 @@ factory_deployer_private_key = confFileValue("ganache", "FACTORY_DEPLOYER_PRIVAT
 amount_eth = 100
 amount_wei = eth_utils.to_wei(amount_eth, "ether")
 
-ganache_command = f'ganache-cli --port {port_number} --gasLimit 10000000000 --gasPrice 1 ---hardfork istanbul --account="{alice_private_key},{amount_wei}" --account="{bob_private_key},{amount_wei}" --account="{factory_deployer_private_key},{amount_wei}"'
+ganache_command = f'ganache-cli --port {port_number} --gasLimit 10000000000 --gasPrice 1 ---hardfork istanbul --account="{alice_private_key},{amount_wei}" --account="{bob_private_key},{amount_wei}" --account="{factory_deployer_private_key},{amount_wei}"'  # pylint: disable=line-too-long
 
 
 if args.run_in_background:

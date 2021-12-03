@@ -1,9 +1,7 @@
 from enforce_typing import enforce_types
-import random
 
 from engine import AgentBase
 from util import globaltokens
-from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT057
 
 

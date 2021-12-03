@@ -2,11 +2,13 @@ import math
 from enforce_typing import enforce_types
 
 from engine import SimStrategyBase
-from util.constants import S_PER_HOUR, S_PER_DAY, S_PER_YEAR
+from util.constants import S_PER_DAY, S_PER_YEAR
 
 
 @enforce_types
-class SimStrategy(SimStrategyBase.SimStrategyBase):
+class SimStrategy(
+    SimStrategyBase.SimStrategyBase
+):  # pylint: disable=too-many-instance-attributes
     def __init__(self):
         # ===initialize self.time_step, max_ticks====
         super().__init__()

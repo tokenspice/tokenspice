@@ -3,7 +3,7 @@ from engine.AgentDict import AgentDict
 
 
 @enforce_types
-class SimStateBase(object):
+class SimStateBase:
     def __init__(self, ss=None):
         # number of ticks elapsed in the simulation
         self.tick = 0

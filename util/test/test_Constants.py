@@ -1,4 +1,4 @@
-from util.constants import *
+from util.constants import *  # pylint: disable=wildcard-import
 
 
 def testINF():

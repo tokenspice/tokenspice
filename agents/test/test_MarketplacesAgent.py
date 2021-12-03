@@ -1,6 +1,7 @@
-from enforce_typing import enforce_types
 import math
 import pytest
+
+from enforce_typing import enforce_types
 
 from agents.MarketplacesAgent import MarketplacesAgent
 from util.constants import S_PER_DAY, S_PER_YEAR
@@ -37,7 +38,7 @@ def test4_takeStep():
             self.USD += USD
 
     class DummyKpis:
-        def mktsRNDToSalesRatio(self):
+        def mktsRNDToSalesRatio(self):  # pylint: disable=no-self-use
             return 0.0
 
     class DummySS:
@@ -45,7 +46,9 @@ def test4_takeStep():
             self.time_step = S_PER_DAY
             self._percent_consume_sales_for_network = 0.05
 
-        def annualMktsGrowthRate(self, dummy_ratio):
+        def annualMktsGrowthRate(
+            self, dummy_ratio
+        ):  # pylint: disable=no-self-use, unused-argument
             return 0.25
 
         def networkRevenue(self, consume_sales: float) -> float:
@@ -85,7 +88,7 @@ def test4_takeStep():
     assert a._n_marketplaces == (100.0 * (1.0 + g) * (1.0 + g))
     assert a._consume_sales_per_marketplace_per_s == (2.0 * (1.0 + g) * (1.0 + g))
 
-    for i in range(10):
+    for _ in range(10):
         a.takeStep(state)
     assert pytest.approx(a._n_marketplaces) == 100.0 * math.pow(1.0 + g, 1 + 1 + 10)
     assert pytest.approx(a._consume_sales_per_marketplace_per_s) == 2.0 * math.pow(

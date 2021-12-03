@@ -1,24 +1,15 @@
-import logging
-
-log = logging.getLogger("marketagents")
-
 from enforce_typing import enforce_types
-import random
 
 from agents.PublisherAgent import PublisherAgent
-from agents.StakerspeculatorAgent import StakerspeculatorAgent
+from agents.SpeculatorAgent import StakerspeculatorAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 from engine import AgentBase
-from util.base18 import toBase18
 
 
 @enforce_types
 class DataecosystemAgent(AgentBase.AgentBaseNoEvm):
     """Will operate as a high-fidelity replacement for MarketplacesAgents,
     when it's ready."""
-
-    def __init__(self, name: str, USD: float, OCEAN: float):
-        super().__init__(name, USD, OCEAN)
 
     def takeStep(self, state):
         if self._doCreatePublisherAgent(state):
@@ -30,35 +21,40 @@ class DataecosystemAgent(AgentBase.AgentBaseNoEvm):
         if self._doCreateDataconsumerAgent(state):
             self._createDataconsumerAgent(state)
 
-    def _doCreatePublisherAgent(self, state) -> bool:
+    @staticmethod
+    def _doCreatePublisherAgent(state) -> bool:
         # magic number: rule - only create if no agents so far
         return not state.publisherAgents()
 
-    def _createPublisherAgent(self, state) -> None:
-        name = "foo"  # FIXME
-        USD = 0.0  # FIXME magic number
-        OCEAN = 1000.0  # FIXME magic number
+    def _createPublisherAgent(self, state) -> None:  # pylint: disable=no-self-use
+        name = "foo_publisher"
+        USD = 0.0  # magic number
+        OCEAN = 1000.0  # magic number
         new_agent = PublisherAgent(name=name, USD=USD, OCEAN=OCEAN)
         state.addAgent(new_agent)
 
-    def _doCreateStakerspeculatorAgent(self, state) -> bool:
+    @staticmethod
+    def _doCreateStakerspeculatorAgent(state) -> bool:
         # magic number: rule - only create if no agents so far
         return not state.stakerspeculatorAgents()
 
-    def _createStakerspeculatorAgent(self, state) -> None:
-        name = "foo"  # FIXME
-        USD = 0.0  # FIXME magic number
-        OCEAN = 1000.0  # FIXME magic number
+    def _createStakerspeculatorAgent(  # pylint: disable=no-self-use
+        self, state
+    ) -> None:
+        name = "foo_stakerspeculator"
+        USD = 0.0  # magic number
+        OCEAN = 1000.0  # magic number
         new_agent = StakerspeculatorAgent(name=name, USD=USD, OCEAN=OCEAN)
         state.addAgent(new_agent)
 
-    def _doCreateDataconsumerAgent(self, state) -> bool:
+    @staticmethod
+    def _doCreateDataconsumerAgent(state) -> bool:
         # magic number: rule - only create if no agents so far
         return not state.dataconumerAgents()
 
-    def _createDataconsumerAgent(self, state) -> None:
-        name = "foo"  # FIXME
-        USD = 0.0  # FIXME magic number
-        OCEAN = 1000.0  # FIXME magic number
+    def _createDataconsumerAgent(self, state) -> None:  # pylint: disable=no-self-use
+        name = "foo_dataconsumer"
+        USD = 0.0  # magic number
+        OCEAN = 1000.0  # magic number
         new_agent = DataconsumerAgent(name=name, USD=USD, OCEAN=OCEAN)
         state.addAgent(new_agent)

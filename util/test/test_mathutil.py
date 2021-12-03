@@ -1,9 +1,8 @@
 from enforce_typing import enforce_types
 
-import numpy
 import pytest
 
-from util.mathutil import *
+from util.mathutil import *  # pylint: disable=wildcard-import
 
 
 @enforce_types
@@ -40,7 +39,7 @@ def testRange():
     assert p == 2.2
 
     r = Range(-1.5, 2.5)
-    for i in range(20):
+    for _ in range(20):
         p = r.drawRandomPoint()
         assert -1.5 <= p <= 2.5
 
@@ -75,7 +74,7 @@ def testRangeStr():
 
 @enforce_types
 def testRandunif():
-    for i in range(20):
+    for _ in range(20):
         # happy path
         p = randunif(-1.5, 2.5)
         assert -1.5 <= p <= 2.5

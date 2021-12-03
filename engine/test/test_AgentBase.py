@@ -1,7 +1,7 @@
 from enforce_typing import enforce_types
 import pytest
 
-from engine.AgentBase import *
+from engine.AgentBase import AgentBaseEvm, AgentBaseNoEvm
 from agents.test.conftest import _DT_INIT, _DT_STAKE
 
 
@@ -21,8 +21,7 @@ class MyTestAgentNoEvm(AgentBaseNoEvm):
 def _MyTestAgent(use_EVM):
     if use_EVM:
         return MyTestAgentEvm
-    else:
-        return MyTestAgentNoEvm
+    return MyTestAgentNoEvm
 
 
 @enforce_types

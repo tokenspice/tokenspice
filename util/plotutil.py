@@ -1,23 +1,13 @@
 import copy
 import csv
-from enforce_typing import enforce_types
-import logging
 import math
+import os
+from typing import Any, List
+
+from enforce_typing import enforce_types
 import matplotlib
 from matplotlib import pyplot
 import numpy
-import os
-from pylab import figure, axes, pie, title, show
-from typing import Any, List, Union
-
-from util.constants import (
-    S_PER_MIN,
-    S_PER_HOUR,
-    S_PER_DAY,
-    S_PER_WEEK,
-    S_PER_MONTH,
-    S_PER_YEAR,
-)
 
 LINEAR, LOG, BOTH = 0, 1, 2  # pyplot.yscale interprets 1st 2
 MULT1, MULT100, DIV1M, DIV1B = 0, 1, 2, 3  # multiply or divide the value?
@@ -30,7 +20,7 @@ class YParam:
     See example usage in netlist_headerValuesToXY.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         y_header_names: List[str],
         labels: List[str],
@@ -51,79 +41,87 @@ class YParam:
     def y_scale_str(self):
         if self.y_scale == LINEAR:
             return "LINEAR"
-        elif self.y_scale == LOG:
+        if self.y_scale == LOG:
             return "LOG"
-        elif self.y_scale == BOTH:
+        if self.y_scale == BOTH:
             return "BOTH"
-        else:
-            raise ValueError(self.y_scale)
+        raise ValueError(self.y_scale)
 
 
 @enforce_types
 def arrayToFloatList(x_array) -> List[float]:
-    """
-    :param: x_array: array[Any]
-    :return: List[float]
+    """Convert array to list of float.
+
+    Args:
+      x_array: array[Any] --
+
+    Returns:
+      List[float]
     """
     return [float(x_item) for x_item in x_array]
 
 
 @enforce_types
 def _applyMult(y: List[float], mult: int) -> List[float]:
-    """
-    Apply multiplier according to enum specified by 'mult'
+    """Apply multiplier according to enum specified by 'mult'
 
-    :param: y: values
-    :param: mult: e.g. MULT1, DIV1B, ..
-    :return: y multiplied
+    Args:
+        y -- values
+        mult -- e.g. MULT1, DIV1B, ..
+
+    Returns:
+        y multiplied
     """
     if mult == MULT1:
         return list(numpy.array(y) * 1.0)
-    elif mult == MULT100:
+    if mult == MULT100:
         return list(numpy.array(y) * 100.0)
-    elif mult == DIV1M:
+    if mult == DIV1M:
         return list(numpy.array(y) / 1e6)
-    elif mult == DIV1B:
+    if mult == DIV1B:
         return list(numpy.array(y) / 1e9)
-    else:
-        raise ValueError(mult)
+    raise ValueError(mult)
 
 
 @enforce_types
-def _multUnitStr(mult: int, unit: int) -> str:
-    """
-    String describing units of a given enum multiplier
+def _multUnitStr(  # pylint: disable=too-many-return-statements
+    mult: int, unit: int
+) -> str:
+    """String describing units of a given enum multiplier
 
-    :param: mult: e.g. MULT1, DIV1B, ..
-    :param: unit: e.g. DOLLAR, COUNT
-    :return: "$", "count, in billions"
+    Args:
+        mult -- e.g. MULT1, DIV1B, ..
+        unit -- e.g. DOLLAR, COUNT
+
+    Returns:
+        e.g. "$", "count, in billions"
     """
     if mult == MULT1 and unit == DOLLAR:
         return "$"
-    elif mult == DIV1M and unit == DOLLAR:
+    if mult == DIV1M and unit == DOLLAR:
         return "$M"
-    elif mult == DIV1B and unit == DOLLAR:
+    if mult == DIV1B and unit == DOLLAR:
         return "$B"
-    elif mult == MULT1 and unit == COUNT:
+    if mult == MULT1 and unit == COUNT:
         return "count"
-    elif mult == DIV1M and unit == COUNT:
+    if mult == DIV1M and unit == COUNT:
         return "count, in millions"
-    elif mult == DIV1B and unit == COUNT:
+    if mult == DIV1B and unit == COUNT:
         return "count, in billions"
-    elif mult == MULT100 and unit == PERCENT:
+    if mult == MULT100 and unit == PERCENT:
         return "%"
-    else:
-        raise ValueError(f"can't handle mult={mult} with unit={unit}")
-    return
+    raise ValueError(f"can't handle mult={mult} with unit={unit}")
 
 
 @enforce_types
 def _expandBOTHinY(y_params: List[YParam]) -> List[YParam]:
-    """
-    Any y_param that has a BOTH gets expanded to a LOG & a LINEAR entry
+    """Any y_param that has a BOTH gets expanded to a LOG & a LINEAR entry
 
-    :param: y_params -- incoming list of what to plot
-    :return: y_params2 -- revised list
+    Args:
+        y_params -- incoming list of what to plot
+
+    Returns:
+        y_params2 -- revised list
     """
     # replace BOTH with 2 entries
     y_params2 = []
@@ -140,7 +138,7 @@ def _expandBOTHinY(y_params: List[YParam]) -> List[YParam]:
 
 
 @enforce_types
-def _xyToPngs(
+def _xyToPngs(  # pylint: disable=too-many-branches, too-many-locals, too-many-arguments
     header: List[str],
     values,
     x_label: str,
@@ -148,17 +146,18 @@ def _xyToPngs(
     y_params: List[YParam],
     output_png_dir: str,
 ):
-    """
+    """Plot.
+
     Given actual data (header, values) and what to plot (x, y_params),
     create plots and store as .png files in output_png_dir
 
-    :param: header: List[str] holding 'Tick', 'Second', ...
-    :param: values: 2d array of float [tick_i, valuetype_i]
-    :param: x_label: str -- e.g. "Day", "Month", "Year"
-    :param: x: x-axis info on how to plot
-    :param: y_params: y-axis info on how to plot
-    :param: output_png_dir: path of output png to be created and filled
-    :return: <None> but creates png directory
+    Args:
+        header -- e.g. 'Tick', 'Second', ...
+        values: 2d array of float [tick_i, valuetype_i] --
+        x_label -- e.g. "Day", "Month", "Year"
+        x -- x-axis info on how to plot
+        y_params -- y-axis info on how to plot
+        output_png_dir -- path of output png to be created and filled
     """
 
     assert not os.path.exists(output_png_dir)
@@ -171,7 +170,7 @@ def _xyToPngs(
 
         ys = [_applyMult(y, p.mult) for y in ys]
 
-        fig, ax = pyplot.subplots()
+        _, ax = pyplot.subplots()
 
         ax.set_xlabel(x_label)
 
@@ -230,21 +229,17 @@ def _xyToPngs(
         pyplot.savefig(full_output_filename, bbox_inches="tight")
         print(f"Created '{full_output_filename}'")
 
-    return
-
 
 @enforce_types
 def _csvToHeaderValues(input_csv_filename: str):
-    """
-    Given csv file from a TokenSPICE run, creates (header, values).
+    """Given csv file from a TokenSPICE run, creates (header, values).
 
-    :param: input_csv_filename absolute path of input csv file
-    :param: output_png_dir: path of output png to be created and filled
-    :param: netlist_headerValuesToXY: function defined by netlist that
-      converts (header, values) to (x, y_params)
+    Args:
+        input_csv_filename -- absolute path of input csv file
 
-    :return: header -- List[str] holding 'Tick', 'Second', ...
-    :return: values -- 2d array of float [tick_i, valuetype_i]
+    Returns:
+        header: List[str] -- e.g. 'Tick', 'Second', ...
+        values: 2d array of float [tick_i, valuetype_i] --
     """
     assert os.path.exists(input_csv_filename)
     header: Any = None
@@ -263,15 +258,12 @@ def _csvToHeaderValues(input_csv_filename: str):
 
 @enforce_types
 def csvToPngs(input_csv_filename: str, output_png_dir: str, netlist_plot_instrs_func):
-    """
-    Main plotting routine, delegates subtasks to worker routines.
+    """Main plotting routine, delegates subtasks to worker routines.
 
-    :param: input_csv_filename absolute path of input csv file
-    :param: output_png_dir: path of output png to be created and filled
-    :param: netlist_headerValuesToXY: function defined by netlist that
-      converts (header, values) to (x, y_params)
-
-    :return: <None> but creates png directory
+    Args:
+        input_csv_filename -- absolute path of input csv file
+        output_png_dir -- path of output png to be created and filled
+        netlist_plot_instrs -- function to convert to (x, y_params)
     """
     (header, values) = _csvToHeaderValues(input_csv_filename)
 

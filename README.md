@@ -100,14 +100,17 @@ pytest contracts/test/test_Simpletoken.py::test_transfer
 #run all of a directory's tests
 pytest contracts/test
 
-#run all tests
+#run all unit tests
 pytest
 
 #run static type-checking. By default, uses config mypy.ini. Note: pytest does dynamic type-checking.
 mypy ./
+
+#run linting on code style
+pylint *
 ```
 
-**[Go here](README-code-quality.md)** if you wish to run code quality tests.
+**[Go here](README-code-quality.md)** for details on linting / style.
 
 ## TokenSPICE Command Line
 

@@ -6,19 +6,16 @@ Main classes in this module:
 -Sub-class AgentBase{NoEvm,Evm} for specific agents (buyers, publishers, ..)
 """
 
+from abc import ABC, abstractmethod
 import logging
 
-log = logging.getLogger("baseagent")
-
-from abc import ABC, abstractmethod
 from enforce_typing import enforce_types
-import typing
 
 from engine.AgentWallet import AgentWalletAbstract, AgentWalletEvm, AgentWalletNoEvm
-from util import globaltokens
 from util.constants import SAFETY
 from util.strutil import StrMixin
-from util.base18 import toBase18
+
+log = logging.getLogger("baseagent")
 
 
 @enforce_types

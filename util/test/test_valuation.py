@@ -1,4 +1,4 @@
-from util.valuation import *
+from util.valuation import OCEANprice
 
 
 def test_OCEANprice():

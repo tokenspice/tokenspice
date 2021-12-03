@@ -1,13 +1,10 @@
-import logging
-
-log = logging.getLogger("strutil")
+import inspect
 
 from enforce_typing import enforce_types
-import inspect
 
 
 @enforce_types
-class StrMixin(object):
+class StrMixin:
     def __str__(self) -> str:
         class_name = self.__class__.__name__
 
@@ -29,12 +26,7 @@ class StrMixin(object):
             attr_obj = getattr(obj, attr)
             if inspect.ismethod(attr_obj):
                 continue
-            if (
-                isinstance(attr_obj, int)
-                or isinstance(attr_obj, float)
-                or (attr_obj is None)
-                or isinstance(attr_obj, str)
-            ):
+            if isinstance(attr_obj, (int, float, str)) or (attr_obj is None):
                 short_attrs.append(attr)
             else:
                 long_attrs.append(attr)
@@ -79,13 +71,12 @@ def asCurrency(amount, decimals: bool = True) -> str:
     if decimals:
         if amount >= 0:
             return "${:,.2f}".format(amount)
-        else:
-            return "-${:,.2f}".format(-amount)
-    else:
-        if amount >= 0:
-            return "${:,.0f}".format(amount)
-        else:
-            return "-${:,.0f}".format(-amount)
+        return "-${:,.2f}".format(-amount)
+
+    if amount >= 0:
+        return "${:,.0f}".format(amount)
+
+    return "-${:,.0f}".format(-amount)
 
 
 def prettyBigNum(amount, remove_zeroes: bool = True) -> str:

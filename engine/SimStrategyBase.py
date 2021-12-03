@@ -1,12 +1,12 @@
 """Strategies hold 'magic numbers' related to running sim engine"""
 import logging
 
-log = logging.getLogger("simstrategy")
-
 from enforce_typing import enforce_types
 
 from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
 from util.strutil import StrMixin
+
+log = logging.getLogger("simstrategy")
 
 
 @enforce_types
@@ -39,7 +39,7 @@ class SimStrategyBase(StrMixin):
         if unit == "ticks":
             max_ticks = val
             self.max_ticks = max_ticks
-        elif unit == "min" or unit == "minutes":
+        elif unit in ["min", "minutes"]:
             max_hours = val
             self.max_ticks = max_hours * S_PER_MIN / self.time_step + 1
         elif unit == "hours":

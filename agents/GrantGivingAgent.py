@@ -1,7 +1,3 @@
-import logging
-
-log = logging.getLogger("agents")
-
 from enforce_typing import enforce_types
 
 from engine import AgentBase
@@ -22,7 +18,7 @@ class GrantGivingAgent(AgentBase.AgentBaseNoEvm):
         receiving_agent_name: str,
         s_between_grants: int,
         n_actions: int,
-    ):
+    ):  # pylint: disable=too-many-arguments
         super().__init__(name, USD, OCEAN)
         self._receiving_agent_name: str = receiving_agent_name
         self._s_between_grants: int = s_between_grants

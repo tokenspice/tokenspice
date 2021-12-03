@@ -1,10 +1,7 @@
-import logging
-
-log = logging.getLogger("agents")
+import math
+from typing import List
 
 from enforce_typing import enforce_types
-from typing import List
-import math
 
 from engine import AgentBase
 from util.constants import S_PER_MONTH

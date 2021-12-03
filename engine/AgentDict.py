@@ -2,20 +2,15 @@ from enforce_typing import enforce_types
 
 from agents.PublisherAgent import PublisherAgent
 from agents.PoolAgent import PoolAgent
-from agents.StakerspeculatorAgent import StakerspeculatorAgent
 from agents.DataconsumerAgent import DataconsumerAgent
-from agents.SpeculatorAgent import SpeculatorAgent
+from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
 
 @enforce_types
 class AgentDict(dict):
-    """Dict of Agent"""
-
-    def __init__(self, *arg, **kw):
-        """
-        Extend the dict object to get the best of both worlds (object/dict)
-        """
-        super(AgentDict, self).__init__(*arg, **kw)
+    def __init__(self, *arg, **kw):  # pylint: disable=useless-super-delegation
+        """Extend the dict object to get the best of both worlds (object/dict)"""
+        super().__init__(*arg, **kw)
 
     def filterByNonzeroStake(self, agent):
         """Which pools has 'agent' staked on?"""
@@ -44,8 +39,7 @@ class AgentDict(dict):
 
     def filterByClass(self, _class):
         return AgentDict(
-            {agent.name: agent for agent in self.values()
-             if isinstance(agent, _class)}
+            {agent.name: agent for agent in self.values() if isinstance(agent, _class)}
         )
 
     def agentByAddress(self, address):

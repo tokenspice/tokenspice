@@ -1,9 +1,11 @@
+from typing import List
+
 from enforce_typing import enforce_types
-from typing import List, Set
 
 from agents import GrantGivingAgent, GrantTakingAgent
 from engine import KPIsBase, SimStateBase, SimStrategyBase
 from util.constants import S_PER_HOUR, S_PER_DAY
+from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, DOLLAR
 
 
 @enforce_types
@@ -46,7 +48,7 @@ class SimState(SimStateBase.SimStateBase):
         # kpis is defined in this netlist module
         self.kpis = KPIs(self.ss.time_step)
 
-    def OCEANprice(self) -> float:
+    def OCEANprice(self) -> float:  # pylint: disable=no-self-use
         return 1.0  # arbitrary. Need GrantTakingAgent
 
 
@@ -87,8 +89,6 @@ def netlist_plotInstructions(header: List[str], values):
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
-    from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, DOLLAR
-
     x_label = "Day"
     x = arrayToFloatList(values[:, header.index(x_label)])
 

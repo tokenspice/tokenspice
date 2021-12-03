@@ -9,11 +9,11 @@ _OCEAN_TOKEN = None
 
 @enforce_types
 def OCEANtoken():
-    global _OCEAN_TOKEN
+    global _OCEAN_TOKEN  # pylint: disable=global-statement
     try:
         token = _OCEAN_TOKEN  # may trigger failure
         if token is not None:
-            x = token.address  # ""
+            x = token.address  # "" # pylint: disable=unused-variable
     except brownie.exceptions.ContractNotFound:
         token = None
     if token is None:

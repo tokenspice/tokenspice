@@ -1,7 +1,3 @@
-import logging
-
-log = logging.getLogger("agents")
-
 from enforce_typing import enforce_types
 
 from engine import AgentBase
@@ -14,7 +10,7 @@ class OCEANBurnerAgent(AgentBase.AgentBaseNoEvm):
             # OCEAN price will go up as we buy. Reflect it here.
             nloops = 10
             USD_spend_per_loop = self.USD() / float(nloops)
-            for i in range(nloops):
+            for _ in range(nloops):
                 price = state.OCEANprice()  # a func of supply
                 OCEAN = USD_spend_per_loop / price
                 state._total_OCEAN_burned += OCEAN

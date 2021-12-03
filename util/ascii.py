@@ -1,33 +1,22 @@
 """ascii.py -- Has routines python_data <=> ascii_files."""
-import logging
+from typing import List
 
-log = logging.getLogger("ascii")
-
-import types
-
+from enforce_typing import enforce_types
 import numpy
 
 # ===========================================================
 # Routines for importing / exporting to simple ascii files
 
 
-def asciiRowToStrings(filename):
-    """
-    @description
+@enforce_types
+def asciiRowToStrings(filename: str) -> List[str]:
+    """Extract and returns a list of strings from the first row of the file.
 
-      Extracts and returns a list of strings from the first row of the file.
+    Args:
+        filename
 
-    @arguments
-
-      filename -- string
-
-    @return
-
-      string_list -- list of string
-
-    @exceptions
-
-    @notes
+    Returns:
+        list of string
     """
     f = open(filename, "r")
     line = f.readline()
@@ -41,24 +30,18 @@ def asciiRowToStrings(filename):
     return strings
 
 
-def asciiTo2dArray(filename):
-    """
-    @description
+@enforce_types
+def asciiTo2dArray(filename: str):
+    """Create 2d array.
 
-      Extracts and returns a 2d array from the file; one row in X
-      for each row of file.
+    Extracts and returns a 2d array from the file; one row in X
+    for each row of file.
 
-    @arguments
+    Args:
+        filename -- indicates file to extract data from
 
-      filename -- string -- indicates file to extract data from
-
-    @return
-
-      X -- 2d array of float [row #][column #] -- extracted output data
-
-    @exceptions
-
-    @notes
+    Return:
+        X: 2d array of float [row #][column #] -- extracted output data
     """
     X = []
     f = open(filename, "r")
@@ -72,41 +55,17 @@ def asciiTo2dArray(filename):
             X.append(numbers)
 
     f.close()
-    X = numpy.array(X)
-    log.info(
-        "Loaded in array of size %d x %d from %s" % (X.shape[0], X.shape[1], filename)
-    )
-
-    # HACK: make an array with 1/factor of the values
-    #     log.info("Make reduced: begin")
-    #     factor = 10
-    #     filename_red = filename + '.reduced' + str(factor)
-    #     X_red = numpy.take(X, range(0, X.shape[0], factor), 0)
-    #     arrayToAscii(filename_red, X_red)
-    #     log.info("Make reduced: size %d x %d, filename = %s; done" %
-    #              (X_red.shape[0], X_red.shape[1], filename_red))
-
+    X = numpy.array(X) # type: ignore # skip mypy complaint
     return X
 
 
-def arrayToAscii(filename, X):
-    """
-    @description
+@enforce_types
+def arrayToAscii(filename: str, X):
+    """Puts 2d array X into ascii file.
 
-      Puts 2d array X into ascii
-
-    @arguments
-
-      filename -- string -- file to create
-      X -- 2d array --
-
-    @return
-
-      <<nothing>> but a file is created
-
-    @exceptions
-
-    @notes
+    Args:
+        filename -- file to create
+        X: 2d array --
     """
     f = open(filename, "w")
     num_rows, num_columns = X.shape
@@ -119,28 +78,19 @@ def arrayToAscii(filename, X):
     f.close()
 
 
-def stringToAscii(filename, string):
+@enforce_types
+def stringToAscii(filename: str, string: str):
     stringsToAscii(filename, [string])
 
 
-def stringsToAscii(filename, strings, add_whitespace=True):
-    """
-    @description
+@enforce_types
+def stringsToAscii(filename: str, strings: List[str], add_whitespace: bool = True):
+    """Puts list of strings into one row of an ascii file (which it creates)
 
-      Puts list of strings into one row of an ascii file
-
-    @arguments
-
-      filename -- string -- file to create
-      strings -- list of string
-
-    @return
-
-      <<nothing>> but a file is created
-
-    @exceptions
-
-    @notes
+    Args:
+        filename -- file to create
+        strings
+        add_whitespace -- add whitespace?
     """
     s = ""
     for string in strings:
@@ -157,30 +107,20 @@ def stringsToAscii(filename, strings, add_whitespace=True):
 # Routines for importing / exporting to .hdr + .val files
 
 
-def hdrValFilesToTrainingData(input_filebase, target_varname):
-    """
-    @description
+@enforce_types
+def hdrValFilesToTrainingData(input_filebase: str, target_varname: str):
+    """Extracts useful info from input_filebase.hdr and input_filebase.val
 
-      Extracts useful info from input_filebase.hdr and input_filebase.val
+    Args:
+      input_filebase -- points to two files
+      target_varname -- this will be the y, and the rest will be the X
 
-    @arguments
-
-      input_filebase -- string -- points to two files
-      target_varname -- string -- this will be the y, and the
-        rest will be the X
-
-    @return
-
-      Xy -- 2d array [#vars][#samples] -- transpose of the data from .val file
-      X -- 2d array [#full_input_vars][#samples] -- Xy, except y
-      y -- 1d array [#samples] -- the vector in Xy corresponding
-        to target_varname
-      all_varnames -- list of string -- essentially what .hdr file holds
-      input_varnames -- list of string -- all_varnames, minus target_varname
-
-    @exceptions
-
-    @notes
+    Returns:
+      Xy: 2d array [#vars][#samples] -- transpose of the data from .val file
+      X:  2d array [#full_input_vars][#samples] -- Xy, except y
+      y:  1d array [#samples] -- the vector in Xy corr. to target_varname
+      all_varnames: List[str] -- essentially what .hdr file holds
+      input_varnames: List[str] -- all_varnames, minus target_varname
     """
     # retrieve varnames
     all_varnames = asciiRowToStrings(input_filebase + ".hdr")
@@ -210,25 +150,15 @@ def hdrValFilesToTrainingData(input_filebase, target_varname):
     return Xy, X, y, all_varnames, input_varnames
 
 
-def trainingDataToHdrValFiles(output_filebase, varnames, Xy):
-    """
-    @description
+@enforce_types
+def trainingDataToHdrValFiles(output_filebase: str, varnames: List[str], Xy):
+    """Creates output_filebase.hdr and output_filebase.val files.
 
-      Creates output_filebase.hdr and output_filebase.val
-
-    @arguments
-
-      output_filebase -- string --
-      varnames -- list of string -- put into .hdr file
-      Xy -- 2d array [#vars][#samples] -- put transpose of this into .val file
-
-    @return
-
+    Args:
+        output_filebase
+        varnames -- put into .hdr file
+        Xy: 2d array [#vars][#samples] -- put transpose of this into .val file
       <<none>> but two files get created
-
-    @exceptions
-
-    @notes
     """
     stringsToAscii(output_filebase + ".hdr", varnames)
     arrayToAscii(output_filebase + ".val", numpy.transpose(Xy))

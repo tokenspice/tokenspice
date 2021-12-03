@@ -1,6 +1,6 @@
-from engine.AgentDict import AgentDict
-
 from enforce_typing import enforce_types
+
+from engine.AgentDict import AgentDict
 
 
 @enforce_types
@@ -38,7 +38,7 @@ def test2():
         def __init__(self, name):
             self.name = name
 
-        def BPT(self, pool):
+        def BPT(self, pool):  # pylint: disable=unused-argument, no-self-use
             return 0.0
 
     d = AgentDict({"foo1": FooAgent("foo1")})
