@@ -217,7 +217,7 @@ class AgentWalletEvm(
 
         self._account: Account = None
 
-        accounts = brownie.network.accounts  # pylint: disable=no-member
+        accounts = brownie.network.accounts
         if private_key is None:
             self._account = accounts.add()
         else:

@@ -26,12 +26,12 @@ _DTFACTORY = None
 
 @enforce_types
 def DTFactory():
-    global _DTFACTORY
+    global _DTFACTORY #pylint: disable=global-statement
     try:
         dt = templateDatatoken()
         factory = _DTFACTORY  # may trigger failure
         if factory is not None:
-            x = factory.address  # ""
+            x = factory.address  # "" #pylint: disable=unused-variable
     except brownie.exceptions.ContractNotFound:
         factory = None
     if factory is None:
@@ -67,12 +67,12 @@ _BFACTORY = None
 
 @enforce_types
 def BFactory():
-    global _BFACTORY
+    global _BFACTORY #pylint: disable=global-statement
     try:
         pool = templatePool()
         factory = _BFACTORY  # may trigger failure
         if factory is not None:
-            x = factory.address  # ""
+            x = factory.address  # "" #pylint: disable=unused-variable
     except brownie.exceptions.ContractNotFound:
         factory = None
     if factory is None:

@@ -8,9 +8,9 @@ from util.constants import BROWNIE_PROJECT057
 from util.base18 import toBase18
 
 # don't use account0, it's GOD_ACCOUNT. don't use account9, it's conftest pool
-accounts = brownie.network.accounts  # pylint: disable=no-member
+accounts = brownie.network.accounts
 account1, account2, account3 = accounts[1], accounts[2], accounts[3]
-chain = brownie.network.chain  # pylint: disable=no-member
+chain = brownie.network.chain
 
 
 @enforce_types

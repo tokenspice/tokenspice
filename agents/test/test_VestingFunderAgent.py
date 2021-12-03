@@ -6,8 +6,8 @@ from util import globaltokens
 from util.base18 import toBase18
 
 # don't use account0, it's GOD_ACCOUNT. don't use account9, it's conftest pool
-account1 = brownie.network.accounts[1]  # pylint: disable=no-member
-chain = brownie.network.chain  # pylint: disable=no-member
+account1 = brownie.network.accounts[1]
+chain = brownie.network.chain
 
 
 @enforce_types
