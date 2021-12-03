@@ -1,5 +1,4 @@
 import brownie
-from brownie import Wei
 from pytest import approx
 
 from util.base18 import toBase18
@@ -87,17 +86,17 @@ def test_ethFunding():
 def test_tokenFunding():
     # accounts 0, 1, 2 should each start with 100 TOK
     token = BROWNIE_PROJECT057.Simpletoken.deploy(
-        "TOK", "Test Token", 18, Wei("300 ether"), {"from": accounts[0]}
+        "TOK", "Test Token", 18, toBase18(300.0), {"from": accounts[0]}
     )
-    token.transfer(accounts[1], Wei("100 ether"), {"from": accounts[0]})
-    token.transfer(accounts[2], Wei("100 ether"), {"from": accounts[0]})
+    token.transfer(accounts[1], toBase18(100.0), {"from": accounts[0]})
+    token.transfer(accounts[2], toBase18(100.0), {"from": accounts[0]})
 
     assert token.balanceOf(accounts[0]) / 1e18 == approx(100.0)
     assert token.balanceOf(accounts[1]) / 1e18 == approx(100.0)
     assert token.balanceOf(accounts[2]) / 1e18 == approx(100.0)
 
     # account0 should be able to freely transfer TOK
-    token.transfer(accounts[1], Wei("10 ether"), {"from": accounts[0]})
+    token.transfer(accounts[1], toBase18(10.0), {"from": accounts[0]})
     assert token.balanceOf(accounts[0]) / 1e18 == approx(90.0)
     assert token.balanceOf(accounts[1]) / 1e18 == approx(110.0)
 
@@ -110,7 +109,7 @@ def test_tokenFunding():
     )
 
     # send TOK to the wallet
-    token.transfer(wallet.address, Wei("90 ether"), {"from": accounts[0]})
+    token.transfer(wallet.address, toBase18(90.0), {"from": accounts[0]})
     assert token.balanceOf(accounts[0]) == 0
     assert token.balanceOf(accounts[1]) / 1e18 == approx(110.0)
     assert wallet.vestedAmount(token.address, chain[-1].timestamp) == 0
@@ -130,7 +129,7 @@ def test_tokenFunding():
     assert token.balanceOf(accounts[1]) / 1e18 == approx(200.0)  # beneficiary is richer
 
     # put some new TOK into wallet. It's immediately vested, but not released
-    token.transfer(wallet.address, Wei("10 ether"), {"from": accounts[2]})
+    token.transfer(wallet.address, toBase18(10.0), {"from": accounts[2]})
     assert wallet.vestedAmount(token.address, chain[-1].timestamp) / 1e18 == approx(
         100.0
     )

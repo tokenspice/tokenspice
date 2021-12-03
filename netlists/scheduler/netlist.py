@@ -1,12 +1,14 @@
+from typing import List
+
 import brownie
 from enforce_typing import enforce_types
-from typing import List
 
 from agents.VestingBeneficiaryAgent import VestingBeneficiaryAgent
 from agents.VestingFunderAgent import VestingFunderAgent
 from engine import KPIsBase, SimStateBase, SimStrategyBase
-from util.constants import S_PER_MIN, S_PER_HOUR, S_PER_DAY, S_PER_MONTH, S_PER_YEAR
+from util.constants import S_PER_MONTH, S_PER_YEAR
 from util.globaltokens import OCEAN_address
+from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, DOLLAR
 
 chain = brownie.network.chain
 
@@ -112,8 +114,6 @@ def netlist_plotInstructions(header: List[str], values):
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
-    from util.plotutil import YParam, arrayToFloatList, LINEAR, MULT1, DOLLAR
-
     x_label = "Year"
     x = arrayToFloatList(values[:, header.index(x_label)])
 

@@ -3,6 +3,7 @@ from pytest import approx
 
 from agents.OCEANBurnerAgent import OCEANBurnerAgent
 
+
 @enforce_types
 def test_fixedOCEANprice():
     class DummySimState:
@@ -10,7 +11,7 @@ def test_fixedOCEANprice():
             self._total_OCEAN_burned: float = 0.0
             self._total_OCEAN_burned_USD: float = 0.0
 
-        def OCEANprice(self) -> float: #pylint: disable=no-self-use
+        def OCEANprice(self) -> float:  # pylint: disable=no-self-use
             return 2.0
 
     state = DummySimState()
@@ -28,6 +29,7 @@ def test_fixedOCEANprice():
     assert state._total_OCEAN_burned_USD == 30.0
     assert state._total_OCEAN_burned == 15.0
 
+
 @enforce_types
 def test_changingOCEANprice():
     class DummySimState:
@@ -36,10 +38,10 @@ def test_changingOCEANprice():
             self._total_OCEAN_burned_USD: float = 0.0
             self._initial_OCEAN: float = 100.0
 
-        def OCEANprice(self) -> float: #pylint: disable=no-self-use
+        def OCEANprice(self) -> float:  # pylint: disable=no-self-use
             return self.overallValuation() / self.OCEANsupply()
 
-        def overallValuation(self) -> float:#pylint: disable=no-self-use
+        def overallValuation(self) -> float:  # pylint: disable=no-self-use
             return 200.0
 
         def OCEANsupply(self) -> float:

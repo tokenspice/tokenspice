@@ -1,11 +1,11 @@
 from enforce_typing import enforce_types
 
-from ..SimState import KPIs
-from ..SimState import SimState
-from ..SimStrategy import SimStrategy
 from agents.PublisherAgent import PublisherAgent
 from agents.DataconsumerAgent import DataconsumerAgent
 from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
+from ..SimState import KPIs
+from ..SimState import SimState
+
 
 @enforce_types
 def test1():
@@ -19,5 +19,5 @@ def test1():
     assert isinstance(state.getAgent("maliciousPublisher"), PublisherAgent)
 
     assert isinstance(state.kpis, KPIs)
-    
+
     assert state.rugged_pools == []

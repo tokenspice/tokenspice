@@ -1,6 +1,7 @@
 from enforce_typing import enforce_types
 from engine.AgentDict import AgentDict
 
+
 @enforce_types
 class SimStateBase:
     def __init__(self, ss=None):

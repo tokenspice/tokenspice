@@ -7,11 +7,13 @@ from util.constants import S_PER_DAY
 SimStrategy = SimStrategyBase.SimStrategyBase
 SimState = SimStateBase.SimStateBase
 
+
 @enforce_types
-def test1(): #pylint: disable=too-many-statements
+def test1():  # pylint: disable=too-many-statements
     ss = SimStrategy()
     ss.time_step = S_PER_DAY
     state = SimState(ss)
+
     class SimpleAgent(AgentBase.AgentBaseNoEvm):
         def takeStep(self, state):
             pass

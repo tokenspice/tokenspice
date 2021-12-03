@@ -2,6 +2,7 @@ from enforce_typing import enforce_types
 
 from engine import AgentBase
 
+
 @enforce_types
 class GrantTakingAgent(AgentBase.AgentBaseNoEvm):
     def __init__(self, name: str, USD: float, OCEAN: float):

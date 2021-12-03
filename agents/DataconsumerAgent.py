@@ -1,23 +1,29 @@
-from enforce_typing import enforce_types
 import random
 from typing import List
+
+from enforce_typing import enforce_types
 
 from agents.PoolAgent import PoolAgent
 from engine import AgentBase
 from util import globaltokens
-from util.base18 import fromBase18, toBase18
+from util.base18 import toBase18
 from util import constants
 
-#magic numbers
+# magic numbers
 DEFAULT_s_between_buys = 3 * constants.S_PER_DAY
 DEFAULT_profit_margin_on_consume = 0.2
 
+
 @enforce_types
 class DataconsumerAgent(AgentBase.AgentBaseEvm):
-    def __init__(self, name: str, USD: float, OCEAN: float,
-                 s_between_buys:int = DEFAULT_s_between_buys,
-                 profit_margin_on_consume:float = DEFAULT_profit_margin_on_consume,
-    ):
+    def __init__(
+        self,
+        name: str,
+        USD: float,
+        OCEAN: float,
+        s_between_buys: int = DEFAULT_s_between_buys,
+        profit_margin_on_consume: float = DEFAULT_profit_margin_on_consume,
+    ):  # pylint: disable=too-many-arguments
         super().__init__(name, USD, OCEAN)
 
         self._s_since_buy = 0
@@ -34,26 +40,25 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         cand_pool_agents = self._candPoolAgents(state)
         if not cand_pool_agents:
             return False
-        else:
-            return self._s_since_buy >= self._s_between_buys
+        return self._s_since_buy >= self._s_between_buys
 
-    def _candPoolAgents(self, state) -> List[PoolAgent]:
+    def _candPoolAgents(  # pylint: disable=too-many-locals
+        self, state
+    ) -> List[PoolAgent]:
         """Pools that this agent can afford to buy 1.0 datatokens from,
         at least based on a first approximation.
         """
         OCEAN_address = globaltokens.OCEAN_address()
-        OCEAN = self.OCEAN()
-        OCEAN_base = toBase18(OCEAN)
+        OCEAN_base = toBase18(self.OCEAN())
         all_pool_agents = state.agents.filterToPool()
-        
+
         cand_pool_agents = []
         for pool_name, pool_agent in all_pool_agents.items():
-            #filter 1: pool rugged?
-            if hasattr(state, 'rugged_pools') \
-               and pool_name in state.rugged_pools:
+            # filter 1: pool rugged?
+            if hasattr(state, "rugged_pools") and pool_name in state.rugged_pools:
                 continue
 
-            #filter 2: agent has enough funds?
+            # filter 2: agent has enough funds?
             pool = pool_agent.pool
             DT_address = pool_agent.datatoken_address
 
@@ -61,7 +66,7 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
             tokenWeightIn = pool.getDenormalizedWeight(OCEAN_address)
             tokenBalanceOut = pool.getBalance(DT_address)
             tokenWeightOut = pool.getDenormalizedWeight(DT_address)
-            tokenAmountOut = toBase18(1.0) #number of DTs
+            tokenAmountOut = toBase18(1.0)  # number of DTs
             swapFee = pool.getSwapFee()
 
             OCEANamountIn_base = pool.calcInGivenOut(
@@ -70,13 +75,13 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
                 tokenBalanceOut,
                 tokenWeightOut,
                 tokenAmountOut,
-                swapFee
+                swapFee,
             )
 
             if OCEANamountIn_base >= OCEAN_base:
                 continue
 
-            #passed all filters! Add this agent
+            # passed all filters! Add this agent
             cand_pool_agents.append(pool_agent)
 
         return cand_pool_agents
@@ -85,7 +90,6 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         """Buy dataset, then consume it"""
         DT_buy_amt = 1.0  # buy just enough to consume once
         max_OCEAN_allow = self.OCEAN()
-        OCEANtoken = globaltokens.OCEANtoken()
 
         cand_pool_agents = self._candPoolAgents(state)
         assert cand_pool_agents
@@ -103,7 +107,7 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
         DT_after = self.DT(DT)
         OCEAN_after = self.OCEAN()
 
-        assert self.DT(DT) == (DT_before + DT_buy_amt)
+        assert DT_after == (DT_before + DT_buy_amt)
         assert OCEAN_after < OCEAN_before
 
         OCEAN_spend = OCEAN_before - OCEAN_after

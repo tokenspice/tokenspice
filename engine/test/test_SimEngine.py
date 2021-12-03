@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from brownie.network import chain # pylint: disable=no-name-in-module
+from brownie.network import chain  # pylint: disable=no-name-in-module
 from enforce_typing import enforce_types
 
 from engine import AgentBase

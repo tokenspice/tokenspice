@@ -1,11 +1,9 @@
-from enforce_typing import enforce_types
-import logging
 import math
+
+from enforce_typing import enforce_types
 
 from engine import AgentBase
 from util.constants import S_PER_YEAR, BITCOIN_NUM_HALF_LIVES
-
-log = logging.getLogger("minteragents")
 
 # ====================================================================
 # Linear minting
@@ -24,7 +22,7 @@ class OCEANLinearMinterAgent(AgentBase.AgentBaseNoEvm):
         total_OCEAN_to_mint: float,
         s_between_mints: int,
         n_mints: int,
-    ):
+    ):  # pylint: disable=too-many-arguments
         assert total_OCEAN_to_mint >= 0.0
         if total_OCEAN_to_mint > 0.0:
             assert n_mints > 0
@@ -46,13 +44,13 @@ class OCEANLinearMinterAgent(AgentBase.AgentBaseNoEvm):
 
         if self._n_mints_left == 0:
             return False
-        elif self._tick_previous_mint is None:
+        if self._tick_previous_mint is None:
             return True
-        else:
-            n_ticks_since = state.tick - self._tick_previous_mint
-            n_s_since = n_ticks_since * state.ss.time_step
-            n_s_thr = self._s_between_mints
-            return n_s_since >= n_s_thr
+
+        n_ticks_since = state.tick - self._tick_previous_mint
+        n_s_since = n_ticks_since * state.ss.time_step
+        n_s_thr = self._s_between_mints
+        return n_s_since >= n_s_thr
 
     def _mintAndDisburseFunds(self, state):
         assert self._n_mints_left > 0, "only call if mints are left"
@@ -93,8 +91,9 @@ class ExpFunc:
         num_half_lives = t / self._H
         return num_half_lives <= BITCOIN_NUM_HALF_LIVES
 
+
 @enforce_types
-class RampedExpFunc:
+class RampedExpFunc:  # pylint: disable=too-many-instance-attributes
     """
     Bitcoin follows the following formula for supply of tokens
     F(H,t) = 1 - (0.5*t/H).
@@ -106,17 +105,25 @@ class RampedExpFunc:
     So, minting is aggressive in the first 4 years. That's ok for Bitcoin.
 
     Challenges:
-    -Minting aggressively in first few years + low liquidity --> downwards price pressure
-    -Bumpy funding in first few years: lots from $ from BDB + OPF + minting, then drop when less from BDB + OPF. Better: avoid a dropoff, such that flat or increasing.
-    -OceanDAO will take months or years to stabilize. Dangerous to give too much $ to OceanDAO when it's still unstable.
+    -Minting aggressively in first few years + low liquidity --> downwards
+    price pressure
+    -Bumpy funding in first few years: lots from $ from BDB + OPF + minting,
+    then drop when less from BDB + OPF. Better: avoid a dropoff, such that
+    flat or increasing.
+    -OceanDAO will take months or years to stabilize. Dangerous to give too
+    much $ to OceanDAO when it's still unstable.
 
     To address these challenges:
-    -We ratchet up the multiplier of rewards from small initially (10%), then 25% after interval 0 (eg 0.5 years), then 50% after another interval (eg 0.5 years), and finally 100% after a final interval (e.g. 1 year).
+    -We ratchet up the multiplier of rewards from small initially (10%),
+    then 25% after interval 0 (eg 0.5 years), then 50% after another interval
+    (eg 0.5 years), and finally 100% after a final interval (e.g. 1 year).
 
-    We considered having ratchets based on milestones other than time. However, non time-based milestones add complexity and are harder to govern.
+    We considered having ratchets based on milestones other than time.
+    However, non time-based milestones add complexity and are harder to govern.
 
     = Equations =
-    g(t) is the overall network rewards schedule. It’s a piecewise model of four exponential curves.
+    g(t) is the overall network rewards schedule. It’s a piecewise model of
+    four exponential curves.
 
     g(t) = { 0      t < T0
            { g1(t)  T0 <= t < T1
@@ -124,7 +131,8 @@ class RampedExpFunc:
            { g3(t)  T2 <= t < T3
            { g4(t)  otherwise
 
-    Where gi(t) are pieces of the piecewise model chosen depending on t, and Gi are the values of gi(t) at the inflection points.
+    Where gi(t) are pieces of the piecewise model chosen depending on t,
+    and Gi are the values of gi(t) at the inflection points.
 
     G1=g1(t=T1); G2=g2(t=T2); G3=g3(t=T3)
     g1(t) = M1*f(t-T0)
@@ -151,7 +159,9 @@ class RampedExpFunc:
     M3=0.50
     """
 
-    def __init__(self, H, T0, T1, T2, T3, M1, M2, M3):
+    def __init__(
+        self, H, T0, T1, T2, T3, M1, M2, M3
+    ):  # pylint: disable=too-many-arguments
         assert H > 0.0
         assert T0 <= T1 <= T2 <= T3
         assert M1 <= M2 <= M3
@@ -176,14 +186,13 @@ class RampedExpFunc:
 
         if t < T0:
             return 0.0
-        elif t < T1:
+        if t < T1:
             return MYG1(t)
-        elif t < T2:
+        if t < T2:
             return MYG2(t, G1)
-        elif t < T3:
+        if t < T3:
             return MYG3(t, G1, G2)
-        else:
-            return MYG4(t, G1, G2, G3)
+        return MYG4(t, G1, G2, G3)
 
     def _MYG1(self, t):
         MYF = self._MYF
@@ -191,19 +200,19 @@ class RampedExpFunc:
         T0 = self._T0
         return M1 * MYF(t - T0)
 
-    def _MYG2(self, t, G1):
+    def _MYG2(self, t, G1):  # pylint: disable=unused-argument
         MYF = self._MYF
-        M1, M2 = self._M1, self._M2
+        M2 = self._M2
         T0, T1 = self._T0, self._T1
         return M2 * MYF(t - T0) - M2 * MYF(T1 - T0) + G1
 
-    def _MYG3(self, t, G1, G2):
+    def _MYG3(self, t, G1, G2):  # pylint: disable=unused-argument
         MYF = self._MYF
-        M1, M2, M3 = self._M1, self._M2, self._M3
-        T0, T1, T2 = self._T0, self._T1, self._T2
+        M3 = self._M3
+        T0, T2 = self._T0, self._T2
         return M3 * MYF(t - T0) - M3 * MYF(T2 - T0) + G2
 
-    def _MYG4(self, t, G1, G2, G3):
+    def _MYG4(self, t, G1, G2, G3):  # pylint: disable=unused-argument
         MYF = self._MYF
         M4 = 1.0 - G3
         T3 = self._T3
@@ -223,7 +232,7 @@ class OCEANFuncMinterAgent(AgentBase.AgentBaseNoEvm):
         total_OCEAN_to_mint: float,
         s_between_mints: int,
         func,
-    ):
+    ):  # pylint: disable=too-many-arguments
         assert total_OCEAN_to_mint >= 0.0
 
         super().__init__(name, USD=0.0, OCEAN=0.0)
@@ -245,15 +254,15 @@ class OCEANFuncMinterAgent(AgentBase.AgentBaseNoEvm):
     def _doMint(self, state) -> bool:
         if self._OCEAN_left_to_mint == 0.0:
             return False
-        elif state.tick == 0:
+        if state.tick == 0:
             return False
-        elif self._tick_previous_mint is None:
+        if self._tick_previous_mint is None:
             return True
-        else:
-            n_ticks_since = state.tick - self._tick_previous_mint
-            n_s_since = n_ticks_since * state.ss.time_step
-            n_s_thr = self._s_between_mints
-            return n_s_since >= n_s_thr
+
+        n_ticks_since = state.tick - self._tick_previous_mint
+        n_s_since = n_ticks_since * state.ss.time_step
+        n_s_thr = self._s_between_mints
+        return n_s_since >= n_s_thr
 
     def _mintAndDisburseFunds(self, state):
         assert self._OCEAN_left_to_mint > 0.0, "only call if mints are left"

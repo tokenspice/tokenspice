@@ -1,7 +1,9 @@
-from util.constants import * # pylint: disable=wildcard-import
+from util.constants import *  # pylint: disable=wildcard-import
+
 
 def testINF():
     assert INF > 1.0
+
 
 def testSeconds():
     assert (

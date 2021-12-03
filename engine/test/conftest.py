@@ -1,1 +1,1 @@
-from agents.test.conftest import * # pylint: disable=wildcard-import
+from agents.test.conftest import *  # pylint: disable=wildcard-import

@@ -2,15 +2,16 @@ from enforce_typing import enforce_types
 
 from ..SimStrategy import SimStrategy
 
+
 @enforce_types
 def test1():
-    #very lightweight testing: just on attribute names and basic (>0)
+    # very lightweight testing: just on attribute names and basic (>0)
     ss = SimStrategy()
 
     assert ss.time_step > 0
     assert ss.max_ticks > 0
     assert ss.log_interval > 0
-    
+
     assert ss.publisher_init_OCEAN > 0.0
     assert ss.publisher_DT_init > 0.0
     assert ss.publisher_DT_stake > 0.0
@@ -44,4 +45,3 @@ def test1():
     assert ss.mal_s_between_sellDT > 0
     assert ss.mal_s_wait_to_rug > 0
     assert ss.mal_s_rug_time > 0
-

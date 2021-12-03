@@ -8,6 +8,7 @@ from engine import AgentBase
 
 SimStrategy = SimStrategyBase.SimStrategyBase
 
+
 @enforce_types
 class MockKPIs(KPIsBase.KPIsBase):
     def takeStep(self, state):
@@ -16,10 +17,12 @@ class MockKPIs(KPIsBase.KPIsBase):
     def tick(self):
         pass
 
+
 @enforce_types
 class SimpleAgent(AgentBase.AgentBaseEvm):
     def takeStep(self, state):
         pass
+
 
 @enforce_types
 class MockSimState(SimStateBase.SimStateBase):
@@ -31,8 +34,10 @@ class MockSimState(SimStateBase.SimStateBase):
         self.addAgent(SimpleAgent("agent1", 0.0, 0.0))
         self.addAgent(SimpleAgent("agent2", 0.0, 0.0))
 
+
 # ==================================================================
 # actual tests
+
 
 @enforce_types
 def test1():

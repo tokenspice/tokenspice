@@ -4,7 +4,6 @@ import pytest
 import sol057.contracts.oceanv3.oceanv3util
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import BROWNIE_PROJECT057
 
 accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]
@@ -69,7 +68,7 @@ def test_2tokens_basic(T1, T2):
     assert T1.address != pool.address
 
     assert fromBase18(T1.balanceOf(address0)) >= 90.0
-    bal2 = fromBase18(T2.balanceOf(address0)) >= 10.0
+    assert fromBase18(T2.balanceOf(address0)) >= 10.0
 
     with pytest.raises(Exception):  # can't bind until we approve
         pool.bind(T1.address, toBase18(90.0), toBase18(9.0))
@@ -266,7 +265,9 @@ def test_spot_price(T1, T2):
     assert round(p, 8) == 0.1000001
 
 
-def _spotPrices(T1, T2, bal1: float, bal2: float, w1: float, w2: float):
+def _spotPrices(
+    T1, T2, bal1: float, bal2: float, w1: float, w2: float
+):  # pylint: disable=too-many-arguments
     pool = _createPoolWith2Tokens(T1, T2, bal1, bal2, w1, w2)
     a1, a2 = T1.address, T2.address
     return (
@@ -363,7 +364,7 @@ def test_exitswapExternAmountOut(T1, T2):
     assert fromBase18(BPT.balanceOf(address0)) >= (100.0 - 10.0)
 
 
-def test_calcSpotPrice(T1, T2):
+def test_calcSpotPrice():
     pool = _deployBPool()
     tokenBalanceIn = toBase18(10.0)
     tokenWeightIn = toBase18(1.0)
@@ -475,7 +476,9 @@ def test_calcPoolInGivenSingleOut():
     assert round(fromBase18(x), 3) == 0.005
 
 
-def _createPoolWith2Tokens(T1, T2, bal1: float, bal2: float, w1: float, w2: float):
+def _createPoolWith2Tokens(
+    T1, T2, bal1: float, bal2: float, w1: float, w2: float
+):  # pylint: disable=too-many-arguments
     pool = _deployBPool()
 
     T1.approve(pool.address, toBase18(bal1), {"from": account0})

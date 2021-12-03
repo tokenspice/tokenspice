@@ -16,7 +16,7 @@ import logging
 import typing
 
 import brownie
-from brownie.network.account import Account #pylint: disable=no-name-in-module
+from brownie.network.account import Account  # pylint: disable=no-name-in-module
 from enforce_typing import enforce_types
 
 from util import constants
@@ -26,6 +26,7 @@ from util.constants import GOD_ACCOUNT
 from util.strutil import asCurrency
 
 log = logging.getLogger("wallet")
+
 
 @enforce_types
 class AgentWalletAbstract(ABC):
@@ -216,7 +217,7 @@ class AgentWalletEvm(
 
         self._account: Account = None
 
-        accounts = brownie.network.accounts # pylint: disable=no-member
+        accounts = brownie.network.accounts
         if private_key is None:
             self._account = accounts.add()
         else:

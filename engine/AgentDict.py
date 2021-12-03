@@ -8,8 +8,7 @@ from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
 @enforce_types
 class AgentDict(dict):
-
-    def __init__(self, *arg, **kw): # pylint: disable=useless-super-delegation
+    def __init__(self, *arg, **kw):  # pylint: disable=useless-super-delegation
         """Extend the dict object to get the best of both worlds (object/dict)"""
         super().__init__(*arg, **kw)
 
@@ -40,8 +39,7 @@ class AgentDict(dict):
 
     def filterByClass(self, _class):
         return AgentDict(
-            {agent.name: agent for agent in self.values()
-             if isinstance(agent, _class)}
+            {agent.name: agent for agent in self.values() if isinstance(agent, _class)}
         )
 
     def agentByAddress(self, address):

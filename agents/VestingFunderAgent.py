@@ -6,6 +6,7 @@ from util.constants import BROWNIE_PROJECT057
 from util import globaltokens
 from util.base18 import toBase18
 
+
 @enforce_types
 class VestingFunderAgent(AgentBase.AgentBaseEvm):
     """Will create and fund a VestingWalletAgent with specified name.
@@ -13,12 +14,15 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
     they will go to the specified beneficiary agent."""
 
     def __init__(
-        self, name: str, USD: float, OCEAN: float,
+        self,
+        name: str,
+        USD: float,
+        OCEAN: float,
         vesting_wallet_agent_name: str,
         beneficiary_agent_name: str,
         start_timestamp: int,
         duration_seconds: int,
-    ): # pylint: disable=too-many-arguments
+    ):  # pylint: disable=too-many-arguments
         super().__init__(name, USD, OCEAN)
 
         self._vesting_wallet_agent_name: str = vesting_wallet_agent_name

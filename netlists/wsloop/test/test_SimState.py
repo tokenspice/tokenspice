@@ -2,7 +2,6 @@ from enforce_typing import enforce_types
 
 from agents import MinterAgents
 from ..SimState import SimState
-from ..SimStrategy import SimStrategy
 
 
 @enforce_types
