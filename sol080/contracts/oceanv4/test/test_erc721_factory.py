@@ -8,9 +8,40 @@ account0 = brownie.network.accounts[0]
 address0 = account0.address
 
 OPF_ADDRESS = OPF_ACCOUNT.address
+ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 accounts = brownie.network.accounts
 
+def test_trent_play():
+    #deploy factory
+    erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy(
+        {"from": account0}
+    )
+    
+    erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy(
+        {"from":account0}
+    )
+
+    erc721_factory = BROWNIE_PROJECT080.ERC721Factory.deploy(
+        erc721_template.address,
+        erc20_template.address,
+        OPF_ADDRESS,
+        address0,
+        {"from":account0}
+    )
+
+    #from factory, deploy a data NFT
+    template_index = 1 #refer to erc721_template
+    additional_NFT_deployer_address = ZERO_ADDRESS
+    token_URI = "https://mystorage.com/mytoken.png"
+    erc721_factory.deployERC721Contract(
+        "data NFT 1",
+        "DATANFT1",
+        template_index,
+        additional_NFT_deployer_address,
+        token_URI)
+
+    
 def test_direct():
     erc721_token= BROWNIE_PROJECT080.ERC721Template.deploy(
         {"from": account0}
