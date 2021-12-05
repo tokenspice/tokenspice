@@ -47,9 +47,14 @@ def test_end_to_end_flow_without_v4util():
 
     #from erc271 data NFT, deploy an ERC20 datatoken
     erc20_template_index = 1 #refer to erc20_template
-    strings = ["datatoken 1", "DT1"] #name, symbol
-    addresses = [address0]*4 #minter, fee mgr, pub mkt addr, pub mkt fee token
-    uints = [toBase18(1000.0), toBase18(0.1)] # erc20 cap, pub mkt fee amt
+    DT_name, DT_symbol = "datatoken 1", "DT1"
+    strings = [DT_name, DT_symbol]
+    minter_addr = fee_mgr_addr = pub_mkt_addr = address0
+    pub_mkt_fee_token_addr = OCEAN_addr
+    addresses = [minter_addr, fee_mgr_addr, pub_mkt_addr, pub_mkt_fee_token_addr)
+    DT_cap = 1000.0
+    pub_mkt_fee_amt = 1000.0 # in OCEAN
+    uints = [toBase18(DT_cap), toBase18(pub_mkt_fee_amt)] 
     bytes = []
     tx = dataNFT1.createERC20(
         erc20_template_index,
@@ -59,10 +64,36 @@ def test_end_to_end_flow_without_v4util():
         bytes,
         {"from":account0}
     )
-    datatoken1_address = tx.events['TokenCreated']['newTokenAddress']
-    datatoken1 = BROWNIE_PROJECT080.ERC20Template.at(datatoken1_address)
+    DT_address = tx.events['TokenCreated']['newTokenAddress']
+    DT = BROWNIE_PROJECT080.ERC20Template.at(DT_address)
     #FIXME: solve warning "Event log does not contain enough topics for the given ABI - this is usually because an event argument is not marked as indexed"
 
-    #from ?, deploy bpool
-    #FIXME
+    #from ERC20 datatoken, deploy bpool ***WIP***
+    # ss_rate = 0.01
+    # ss_OCEAN_decimals = 18
+    # ss_DT_vest_amt = 100.0
+    # ss_DT_vested_blocks = 2102666.6 # = num blocks/year, if 15 s/block
+    # ss_OCEAN_init_liquidity = 100.0
+    # ss_params = [toBase18(ss_rate), toBase18(ss_OCEAN_decimals),
+    #              toBase18(ss_DT_vest_amt), toBase18(ss_DT_vested_blocks),
+    #              toBase18(ss_OCEAN_init_liquidity))
     
+    # LP_swap_fee = 0.01 # 1%
+    # mkt_swap_fee = 0.01 # 1%
+    # swap_fees = [to_base18(LP_swap_fee), toBase18(mkt_swap_fee)]
+
+    # ss_contract_addr = FIXME
+    # OCEAN_addr = FIXME
+    # OCEAN_sender_addr = address0
+    # pub_addr = address0
+    # mkt_fee_collector_addr = address0
+    # pool_template_addr = FIXME
+    
+    # tx = datatoken1.deployPool(
+    #     ss_params,
+    #     swap_fees,
+    #     addresses,
+    #     {"from":account0}
+    # )
+    #pool_address = tx.events['FIXME']['FIXME']
+    #pool = BROWNIE_PROJECT080.ERC20Template.at(datatoken1_address)
