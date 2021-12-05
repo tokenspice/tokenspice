@@ -12,7 +12,7 @@ ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 accounts = brownie.network.accounts
 
-def test_end_to_end_flow():
+def test_end_to_end_flow_without_v4util():
     #deploy templates, then factory
     erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy(
         {"from": account0}
