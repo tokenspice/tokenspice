@@ -277,4 +277,4 @@ Art:
 
 The license is MIT. [Details](LICENSE)
 
-<img src="images/fishnado2-crop.jpeg" width="100%">
+<img src="images/fishnado2-crop.jpeg" width="100%"> 
