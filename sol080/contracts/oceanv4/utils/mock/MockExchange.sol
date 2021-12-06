@@ -1,5 +1,5 @@
-pragma solidity ^0.8.0;
-
+// SPDX-License-Identifier: Unknown
+pragma solidity 0.8.10;
 import "../../interfaces/IERC20Template.sol";
 
 

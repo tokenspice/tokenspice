@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity >=0.5.0 <0.9.0;
+pragma solidity 0.8.10;
 
 /**
  * @dev Contract module which provides the ability to call arbitrary functions at any other smart contract and itself,

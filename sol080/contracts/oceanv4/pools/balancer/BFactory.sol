@@ -1,11 +1,10 @@
-pragma solidity >=0.5.7;
+pragma solidity 0.8.10;
 // Copyright BigchainDB GmbH and Ocean Protocol contributors
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
 import './BPool.sol';
 import './BConst.sol';
-//import './BaseSplitCodeFactory.sol';
 import '../../utils/Deployer.sol';
 import '../../interfaces/ISideStaking.sol';
 import '../../interfaces/IERC20.sol';
@@ -85,7 +84,7 @@ contract BFactory is BConst, Deployer {
         internal 
         returns (address bpool)
     {
-        require(poolTemplates[addresses[5]] == true, 'BFactory: Wrong Pool Template');
+        require(poolTemplates[addresses[5]], 'BFactory: Wrong Pool Template');
         address[2] memory feeCollectors = [addresses[4],opfCollector];
 
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity >=0.5.0 <0.79.0;
+pragma solidity 0.8.10;
 
 /**
  * @notice ERC-1271: Standard Signature Validation Method for Contracts

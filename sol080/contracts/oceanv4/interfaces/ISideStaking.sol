@@ -7,7 +7,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity >=0.5.7;
+pragma solidity 0.8.10;
 
 interface ISideStaking {
 
@@ -100,21 +100,5 @@ interface ISideStaking {
     function notifyFinalize(address datatokenAddress) external;
 
 
-    function swapExactAmountIn(
-        address datatokenAddress,
-        address userAddress,
-        address tokenIn,
-        uint256 tokenAmountIn,
-        address tokenOut,
-        uint256 minAmountOut
-    ) external returns (uint256 tokenAmountOut);
-
-    function swapExactAmountOut(
-        address datatokenAddress,
-        address userAddress,
-        address tokenIn,
-        uint256 maxTokenAmountIn,
-        address tokenOut,
-        uint256 amountOut
-    ) external returns (uint256 tokenAmountIn);
+  
 }

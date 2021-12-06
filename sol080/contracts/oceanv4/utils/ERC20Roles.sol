@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unknown
-pragma solidity >=0.6.0;
+pragma solidity 0.8.10;
 
 contract ERC20Roles {
     
@@ -10,7 +10,7 @@ contract ERC20Roles {
 
     struct RolesERC20 {
         bool minter;
-        bool feeManager; 
+        bool paymentManager; 
     }
 
     event AddedMinter(
@@ -40,30 +40,30 @@ contract ERC20Roles {
         emit RemovedMinter(_minter,msg.sender,block.timestamp,block.number);
     }
 
-    event AddedFeeManager(
+    event AddedPaymentManager(
         address indexed user,
         address indexed signer,
         uint256 timestamp,
         uint256 blockNumber
     );
-    event RemovedFeeManager(
+    event RemovedPaymentManager(
         address indexed user,
         address indexed signer,
         uint256 timestamp,
         uint256 blockNumber
     );
-    function _addFeeManager(address _feeManager) internal {
-        RolesERC20 storage user = permissions[_feeManager];
-        require(user.feeManager == false, "ERC20Roles:  ALREADY A FEE MANAGER");
-        user.feeManager = true;
-        authERC20.push(_feeManager);
-        emit AddedFeeManager(_feeManager,msg.sender,block.timestamp,block.number);
+    function _addPaymentManager(address _paymentCollector) internal {
+        RolesERC20 storage user = permissions[_paymentCollector];
+        require(user.paymentManager == false, "ERC20Roles:  ALREADY A FEE MANAGER");
+        user.paymentManager = true;
+        authERC20.push(_paymentCollector);
+        emit AddedPaymentManager(_paymentCollector,msg.sender,block.timestamp,block.number);
     }
 
-    function _removeFeeManager(address _feeManager) internal {
-        RolesERC20 storage user = permissions[_feeManager];
-        user.feeManager = false;
-        emit RemovedFeeManager(_feeManager,msg.sender,block.timestamp,block.number);
+    function _removePaymentManager(address _paymentCollector) internal {
+        RolesERC20 storage user = permissions[_paymentCollector];
+        user.paymentManager = false;
+        emit RemovedPaymentManager(_paymentCollector,msg.sender,block.timestamp,block.number);
     }
 
 
@@ -82,7 +82,7 @@ contract ERC20Roles {
         for (uint256 i = 0; i < authERC20.length; i++) {
             RolesERC20 storage user = permissions[authERC20[i]];
             user.minter = false;
-            user.feeManager = false;
+            user.paymentManager = false;
 
         }
         
