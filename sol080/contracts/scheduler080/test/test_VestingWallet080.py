@@ -80,7 +80,6 @@ def test_ethFunding():
     # make enough time pass for everything to vest
     chain.mine(blocks=14, timedelta=100)
 
-    #what I want 
     assert wallet.vestedAmount(toBase18(1)) == 0
     assert wallet.vestedAmount(toBase18(2)) == 0
     assert wallet.vestedAmount(toBase18(3)) == 0
