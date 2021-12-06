@@ -55,26 +55,25 @@ def test_ethFunding():
 
     # set up vesting wallet (account). It vests all ETH/tokens that it receives.
     # where beneficiary is account1
-    start_block = 4  # magic number
-    num_blocks_duration = 5  # magic number
+    start_block = 4
+    num_blocks_duration = 5
     wallet = BROWNIE_PROJECT080.VestingWallet080.deploy(
-        account1.address, toBase18(start_block), toBase18(num_blocks_duration),
+        address1, toBase18(start_block), toBase18(num_blocks_duration),
         {"from": account0}
     )
+    assert wallet.balance() == 0
 
     # send ETH to the wallet. It has a function:
     #    receive() external payable virtual {}
     # which allows it to receive ETH. It's called for plain ETH transfers,
     # ie every call with empty calldata.
     # https://medium.com/coinmonks/solidity-v0-6-0-is-here-things-you-should-know-7d4ab5bca5f1
-    assert wallet.balance() == 0.0
     assert account0.transfer(wallet.address, toBase18(30.0))
     assert wallet.balance()/1e18 == approx(30.0)
     assert account0.balance()/1e18 == approx(0.0)
     assert account1.balance()/1e18 == approx(30.0) # unchanged so far
     assert wallet.vestedAmount(toBase18(4)) == 0
     assert wallet.vestedAmount(toBase18(10)) > 0.0
-    
     assert wallet.released() == 0
 
     # make enough time pass for everything to vest
@@ -118,6 +117,7 @@ def test_tokenFunding():
     )
     token.transfer(account1, toBase18(100.0), {"from": account0})
     token.transfer(account2, toBase18(100.0), {"from": account0})
+    taddress = token.address
 
     assert token.balanceOf(account0)/1e18 == approx(100.0)
     assert token.balanceOf(account1)/1e18 == approx(100.0)
@@ -129,39 +129,53 @@ def test_tokenFunding():
     assert token.balanceOf(account1)/1e18 == approx(110.0)
 
     # set up vesting wallet (account). It vests all ETH/tokens that it receives.
-    beneficiary_address = account1.address
-    start_block = len(chain) + 1  # magic number
-    num_blocks_duration = 4  # magic number
+    start_block = 4
+    num_blocks_duration = 5
     wallet = BROWNIE_PROJECT080.VestingWallet080.deploy(
-        beneficiary_address, start_block, num_blocks_duration,
+        address1, toBase18(start_block), toBase18(num_blocks_duration),
         {"from": account0}
     )
+    assert token.balanceOf(wallet) == 0
 
     # send TOK to the wallet
-    token.transfer(wallet.address, toBase18(90.0), {"from": account0})
-    assert token.balanceOf(account0) == 0
+    token.transfer(wallet.address, toBase18(30.0), {"from": account0})
+    assert token.balanceOf(wallet)/1e18 == approx(30.0)
+    assert token.balanceOf(account0)/1e18 == approx(60.0)
     assert token.balanceOf(account1)/1e18 == approx(110.0)
-    assert wallet.vestedAmount(token.address, toBase18(len(chain))) == 0
-    assert wallet.released(token.address) == 0
+    assert wallet.vestedAmount(taddress, toBase18(4)) == 0
+    assert wallet.vestedAmount(taddress, toBase18(10)) > 0.0
+    assert wallet.released(taddress) == 0
 
     # make enough time pass for everything to vest
-    chain.mine(blocks=7, timedelta=100)
-    assert wallet.vestedAmount(token.address, toBase18(len(chain)))/1e18 == approx(90.0)
-    assert wallet.released(token.address) == 0
+    chain.mine(blocks=14, timedelta=100)
+
+    assert wallet.vestedAmount(taddress, toBase18(1)) == 0
+    assert wallet.vestedAmount(taddress, toBase18(2)) == 0
+    assert wallet.vestedAmount(taddress, toBase18(3)) == 0
+    assert wallet.vestedAmount(taddress, toBase18(4)) == 0
+    assert wallet.vestedAmount(taddress, toBase18(5))/1e18 == approx(6.0)
+    assert wallet.vestedAmount(taddress, toBase18(6))/1e18 == approx(12.0)
+    assert wallet.vestedAmount(taddress, toBase18(7))/1e18 == approx(18.0)
+    assert wallet.vestedAmount(taddress, toBase18(8))/1e18 == approx(24.0)
+    assert wallet.vestedAmount(taddress, toBase18(9))/1e18 == approx(30.0)
+    assert wallet.vestedAmount(taddress, toBase18(10))/1e18 == approx(30.0)
+    assert wallet.vestedAmount(taddress, toBase18(11))/1e18 == approx(30.0)
+
+    assert wallet.released(taddress) == 0
     assert token.balanceOf(account1)/1e18 == approx(110.0) #not released yet
 
     # release the TOK. Anyone can call it
-    wallet.release(token.address, {"from": account2})
-    assert wallet.released(token.address)/1e18 == approx(90.0) #released!
-    assert token.balanceOf(account1)/1e18 == approx(200.0)  #beneficiary richer
+    wallet.release(taddress, {"from": account2})
+    assert wallet.released(taddress)/1e18 == approx(30.0) #released!
+    assert token.balanceOf(account1)/1e18 == approx(110.0+30.0) #beneficiary richer
 
     # put some new TOK into wallet. It's immediately vested, but not released
     token.transfer(wallet.address, toBase18(10.0), {"from": account2})
-    assert wallet.vestedAmount(token.address,toBase18(len(chain)))/1e18 == approx(100.0)
-    assert wallet.released(token.address)/1e18 == approx(90.0) #not released yet
+    assert wallet.vestedAmount(taddress,toBase18(11))/1e18 == approx(30.0+10.0)
+    assert wallet.released(taddress)/1e18 == approx(30.0) #not released yet
 
     # release the new TOK
-    wallet.release(token.address, {"from": account3})
-    assert wallet.released(token.address)/1e18 == approx(100.0) #TOK released!
-    assert token.balanceOf(account1)/1e18 == approx(210.0) #+10 TOK to benef.
+    wallet.release(taddress, {"from": account3})
+    assert wallet.released(taddress)/1e18 == approx(30.0+10.0) #TOK released!
+    assert token.balanceOf(account1)/1e18 == approx(110+30+10.0) #beneficiary richer
 
