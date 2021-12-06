@@ -5,47 +5,61 @@ from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080, GOD_ACCOUNT
 
 accounts = brownie.network.accounts
+account0, account1, account2, account3 = \
+    accounts[0], accounts[1], accounts[2], accounts[3]
+address0, address1, address2 = \
+    account0.address, account1.address, account2.address
 chain = brownie.network.chain
 
-# Q: this is a copy-and-paste of test_VestingWallet057.py. Fix?
-# A: no, because we'll be modifying VestingWallet080 and derivatives a _lot_, for
-#   for Bitcoin-exponential and ratchet. They could evolve differently. Leave it.
+#This code has evolved from sol057:
+# -DONE: time is # blocks not unix time
+# -TODO: fix 500M issue, exponential vesting, ratchet
 
 
-def test_init():
-    vesting_wallet = _vesting_wallet()
-    assert vesting_wallet.beneficiary() == accounts[1].address
-    assert vesting_wallet.start() > chain[-1].timestamp
-    assert vesting_wallet.duration() == 30
+def test_basic():
+    beneficiary = address1
+    start_block = n_blocks + 1
+    num_blocks_duration = 4
+
+    #constructor
+    vesting_wallet = BROWNIE_PROJECT080.VestingWallet080.deploy(
+        beneficiary, toBase18(start_block), toBase18(num_blocks_duration),
+        {"from": account0}
+    )
+
+    assert vesting_wallet.beneficiary() == beneficiary
+    assert vesting_wallet.startBlock()/1e18 == start_block
+    assert vesting_wallet.numBlocksDuration()/1e18 == 4
     assert vesting_wallet.released() == 0
 
+    #time passes
+    chain.mine(blocks=15, timedelta=1)
+    assert vesting_wallet.released() == 0 #haven't released anything
 
-def test_noFunding():
-    vesting_wallet = _vesting_wallet()
-    chain.mine(blocks=3, timedelta=10)
-    assert vesting_wallet.released() == 0
+    #call release
     vesting_wallet.release()
-    assert vesting_wallet.released() == 0  # wallet never got funds _to_ release!
+    assert vesting_wallet.released() == 0  # wallet never got funds to release!
 
 
 def test_ethFunding():
     # ensure each account has exactly 30 ETH
-    for i in range(3):
-        accounts[i].transfer(GOD_ACCOUNT, accounts[i].balance())
-        GOD_ACCOUNT.transfer(accounts[i], toBase18(30.0))
+    for account in [account0, account1, account2]:
+        account.transfer(GOD_ACCOUNT, account.balance())
+        GOD_ACCOUNT.transfer(account, toBase18(30.0))
 
     # account0 should be able to freely transfer ETH
-    accounts[0].transfer(accounts[1], "1 ether")
-    accounts[1].transfer(accounts[0], "1 ether")
-    assert accounts[0].balance() / 1e18 == approx(30.0)
-    assert accounts[1].balance() / 1e18 == approx(30.0)
+    account0.transfer(account1, toBase18(1.0))
+    account1.transfer(account0, toBase18(1.0))
+    assert account0.balance()/1e18 == approx(30.0)
+    assert account1.balance()/1e18 == approx(30.0)
 
     # set up vesting wallet (account). It vests all ETH/tokens that it receives.
-    # where beneficiary is accounts[1]
-    start_timestamp = chain[-1].timestamp + 5  # magic number
-    duration_seconds = 30  # magic number
+    # where beneficiary is account1
+    start_block = 4  # magic number
+    num_blocks_duration = 5  # magic number
     wallet = BROWNIE_PROJECT080.VestingWallet080.deploy(
-        accounts[1].address, start_timestamp, duration_seconds, {"from": accounts[0]}
+        account1.address, toBase18(start_block), toBase18(num_blocks_duration),
+        {"from": account0}
     )
 
     # send ETH to the wallet. It has a function:
@@ -53,110 +67,118 @@ def test_ethFunding():
     # which allows it to receive ETH. It's called for plain ETH transfers,
     # ie every call with empty calldata.
     # https://medium.com/coinmonks/solidity-v0-6-0-is-here-things-you-should-know-7d4ab5bca5f1
-    accounts[0].transfer(wallet.address, "30 ether")
-    assert accounts[0].balance() / 1e18 == approx(0.0)
-    assert accounts[1].balance() / 1e18 == approx(30.0)  # unchanged so far
-    assert wallet.vestedAmount(chain[1].timestamp) == 0
+    assert wallet.balance() == 0.0
+    assert account0.transfer(wallet.address, toBase18(30.0))
+    assert wallet.balance()/1e18 == approx(30.0)
+    assert account0.balance()/1e18 == approx(0.0)
+    assert account1.balance()/1e18 == approx(30.0) # unchanged so far
+    assert wallet.vestedAmount(toBase18(4)) == 0
+    assert wallet.vestedAmount(toBase18(10)) > 0.0
+    
     assert wallet.released() == 0
 
     # make enough time pass for everything to vest
-    chain.mine(blocks=3, timedelta=100)
-    assert wallet.vestedAmount(chain[-1].timestamp) / 1e18 == approx(30.0)
+    chain.mine(blocks=14, timedelta=100)
+    """what I get
+
+    (Pdb) for i in range(11): print(f"i={i}, vested={wallet.vestedAmount(toBase18(i))}")
+    i=0, vested=0
+    i=1, vested=0
+    i=2, vested=0
+    i=3, vested=0
+    i=4, vested=0
+    i=5, vested=0
+    i=6, vested=0
+    i=7, vested=0
+    i=8, vested=0
+    i=9, vested=30000000000000000000
+    i=10, vested=30000000000000000000
+
+    """
+
+    #what I want 
+    assert wallet.vestedAmount(toBase18(1)) == 0
+    assert wallet.vestedAmount(toBase18(2)) == 0
+    assert wallet.vestedAmount(toBase18(3)) == 0
+    assert wallet.vestedAmount(toBase18(4)) == 0
+    assert wallet.vestedAmount(toBase18(5))/1e18 == approx(6.0)
+    assert wallet.vestedAmount(toBase18(6))/1e18 == approx(12.0)
+    assert wallet.vestedAmount(toBase18(7))/1e18 == approx(18.0)
+    assert wallet.vestedAmount(toBase18(8))/1e18 == approx(24.0)
+    assert wallet.vestedAmount(toBase18(9))/1e18 == approx(30.0)
+    assert wallet.vestedAmount(toBase18(10))/1e18 == approx(30.0)
+    assert wallet.vestedAmount(toBase18(11))/1e18 == approx(30.0)
+
     assert wallet.released() == 0
-    assert accounts[1].balance() / 1e18 == approx(30.0)  # not released yet!
+    assert account1.balance()/1e18 == approx(30.0) # not released yet!
 
     # release the ETH. Anyone can call it
-    wallet.release({"from": accounts[2]})
-    assert wallet.released() / 1e18 == approx(30.0)  # now it's released!
-    assert accounts[1].balance() / 1e18 == approx(30.0 + 30.0)  # beneficiary is richer
+    wallet.release({"from": account2})
+    assert wallet.released()/1e18 == approx(30.0) # now it's released!
+    assert account1.balance()/1e18 == approx(30.0 + 30.0) # beneficiary richer
 
     # put some new ETH into wallet. It's immediately vested, but not released
-    accounts[2].transfer(wallet.address, "10 ether")
-    assert wallet.vestedAmount(chain[-1].timestamp) / 1e18 == approx(30.0 + 10.0)
-    assert wallet.released() / 1e18 == approx(30.0 + 0.0)  # not released yet!
+    account2.transfer(wallet.address, toBase18(10.0))
+    assert wallet.vestedAmount(toBase18(len(chain))) / 1e18 == approx(30.0+10.0)
+    assert wallet.released()/1e18 == approx(30.0+0.0)  # not released yet!
 
     # release the new ETH
-    wallet.release({"from": accounts[3]})
-    assert wallet.released() / 1e18 == approx(30.0 + 10.0)  # now new ETH is released!
-    assert accounts[1].balance() / 1e18 == approx(
-        30.0 + 30.0 + 10.0
-    )  # beneficiary got +10 ETH
+    wallet.release({"from": account3})
+    assert wallet.released()/1e18 == approx(30.0+10.0) #new ETH is released!
+    assert account1.balance()/1e18 == approx(30.0+30.0+10.0) #+10 eth to ben
 
 
 def test_tokenFunding():
     # accounts 0, 1, 2 should each start with 100 TOK
     token = BROWNIE_PROJECT057.Simpletoken.deploy(
-        "TOK", "Test Token", 18, toBase18(300.0), {"from": accounts[0]}
+        "TOK", "Test Token", 18, toBase18(300.0), {"from": account0}
     )
-    token.transfer(accounts[1], toBase18(100.0), {"from": accounts[0]})
-    token.transfer(accounts[2], toBase18(100.0), {"from": accounts[0]})
+    token.transfer(account1, toBase18(100.0), {"from": account0})
+    token.transfer(account2, toBase18(100.0), {"from": account0})
 
-    assert token.balanceOf(accounts[0]) / 1e18 == approx(100.0)
-    assert token.balanceOf(accounts[1]) / 1e18 == approx(100.0)
-    assert token.balanceOf(accounts[2]) / 1e18 == approx(100.0)
+    assert token.balanceOf(account0)/1e18 == approx(100.0)
+    assert token.balanceOf(account1)/1e18 == approx(100.0)
+    assert token.balanceOf(account2)/1e18 == approx(100.0)
 
     # account0 should be able to freely transfer TOK
-    token.transfer(accounts[1], toBase18(10.0), {"from": accounts[0]})
-    assert token.balanceOf(accounts[0]) / 1e18 == approx(90.0)
-    assert token.balanceOf(accounts[1]) / 1e18 == approx(110.0)
+    token.transfer(account1, toBase18(10.0), {"from": account0})
+    assert token.balanceOf(account0)/1e18 == approx(90.0)
+    assert token.balanceOf(account1)/1e18 == approx(110.0)
 
     # set up vesting wallet (account). It vests all ETH/tokens that it receives.
-    beneficiary_address = accounts[1].address
-    start_timestamp = chain[-1].timestamp + 5  # magic number
-    duration_seconds = 30  # magic number
+    beneficiary_address = account1.address
+    start_block = len(chain) + 1  # magic number
+    num_blocks_duration = 4  # magic number
     wallet = BROWNIE_PROJECT080.VestingWallet080.deploy(
-        beneficiary_address, start_timestamp, duration_seconds, {"from": accounts[0]}
+        beneficiary_address, start_block, num_blocks_duration,
+        {"from": account0}
     )
 
     # send TOK to the wallet
-    token.transfer(wallet.address, toBase18(90.0), {"from": accounts[0]})
-    assert token.balanceOf(accounts[0]) == 0
-    assert token.balanceOf(accounts[1]) / 1e18 == approx(110.0)
-    assert wallet.vestedAmount(token.address, chain[-1].timestamp) == 0
+    token.transfer(wallet.address, toBase18(90.0), {"from": account0})
+    assert token.balanceOf(account0) == 0
+    assert token.balanceOf(account1)/1e18 == approx(110.0)
+    assert wallet.vestedAmount(token.address, toBase18(len(chain))) == 0
     assert wallet.released(token.address) == 0
 
     # make enough time pass for everything to vest
-    chain.mine(blocks=3, timedelta=100)
-    assert wallet.vestedAmount(token.address, chain[-1].timestamp) / 1e18 == approx(
-        90.0
-    )
+    chain.mine(blocks=7, timedelta=100)
+    assert wallet.vestedAmount(token.address, toBase18(len(chain)))/1e18 == approx(90.0)
     assert wallet.released(token.address) == 0
-    assert token.balanceOf(accounts[1]) / 1e18 == approx(110.0)  # not released yet!
+    assert token.balanceOf(account1)/1e18 == approx(110.0) #not released yet
 
     # release the TOK. Anyone can call it
-    wallet.release(token.address, {"from": accounts[2]})
-    assert wallet.released(token.address) / 1e18 == approx(90.0)  # now it's released!
-    assert token.balanceOf(accounts[1]) / 1e18 == approx(200.0)  # beneficiary is richer
+    wallet.release(token.address, {"from": account2})
+    assert wallet.released(token.address)/1e18 == approx(90.0) #released!
+    assert token.balanceOf(account1)/1e18 == approx(200.0)  #beneficiary richer
 
     # put some new TOK into wallet. It's immediately vested, but not released
-    token.transfer(wallet.address, toBase18(10.0), {"from": accounts[2]})
-    assert wallet.vestedAmount(token.address, chain[-1].timestamp) / 1e18 == approx(
-        100.0
-    )
-    assert wallet.released(token.address) / 1e18 == approx(90.0)  # not released yet!
+    token.transfer(wallet.address, toBase18(10.0), {"from": account2})
+    assert wallet.vestedAmount(token.address,toBase18(len(chain)))/1e18 == approx(100.0)
+    assert wallet.released(token.address)/1e18 == approx(90.0) #not released yet
 
     # release the new TOK
-    wallet.release(token.address, {"from": accounts[3]})
-    assert wallet.released(token.address) / 1e18 == approx(
-        100.0
-    )  # now new TOK is released!
-    assert token.balanceOf(accounts[1]) / 1e18 == approx(
-        210.0
-    )  # beneficiary got +10 ETH
+    wallet.release(token.address, {"from": account3})
+    assert wallet.released(token.address)/1e18 == approx(100.0) #TOK released!
+    assert token.balanceOf(account1)/1e18 == approx(210.0) #+10 TOK to benef.
 
-
-def _vesting_wallet():
-    # note: eth timestamps are in unix time (seconds since jan 1, 1970)
-    beneficiary_address = brownie.network.accounts[1].address
-
-    start_timestamp = brownie.network.chain[-1].timestamp + 5  # magic number
-
-    duration_seconds = 30  # magic number
-
-    w = BROWNIE_PROJECT080.VestingWallet080.deploy(
-        beneficiary_address,
-        start_timestamp,
-        duration_seconds,
-        {"from": brownie.network.accounts[0]},
-    )
-    return w
