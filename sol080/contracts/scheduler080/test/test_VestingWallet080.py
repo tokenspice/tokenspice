@@ -79,22 +79,6 @@ def test_ethFunding():
 
     # make enough time pass for everything to vest
     chain.mine(blocks=14, timedelta=100)
-    """what I get
-
-    (Pdb) for i in range(11): print(f"i={i}, vested={wallet.vestedAmount(toBase18(i))}")
-    i=0, vested=0
-    i=1, vested=0
-    i=2, vested=0
-    i=3, vested=0
-    i=4, vested=0
-    i=5, vested=0
-    i=6, vested=0
-    i=7, vested=0
-    i=8, vested=0
-    i=9, vested=30000000000000000000
-    i=10, vested=30000000000000000000
-
-    """
 
     #what I want 
     assert wallet.vestedAmount(toBase18(1)) == 0
