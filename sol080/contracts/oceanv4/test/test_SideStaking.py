@@ -29,7 +29,7 @@ def test_end_to_end_flow_without_v4util():
     erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy(
         {"from":account0}
     )
-    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address2, {"from":address2})
+    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address2, {"from":address2}) # to change cap, go to MockOcean.sol
     OCEAN_address = OCEANtoken.address
     pool_template = BROWNIE_PROJECT080.BPool.deploy({'from': account0})
     
@@ -61,7 +61,7 @@ def test_end_to_end_flow_without_v4util():
 
     current_nft_count = erc721_factory.getCurrentNFTCount()
 
-    #from factory, deployERC721Contract data NFT
+    #1. account0 deployERC721Contract data NFT
     erc721_template_index = 1 #refer to erc721_template
     additional_NFT_deployer_address = ZERO_ADDRESS
     token_URI = "https://mystorage.com/mytoken.png"
@@ -91,8 +91,7 @@ def test_end_to_end_flow_without_v4util():
     assert nft_template[0] == erc721_template.address
     assert nft_template[1] is True
 
-    # Step 2: Publisher createERC20
-    #2 - owner adds user2 as manager, which then adds user3 
+    #2 - account0 adds account1 as manager, which then adds account2 
     # as store updater, metadata updater and erc20 deployer"
     dataNFT1.addManager(address1,{"from":account0})
     dataNFT1.addTo725StoreList(address2, {"from":account1})
@@ -100,7 +99,7 @@ def test_end_to_end_flow_without_v4util():
     dataNFT1.addToMetadataList(address2, {"from":account1})
     
     #FIXME: add assert permissions
-
+    #3 - account2 deploys a new erc20DT, assigning himself as minter
     erc20_template_index = 1 #refer to erc20_template
     DT_name, DT_symbol = "datatoken 1", "DT1"
     strings = [DT_name, DT_symbol]
@@ -121,8 +120,6 @@ def test_end_to_end_flow_without_v4util():
         {"from":account2}
     )
 
-#     dataNFT1.createERC20(1, ["datatoken 1", "DT1"], [address0, address0, add
-# ress0, ZERO_ADDRESS], [1e21, 0], [], {"from":account0})
     DT_address = tx.events['TokenCreated']['newTokenAddress']
     DT = BROWNIE_PROJECT080.ERC20Template.at(DT_address)
 
@@ -133,7 +130,7 @@ def test_end_to_end_flow_without_v4util():
     # Tests balanceOf
     assert DT.balanceOf(minter_addr) == 0
 
-    # Test creating bpool, from ERC20 datatoken, deploy bpool ***WIP***
+    #4 - account2 calls deployPool() and check ocean and market fee
     ss_rate = 0.1
     ss_OCEAN_decimals = 18
     ss_DT_vest_amt = 9999.0 # max 10% of cap
@@ -143,17 +140,6 @@ def test_end_to_end_flow_without_v4util():
     LP_swap_fee = 0.001 # 1%
     mkt_swap_fee = 0.001 # 1%
 
-    # addresses refers to an array of addresses passed by user
-    # [0]  = side staking contract address
-    # [1]  = basetoken address for pool creation(OCEAN or other)
-    # [2]  = basetokenSender user which will provide the baseToken amount for initial liquidity
-    # [3]  = publisherAddress user which will be assigned the vested amount
-    # [4]  = marketFeeCollector marketFeeCollector address
-    # [5] = poolTemplateAddress
-
-    
-    
-    # OCEANtoken.transfer(address2, toBase18(2000.0), {"from":GOD_ACCOUNT})
     pool_create_data = {
         "addresses": [
             sideStaking.address, OCEAN_address, address2,
@@ -168,62 +154,11 @@ def test_end_to_end_flow_without_v4util():
     }
 
     OCEANtoken.approve(router.address, toBase18(ss_OCEAN_init_liquidity),{'from': account2})
-    # OCEANtoken.approve(sideStaking.address, toBase18(ss_OCEAN_init_liquidity),{'from': account0})
-
-    # DT.addMinter(address0, {"from":account0})
     tx = DT.deployPool(
         pool_create_data["ssParams"],
         pool_create_data["swapFees"],
         pool_create_data["addresses"],
         {"from":account2}
     )
-    #pool_address = tx.events['FIXME']['FIXME']
-    #pool = BROWNIE_PROJECT080.ERC20Template.at(datatoken1_address)
-    
-    
-    
-    
-    
-    # Tests creating NFT with ERC20
-    # nft_create_data = {
-    #     "name": "72120Bundle",
-    #     "symbol": "72Bundle",
-    #     "templateIndex": 1,
-    #     "tokenURI": "https://mystorage.com/mytoken.png",
-    # }
-    # erc_create_data = {
-    #     "strings": ["ERC20B1", "ERC20DT1Symbol"],
-    #     "templateIndex": 1,
-    #     "addresses": [
-    #         pub_mkt_addr,
-    #         consumer_addr,
-    #         pub_mkt_addr,
-    #         ZERO_ADDRESS,
-    #     ],
-    #     "uints": [toBase18(10), 0],
-    #     "bytess": [b""],
-    # }
 
-    # tx = erc721_factory.createNftWithErc(
-    #     (
-    #         nft_create_data["name"], nft_create_data["symbol"],
-    #         nft_create_data["templateIndex"], nft_create_data["tokenURI"]
-    #     ),
-    #     (
-    #         erc_create_data["templateIndex"], erc_create_data["strings"],
-    #         erc_create_data["addresses"], erc_create_data["uints"],
-    #         erc_create_data["bytess"]
-    #     )
-    # )
-
-    # assert tx.events["NFTCreated"]["admin"] == pub_mkt_addr
-
-    # dataNFT2_address = tx.events["NFTCreated"]["newTokenAddress"]
-    # dataNFT2 = BROWNIE_PROJECT080.ERC721Template.at(dataNFT2_address)
-    # assert dataNFT2.name() == "72120Bundle"
-    # assert dataNFT2.symbol() == "72Bundle"
-
-    # DT_address_2 = tx.events["TokenCreated"]["newTokenAddress"]
-    # DT_2 = BROWNIE_PROJECT080.ERC20Template.at(DT_address_2)
-    # assert DT_2.name() == "ERC20B1"
-    # assert DT_2.symbol == "ERC20DT1Symbol"
+    #FIXME: add assertions
