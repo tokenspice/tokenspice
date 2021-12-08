@@ -1,8 +1,9 @@
 import brownie
+from sol080.contracts.oceanv4.oceanv4util import createDataNFT, createDatatoken, createBPool
 
 # import sol080.contracts.oceanv4.oceanv4util
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT
+from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
 
 accounts = brownie.network.accounts
 account0 = accounts[0]
@@ -11,31 +12,29 @@ address0 = account0.address
 OPF_ADDRESS = OPF_ACCOUNT.address
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
-def test_end_to_end_flow_without_v4util():
+def test_pool_creation_flow_without_v4util():
     erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy(
-        {"from": account0}
+        {"from": GOD_ACCOUNT}
     )
     
     erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy(
-        {"from":account0}
+        {"from":GOD_ACCOUNT}
     )
-    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address0, {"from":account0})
+    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address0, {"from":GOD_ACCOUNT})
     OCEAN_address = OCEANtoken.address
-    pool_template = BROWNIE_PROJECT080.BPool.deploy({'from': account0})
+    pool_template = BROWNIE_PROJECT080.BPool.deploy({'from': GOD_ACCOUNT})
     
+    # DEPLOY ROUTER, SETTING OWNER
     router = BROWNIE_PROJECT080.FactoryRouter.deploy(
         address0,
         OCEAN_address,
         pool_template.address,
         OPF_ADDRESS,
         [],
-        {'from': account0}
-    )
+        {'from': GOD_ACCOUNT}
+    )    
 
-    sideStaking = BROWNIE_PROJECT080.SideStaking.deploy(
-        router.address, {'from': account0}
-    )
-
+    # SETUP ERC721 Factory with template
     erc721_factory = BROWNIE_PROJECT080.ERC721Factory.deploy(
         erc721_template.address,
         erc20_template.address,
@@ -43,15 +42,13 @@ def test_end_to_end_flow_without_v4util():
         router.address,
         {"from":account0}
     )
-    router.addFactory(erc721_factory.address, {'from': account0})
-    router.addSSContract(sideStaking.address, {"from": account0})
 
     assert erc721_factory.tx.events["OwnershipTransferred"]["newOwner"] == address0
     assert erc721_factory.tx.events["Template20Added"]["_templateAddress"] == erc20_template.address
 
     current_nft_count = erc721_factory.getCurrentNFTCount()
 
-    #1 deployERC721Contract data NFT
+    #1 Publisher deployERC721Contract
     erc721_template_index = 1 #refer to erc721_template
     additional_NFT_deployer_address = ZERO_ADDRESS
     token_URI = "https://mystorage.com/mytoken.png"
@@ -121,6 +118,11 @@ def test_end_to_end_flow_without_v4util():
     LP_swap_fee = 0.001 # 1%
     mkt_swap_fee = 0.001 # 1%
     
+    sideStaking = BROWNIE_PROJECT080.SideStaking.deploy(
+        router.address, {'from': GOD_ACCOUNT}
+    )
+    router.addSSContract(sideStaking.address, {"from": account0})
+    router.addFactory(erc721_factory.address, {'from': account0})
     pool_create_data = {
         "addresses": [
             sideStaking.address, OCEAN_address, address0,
@@ -142,3 +144,15 @@ def test_end_to_end_flow_without_v4util():
         pool_create_data["addresses"],
         {"from":account0}
     )
+
+
+def test_dataNFT_creation_with_v4util():
+    createDataNFT(name = "dataNFT1", symbol = "DATANFT", account = account0)
+
+def test_datatokens_creation_with_v4util():
+    NFT_creation = createDataNFT(name = "dataNFT1", symbol = "DATANFT", account = account0)
+    dataNFT = NFT_creation[0]
+    createDatatoken("DT", "DTSymbol", 1000, account0, dataNFT)
+
+def test_pool_creation_with_v4util():
+    createBPool(account0)
