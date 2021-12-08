@@ -108,6 +108,9 @@ mypy ./
 
 #run linting on code style
 pylint *
+
+#auto-fix some pylint complaints
+black ./
 ```
 
 **[Go here](README-code-quality.md)** for details on linting / style.
