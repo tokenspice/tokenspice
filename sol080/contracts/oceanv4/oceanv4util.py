@@ -86,7 +86,7 @@ def OCEAN_address() -> str:
 
 _POOL_TEMPLATE = None
 @enforce_types
-def pool_template():
+def POOLTemplate():
     global _POOL_TEMPLATE  # pylint: disable=global-statement
     try:
         pooltemplate = _POOL_TEMPLATE  # may trigger failure
@@ -109,7 +109,7 @@ def ROUTER():
     global _ROUTER  # pylint: disable=global-statement
     try:
         oceanToken = OCEANtoken()
-        poolTemplate = pool_template()
+        poolTemplate = POOLTemplate()
         router = _ROUTER  # may trigger failure
         if router is not None:
             x = router.address  # "" #pylint: disable=unused-variable
@@ -125,6 +125,23 @@ def ROUTER():
             {'from': GOD_ACCOUNT}
         )
     return router
+
+_SIDE_STAKING = None
+@enforce_types
+def SIDESTAKING():
+    global _SIDE_STAKING  # pylint: disable=global-statement
+    try:
+        ss = _SIDE_STAKING  # may trigger failure
+        if ss is not None:
+            x = ss.address  # "" # pylint: disable=unused-variable
+    except brownie.exceptions.ContractNotFound:
+        ss = None
+    if ss is None:
+        router = ROUTER()
+        ss = _SIDE_STAKING = BROWNIE_PROJECT080.SideStaking.deploy(
+            router.address, {'from': GOD_ACCOUNT}
+        )
+    return ss
 
 @enforce_types
 def createDataNFT(
@@ -180,18 +197,16 @@ def create_BPool_from_datatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity,
     if router.routerOwner() == GOD_ADDRESS:
         router.changeRouterOwner(account.address, {"from":GOD_ACCOUNT})
     OCEAN = OCEANtoken()
-    poolTemplate = pool_template()    
+    poolTemplate = POOLTemplate()    
     erc721_factory = ERC721Factory(router.address)
     
-    erc20_template = ERC20Template()
-    erc721_template = ERC721Template()
-    assert erc721_factory.getTokenTemplate(1)[0] == erc20_template.address
+    # erc20_template = ERC20Template()
+    # erc721_template = ERC721Template()
+    # assert erc721_factory.getTokenTemplate(1)[0] == erc20_template.address
     # assert erc721_factory.getTokenTemplate(1)[0] == erc20_template.address
 
     # assert 1==2
-    sideStaking = BROWNIE_PROJECT080.SideStaking.deploy(
-        router.address, {'from': GOD_ACCOUNT}
-    )
+    sideStaking = SIDESTAKING()
     router.addSSContract(sideStaking.address, {"from": account})
     router.addFactory(erc721_factory.address, {'from': account})
     
