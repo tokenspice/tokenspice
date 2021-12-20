@@ -7,7 +7,6 @@ from util.constants import BROWNIE_PROJECT080, GOD_ACCOUNT, OPF_ACCOUNT, ZERO_AD
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
 
-
 _ERC721_TEMPLATE = None
 @enforce_types
 def ERC721Template():
@@ -78,11 +77,9 @@ def OCEANtoken():
         )
     return token
 
-
 @enforce_types
 def OCEAN_address() -> str:
     return OCEANtoken().address
-
 
 _POOL_TEMPLATE = None
 @enforce_types
@@ -101,7 +98,6 @@ def POOLTemplate():
 @enforce_types
 def fundOCEANFromAbove(dst_address: str, amount_base: int):
     OCEANtoken().transfer(dst_address, amount_base, {"from": GOD_ACCOUNT})
-
 
 _ROUTER = None
 @enforce_types
@@ -200,12 +196,6 @@ def create_BPool_from_datatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity,
     poolTemplate = POOLTemplate()    
     erc721_factory = ERC721Factory(router.address)
     
-    # erc20_template = ERC20Template()
-    # erc721_template = ERC721Template()
-    # assert erc721_factory.getTokenTemplate(1)[0] == erc20_template.address
-    # assert erc721_factory.getTokenTemplate(1)[0] == erc20_template.address
-
-    # assert 1==2
     sideStaking = SIDESTAKING()
     router.addSSContract(sideStaking.address, {"from": account})
     router.addFactory(erc721_factory.address, {'from': account})
@@ -219,8 +209,8 @@ def create_BPool_from_datatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity,
     OCEAN.transfer(account, toBase18(10000.0), {"from": GOD_ACCOUNT})
     OCEAN.approve(router.address, toBase18(ss_OCEAN_init_liquidity),{'from': account})   
 
-    LP_swap_fee = 0.001 
-    mkt_swap_fee = 0.001 
+    LP_swap_fee = 0.02 
+    mkt_swap_fee = 0.01 
     pool_create_data = {
         "addresses": [
             sideStaking.address, OCEAN.address, account.address,
