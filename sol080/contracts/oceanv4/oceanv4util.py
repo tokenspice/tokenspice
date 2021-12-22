@@ -200,7 +200,7 @@ def create_BPool_from_datatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity,
     router.addSSContract(sideStaking.address, {"from": account})
     router.addFactory(erc721_factory.address, {'from': account})
     
-    ss_rate = 1
+    ss_rate = 0.1
     ss_OCEAN_decimals = 18
     ss_DT_vest_amt = DT_vest_amount #max 10% but 10000 gives error
     ss_DT_vested_blocks = 2500000 # = num blocks/year, if 15 s/block
