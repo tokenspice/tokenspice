@@ -23,21 +23,33 @@ address3 = account3.address
 
 OPF_ADDRESS = OPF_ACCOUNT.address
 
-def test_sideStaking_properties():
+def test_sideStaking_properties():    
     pool = _deployBPool()
     pool_address = pool.address
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
     dt_address = datatoken.address
+    OCEAN = OCEANtoken()
     sideStaking = SIDESTAKING()
+    initialBlockNum = brownie.chain.height
 
     assert sideStaking.getPoolAddress(dt_address) == pool_address
     assert sideStaking.getBaseTokenAddress(dt_address) == pool.getBaseTokenAddress()
+    assert sideStaking.getBaseTokenAddress(dt_address) == OCEAN.address
     assert sideStaking.getPublisherAddress(dt_address) == address0
 
-    assert datatoken.balanceOf(sideStaking.address) == toBase18(8000) #why?
+    assert datatoken.balanceOf(sideStaking.address) == toBase18(9800) #depend on ss_rate, DT_vest_amount, ss_OCEAN_init_liquidity
+    assert sideStaking.getDataTokenCirculatingSupply(datatoken.address) == toBase18(1200)
+
+    assert sideStaking.getBaseTokenBalance(datatoken.address) == 0
+    assert sideStaking.getDataTokenBalance(datatoken.address) == toBase18(8800)
+
+    assert sideStaking.getDataTokenCurrentCirculatingSupply(datatoken.address) == toBase18(2000*0.1) # ss_rate*ss_OCEAN_init_liquidity
 
     assert sideStaking.getvestingAmountSoFar(dt_address) == 0
-    # assert sideStaking.getvestingLastBlock(dt_address) == 0
+    assert sideStaking.getvestingAmount(datatoken.address) == toBase18(1000)
+
+    assert sideStaking.getvestingLastBlock(datatoken.address) == initialBlockNum
+    assert sideStaking.getvestingEndBlock(datatoken.address) == initialBlockNum + 2500000
 
     
 def test_swapExactAmountIn():
@@ -48,11 +60,23 @@ def test_swapExactAmountIn():
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
     
     tokenInOutMarket = [OCEAN.address, datatoken.address, address1]; # [tokenIn,tokenOut,marketFeeAddress]
-    amountsInOutMaxFee = [toBase18(10), toBase18(1), toBase18(10), 0]; # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
+    amountsInOutMaxFee = [toBase18(100), toBase18(1), toBase18(100), 0]; # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
 
     assert datatoken.balanceOf(address1) == 0
     pool.swapExactAmountIn(tokenInOutMarket, amountsInOutMaxFee, {"from":account1})
     assert datatoken.balanceOf(address1) > 0
+
+    # swaps some DT back to Ocean swapExactAmountIn
+    dt_balance_before = datatoken.balanceOf(account1.address)
+    ocean_balance_before = OCEAN.balanceOf(account1.address)
+
+    datatoken.approve(pool.address, toBase18(1000), {"from":account1})
+    tokenInOutMarket = [datatoken.address, OCEAN.address, address1]; # [tokenIn,tokenOut,marketFeeAddress]
+    amountsInOutMaxFee = [toBase18(1), toBase18(1), toBase18(100), 0]; # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
+    pool.swapExactAmountIn(tokenInOutMarket, amountsInOutMaxFee, {"from":account1})
+
+    assert datatoken.balanceOf(account1.address) < dt_balance_before
+    assert OCEAN.balanceOf(account1.address) > ocean_balance_before
 
 def test_swapExactAmountOut():
     pool = _deployBPool()
@@ -62,7 +86,7 @@ def test_swapExactAmountOut():
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
 
     tokenInOutMarket = [OCEAN.address, datatoken.address, address1] #// [tokenIn,tokenOut,marketFeeAddress]
-    amountsInOutMaxFee = [toBase18(100), toBase18(10), toBase18(10), 0]
+    amountsInOutMaxFee = [toBase18(1000), toBase18(10), toBase18(1000), 0]
 
     pool.swapExactAmountOut(tokenInOutMarket, amountsInOutMaxFee, {"from": account1})
     assert datatoken.balanceOf(address1) > 0
