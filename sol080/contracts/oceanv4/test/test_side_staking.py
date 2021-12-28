@@ -3,25 +3,18 @@ import brownie
 import sol080.contracts.oceanv4.oceanv4util 
 from sol080.contracts.oceanv4.oceanv4util import OCEANtoken, fundOCEANFromAbove, ROUTER, SIDESTAKING
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
+from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
 
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
 
 accounts = brownie.network.accounts
+
 account0 = accounts[0] 
 address0 = account0.address
 
 account1 = accounts[1]
 address1 = account1.address
-
-account2 = accounts[2] 
-address2 = account2.address
-
-account3 = accounts[3] 
-address3 = account3.address
-
-OPF_ADDRESS = OPF_ACCOUNT.address
 
 def test_sideStaking_properties():    
     pool = _deployBPool()
