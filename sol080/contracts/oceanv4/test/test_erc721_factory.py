@@ -8,14 +8,13 @@ from sol080.contracts.oceanv4.oceanv4util import (
     OCEANtoken,
 )
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
+from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
 
 accounts = brownie.network.accounts
 account0 = accounts[0]
 address0 = account0.address
 
 OPF_ADDRESS = OPF_ACCOUNT.address
-ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 
 def test_direct():
