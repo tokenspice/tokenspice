@@ -17,6 +17,7 @@ address0 = account0.address
 OPF_ADDRESS = OPF_ACCOUNT.address
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
+
 def test_direct():
     erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
 

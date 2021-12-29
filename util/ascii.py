@@ -55,7 +55,7 @@ def asciiTo2dArray(filename: str):
             X.append(numbers)
 
     f.close()
-    X = numpy.array(X) # type: ignore # skip mypy complaint
+    X = numpy.array(X)  # type: ignore # skip mypy complaint
     return X
 
 

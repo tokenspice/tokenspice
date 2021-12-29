@@ -40,21 +40,11 @@ def test_fail_to_mint():
 def test_vesting_amount():
     pool = _deployBPool()
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    OCEAN = OCEANtoken()
-
-    dataNFT_address = datatoken.getERC721Address()
-    dataNFT = BROWNIE_PROJECT080.ERC721Template.at(dataNFT_address)
-
     sideStaking = SIDESTAKING()
-
     assert sideStaking.getvestingAmount(datatoken.address) == toBase18(1000)
 
     # TODO: https://github.com/oceanprotocol/contracts/blob/v4main_postaudit/test/flow/Vesting.test.js#L292
     # can use brownie.chain.sleep
-    pubDTbalBEFORE = datatoken.balanceOf(dataNFT.address)
-    for i in range(100):
-        OCEAN.transfer(address1, 0, {'from':GOD_ACCOUNT})
-    sideStaking.getVesting
 
 
 def _deployBPool():

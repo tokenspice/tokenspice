@@ -171,7 +171,6 @@ def createDataNFT(
     account,
     additional_NFT_deployer_address=GOD_ADDRESS,
 ):
-
     erc721_factory = ERC721Factory(additional_NFT_deployer_address)
     erc721_template_index = 1
     additional_NFT_deployer_address = ZERO_ADDRESS

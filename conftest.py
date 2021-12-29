@@ -7,11 +7,13 @@ import pytest
 
 import brownie
 
-@pytest.fixture(scope='session', autouse=True)
+
+@pytest.fixture(scope="session", autouse=True)
 def session_setup_teardown():
     # setup code goes here if needed
     yield
     cleanup_testsuite()
+
 
 def cleanup_testsuite():
     if brownie.network.is_connected():
