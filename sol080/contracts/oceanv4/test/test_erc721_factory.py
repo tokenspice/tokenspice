@@ -1,6 +1,12 @@
 import brownie
-from sol080.contracts.oceanv4.oceanv4util import createDataNFT, create_datatoken_from_dataNFT, \
-    create_BPool_from_datatoken,poolAddressFromNewBPoolTx, ROUTER, OCEANtoken
+from sol080.contracts.oceanv4.oceanv4util import (
+    createDataNFT,
+    create_datatoken_from_dataNFT,
+    create_BPool_from_datatoken,
+    poolAddressFromNewBPoolTx,
+    ROUTER,
+    OCEANtoken,
+)
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
 
@@ -12,17 +18,13 @@ OPF_ADDRESS = OPF_ACCOUNT.address
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 def test_direct():
-    erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy(
-        {"from": GOD_ACCOUNT}
-    )
-    
-    erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy(
-        {"from":GOD_ACCOUNT}
-    )
-    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address0, {"from":GOD_ACCOUNT})
+    erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
+
+    erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy({"from": GOD_ACCOUNT})
+    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address0, {"from": GOD_ACCOUNT})
     OCEAN_address = OCEANtoken.address
-    pool_template = BROWNIE_PROJECT080.BPool.deploy({'from': GOD_ACCOUNT})
-    
+    pool_template = BROWNIE_PROJECT080.BPool.deploy({"from": GOD_ACCOUNT})
+
     # DEPLOY ROUTER, SETTING OWNER
     router = BROWNIE_PROJECT080.FactoryRouter.deploy(
         address0,
@@ -30,8 +32,8 @@ def test_direct():
         pool_template.address,
         OPF_ADDRESS,
         [],
-        {'from': GOD_ACCOUNT}
-    )    
+        {"from": GOD_ACCOUNT},
+    )
 
     # SETUP ERC721 Factory with template
     erc721_factory = BROWNIE_PROJECT080.ERC721Factory.deploy(
@@ -39,15 +41,15 @@ def test_direct():
         erc20_template.address,
         OPF_ADDRESS,
         router.address,
-        {"from":account0}
+        {"from": account0},
     )
 
     assert erc721_factory.owner() == address0
 
     current_nft_count = erc721_factory.getCurrentNFTCount()
 
-    #1 Publisher deployERC721Contract
-    erc721_template_index = 1 #refer to erc721_template
+    # 1 Publisher deployERC721Contract
+    erc721_template_index = 1  # refer to erc721_template
     additional_NFT_deployer_address = ZERO_ADDRESS
     token_URI = "https://mystorage.com/mytoken.png"
     tx = erc721_factory.deployERC721Contract(
@@ -56,16 +58,16 @@ def test_direct():
         erc721_template_index,
         additional_NFT_deployer_address,
         token_URI,
-        {"from":account0}
+        {"from": account0},
     )
 
     assert tx.events["NFTCreated"] is not None
     assert tx.events["NFTCreated"]["admin"] == address0
-    
+
     # ERC721 token
     dataNFT1_address = tx.events["NFTCreated"]["newTokenAddress"]
     dataNFT1 = BROWNIE_PROJECT080.ERC721Template.at(dataNFT1_address)
-    
+
     assert dataNFT1.name() == "dataNFT1"
     assert dataNFT1.symbol() == "DATANFT1"
 
@@ -77,27 +79,22 @@ def test_direct():
     assert nft_template[0] == erc721_template.address
     assert nft_template[1] is True
 
-    #2: Publisher createERC20
-    erc20_template_index = 1 #refer to erc20_template
+    # 2: Publisher createERC20
+    erc20_template_index = 1  # refer to erc20_template
     DT_name, DT_symbol = "datatoken1", "DT1"
     strings = [DT_name, DT_symbol]
     minter_addr = fee_mgr_addr = pub_mkt_addr = address0
     pub_mkt_fee_token_addr = ZERO_ADDRESS
     DT_cap = 100000
-    pub_mkt_fee_amt = 0.0 # in OCEAN
-    uints = [toBase18(DT_cap), toBase18(pub_mkt_fee_amt)] 
+    pub_mkt_fee_amt = 0.0  # in OCEAN
+    uints = [toBase18(DT_cap), toBase18(pub_mkt_fee_amt)]
     addresses = [minter_addr, fee_mgr_addr, pub_mkt_addr, pub_mkt_fee_token_addr]
     bytes = []
     tx = dataNFT1.createERC20(
-        erc20_template_index,
-        strings,
-        addresses,
-        uints,
-        bytes,
-        {"from":account0}
+        erc20_template_index, strings, addresses, uints, bytes, {"from": account0}
     )
 
-    DT_address = tx.events['TokenCreated']['newTokenAddress']
+    DT_address = tx.events["TokenCreated"]["newTokenAddress"]
     DT = BROWNIE_PROJECT080.ERC20Template.at(DT_address)
 
     assert DT.name() == DT_name
@@ -118,41 +115,49 @@ def test_direct():
     # 3. Mint DTs and created pools on any other market
 
     # FOCUS on option 1
-    #3 Publisher creating bpool, from ERC20 datatoken
+    # 3 Publisher creating bpool, from ERC20 datatoken
     ss_rate = 0.1
     ss_OCEAN_decimals = 18
-    ss_DT_vest_amt = 9999.0 #max 10% but 10000 gives error
-    ss_DT_vested_blocks = 2500000 # = num blocks/year, if 15 s/block
+    ss_DT_vest_amt = 9999.0  # max 10% but 10000 gives error
+    ss_DT_vested_blocks = 2500000  # = num blocks/year, if 15 s/block
     ss_OCEAN_init_liquidity = 2000.0
 
-    LP_swap_fee = 0.02 # 2%
-    mkt_swap_fee = 0.01 # 1%
-    
+    LP_swap_fee = 0.02  # 2%
+    mkt_swap_fee = 0.01  # 1%
+
     sideStaking = BROWNIE_PROJECT080.SideStaking.deploy(
-        router.address, {'from': GOD_ACCOUNT}
+        router.address, {"from": GOD_ACCOUNT}
     )
     router.addSSContract(sideStaking.address, {"from": account0})
-    router.addFactory(erc721_factory.address, {'from': account0})
+    router.addFactory(erc721_factory.address, {"from": account0})
     pool_create_data = {
         "addresses": [
-            sideStaking.address, OCEAN_address, address0,
-            address0, OPF_ADDRESS, pool_template.address
+            sideStaking.address,
+            OCEAN_address,
+            address0,
+            address0,
+            OPF_ADDRESS,
+            pool_template.address,
         ],
         "ssParams": [
-            toBase18(ss_rate), ss_OCEAN_decimals,
-            toBase18(ss_DT_vest_amt), ss_DT_vested_blocks,
-            toBase18(ss_OCEAN_init_liquidity)
+            toBase18(ss_rate),
+            ss_OCEAN_decimals,
+            toBase18(ss_DT_vest_amt),
+            ss_DT_vested_blocks,
+            toBase18(ss_OCEAN_init_liquidity),
         ],
         "swapFees": [toBase18(LP_swap_fee), toBase18(mkt_swap_fee)],
     }
 
-    OCEANtoken.approve(router.address, toBase18(ss_OCEAN_init_liquidity),{'from': account0})
+    OCEANtoken.approve(
+        router.address, toBase18(ss_OCEAN_init_liquidity), {"from": account0}
+    )
 
     tx = DT.deployPool(
         pool_create_data["ssParams"],
         pool_create_data["swapFees"],
         pool_create_data["addresses"],
-        {"from":account0}
+        {"from": account0},
     )
     pool_address = poolAddressFromNewBPoolTx(tx)
     pool = BROWNIE_PROJECT080.BPool.at(pool_address)
@@ -178,7 +183,9 @@ def test_createDT_via_util():
     assert DT.cap() == toBase18(10000)
     assert DT.balanceOf(account0.address) == 0
 
+
 def test_createBPool_via_util():
+    brownie.chain.reset()
     router = ROUTER()
     dataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
     DT = create_datatoken_from_dataNFT("DT", "DTSymbol", 10000, dataNFT, account0)
