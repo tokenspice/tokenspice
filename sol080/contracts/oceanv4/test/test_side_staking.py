@@ -347,9 +347,9 @@ def test_exitswapExternAmountOut_receiveDT():
     assert ssContractDTbalance == datatoken.balanceOf(sideStaking.address)
 
 def _deployBPool():
+    brownie.chain.reset()
     router = ROUTER()
     dataNFT = sol080.contracts.oceanv4.oceanv4util.createDataNFT("dataNFT", "DATANFTSYMBOL", account0, router)
     datatoken = sol080.contracts.oceanv4.oceanv4util.create_datatoken_from_dataNFT("DT", "DTSYMBOL", 10000, dataNFT, account0)
     pool = sol080.contracts.oceanv4.oceanv4util.create_BPool_from_datatoken(datatoken, 1000, 2000, account0)
-
     return pool
