@@ -1,8 +1,10 @@
 import brownie
 from enforce_typing import enforce_types
 
-from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080, GOD_ACCOUNT, GOD_ADDRESS
-from util.base18 import toBase18
+from .constants import GOD_ACCOUNT, GOD_ADDRESS
+from .base18 import toBase18
+BROWNIE_PROJECT080 = brownie.project.Project080
+
 
 _OCEAN_TOKEN = None
 @enforce_types

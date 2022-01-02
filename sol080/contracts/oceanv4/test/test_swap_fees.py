@@ -1,9 +1,13 @@
 import brownie
 
 import sol080.contracts.oceanv4.oceanv4util
-from sol080.contracts.oceanv4.oceanv4util import OCEANtoken, fundOCEANFromAbove, ROUTER
+from sol080.contracts.oceanv4.oceanv4util import ROUTER 
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
+from util.globaltokens import OCEANtoken
+from util.globaltokens import fundOCEANFromAbove
+
+
 
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
@@ -65,6 +69,7 @@ def test_exactAmountIn_fee():
 def _deployBPool():
     brownie.chain.reset()
     router = ROUTER()
+    fundOCEANFromAbove(address0, toBase18(10000.0))
     dataNFT = sol080.contracts.oceanv4.oceanv4util.createDataNFT(
         "dataNFT", "DATANFTSYMBOL", account0, router
     )

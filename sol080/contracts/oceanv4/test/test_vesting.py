@@ -7,6 +7,7 @@ from sol080.contracts.oceanv4.oceanv4util import (
 )
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
+from util.globaltokens import fundOCEANFromAbove
 
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
@@ -46,6 +47,7 @@ def test_vesting_amount():
 def _deployBPool():
     brownie.chain.reset()
     router = ROUTER()
+    fundOCEANFromAbove(address0, toBase18(100000))
     dataNFT = sol080.contracts.oceanv4.oceanv4util.createDataNFT(
         "dataNFT", "DATANFTSYMBOL", account0, router
     )

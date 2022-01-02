@@ -1,24 +1,22 @@
 import brownie
-from sol080.contracts.oceanv4.oceanv4util import (
-    createDataNFT,
-    create_datatoken_from_dataNFT,
-    create_BPool_from_datatoken,
-    poolAddressFromNewBPoolTx,
-    ROUTER,
-    # OCEANtoken,
-)
-from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
-from util.globaltokens import fundOCEANFromAbove, OCEANtoken
+# from contracts.oceanv4.oceanv4util import (
+#     createDataNFT,
+#     create_datatoken_from_dataNFT,
+#     create_BPool_from_datatoken,
+#     poolAddressFromNewBPoolTx,
+#     ROUTER,
+#     # OCEANtoken,
+# )
+from .base18 import toBase18
+from .constants import OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
+BROWNIE_PROJECT080 = brownie.project.Project080
 
 accounts = brownie.network.accounts
 account0 = accounts[0]
 address0 = account0.address
 
 OPF_ADDRESS = OPF_ACCOUNT.address
-
-
-def test_direct():
+def main():
     erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
 
     erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy({"from": GOD_ACCOUNT})
@@ -160,43 +158,11 @@ def test_direct():
         pool_create_data["addresses"],
         {"from": account0},
     )
-    pool_address = poolAddressFromNewBPoolTx(tx)
+    pool_address = tx.events["NewPool"]["poolAddress"]
     pool = BROWNIE_PROJECT080.BPool.at(pool_address)
 
     assert OCEANtoken.balanceOf(pool_address) == toBase18(ss_OCEAN_init_liquidity)
     assert pool.getMarketFee() == toBase18(mkt_swap_fee)
     assert pool.getSwapFee() == toBase18(LP_swap_fee)
 
-
-def test_createDataNFT_via_util():
-    dataNFT = createDataNFT("dataNFT", "DATANFT", account0)
-    assert dataNFT.name() == "dataNFT"
-    assert dataNFT.symbol() == "DATANFT"
-    assert dataNFT.getPermissions(account0.address) == (True, True, True, True)
-    assert dataNFT.balanceOf(account0.address) == 1
-
-
-def test_createDT_via_util():
-    dataNFT = createDataNFT("dataNFT", "DATANFT", account0)
-    DT = create_datatoken_from_dataNFT("DT", "DTSymbol", 10000, dataNFT, account0)
-    assert DT.name() == "DT"
-    assert DT.symbol() == "DTSymbol"
-    assert DT.cap() == toBase18(10000)
-    assert DT.balanceOf(account0.address) == 0
-
-
-def test_createBPool_via_util():
-    brownie.chain.reset()
-    router = ROUTER()
-    dataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
-    DT = create_datatoken_from_dataNFT("DT", "DTSymbol", 10000, dataNFT, account0)
-    fundOCEANFromAbove(address0, toBase18(10000.0))
-    pool = create_BPool_from_datatoken(DT, 10, 2000, account0)
-    pool_address = pool.address
-
-    OCEAN = OCEANtoken()
-    assert pool.getBaseTokenAddress() == OCEAN.address
-
-    assert OCEAN.balanceOf(pool_address) == toBase18(2000)
-    assert pool.getMarketFee() == toBase18(0.01)
-    assert pool.getSwapFee() == toBase18(0.02)
+    return pool, dataNFT1, DT, 

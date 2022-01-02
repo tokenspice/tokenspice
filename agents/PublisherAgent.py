@@ -1,5 +1,6 @@
 import random
 from typing import List
+from brownie.network import account
 
 from enforce_typing import enforce_types
 
@@ -10,9 +11,10 @@ from util import globaltokens
 from util.base18 import toBase18
 from util.constants import S_PER_DAY
 
+from sol080.contracts.oceanv4 import oceanv4util
+
 # magic numbers
-DEFAULT_DT_init = 1000.0
-DEFAULT_DT_stake = 20.0
+DEFAULT_DT_CAP = 1000.0
 DEFAULT_pool_weight_DT = 3.0
 DEFAULT_pool_weight_OCEAN = 7.0
 DEFAULT_s_between_create = 7 * S_PER_DAY
@@ -24,33 +26,34 @@ DEFAULT_is_malicious = False
 DEFAULT_s_wait_to_rug = int(DEFAULT_s_between_create / 2)
 DEFAULT_s_rug_time = int(DEFAULT_s_wait_to_rug / 5)
 
+DEFAULT_vested_amount = 10.0
+
 
 class PublisherStrategy:  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
-        DT_init: float = DEFAULT_DT_init,
-        DT_stake: float = DEFAULT_DT_stake,
-        pool_weight_DT: float = DEFAULT_pool_weight_DT,
-        pool_weight_OCEAN: float = DEFAULT_pool_weight_OCEAN,
+        DT_cap: float = DEFAULT_DT_CAP,
+        vested_amount: float = DEFAULT_vested_amount,
+        # pool_weight_DT: float = DEFAULT_pool_weight_DT,
+        # pool_weight_OCEAN: float = DEFAULT_pool_weight_OCEAN,
         s_between_create: int = DEFAULT_s_between_create,
         s_between_unstake: int = DEFAULT_s_between_unstake,
         s_between_sellDT: int = DEFAULT_s_between_sellDT,
-        is_malicious: bool = DEFAULT_is_malicious,
-        s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
-        s_rug_time: int = DEFAULT_s_rug_time,
+        # is_malicious: bool = DEFAULT_is_malicious,
+        # s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
+        # s_rug_time: int = DEFAULT_s_rug_time,
     ):  # pylint: disable=too-many-arguments
-        self.DT_init: float = DT_init
-        self.DT_stake: float = DT_stake
-        self.pool_weight_DT: float = pool_weight_DT
-        self.pool_weight_OCEAN: float = pool_weight_OCEAN
+        self.DT_cap: float = DT_cap
+        self.vested_amount: float = vested_amount
+        # self.pool_weight_DT: float = pool_weight_DT
+        # self.pool_weight_OCEAN: float = pool_weight_OCEAN
         self.s_between_create: int = s_between_create
         self.s_between_unstake: int = s_between_unstake
         self.s_between_sellDT: int = s_between_sellDT
 
-        self.is_malicious: bool = is_malicious
-        self.s_wait_to_rug: int = s_wait_to_rug
-        self.s_rug_time: int = s_rug_time
-
+        # self.is_malicious: bool = is_malicious
+        # self.s_wait_to_rug: int = s_wait_to_rug
+        # self.s_rug_time: int = s_rug_time
 
 @enforce_types
 class PublisherAgent(AgentBase.AgentBaseEvm):
@@ -90,9 +93,9 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
             self._s_since_sellDT = 0
             self._sellDTsomewhere(state)
 
-        if self._doRug():
-            if len(self.pools) > 0:
-                state.rugged_pools.append(self.pools[-1])
+        # if self._doRug():
+        #     if len(self.pools) > 0:
+        #         state.rugged_pools.append(self.pools[-1])
 
     def _doCreatePool(self) -> bool:
         if self.OCEAN() < 200.0:  # magic number
@@ -109,33 +112,18 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         dt_name = f"DT{pool_i}"
         pool_agent_name = f"pool{pool_i}"
 
+        # new dataNFT
+        dataNFT = self._creatDataNFT_withRouter(dt_name, dt_name)
+
         # new DT
-        DT = self._createDatatoken(dt_name, mint_amt=self.pub_ss.DT_init)
-
+        DT = self._createDataToken(dt_name, dt_name, self.pub_ss.DT_cap, dataNFT)
+                
         # new pool
-        pool = oceanv3util.newBPool(account)
+        OCEAN_bind_amt = self.OCEAN()-1  # magic number: use all the OCEAN
+        # import ipdb
+        # ipdb.set_trace()
 
-        # bind tokens & add initial liquidity
-        OCEAN_bind_amt = self.OCEAN()  # magic number: use all the OCEAN
-        DT_bind_amt = self.pub_ss.DT_stake
-
-        DT.approve(pool.address, toBase18(DT_bind_amt), {"from": account})
-        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt), {"from": account})
-
-        pool.bind(
-            DT.address,
-            toBase18(DT_bind_amt),
-            toBase18(self.pub_ss.pool_weight_DT),
-            {"from": account},
-        )
-        pool.bind(
-            OCEAN.address,
-            toBase18(OCEAN_bind_amt),
-            toBase18(self.pub_ss.pool_weight_OCEAN),
-            {"from": account},
-        )
-
-        pool.finalize({"from": account})
+        pool = self._createBpool(DT, self.pub_ss.vested_amount, OCEAN_bind_amt)
 
         # create agent
         pool_agent = PoolAgent(pool_agent_name, pool)
@@ -151,15 +139,15 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         if not state.agents.filterByNonzeroStake(self):
             return False
 
-        if self.pub_ss.is_malicious:
-            return (
-                (self._s_since_unstake >= self.pub_ss.s_between_unstake)
-                & (self._s_since_create >= self.pub_ss.s_wait_to_rug)
-                & (
-                    self._s_since_create
-                    <= self.pub_ss.s_wait_to_rug + self.pub_ss.s_rug_time
-                )
-            )
+        # if self.pub_ss.is_malicious:
+        #     return (
+        #         (self._s_since_unstake >= self.pub_ss.s_between_unstake)
+        #         & (self._s_since_create >= self.pub_ss.s_wait_to_rug)
+        #         & (
+        #             self._s_since_create
+        #             <= self.pub_ss.s_wait_to_rug + self.pub_ss.s_rug_time
+        #         )
+        #     )
 
         return self._s_since_unstake >= self.pub_ss.s_between_unstake
 
@@ -234,10 +222,18 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         DTs = [pool_agent.datatoken for pool_agent in pool_agents]
         return [DT for DT in DTs if self.DT(DT) > 0.0]
 
-    def _createDatatoken(self, dt_name: str, mint_amt: float):
-        """Create datatoken contract and mint DTs to self."""
+    def _creatDataNFT_withRouter(self, dataNFT_name:str, dataNFT_symbol:str):
         account = self._wallet._account
-        DT = oceanv3util.newDatatoken("", dt_name, dt_name, toBase18(mint_amt), account)
-        DT.mint(account.address, toBase18(mint_amt), {"from": account})
-        self._wallet.resetCachedInfo()
+        router = oceanv4util.ROUTER()
+        dataNFT = oceanv4util.createDataNFT(dataNFT_name, dataNFT_symbol, account, router)
+        return dataNFT
+
+    def _createDataToken(self, DT_name, DT_symbol, DT_cap, dataNFT):
+        account = self._wallet._account
+        DT = oceanv4util.create_datatoken_from_dataNFT(DT_name, DT_symbol, DT_cap, dataNFT, account)
         return DT
+
+    def _createBpool(self, datatoken, DT_vest_amount, OCEAN_init_liquidity):
+        account = self._wallet._account
+        pool = oceanv4util.create_BPool_from_datatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity, account)
+        return pool

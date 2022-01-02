@@ -3,6 +3,7 @@ from enforce_typing import enforce_types
 
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080, GOD_ACCOUNT, OPF_ACCOUNT, ZERO_ADDRESS
+from util.globaltokens import OCEANtoken, fundOCEANFromAbove
 
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
@@ -70,29 +71,6 @@ def ERC721Factory(additional_NFT_deployer_address):
     return factory
 
 
-_OCEAN_TOKEN = None
-
-
-@enforce_types
-def OCEANtoken():
-    global _OCEAN_TOKEN  # pylint: disable=global-statement
-    try:
-        token = _OCEAN_TOKEN  # may trigger failure
-        if token is not None:
-            x = token.address  # "" # pylint: disable=unused-variable
-    except brownie.exceptions.ContractNotFound:
-        token = None
-    if token is None:
-        token = _OCEAN_TOKEN = BROWNIE_PROJECT080.MockOcean.deploy(
-            GOD_ADDRESS, {"from": GOD_ACCOUNT}
-        )
-    return token
-
-
-@enforce_types
-def OCEAN_address() -> str:
-    return OCEANtoken().address
-
 
 _POOL_TEMPLATE = None
 
@@ -111,11 +89,6 @@ def POOLTemplate():
             {"from": GOD_ACCOUNT}
         )
     return pooltemplate
-
-
-@enforce_types
-def fundOCEANFromAbove(dst_address: str, amount_base: int):
-    OCEANtoken().transfer(dst_address, amount_base, {"from": GOD_ACCOUNT})
 
 
 _ROUTER = None
@@ -230,8 +203,7 @@ def create_BPool_from_datatoken(
     ss_DT_vest_amt = DT_vest_amount  # max 10% but 10000 gives error
     ss_DT_vested_blocks = 2500000  # = num blocks/year, if 15 s/block
     ss_OCEAN_init_liquidity = OCEAN_init_liquidity
-
-    OCEAN.transfer(account, toBase18(10000.0), {"from": GOD_ACCOUNT})
+    
     OCEAN.approve(router.address, toBase18(ss_OCEAN_init_liquidity), {"from": account})
 
     LP_swap_fee = 0.02

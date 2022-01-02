@@ -12,35 +12,39 @@ from enforce_typing import enforce_types
 # from sol057.contracts.oceanv3.oceanv3util import GOD_ADDRESS
 
 # from sol080.contracts.oceanv4.test.test_SideStaking import ZERO_ADDRESS  # pylint: disable=unused-import
+CONF_FILE_PATH = "./tokenspice.ini"
+def confFileValue(section: str, key: str) -> str:
+    conf = configparser.ConfigParser()
+    path = os.path.expanduser(CONF_FILE_PATH)
+    conf.read(path)
+    return conf[section][key]
 
-from util.configutil import CONF_FILE_PATH
+# config = configparser.ConfigParser()
+# config.read(os.path.expanduser(CONF_FILE_PATH))
 
-config = configparser.ConfigParser()
-config.read(os.path.expanduser(CONF_FILE_PATH))
-
-BROWNIE_PROJECT057 = brownie.project.load("./sol057/", name="Project057")
-BROWNIE_PROJECT080 = brownie.project.load("./sol080/", name="Project080")
+# BROWNIE_PROJECT057 = brownie.project.load("./sol057/", name="Project057")
+# BROWNIE_PROJECT080 = brownie.project.load("", name="Project080")
 
 # brownie auto-reverts in "development". If needed, set to "ganache"
-brownie.network.connect("development")
+# brownie.network.connect("development")
 
 GOD_ACCOUNT = brownie.network.accounts[9]
 GOD_ADDRESS = GOD_ACCOUNT.address
 
-SAFETY = config["general"].getboolean("SAFETY")
-assert SAFETY is not None
+# SAFETY = config["general"].getboolean("SAFETY")
+# assert SAFETY is not None
 
-if not SAFETY:
-    # do nothing, just return the original function
-    def noop(f):
-        return f
+# if not SAFETY:
+#     # do nothing, just return the original function
+#     def noop(f):
+#         return f
 
-    enforce_types = noop
+#     enforce_types = noop
 
-SILENT = config["general"].getboolean("SILENT")
-assert SILENT is not None
+# SILENT = config["general"].getboolean("SILENT")
+# assert SILENT is not None
 
-CONFIG.argv["silent"] = SILENT  # brownie config
+# CONFIG.argv["silent"] = SILENT  # brownie config
 
 # big numbers
 
