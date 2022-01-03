@@ -9,7 +9,7 @@ import brownie
 # )
 from .base18 import toBase18
 from .constants import OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
-BROWNIE_PROJECT080 = brownie.project.Project080
+BROWNIE_PROJECT080 = brownie.project.Sol080Project
 
 accounts = brownie.network.accounts
 account0 = accounts[0]
@@ -165,4 +165,5 @@ def main():
     assert pool.getMarketFee() == toBase18(mkt_swap_fee)
     assert pool.getSwapFee() == toBase18(LP_swap_fee)
 
-    return pool, dataNFT1, DT, 
+    # return pool, dataNFT1, DT, OCEANtoken, router, sideStaking, pool_template
+    return DT, OCEANtoken, router, sideStaking, pool_template

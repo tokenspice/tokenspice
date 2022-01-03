@@ -44,15 +44,15 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
-        # new_agents.add(
-        #     DataconsumerAgent(
-        #         name="consumer",
-        #         USD=0.0,
-        #         OCEAN=self.ss.consumer_init_OCEAN,
-        #         s_between_buys=self.ss.consumer_s_between_buys,
-        #         profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
-        #     )
-        # )
+        new_agents.add(
+            DataconsumerAgent(
+                name="consumer",
+                USD=0.0,
+                OCEAN=self.ss.consumer_init_OCEAN,
+                s_between_buys=self.ss.consumer_s_between_buys,
+                profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
+            )
+        )
 
         # new_agents.add(
         #     StakerspeculatorAgent(

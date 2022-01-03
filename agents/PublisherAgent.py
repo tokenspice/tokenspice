@@ -112,8 +112,14 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         dt_name = f"DT{pool_i}"
         pool_agent_name = f"pool{pool_i}"
 
+        #Router
+        router = self._deployRouter()
+
         # new dataNFT
-        dataNFT = self._creatDataNFT_withRouter(dt_name, dt_name)
+        createDataNFT = self._creatDataNFT_withRouter(dt_name, dt_name, router)
+        dataNFT = createDataNFT[0]
+        erc721_factory = createDataNFT[1]
+
 
         # new DT
         DT = self._createDataToken(dt_name, dt_name, self.pub_ss.DT_cap, dataNFT)
@@ -123,7 +129,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         # import ipdb
         # ipdb.set_trace()
 
-        pool = self._createBpool(DT, self.pub_ss.vested_amount, OCEAN_bind_amt)
+        pool = self._createBpool(DT, self.pub_ss.vested_amount, OCEAN_bind_amt, router, erc721_factory)
 
         # create agent
         pool_agent = PoolAgent(pool_agent_name, pool)
@@ -222,18 +228,21 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         DTs = [pool_agent.datatoken for pool_agent in pool_agents]
         return [DT for DT in DTs if self.DT(DT) > 0.0]
 
-    def _creatDataNFT_withRouter(self, dataNFT_name:str, dataNFT_symbol:str):
+    def _deployRouter(self):
         account = self._wallet._account
-        router = oceanv4util.ROUTER()
-        dataNFT = oceanv4util.createDataNFT(dataNFT_name, dataNFT_symbol, account, router)
-        return dataNFT
+        return oceanv4util.deployRouter(account)
+
+    def _creatDataNFT_withRouter(self, dataNFT_name:str, dataNFT_symbol:str, router):
+        account = self._wallet._account
+        createDataNFT = oceanv4util.createDataNFT(dataNFT_name, dataNFT_symbol, account, router)
+        return createDataNFT
 
     def _createDataToken(self, DT_name, DT_symbol, DT_cap, dataNFT):
         account = self._wallet._account
-        DT = oceanv4util.create_datatoken_from_dataNFT(DT_name, DT_symbol, DT_cap, dataNFT, account)
+        DT = oceanv4util.createDatatokenFromDataNFT(DT_name, DT_symbol, DT_cap, dataNFT, account)
         return DT
 
-    def _createBpool(self, datatoken, DT_vest_amount, OCEAN_init_liquidity):
+    def _createBpool(self, datatoken, DT_vest_amount, OCEAN_init_liquidity, router, erc721_factory):
         account = self._wallet._account
-        pool = oceanv4util.create_BPool_from_datatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity, account)
+        pool = oceanv4util.createBPoolFromDatatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity, account, router, erc721_factory)
         return pool
