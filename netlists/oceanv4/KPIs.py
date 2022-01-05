@@ -81,7 +81,7 @@ def netlist_createLogData(state):
     agents_names = [
         "publisher",
         # "consumer",
-        # "stakerSpeculator",
+        "stakerSpeculator",
         # "speculator",
         # "maliciousPublisher",
     ]

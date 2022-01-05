@@ -1,12 +1,10 @@
 import brownie
 from enforce_typing import enforce_types
 
-from util.constants import BROWNIE_PROJECT057, GOD_ACCOUNT
+from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080, GOD_ACCOUNT, GOD_ADDRESS
 from util.base18 import toBase18
 
 _OCEAN_TOKEN = None
-
-
 @enforce_types
 def OCEANtoken():
     global _OCEAN_TOKEN  # pylint: disable=global-statement
@@ -17,8 +15,8 @@ def OCEANtoken():
     except brownie.exceptions.ContractNotFound:
         token = None
     if token is None:
-        token = _OCEAN_TOKEN = BROWNIE_PROJECT057.Simpletoken.deploy(
-            "OCEAN", "OCEAN", 18, toBase18(1e9), {"from": GOD_ACCOUNT}
+        token = _OCEAN_TOKEN = BROWNIE_PROJECT080.MockOcean.deploy(
+            GOD_ADDRESS, {"from": GOD_ACCOUNT}
         )
     return token
 

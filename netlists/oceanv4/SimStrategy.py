@@ -29,14 +29,14 @@ class SimStrategy(
         self.publisher_s_between_unstake = 3 * S_PER_DAY
         self.publisher_s_between_sellDT = 15 * S_PER_DAY
 
-        # # data consumer
+        # data consumer
         # self.consumer_init_OCEAN = 10000.0
         # self.consumer_s_between_buys = 3 * S_PER_DAY
         # self.consumer_profit_margin_on_consume = 0.2
 
-        # # staker-speculator
-        # self.staker_init_OCEAN = 10000.0
-        # self.staker_s_between_speculates = 8 * S_PER_HOUR
+        # staker-speculator
+        self.staker_init_OCEAN = 10000.0
+        self.staker_s_between_speculates = 8 * S_PER_HOUR
 
         # # speculator
         # self.speculator_init_OCEAN = 10000.0

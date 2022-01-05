@@ -376,16 +376,19 @@ class AgentWalletEvm(
         OCEAN.approve(pool.address, toBase18(max_OCEAN_allow), {"from": self._account})
 
         tokenIn_address = globaltokens.OCEAN_address()
-        maxAmountIn_base = toBase18(max_OCEAN_allow)
         tokenOut_address = DT.address
+        marketFeeAddress = self._account.address
+        maxAmountIn_base = toBase18(max_OCEAN_allow)        
         tokenAmountOut_base = toBase18(DT_buy_amt)
         maxPrice_base = 2 ** 255
+        swapFee = pool.getSwapFee()
+
+        tokenInOutMarket = [tokenIn_address, tokenOut_address, marketFeeAddress] #[tokenIn,tokenOut,marketFeeAddress]
+        amountsInOutMaxFee = [maxAmountIn_base, tokenAmountOut_base, maxPrice_base, swapFee] #[exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
+
         pool.swapExactAmountOut(
-            tokenIn_address,
-            maxAmountIn_base,
-            tokenOut_address,
-            tokenAmountOut_base,
-            maxPrice_base,
+            tokenInOutMarket,
+            amountsInOutMaxFee,
             {"from": self._account},
         )
         self.resetCachedInfo()

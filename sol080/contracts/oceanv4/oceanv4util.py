@@ -201,6 +201,3 @@ def createBPoolFromDatatoken(
 @enforce_types
 def poolAddressFromNewBPoolTx(tx):
     return tx.events["NewPool"]["poolAddress"]
-
-# @enforce_types
-# def createBPoolDirectly(ac)

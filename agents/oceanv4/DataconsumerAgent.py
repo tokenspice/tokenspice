@@ -62,20 +62,18 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
             pool = pool_agent.pool
             DT_address = pool_agent.datatoken_address
 
-            tokenBalanceIn = pool.getBalance(OCEAN_address)
-            tokenWeightIn = pool.getDenormalizedWeight(OCEAN_address)
-            tokenBalanceOut = pool.getBalance(DT_address)
-            tokenWeightOut = pool.getDenormalizedWeight(DT_address)
+            # tokenBalanceIn = pool.getBalance(OCEAN_address)
+            # tokenWeightIn = pool.getDenormalizedWeight(OCEAN_address)
+            # tokenBalanceOut = pool.getBalance(DT_address)
+            # tokenWeightOut = pool.getDenormalizedWeight(DT_address)
             tokenAmountOut = toBase18(1.0)  # number of DTs
             swapFee = pool.getSwapFee()
 
-            OCEANamountIn_base = pool.calcInGivenOut(
-                tokenBalanceIn,
-                tokenWeightIn,
-                tokenBalanceOut,
-                tokenWeightOut,
+            OCEANamountIn_base = pool.getAmountInExactOut(
+                OCEAN_address,
+                DT_address,
                 tokenAmountOut,
-                swapFee,
+                swapFee
             )
 
             if OCEANamountIn_base >= OCEAN_base:
@@ -114,6 +112,11 @@ class DataconsumerAgent(AgentBase.AgentBaseEvm):
 
         # consume
         publisher_agent = state.agents.agentByAddress(pool_agent.controller_address)
+        # publisher is not controller anymore, 
+        # so publisher_agent will return None with V4 contract
+        # will get back
+        import ipdb
+        ipdb.set_trace()
         self._wallet.transferDT(publisher_agent._wallet, DT, DT_buy_amt)
 
         # get business value due to consume

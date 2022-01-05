@@ -2,7 +2,8 @@ from enforce_typing import enforce_types
 
 from engine import AgentBase
 from util import globaltokens
-from util.constants import BROWNIE_PROJECT057
+from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080
+
 
 
 @enforce_types
@@ -12,7 +13,7 @@ class PoolAgent(AgentBase.AgentBaseEvm):
         self._pool = pool
 
         self._dt_address = self._datatokenAddress()
-        self._dt = BROWNIE_PROJECT057.DataTokenTemplate.at(self._dt_address)
+        self._dt = BROWNIE_PROJECT080.ERC20Template.at(self._dt_address)
         self._controller_address = self._controllerAddress()
 
     @property

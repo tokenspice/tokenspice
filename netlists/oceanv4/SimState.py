@@ -2,11 +2,11 @@ from typing import Set, List
 
 from enforce_typing import enforce_types
 
-from agents.DataconsumerAgent import DataconsumerAgent
-from agents.PublisherAgent import PublisherAgent, PublisherStrategy
-# from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
+from agents.oceanv4.DataconsumerAgent import DataconsumerAgent
+from agents.oceanv4.PublisherAgent import PublisherAgent, PublisherStrategy
+from agents.oceanv4.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
-from engine import SimStateBase, AgentBase
+from engine.oceanv4 import SimStateBase, AgentBase
 from .KPIs import KPIs
 from .SimStrategy import SimStrategy
 
@@ -44,24 +44,25 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
-        new_agents.add(
-            DataconsumerAgent(
-                name="consumer",
-                USD=0.0,
-                OCEAN=self.ss.consumer_init_OCEAN,
-                s_between_buys=self.ss.consumer_s_between_buys,
-                profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
-            )
-        )
-
         # new_agents.add(
-        #     StakerspeculatorAgent(
-        #         name="stakerSpeculator",
+        #     DataconsumerAgent(
+        #         name="consumer",
         #         USD=0.0,
-        #         OCEAN=self.ss.staker_init_OCEAN,
-        #         s_between_speculates=self.ss.staker_s_between_speculates,
+        #         OCEAN=self.ss.consumer_init_OCEAN,
+        #         s_between_buys=self.ss.consumer_s_between_buys,
+        #         profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
         #     )
         # )
+        # need to work on _buyAndConsumeDT
+
+        new_agents.add(
+            StakerspeculatorAgent(
+                name="stakerSpeculator",
+                USD=0.0,
+                OCEAN=self.ss.staker_init_OCEAN,
+                s_between_speculates=self.ss.staker_s_between_speculates,
+            )
+        )
 
         # new_agents.add(
         #     SpeculatorAgent(

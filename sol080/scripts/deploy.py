@@ -166,4 +166,4 @@ def main():
     assert pool.getSwapFee() == toBase18(LP_swap_fee)
 
     # return pool, dataNFT1, DT, OCEANtoken, router, sideStaking, pool_template
-    return DT, OCEANtoken, router, sideStaking, pool_template
+    return DT, OCEANtoken, sideStaking, pool
