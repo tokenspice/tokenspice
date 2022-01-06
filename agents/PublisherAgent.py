@@ -347,7 +347,7 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         # import ipdb
         # ipdb.set_trace()
 
-        pool = self._createBpool(DT, self.pub_ss.vested_amount, OCEAN_bind_amt, router, erc721_factory)
+        pool = self._createBpool(DT, self.pub_ss.vested_amount, OCEAN_bind_amt, erc721_factory)
 
         # create agent
         pool_agent = PoolAgentV4(pool_agent_name, pool)
@@ -460,7 +460,7 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         DT = oceanv4util.createDatatokenFromDataNFT(DT_name, DT_symbol, DT_cap, dataNFT, account)
         return DT
 
-    def _createBpool(self, datatoken, DT_vest_amount, OCEAN_init_liquidity, router, erc721_factory):
+    def _createBpool(self, datatoken, DT_vest_amount, OCEAN_init_liquidity, erc721_factory):
         account = self._wallet._account
-        pool = oceanv4util.createBPoolFromDatatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity, account, router, erc721_factory)
+        pool = oceanv4util.createBPoolFromDatatoken(datatoken, DT_vest_amount, OCEAN_init_liquidity, account, erc721_factory)
         return pool
