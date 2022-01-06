@@ -13,11 +13,11 @@ class SimStrategy(
 
         # ==baseline
         self.setTimeStep(S_PER_HOUR)
-        self.setMaxTime(100, "days")
+        self.setMaxTime(20, "days")
         self.setLogInterval(12 * S_PER_HOUR)
 
         # data publisher
-        self.publisher_init_OCEAN = 2000.0
+        self.publisher_init_OCEAN = 5000.0
         self.publisher_DT_cap = 1000.0
         self.publisher_vested_amount = 10.0
         self.publisher_pool_weight_DT = 3.0
@@ -25,7 +25,7 @@ class SimStrategy(
         assert (
             self.publisher_pool_weight_DT + self.publisher_pool_weight_OCEAN
         ) == 10.0
-        self.publisher_s_between_create = 1 * S_PER_DAY
+        self.publisher_s_between_create = 2 * S_PER_DAY
         self.publisher_s_between_unstake = 3 * S_PER_DAY
         self.publisher_s_between_sellDT = 15 * S_PER_DAY
 
@@ -35,12 +35,12 @@ class SimStrategy(
         # self.consumer_profit_margin_on_consume = 0.2
 
         # staker-speculator
-        self.staker_init_OCEAN = 10000.0
+        self.staker_init_OCEAN = 5000.0
         self.staker_s_between_speculates = 8 * S_PER_HOUR
 
-        # # speculator
-        # self.speculator_init_OCEAN = 10000.0
-        # self.speculator_s_between_speculates = 1 * S_PER_DAY
+        # speculator
+        self.speculator_init_OCEAN = 5000.0
+        self.speculator_s_between_speculates = 1 * S_PER_DAY
 
         # # malicious publisher
         # self.mal_init_OCEAN = 10000.0

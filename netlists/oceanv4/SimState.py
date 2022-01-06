@@ -2,11 +2,11 @@ from typing import Set, List
 
 from enforce_typing import enforce_types
 
-from agents.oceanv4.DataconsumerAgent import DataconsumerAgent
-from agents.oceanv4.PublisherAgent import PublisherAgent, PublisherStrategy
-from agents.oceanv4.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
+from agents.DataconsumerAgent import DataconsumerAgent
+from agents.PublisherAgent import PublisherAgentV4, PublisherStrategyV4 #as PublisherAgent, PublisherStrategy
+from agents.SpeculatorAgent import SpeculatorAgentV4, StakerspeculatorAgentV4
 
-from engine.oceanv4 import SimStateBase, AgentBase
+from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
 from .SimStrategy import SimStrategy
 
@@ -25,7 +25,7 @@ class SimState(SimStateBase.SimStateBase):
         # wire up the circuit
         new_agents: Set[AgentBase.AgentBase] = set()
 
-        pub_ss = PublisherStrategy(
+        pub_ss = PublisherStrategyV4(
             DT_cap=self.ss.publisher_DT_cap,
             vested_amount=self.ss.publisher_vested_amount,
             # pool_weight_DT=self.ss.publisher_pool_weight_DT,
@@ -36,7 +36,7 @@ class SimState(SimStateBase.SimStateBase):
             # is_malicious=False,
         )
         new_agents.add(
-            PublisherAgent(
+            PublisherAgentV4(
                 name="publisher",
                 USD=0.0,
                 OCEAN=self.ss.publisher_init_OCEAN,
@@ -56,7 +56,7 @@ class SimState(SimStateBase.SimStateBase):
         # need to work on _buyAndConsumeDT
 
         new_agents.add(
-            StakerspeculatorAgent(
+            StakerspeculatorAgentV4(
                 name="stakerSpeculator",
                 USD=0.0,
                 OCEAN=self.ss.staker_init_OCEAN,
@@ -64,14 +64,14 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
-        # new_agents.add(
-        #     SpeculatorAgent(
-        #         name="speculator",
-        #         USD=0.0,
-        #         OCEAN=self.ss.speculator_init_OCEAN,
-        #         s_between_speculates=self.ss.speculator_s_between_speculates,
-        #     )
-        # )
+        new_agents.add(
+            SpeculatorAgentV4(
+                name="speculator",
+                USD=0.0,
+                OCEAN=self.ss.speculator_init_OCEAN,
+                s_between_speculates=self.ss.speculator_s_between_speculates,
+            )
+        )
 
         # mal_pub_ss = PublisherStrategy(
         #     DT_cap=self.ss.mal_DT_cap,

@@ -141,13 +141,14 @@ def deploySideStaking(account, router):
 
 @enforce_types
 def createBPoolFromDatatoken(
-    datatoken, DT_vest_amount, OCEAN_init_liquidity, account, 
-    router, erc721_factory
+    datatoken, DT_vest_amount, OCEAN_init_liquidity, account, erc721_factory
 ):
     OCEAN = OCEANtoken()
     poolTemplate = POOLTemplate()
-    # erc721_factory_address = datatoken.getERC721Address()
-    erc721_factory_address = erc721_factory.address 
+    routerAddress = datatoken.router()
+    router = BROWNIE_PROJECT080.FactoryRouter.at(routerAddress)
+    # erc721_factory = BROWNIE_PROJECT080.ERC721Factory.at(router.factory())
+    erc721_factory_address = erc721_factory.address
 
     sideStaking = deploySideStaking(account, router)
     router.addSSContract(sideStaking.address, {"from": account})

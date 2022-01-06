@@ -82,7 +82,7 @@ def netlist_createLogData(state):
         "publisher",
         # "consumer",
         "stakerSpeculator",
-        # "speculator",
+        "speculator",
         # "maliciousPublisher",
     ]
 
@@ -110,7 +110,7 @@ def netlist_createLogData(state):
             + get_OCEAN_in_BPTs(state, agent)
         ]
 
-    pool_agents = state.agents.filterToPool()
+    pool_agents = state.agents.filterToPoolV4()
     n_pools = len(pool_agents)
     s += ["; # pools=%d" % n_pools]
     dataheader += ["n_pools"]

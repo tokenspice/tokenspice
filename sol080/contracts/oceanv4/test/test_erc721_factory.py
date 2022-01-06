@@ -173,7 +173,7 @@ def test_direct():
 
 def test_createDataNFT_via_util():
     router = deployRouter(account0)
-    # dataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
+    dataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
     createdDataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
     dataNFT = createdDataNFT[0]
     assert dataNFT.name() == "dataNFT"
@@ -184,7 +184,6 @@ def test_createDataNFT_via_util():
 
 def test_createDT_via_util():
     router = deployRouter(account0)
-    # dataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
     createdDataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
     dataNFT = createdDataNFT[0]
     DT = createDatatokenFromDataNFT("DT", "DTSymbol", 10000, dataNFT, account0)
@@ -197,7 +196,6 @@ def test_createDT_via_util():
 def test_createBPool_via_util():
     brownie.chain.reset()
     router = deployRouter(account0)
-    # dataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
     createdDataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
     dataNFT = createdDataNFT[0]
     erc721_factory = createdDataNFT[1]
@@ -205,12 +203,7 @@ def test_createBPool_via_util():
     
     fundOCEANFromAbove(address0, toBase18(10000.0))
     OCEAN = OCEANtoken()
-    # sideStaking = deploySideStaking(GOD_ACCOUNT, router)
-    # poolTempate = POOLTemplate()
-
-    # import ipdb
-    # ipdb.set_trace()
-    pool = createBPoolFromDatatoken(DT, 100, 2000.0, account0, router, erc721_factory)
+    pool = createBPoolFromDatatoken(DT, 100, 2000.0, account0, erc721_factory)
     pool_address = pool.address
 
     assert pool.getBaseTokenAddress() == OCEAN.address
