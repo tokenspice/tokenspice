@@ -3,10 +3,13 @@ from enforce_typing import enforce_types
 
 from .constants import GOD_ACCOUNT, GOD_ADDRESS
 from .base18 import toBase18
+
 BROWNIE_PROJECT080 = brownie.project.Project080
 
 
 _OCEAN_TOKEN = None
+
+
 @enforce_types
 def OCEANtoken():
     global _OCEAN_TOKEN  # pylint: disable=global-statement

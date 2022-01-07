@@ -3,7 +3,10 @@ from typing import Set, List
 from enforce_typing import enforce_types
 
 from agents.DataconsumerAgent import DataconsumerAgent
-from agents.PublisherAgent import PublisherAgentV4, PublisherStrategyV4 #as PublisherAgent, PublisherStrategy
+from agents.PublisherAgent import (
+    PublisherAgentV4,
+    PublisherStrategyV4,
+)  # as PublisherAgent, PublisherStrategy
 from agents.SpeculatorAgent import SpeculatorAgentV4, StakerspeculatorAgentV4
 
 from engine import SimStateBase, AgentBase

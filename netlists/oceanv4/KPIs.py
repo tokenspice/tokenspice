@@ -56,7 +56,7 @@ def get_OCEAN_in_BPTs(state, agent):
         pool = pool_agent._pool
         DT = pool_agent._dt
 
-        price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address,0))
+        price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address, 0))
         pool_value_DT = price * fromBase18(pool.getBalance(DT.address))
         pool_value_OCEAN = fromBase18(pool.getBalance(OCEAN_address))
         pool_value = pool_value_DT + pool_value_OCEAN

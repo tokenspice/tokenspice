@@ -1,4 +1,5 @@
 import brownie
+
 # from contracts.oceanv4.oceanv4util import (
 #     createDataNFT,
 #     create_datatoken_from_dataNFT,
@@ -9,6 +10,7 @@ import brownie
 # )
 from .base18 import toBase18
 from .constants import OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
+
 BROWNIE_PROJECT080 = brownie.project.Sol080Project
 
 accounts = brownie.network.accounts
@@ -16,6 +18,8 @@ account0 = accounts[0]
 address0 = account0.address
 
 OPF_ADDRESS = OPF_ACCOUNT.address
+
+
 def main():
     erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
 

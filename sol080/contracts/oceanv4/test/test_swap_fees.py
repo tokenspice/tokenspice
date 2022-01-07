@@ -7,7 +7,6 @@ from util.globaltokens import OCEANtoken
 from util.globaltokens import fundOCEANFromAbove
 
 
-
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
 

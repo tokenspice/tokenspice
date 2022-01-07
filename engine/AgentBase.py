@@ -105,5 +105,5 @@ class AgentBaseEvm(StrMixin, AgentBaseAbstract):
     def unstakeOCEAN(self, BPT_unstake: float, pool):
         self._wallet.unstakeOCEAN(BPT_unstake, pool)
 
-    def joinPoolAddOCEAN(self, OCEAN_stake: float, pool): #V4 contracts
+    def joinPoolAddOCEAN(self, OCEAN_stake: float, pool):  # V4 contracts
         self._wallet.joinPoolAddOCEAN(OCEAN_stake, pool)

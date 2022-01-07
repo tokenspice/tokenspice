@@ -9,15 +9,19 @@ import os
 import brownie
 from brownie._config import CONFIG  # pylint: disable=no-name-in-module
 from enforce_typing import enforce_types
+
 # from sol057.contracts.oceanv3.oceanv3util import GOD_ADDRESS
 
 # from sol080.contracts.oceanv4.test.test_SideStaking import ZERO_ADDRESS  # pylint: disable=unused-import
 CONF_FILE_PATH = "./tokenspice.ini"
+
+
 def confFileValue(section: str, key: str) -> str:
     conf = configparser.ConfigParser()
     path = os.path.expanduser(CONF_FILE_PATH)
     conf.read(path)
     return conf[section][key]
+
 
 # config = configparser.ConfigParser()
 # config.read(os.path.expanduser(CONF_FILE_PATH))

@@ -134,9 +134,7 @@ def createDatatokenFromDataNFT(DT_name, DT_symbol, DT_cap, dataNFT, account):
 
 @enforce_types
 def deploySideStaking(account, router):
-    return BROWNIE_PROJECT080.SideStaking.deploy(
-        router.address, {"from": account}
-    )
+    return BROWNIE_PROJECT080.SideStaking.deploy(router.address, {"from": account})
 
 
 @enforce_types
@@ -154,16 +152,14 @@ def createBPoolFromDatatoken(
     router.addSSContract(sideStaking.address, {"from": account})
     router.addFactory(erc721_factory_address, {"from": account})
 
-    OCEAN.approve(
-        router.address, toBase18(OCEAN_init_liquidity), {"from": account}
-    )
+    OCEAN.approve(router.address, toBase18(OCEAN_init_liquidity), {"from": account})
 
     ss_rate = 0.1
     ss_OCEAN_decimals = 18
     ss_DT_vest_amt = DT_vest_amount  # max 10% but 10000 gives error
     ss_DT_vested_blocks = 2500000  # = num blocks/year, if 15 s/block
     ss_OCEAN_init_liquidity = OCEAN_init_liquidity
-    
+
     LP_swap_fee = 0.02
     mkt_swap_fee = 0.01
     pool_create_data = {
@@ -184,7 +180,7 @@ def createBPoolFromDatatoken(
         ],
         "swapFees": [toBase18(LP_swap_fee), toBase18(mkt_swap_fee)],
     }
-    
+
     assert router.ssContracts(sideStaking.address) == True
     # import ipdb
     # ipdb.set_trace()

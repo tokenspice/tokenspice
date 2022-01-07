@@ -2,8 +2,9 @@ import brownie
 from sol080.contracts.oceanv4 import oceanv4util
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
-from util.globaltokens import OCEANtoken 
-from util.globaltokens import fundOCEANFromAbove 
+from util.globaltokens import OCEANtoken
+from util.globaltokens import fundOCEANFromAbove
+
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
 
@@ -114,7 +115,7 @@ def test_joinPool_addTokens():
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
-    
+
     tokenInOutMarket = [OCEAN.address, datatoken.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
     amountsInOutMaxFee = [toBase18(100), toBase18(1), toBase18(100), 0]

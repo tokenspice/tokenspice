@@ -453,7 +453,7 @@ class AgentWalletEvm(
             OCEAN.address,
             tokenAmountIn_base,
             minPoolAmountOut_base,
-            {"from": self._account}
+            {"from": self._account},
         )
         self.resetCachedInfo()
 
@@ -461,21 +461,28 @@ class AgentWalletEvm(
         """Swap OCEAN for DT, oceanv4 contracts"""
         OCEAN = globaltokens.OCEANtoken()
         OCEAN.approve(pool.address, toBase18(max_OCEAN_allow), {"from": self._account})
-        
+
         tokenIn_address = globaltokens.OCEAN_address()
         tokenOut_address = DT.address
         marketFeeAddress = pool.getController()
 
-        maxAmountIn_base = toBase18(max_OCEAN_allow)        
+        maxAmountIn_base = toBase18(max_OCEAN_allow)
         tokenAmountOut_base = toBase18(DT_buy_amt)
         maxPrice_base = 2 ** 255
 
-        tokenInOutMarket = [tokenIn_address,tokenOut_address,marketFeeAddress]  # // [tokenIn,tokenOut,marketFeeAddress]
-        amountsInOutMaxFee = [maxAmountIn_base, tokenAmountOut_base, maxPrice_base, 0] # [maxAmountIn,exactAmountOut,maxPrice,_swapMarketFee]
+        tokenInOutMarket = [
+            tokenIn_address,
+            tokenOut_address,
+            marketFeeAddress,
+        ]  # // [tokenIn,tokenOut,marketFeeAddress]
+        amountsInOutMaxFee = [
+            maxAmountIn_base,
+            tokenAmountOut_base,
+            maxPrice_base,
+            0,
+        ]  # [maxAmountIn,exactAmountOut,maxPrice,_swapMarketFee]
         pool.swapExactAmountOut(
-            tokenInOutMarket, 
-            amountsInOutMaxFee, 
-            {"from": self._account}
+            tokenInOutMarket, amountsInOutMaxFee, {"from": self._account}
         )
         self.resetCachedInfo()
 
@@ -489,15 +496,25 @@ class AgentWalletEvm(
         minAmountOut_base = toBase18(min_OCEAN_amt)  # ""
         maxPrice_base = 2 ** 255  # limit by min_OCEAN_amt, not price
         marketFeeAddress = pool.getController()
-        tokenInOutMarket = [tokenIn_address, tokenOut_address, marketFeeAddress] #[tokenIn,tokenOut,marketFeeAddress]
-        amountsInOutMaxFee = [tokenAmountIn_base, minAmountOut_base, maxPrice_base, 0] #[exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
+        tokenInOutMarket = [
+            tokenIn_address,
+            tokenOut_address,
+            marketFeeAddress,
+        ]  # [tokenIn,tokenOut,marketFeeAddress]
+        amountsInOutMaxFee = [
+            tokenAmountIn_base,
+            minAmountOut_base,
+            maxPrice_base,
+            0,
+        ]  # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
 
         pool.swapExactAmountIn(
-            tokenInOutMarket, 
+            tokenInOutMarket,
             amountsInOutMaxFee,
             {"from": self._account},
         )
         self.resetCachedInfo()
+
 
 # ========================================================================
 # burn-related

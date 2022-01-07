@@ -1,7 +1,12 @@
 import brownie
 from enforce_typing import enforce_types
 
-from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080, GOD_ACCOUNT, GOD_ADDRESS
+from util.constants import (
+    BROWNIE_PROJECT057,
+    BROWNIE_PROJECT080,
+    GOD_ACCOUNT,
+    GOD_ADDRESS,
+)
 from util.base18 import toBase18
 
 _OCEAN_TOKEN = None
@@ -31,6 +36,7 @@ def OCEAN_address() -> str:
 @enforce_types
 def fundOCEANFromAbove(dst_address: str, amount_base: int):
     OCEANtoken().transfer(dst_address, amount_base, {"from": GOD_ACCOUNT})
+
 
 # _OCEAN_TOKEN_V4 = None
 # @enforce_types

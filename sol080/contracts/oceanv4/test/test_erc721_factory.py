@@ -5,8 +5,8 @@ from sol080.contracts.oceanv4.oceanv4util import (
     createDataNFT,
     createDatatokenFromDataNFT,
     createBPoolFromDatatoken,
-    poolAddressFromNewBPoolTx, 
-    deploySideStaking
+    poolAddressFromNewBPoolTx,
+    deploySideStaking,
 )
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
@@ -133,7 +133,6 @@ def test_direct():
     LP_swap_fee = 0.02  # 2%
     mkt_swap_fee = 0.01  # 1%
 
-    
     pool_create_data = {
         "addresses": [
             sideStaking.address,
@@ -199,8 +198,8 @@ def test_createBPool_via_util():
     createdDataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
     dataNFT = createdDataNFT[0]
     erc721_factory = createdDataNFT[1]
-    DT = createDatatokenFromDataNFT("DT", "DTSymbol", 10000, dataNFT, account0)    
-    
+    DT = createDatatokenFromDataNFT("DT", "DTSymbol", 10000, dataNFT, account0)
+
     fundOCEANFromAbove(address0, toBase18(10000.0))
     OCEAN = OCEANtoken()
     pool = createBPoolFromDatatoken(DT, 100, 2000.0, account0, erc721_factory)
