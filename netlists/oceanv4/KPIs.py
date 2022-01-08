@@ -27,7 +27,7 @@ def get_OCEAN_in_DTs(state, agent) -> float:
     OCEAN_address = globaltokens.OCEAN_address()
     value_held = 0.0
 
-    for pool_agent in state.agents.filterToPool().values():
+    for pool_agent in state.agents.filterToPoolV4().values():
         pool = pool_agent._pool
         DT = pool_agent._dt
         price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address, 0))
@@ -52,7 +52,7 @@ def get_OCEAN_in_BPTs(state, agent):
     OCEAN_address = globaltokens.OCEAN_address()
     value_held = 0
 
-    for pool_agent in state.agents.filterToPool().values():
+    for pool_agent in state.agents.filterToPoolV4().values():
         pool = pool_agent._pool
         DT = pool_agent._dt
 
@@ -80,10 +80,10 @@ def netlist_createLogData(state):
     # So we log other things...
     agents_names = [
         "publisher",
-        # "consumer",
+        "consumer",
         "stakerSpeculator",
         "speculator",
-        # "maliciousPublisher",
+        "maliciousPublisher",
     ]
 
     # tracking OCEAN
@@ -137,7 +137,7 @@ def netlist_plotInstructions(header: List[str], values):
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
-    x_label = "Year"
+    x_label = "Day"
     x = arrayToFloatList(values[:, header.index(x_label)])
 
     y_params = [

@@ -2,11 +2,11 @@ from typing import Set, List
 
 from enforce_typing import enforce_types
 
-from agents.DataconsumerAgent import DataconsumerAgent
+from agents.DataconsumerAgent import DataconsumerAgentV4
 from agents.PublisherAgent import (
     PublisherAgentV4,
     PublisherStrategyV4,
-)  # as PublisherAgent, PublisherStrategy
+)
 from agents.SpeculatorAgent import SpeculatorAgentV4, StakerspeculatorAgentV4
 
 from engine import SimStateBase, AgentBase
@@ -36,7 +36,7 @@ class SimState(SimStateBase.SimStateBase):
             s_between_create=self.ss.publisher_s_between_create,
             s_between_unstake=self.ss.publisher_s_between_unstake,
             s_between_sellDT=self.ss.publisher_s_between_sellDT,
-            # is_malicious=False,
+            is_malicious=False,
         )
         new_agents.add(
             PublisherAgentV4(
@@ -47,15 +47,15 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
-        # new_agents.add(
-        #     DataconsumerAgent(
-        #         name="consumer",
-        #         USD=0.0,
-        #         OCEAN=self.ss.consumer_init_OCEAN,
-        #         s_between_buys=self.ss.consumer_s_between_buys,
-        #         profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
-        #     )
-        # )
+        new_agents.add(
+            DataconsumerAgentV4(
+                name="consumer",
+                USD=0.0,
+                OCEAN=self.ss.consumer_init_OCEAN,
+                s_between_buys=self.ss.consumer_s_between_buys,
+                profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
+            )
+        )
         # need to work on _buyAndConsumeDT
 
         new_agents.add(
@@ -76,26 +76,26 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
-        # mal_pub_ss = PublisherStrategy(
-        #     DT_cap=self.ss.mal_DT_cap,
-        #     DT_stake=self.ss.mal_DT_stake,
-        #     pool_weight_DT=self.ss.mal_pool_weight_DT,
-        #     pool_weight_OCEAN=self.ss.mal_pool_weight_OCEAN,
-        #     s_between_create=self.ss.mal_s_between_create,
-        #     s_between_unstake=self.ss.mal_s_between_unstake,
-        #     s_between_sellDT=self.ss.mal_s_between_sellDT,
-        #     is_malicious=True,
-        #     s_wait_to_rug=self.ss.mal_s_wait_to_rug,
-        #     s_rug_time=self.ss.mal_s_rug_time,
-        # )
-        # new_agents.add(
-        #     PublisherAgent(
-        #         name="maliciousPublisher",
-        #         USD=0.0,
-        #         OCEAN=self.ss.mal_init_OCEAN,
-        #         pub_ss=mal_pub_ss,
-        #     )
-        # )
+        mal_pub_ss = PublisherStrategyV4(
+            DT_cap=self.ss.publisher_DT_cap,
+            vested_amount=self.ss.publisher_vested_amount,
+            # pool_weight_DT=self.ss.mal_pool_weight_DT,
+            # pool_weight_OCEAN=self.ss.mal_pool_weight_OCEAN,
+            s_between_create=self.ss.mal_s_between_create,
+            s_between_unstake=self.ss.mal_s_between_unstake,
+            s_between_sellDT=self.ss.mal_s_between_sellDT,
+            is_malicious=True,
+            s_wait_to_rug=self.ss.mal_s_wait_to_rug,
+            s_rug_time=self.ss.mal_s_rug_time,
+        )
+        new_agents.add(
+            PublisherAgentV4(
+                name="maliciousPublisher",
+                USD=0.0,
+                OCEAN=self.ss.mal_init_OCEAN,
+                pub_ss=mal_pub_ss,
+            )
+        )
 
         for agent in new_agents:
             self.agents[agent.name] = agent

@@ -258,9 +258,9 @@ class PublisherStrategyV4:  # pylint: disable=too-many-instance-attributes
         s_between_create: int = DEFAULT_s_between_create,
         s_between_unstake: int = DEFAULT_s_between_unstake,
         s_between_sellDT: int = DEFAULT_s_between_sellDT,
-        # is_malicious: bool = DEFAULT_is_malicious,
-        # s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
-        # s_rug_time: int = DEFAULT_s_rug_time,
+        is_malicious: bool = DEFAULT_is_malicious,
+        s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
+        s_rug_time: int = DEFAULT_s_rug_time,
     ):  # pylint: disable=too-many-arguments
         self.DT_cap: float = DT_cap
         self.vested_amount: float = vested_amount
@@ -270,9 +270,9 @@ class PublisherStrategyV4:  # pylint: disable=too-many-instance-attributes
         self.s_between_unstake: int = s_between_unstake
         self.s_between_sellDT: int = s_between_sellDT
 
-        # self.is_malicious: bool = is_malicious
-        # self.s_wait_to_rug: int = s_wait_to_rug
-        # self.s_rug_time: int = s_rug_time
+        self.is_malicious: bool = is_malicious
+        self.s_wait_to_rug: int = s_wait_to_rug
+        self.s_rug_time: int = s_rug_time
 
 
 @enforce_types
@@ -313,9 +313,9 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
             self._s_since_sellDT = 0
             self._sellDTsomewhere(state)
 
-        # if self._doRug():
-        #     if len(self.pools) > 0:
-        #         state.rugged_pools.append(self.pools[-1])
+        if self._doRug():
+            if (len(self.pools) > 0) & (self.pools[-1] not in state.rugged_pools):
+                state.rugged_pools.append(self.pools[-1])
 
     def _doCreatePool(self) -> bool:
         if self.OCEAN() < 200.0:  # magic number
@@ -366,15 +366,15 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         if not state.agents.filterByNonzeroStakeV4(self):
             return False
 
-        # if self.pub_ss.is_malicious:
-        #     return (
-        #         (self._s_since_unstake >= self.pub_ss.s_between_unstake)
-        #         & (self._s_since_create >= self.pub_ss.s_wait_to_rug)
-        #         & (
-        #             self._s_since_create
-        #             <= self.pub_ss.s_wait_to_rug + self.pub_ss.s_rug_time
-        #         )
-        #     )
+        if self.pub_ss.is_malicious:
+            return (
+                (self._s_since_unstake >= self.pub_ss.s_between_unstake)
+                & (self._s_since_create >= self.pub_ss.s_wait_to_rug)
+                & (
+                    self._s_since_create
+                    <= self.pub_ss.s_wait_to_rug + self.pub_ss.s_rug_time
+                )
+            )
 
         return self._s_since_unstake >= self.pub_ss.s_between_unstake
 
@@ -419,7 +419,7 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         DT_balance_amt = self.DT(DT)
         assert DT_balance_amt > 0.0
         DT_sell_amt = perc_sell * DT_balance_amt
-        self._wallet.sellDT(pool, DT, DT_sell_amt)
+        self._wallet.sellDTV4(pool, DT, DT_sell_amt)
 
     def _doRug(self):
         if not self.pub_ss.is_malicious:
@@ -432,7 +432,7 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         assert self.pub_ss.is_malicious, "should only call if malicious"
         assert self.pools, "can't rug if no pools"
         assert hasattr(state, "rugged_pools"), "state needs 'rugged_pools attr"
-        state.rugged_pools.append(self.pools[-1])
+        # state.rugged_pools.append(self.pools[-1])
 
     @staticmethod
     def _poolsWithDT(state, DT) -> list:
