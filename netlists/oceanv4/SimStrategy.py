@@ -13,7 +13,7 @@ class SimStrategy(
 
         # ==baseline
         self.setTimeStep(S_PER_HOUR)
-        self.setMaxTime(20, "days")
+        self.setMaxTime(19, "days")
         self.setLogInterval(12 * S_PER_HOUR)
 
         # data publisher

@@ -121,7 +121,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         pool = oceanv3util.newBPool(account)
 
         # bind tokens & add initial liquidity
-        OCEAN_bind_amt = self.OCEAN()  # magic number: use all the OCEAN
+        OCEAN_bind_amt = self.OCEAN()-1  # magic number: use all the OCEAN
         DT_bind_amt = self.pub_ss.DT_stake
 
         DT.approve(pool.address, toBase18(DT_bind_amt), {"from": account})
@@ -322,7 +322,7 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
             return False
         return self._s_since_create >= self.pub_ss.s_between_create
 
-    def _createPoolAgent(self, state) -> PoolAgent:
+    def _createPoolAgent(self, state) -> PoolAgentV4:
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"
         account = self._wallet._account
         OCEAN = globaltokens.OCEANtoken()
