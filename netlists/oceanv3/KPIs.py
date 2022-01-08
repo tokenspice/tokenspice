@@ -61,7 +61,7 @@ def get_OCEAN_in_BPTs(state, agent):
         pool_value_OCEAN = fromBase18(pool.getBalance(OCEAN_address))
         pool_value = pool_value_DT + pool_value_OCEAN
 
-        amt_pool_BPTs = pool.totalSupply()  # from BPool, inheriting from BToken
+        amt_pool_BPTs = fromBase18(pool.totalSupply())  # from BPool, inheriting from BToken
         agent_percent_pool = agent.BPT(pool) / amt_pool_BPTs
 
         value_held += agent_percent_pool * pool_value
@@ -137,7 +137,7 @@ def netlist_plotInstructions(header: List[str], values):
     :return: x: List[float] -- x-axis info on how to plot
     :return: y_params: List[YParam] -- y-axis info on how to plot
     """
-    x_label = "Year"
+    x_label = "Day"
     x = arrayToFloatList(values[:, header.index(x_label)])
 
     y_params = [
