@@ -315,8 +315,10 @@ contract SideStaking is ReentrancyGuard {
         if (_datatokens[datatokenAddress].basetokenAddress == stakeToken)
             return (false);
 
-        //check balances
-        if (_datatokens[datatokenAddress].datatokenBalance >= amount)
+        //check balances. Make sure that we have enough to vest
+        if (_datatokens[datatokenAddress].datatokenBalance >= 
+        (amount + (_datatokens[datatokenAddress].vestingAmount - _datatokens[datatokenAddress].vestingAmountSoFar))
+        )
             return (true);
         return (false);
     }

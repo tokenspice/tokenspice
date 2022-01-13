@@ -18,6 +18,7 @@ contract FactoryRouter is BFactory {
     address public routerOwner;
     address public factory;
     address public fixedRate;
+    uint256 public minVestingPeriodInBlocks = 2426000;
 
     uint256 public swapOceanFee = 1e15;
     mapping(address => bool) public oceanTokens;
@@ -26,6 +27,7 @@ contract FactoryRouter is BFactory {
     mapping(address => bool) public dispenser;
 
     event NewPool(address indexed poolAddress, bool isOcean);
+    event VestingPeriodChanges(address indexed caller, uint256 minVestingPeriodInBlocks);
     event RouterChanged(address indexed caller, address indexed newRouter);
     event FactoryContractChanged(
         address indexed caller,
@@ -207,6 +209,23 @@ contract FactoryRouter is BFactory {
         emit OPFFeeChanged(msg.sender, _newSwapOceanFee);
     }
 
+    /*
+     * @dev getMinVestingPeriod
+     *      Returns current minVestingPeriodInBlocks
+       @return minVestingPeriodInBlocks
+     */
+    function getMinVestingPeriod() public view returns (uint256) {
+        return minVestingPeriodInBlocks;
+    }
+    /*
+     * @dev updateMinVestingPeriod
+     *      Set new minVestingPeriodInBlocks
+     * @param _newPeriod
+     */
+    function updateMinVestingPeriod(uint256 _newPeriod) external onlyRouterOwner {
+        minVestingPeriodInBlocks = _newPeriod;
+        emit VestingPeriodChanges(msg.sender, _newPeriod);
+    }
     /**
      * @dev Deploys a new `OceanPool` on Ocean Friendly Fork modified for 1SS.
      This function cannot be called directly, but ONLY through the ERC20DT contract from a ERC20DEployer role
