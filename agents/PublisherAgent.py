@@ -301,7 +301,7 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         self._s_since_unstake += state.ss.time_step
         self._s_since_sellDT += state.ss.time_step
 
-        if self._doCreatePool():
+        if (self._doCreatePool()):# & (len(self.pools) < 1):
             self._s_since_create = 0
             self._createPoolAgent(state)
 
@@ -402,7 +402,7 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
 
         return self._s_since_sellDT >= self.pub_ss.s_between_sellDT
 
-    def _sellDTsomewhere(self, state, perc_sell: float = 0.01):
+    def _sellDTsomewhere(self, state, perc_sell: float = 0.1):
         """Choose what DT to sell and by how much. Then do the action."""
         if self.pub_ss.is_malicious:
             # unstakes the newest pool
@@ -417,9 +417,9 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
             pool = random.choice(cand_pools)
 
         DT_balance_amt = self.DT(DT)
-        assert DT_balance_amt > 0.0
-        DT_sell_amt = perc_sell * DT_balance_amt
-        self._wallet.sellDTV4(pool, DT, DT_sell_amt)
+        if DT_balance_amt > 0.0:
+            DT_sell_amt = perc_sell * DT_balance_amt
+            self._wallet.sellDTV4(pool, DT, DT_sell_amt)
 
     def _doRug(self):
         if not self.pub_ss.is_malicious:

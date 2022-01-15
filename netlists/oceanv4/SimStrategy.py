@@ -13,21 +13,21 @@ class SimStrategy(
 
         # ==baseline
         self.setTimeStep(S_PER_HOUR)
-        self.setMaxTime(19, "days")
+        self.setMaxTime(25, "days")
         self.setLogInterval(12 * S_PER_HOUR)
 
         # data publisher
         self.publisher_init_OCEAN = 5000.0
         self.publisher_DT_cap = 1000.0
-        self.publisher_vested_amount = 10.0
+        self.publisher_vested_amount = 100.0
         # self.publisher_pool_weight_DT = 3.0
         # self.publisher_pool_weight_OCEAN = 7.0
         # assert (
         #     self.publisher_pool_weight_DT + self.publisher_pool_weight_OCEAN
         # ) == 10.0
-        self.publisher_s_between_create = 2 * S_PER_DAY
-        self.publisher_s_between_unstake = 3 * S_PER_DAY
-        self.publisher_s_between_sellDT = 15 * S_PER_DAY
+        self.publisher_s_between_create = 7 * S_PER_DAY
+        self.publisher_s_between_unstake = 5 * S_PER_DAY
+        self.publisher_s_between_sellDT = 10 * S_PER_DAY
 
         # data consumer
         self.consumer_init_OCEAN = 5000.0
@@ -36,11 +36,12 @@ class SimStrategy(
 
         # staker-speculator
         self.staker_init_OCEAN = 5000.0
-        self.staker_s_between_speculates = 8 * S_PER_HOUR
+        # self.staker_s_between_speculates = 8 * S_PER_HOUR
+        self.staker_s_between_speculates = 1 * S_PER_DAY
 
         # speculator
         self.speculator_init_OCEAN = 5000.0
-        self.speculator_s_between_speculates = 1 * S_PER_DAY
+        self.speculator_s_between_speculates = 3 * S_PER_DAY
 
         # malicious publisher
         self.mal_init_OCEAN = 5000.0
@@ -49,8 +50,8 @@ class SimStrategy(
         # self.mal_pool_weight_DT = 3.0
         # self.mal_pool_weight_OCEAN = 7.0
         # assert (self.mal_pool_weight_DT + self.mal_pool_weight_OCEAN) == 10.0
-        self.mal_s_between_create = 10 * S_PER_DAY
+        self.mal_s_between_create = 1 * S_PER_DAY
         self.mal_s_between_unstake = 1 * S_PER_HOUR
         self.mal_s_between_sellDT = 1 * S_PER_HOUR
-        self.mal_s_wait_to_rug = 5 * S_PER_DAY
-        self.mal_s_rug_time = 1 * S_PER_DAY
+        self.mal_s_wait_to_rug = 10 * S_PER_DAY
+        self.mal_s_rug_time = 3 * S_PER_DAY

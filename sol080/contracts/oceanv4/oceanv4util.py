@@ -155,9 +155,10 @@ def createBPoolFromDatatoken(
     OCEAN.approve(router.address, toBase18(OCEAN_init_liquidity), {"from": account})
 
     ss_rate = 0.1
+    # ss_rate = 0.15
     ss_OCEAN_decimals = 18
     ss_DT_vest_amt = DT_vest_amount  # max 10% but 10000 gives error
-    ss_DT_vested_blocks = 2500000  # = num blocks/year, if 15 s/block
+    ss_DT_vested_blocks = 2500000  # = num blocks/year, if 15 s/block, require > 2426000
     ss_OCEAN_init_liquidity = OCEAN_init_liquidity
 
     LP_swap_fee = 0.02

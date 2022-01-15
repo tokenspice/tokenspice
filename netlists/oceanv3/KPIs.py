@@ -61,10 +61,12 @@ def get_OCEAN_in_BPTs(state, agent):
         pool_value_OCEAN = fromBase18(pool.getBalance(OCEAN_address))
         pool_value = pool_value_DT + pool_value_OCEAN
 
-        amt_pool_BPTs = pool.totalSupply()  # from BPool, inheriting from BToken
+        amt_pool_BPTs = fromBase18(pool.totalSupply())  # from BPool, inheriting from BToken
         agent_percent_pool = agent.BPT(pool) / amt_pool_BPTs
 
         value_held += agent_percent_pool * pool_value
+        import ipdb
+        ipdb.set_trace()
 
     return value_held
 

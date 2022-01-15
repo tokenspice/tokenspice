@@ -56,7 +56,6 @@ class SimState(SimStateBase.SimStateBase):
                 profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
             )
         )
-        # need to work on _buyAndConsumeDT
 
         new_agents.add(
             StakerspeculatorAgentV4(
@@ -76,26 +75,26 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
-        mal_pub_ss = PublisherStrategyV4(
-            DT_cap=self.ss.publisher_DT_cap,
-            vested_amount=self.ss.publisher_vested_amount,
-            # pool_weight_DT=self.ss.mal_pool_weight_DT,
-            # pool_weight_OCEAN=self.ss.mal_pool_weight_OCEAN,
-            s_between_create=self.ss.mal_s_between_create,
-            s_between_unstake=self.ss.mal_s_between_unstake,
-            s_between_sellDT=self.ss.mal_s_between_sellDT,
-            is_malicious=True,
-            s_wait_to_rug=self.ss.mal_s_wait_to_rug,
-            s_rug_time=self.ss.mal_s_rug_time,
-        )
-        new_agents.add(
-            PublisherAgentV4(
-                name="maliciousPublisher",
-                USD=0.0,
-                OCEAN=self.ss.mal_init_OCEAN,
-                pub_ss=mal_pub_ss,
-            )
-        )
+        # mal_pub_ss = PublisherStrategyV4(
+        #     DT_cap=self.ss.publisher_DT_cap,
+        #     vested_amount=self.ss.publisher_vested_amount,
+        #     # pool_weight_DT=self.ss.mal_pool_weight_DT,
+        #     # pool_weight_OCEAN=self.ss.mal_pool_weight_OCEAN,
+        #     s_between_create=self.ss.mal_s_between_create,
+        #     s_between_unstake=self.ss.mal_s_between_unstake,
+        #     s_between_sellDT=self.ss.mal_s_between_sellDT,
+        #     is_malicious=True,
+        #     s_wait_to_rug=self.ss.mal_s_wait_to_rug,
+        #     s_rug_time=self.ss.mal_s_rug_time,
+        # )
+        # new_agents.add(
+        #     PublisherAgentV4(
+        #         name="maliciousPublisher",
+        #         USD=0.0,
+        #         OCEAN=self.ss.mal_init_OCEAN,
+        #         pub_ss=mal_pub_ss,
+        #     )
+        # )
 
         for agent in new_agents:
             self.agents[agent.name] = agent

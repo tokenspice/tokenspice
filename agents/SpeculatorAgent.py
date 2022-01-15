@@ -55,7 +55,10 @@ class SpeculatorAgentBase(AgentBase.AgentBaseEvm):
 
         if hasattr(state, "rugged_pools"):
             for pool_name in state.rugged_pools:
-                del pool_agents[pool_name]
+                try:
+                    del pool_agents[pool_name]
+                except KeyError:
+                    pass
 
         pool_agents = pool_agents.values()
         return pool_agents
@@ -183,10 +186,11 @@ class StakerspeculatorAgentV4(SpeculatorAgentBaseV4):
         BPT = self.BPT(pool)
 
         if BPT > 0.0 and random.random() < 0.50:  # magic number
-            BPT_sell = 0.10 * BPT  # magic number
+            BPT_sell = 0.5 * BPT  # magic number
             self.unstakeOCEAN(BPT_sell, pool)
 
         else:
-            OCEAN_stake = 0.05 * self.OCEAN()  # magic number
+            OCEAN_stake = min(0.1 * self.OCEAN(), 200)  # magic number
+            # OCEAN_stake = 200
             self.joinPoolAddOCEAN(OCEAN_stake, pool)
         # potentially other actions
