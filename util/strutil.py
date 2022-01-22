@@ -88,7 +88,7 @@ def prettyBigNum(amount, remove_zeroes: bool = True) -> str:
     Remove zeros True vs False: 1.00M vs 1M
     """
     if remove_zeroes:
-        amount = float("%.2e" % amount)  # reduce to 3 sig figs
+        amount = float(f"{amount:.2e}")  # reduce to 3 sig figs
     if amount == 0:
         return "0"
 
@@ -99,16 +99,16 @@ def prettyBigNum(amount, remove_zeroes: bool = True) -> str:
         base = "e"
         s = s.replace("e", "X")
     elif a >= 1e9:
-        s = "%.2fX" % (a / 1e9)
+        s = f"{a/1e9:.2f}X"
         base = "B"
     elif a >= 1e6:
-        s = "%.2fX" % (a / 1e6)
+        s = f"{a/1e6:.2f}X"
         base = "M"
     elif a >= 1e3:
-        s = "%.2fX" % (a / 1e3)
+        s = f"{a/1e3:.2f}X"
         base = "K"
     else:
-        s = "%.2fX" % a
+        s = f"{a:.2f}X"
         base = ""
 
     if remove_zeroes:
