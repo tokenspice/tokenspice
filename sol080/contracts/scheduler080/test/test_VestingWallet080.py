@@ -179,4 +179,3 @@ def test_tokenFunding():
     wallet.release(taddress, {"from": account3})
     assert wallet.released(taddress)/1e18 == approx(30.0+10.0) #TOK released!
     assert token.balanceOf(account1)/1e18 == approx(110+30+10.0) #beneficiary richer
-
