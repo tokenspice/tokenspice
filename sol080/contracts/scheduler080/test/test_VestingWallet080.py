@@ -17,6 +17,7 @@ chain = brownie.network.chain
 
 
 def test_basic():
+    n_blocks = len(chain)
     beneficiary = address1
     start_block = n_blocks + 1
     num_blocks_duration = 4
