@@ -70,13 +70,13 @@ def asCurrency(amount, decimals: bool = True) -> str:
     """Ref: https://stackoverflow.com/questions/21208376/converting-float-to-dollars-and-cents"""
     if decimals:
         if amount >= 0:
-            return "${:,.2f}".format(amount)
-        return "-${:,.2f}".format(-amount)
+            return f"${amount:,.2f}"
+        return f"-${-amount:,.2f}".format(-amount)
 
     if amount >= 0:
-        return "${:,.0f}".format(amount)
+        return f"${amount:,.0f}"
 
-    return "-${:,.0f}".format(-amount)
+    return f"-${-amount:,.0f}"
 
 
 def prettyBigNum(amount, remove_zeroes: bool = True) -> str:
