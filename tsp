@@ -61,8 +61,8 @@ def do_run():
         do_profile = True
 
     print(
-        f"Arguments: NETLIST={netlist_str}, OUTPUT_DIR={output_dir},"
-        " DO_PROFILE={do_profile}"
+        f"Arguments: NETLIST={netlist_str}, OUTPUT_DIR={output_dir}," 
+        f" DO_PROFILE={do_profile}"
     )
 
     # handle corner cases
@@ -87,7 +87,7 @@ def do_run():
         cProfile.run("engine.run()", stats_filename)
         print(
             f"Output stats file: {stats_filename}. To see: tsp showstats "
-            "outdir_csv/stats 20 cumulative"
+            f"outdir_csv/stats 20 cumulative"
         )
     print(f"Output directory: {output_dir}")
 
@@ -131,7 +131,7 @@ def do_plot():
 
     print(
         f"Arguments: NETLIST={netlist_str}, INPUT_CSV_DIR={input_csv_dir}, "
-        "OUTPUT_PNG_DIR={output_pngdir}"
+        f"OUTPUT_PNG_DIR={output_png_dir}"
     )
     print(f"Base input filename: '{base_input_csv_filename}' (hardcoded)")
     print(f"Full input filename: '{input_csv_filename}'")
