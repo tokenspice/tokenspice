@@ -73,12 +73,23 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## TokenSPICE CLI
+
+`tsp` is the command-line interface for TokenSPICE. From the same terminal:
+```console
+#add pwd to bash path
+export PATH=$PATH:.
+
+#see tsp help
+tsp
+```
+
 ## Compile the contracts
 
 From the same terminal:
 ```console
 #install 3rd party libs, then call "brownie compile" in sol057/ and sol080/
-./compile.sh
+tsp compile
 ```
 
 TokenSPICE sees smart contracts as classes. How:
@@ -88,8 +99,6 @@ TokenSPICE sees smart contracts as classes. How:
 # 🏄 Running, Debugging
 
 ## Testing
-
-Note: this will fail if there is a `contracts` directory side-by-side with tokenspice/. If you have such a directory, delete or move it.
 
 From terminal:
 ```console
@@ -114,16 +123,10 @@ black ./
 
 **[Go here](README-code-quality.md)** for details on linting / style.
 
-## TokenSPICE Command Line
+## Simulating with TokenSPICE
 
-Use `tsp`. From terminal:
+From terminal:
 ```console
-#add pwd to bash path
-export PATH=$PATH:.
-
-#see tsp help
-tsp
-
 #simulate 'scheduler' netlist, sending results to 'outdir_csv'
 tsp run netlists/scheduler/netlist.py outdir_csv
 
@@ -140,8 +143,8 @@ In `tsp run`, it will dump all the ganache txs to stdout. To make this cleaner, 
 cd tokenspice
 source venv/bin/activate
 
-#run ganache.py. It calls ganache cli and fills in many arguments for you.
-./ganache.py
+#run ganache-cli with many arguments filled in
+tsp ganache
 
 #now TokenSPICE runs will auto-connect to your separately-running ganache.
 ```
