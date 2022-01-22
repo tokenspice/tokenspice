@@ -95,10 +95,10 @@ Note: this will fail if there is a `contracts` directory side-by-side with token
 From terminal:
 ```console
 #run single test. It uses brownie, which auto-starts Ganache local blockchain node.
-pytest contracts/test/test_Simpletoken.py::test_transfer
+pytest pytest sol057/contracts/simpletoken/test/test_Simpletoken.py::test_transfer
 
 #run all of a directory's tests
-pytest contracts/test
+pytest sol057/contracts/simpletoken/test
 
 #run all unit tests
 pytest
