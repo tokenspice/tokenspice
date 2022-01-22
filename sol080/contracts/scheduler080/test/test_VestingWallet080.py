@@ -29,7 +29,8 @@ def test_basic():
     )
 
     assert vesting_wallet.beneficiary() == beneficiary
-    assert int(vesting_wallet.startBlock()/1e18) == start_block
+    start_block_measured = int(vesting_wallet.startBlock()/1e18)
+    assert start_block_measured in [start_block-1, start_block, start_block+1]
     assert int(vesting_wallet.numBlocksDuration()/1e18) == 4
     assert vesting_wallet.released() == 0
 
