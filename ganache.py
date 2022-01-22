@@ -43,8 +43,8 @@ for private_key in [
         "0x53a2a4124387132ceae955edb80f13aa549f2e956d3f8aae0383412a3c765a93",
         "0x1803ea57835da6f03f8b43458482f65f280600c278947fe0eaf78c5d7d260c81",
         "0xb13f2706716d269a9639f2eb99d38ba8aaef0e210d1b35a2e40e3e8b62ab76f9"]:
-    ganache_command += f' --account="{private_key}"'
-
+    ganache_command += f' --account="{private_key},{amount_wei}"'
+    
 if args.run_in_background:
     os.system(ganache_command + "&")
 else:
