@@ -69,7 +69,7 @@ def netlist_createLogData(state):
     # So we log other things...
 
     g = state.getAgent("granter1")
-    s += ["; granter OCEAN=%s, USD=%s" % (g.OCEAN(), g.USD())]
+    s += [f"; granter OCEAN={g.OCEAN()}, USD={g.USD()}"]
     dataheader += ["granter_OCEAN", "granter_USD"]
     datarow += [g.OCEAN(), g.USD()]
 

@@ -72,7 +72,7 @@ def arrayToAscii(filename: str, X):
     for row_index in range(num_rows):
         s = ""
         for col_index in range(num_columns):
-            s += "%g " % X[row_index, col_index]
+            s += f"{X[row_index, col_index]:g} " 
         s += "\n"
         f.write(s)
     f.close()
