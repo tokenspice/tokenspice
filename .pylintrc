@@ -157,7 +157,8 @@ disable=D203, D204, D213, D215, D400, D401, D404, D406, D407, D408, D409, D413,
         xreadlines-attribute,
         deprecated-sys-function,
         exception-escape,
-        comprehension-escape
+        comprehension-escape,
+	use-implicit-booleaness-not-comparison 
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

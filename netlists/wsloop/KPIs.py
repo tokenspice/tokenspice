@@ -294,15 +294,15 @@ def netlist_createLogData(
     datarow += [allmkts_tot_sales_day, allmkts_tot_sales_mo, allmkts_tot_sales_yr]
 
     tot_staked = ss.totalStaked(allmkts_tot_sales_day)
-    s += ["; tot_staked=$%s" % prettyBigNum(tot_staked, F)]
+    s += [f"; tot_staked=${prettyBigNum(tot_staked, F)}"]
     dataheader += ["tot_staked"]
     datarow += [tot_staked]
 
     network_rev_mo = kpis.monthlyNetworkRevenueNow()
     network_rev_yr = kpis.annualNetworkRevenueNow()
-    # s += ["; network_rev/mo=$%sm,/yr=$%s" %
-    #      (prettyBigNum(network_rev_mo,F), prettyBigNum(network_rev_yr,F))]
-    s += ["; network_rev/mo=$%sm" % prettyBigNum(network_rev_mo, F)]
+    # s += [f"; network_rev/mo=${prettyBigNum(network_rev_mo,F)}m"
+    #      [",/yr=${prettyBigNum(network_rev_yr,F)}"]
+    s += [f"; network_rev/mo=${prettyBigNum(network_rev_mo, F)}m"]
     dataheader += ["network_rev/mo", "network_rev/yr"]
     datarow += [network_rev_mo, network_rev_yr]
 
@@ -315,7 +315,7 @@ def netlist_createLogData(
         "fundamentals_valuation",
         "speculation_valuation",
     ]
-    s += ["; valn=$%s" % prettyBigNum(overall_valuation, F)]
+    s += [f"; valn=${prettyBigNum(overall_valuation, F)}"]
     datarow += [
         overall_valuation,
         state.fundamentalsValuation(),
@@ -323,7 +323,7 @@ def netlist_createLogData(
     ]
 
     tot_O_supply = state.OCEANsupply()
-    s += ["; #OCEAN=%s" % prettyBigNum(tot_O_supply)]
+    s += [f"; #OCEAN={prettyBigNum(tot_O_supply)}"]
     dataheader += ["tot_OCEAN_supply", "tot_OCEAN_minted", "tot_OCEAN_burned"]
     datarow += [tot_O_supply, state.totalOCEANminted(), state.totalOCEANburned()]
 
@@ -335,20 +335,20 @@ def netlist_createLogData(
 
     O_price = state.OCEANprice()
     if O_price <= 10.0:
-        s += ["; $OCEAN=$%.3f" % O_price]
+        s += [f"; $OCEAN=${O_price:.3f}"]
     else:
-        s += ["; $OCEAN=$%s" % prettyBigNum(O_price, F)]
+        s += [f"; $OCEAN=${prettyBigNum(O_price, F)}"]
     dataheader += ["OCEAN_price"]
     datarow += [O_price]
 
     gt_rev = kpis.grantTakersMonthlyRevenueNow()
-    # s += ["; r&d/mo=$%s" % prettyBigNum(gt_rev,F)]
+    # s += [f"; r&d/mo=${prettyBigNum(gt_rev,F)}"]
     dataheader += ["RND/mo"]
     datarow += [gt_rev]
 
     ratio = kpis.mktsRNDToSalesRatio()
     growth = ss.annualMktsGrowthRate(ratio)
-    # s += ["; r&d/sales ratio=%.2f, growth(ratio)=%.3f" % (ratio, growth)]
+    # s += ["; r&d/sales ratio={ratio:.2f}, growth(ratio)={growth:.3f}"]
     dataheader += ["rnd_to_cons_sales_ratio", "mkts_annual_growth_rate"]
     datarow += [ratio, growth]
 
@@ -357,9 +357,10 @@ def netlist_createLogData(
     dao_OCEAN = dao.monthlyOCEANreceived(state)
     dao_OCEAN_in_USD = dao_OCEAN * O_price
     dao_total_in_USD = dao_USD + dao_OCEAN_in_USD
-    # s += ["; dao:[$%s/mo,%s OCEAN/mo ($%s),total=$%s/mo]" %
-    #      (prettyBigNum(dao_USD,F), prettyBigNum(dao_OCEAN,F),
-    #       prettyBigNum(dao_OCEAN_in_USD,F), prettyBigNum(dao_total_in_USD,F))]
+    # s += [f"; dao:[${prettyBigNum(dao_USD,F)}/mo"
+    #      ",{prettyBigNum(dao_OCEAN,F)} OCEAN/mo"
+    #      " (${prettyBigNum(dao_OCEAN_in_USD,F)})"
+    #      ",total=${prettyBigNum(dao_total_in_USD,F)}/mo"]
     dataheader += [
         "dao_USD/mo",
         "dao_OCEAN/mo",

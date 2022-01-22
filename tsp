@@ -60,7 +60,7 @@ def do_run():
 
     # handle corner cases
     if os.path.exists(output_dir):
-        print("\nOutput path '%s' already exists.  Exiting.\n" % output_dir)
+        print(f"\nOutput path '{output_dir}' already exists.  Exiting.\n")
         sys.exit(0)
 
     # make directory
