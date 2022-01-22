@@ -34,7 +34,7 @@ def do_ganache():
 # tsp compile
 def do_compile():
     os.system("./compile.sh")
-    
+
 # ========================================================================
 # tsp run
 
@@ -78,7 +78,7 @@ def do_run():
     netlist_state = netlist_module.SimState()
     netlist_log_func = netlist_module.netlist_createLogData
 
-    from engine.SimEngine import SimEngine #pylint: disable=wrong-import-position
+    from engine.SimEngine import SimEngine #pylint: disable=import-outside-toplevel
     engine = SimEngine(netlist_state, output_dir, netlist_log_func)
     if not do_profile:
         engine.run()
@@ -155,7 +155,7 @@ def do_plot():
     netlist_plot_instrs_func = netlist_module.netlist_plotInstructions
 
     # main work
-    from util.plotutil import csvToPngs    #pylint: disable=wrong-import-position
+    from util.plotutil import csvToPngs    #pylint: disable=import-outside-toplevel
     csvToPngs(input_csv_filename, output_png_dir, netlist_plot_instrs_func)
 
     print("Done")
@@ -228,7 +228,7 @@ def do_showstats():
 
     print("Done")
 
-    
+
 # ========================================================================
 # main
 def do_main():
@@ -243,7 +243,7 @@ def do_main():
 
     elif sys.argv[1] == "ganache":
         do_ganache()
-        
+
     elif sys.argv[1] == "run":
         do_run()
 
@@ -255,6 +255,6 @@ def do_main():
 
     else:
         do_help()
-        
+
 if __name__ == "__main__":
     do_main()

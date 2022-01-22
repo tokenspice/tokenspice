@@ -18,6 +18,7 @@ ignore=
   logging.conf,
   requirements.txt,
   compile.sh,
+  brownie-install.sh,
   LICENSE
 
 # Add files or directories matching the regex patterns to the blacklist. The
