@@ -11,7 +11,7 @@ def testStrMixin():
             self.y = 2
             self.d = {"a": 3, "b": 4}
             self.d2 = {}
-            self.__ignoreVal = "ignoreVal"
+            self.__ignoreVal = "ignoreVal" #pylint: disable=unused-private-member
 
         def ignoreMethod(self):
             pass
@@ -151,7 +151,7 @@ def generatePairsForPrettyBigNum2_Random_DoRemoveZeroes():
         x = mathutil.round_sig(x, sigfigs)
 
         s = prettyBigNum(x)  # prettyBigNum(x, remove_zeroes=False)
-        print("            (%15s, '%s')," % (x, s))
+        print(f"            ({x:s}, '{s:s}')," % (x, s))
 
 
 def testPrettyBigNum2_Random_DoRemoveZeroes():
