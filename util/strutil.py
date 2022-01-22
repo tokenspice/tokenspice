@@ -13,7 +13,7 @@ class StrMixin:
             newline = self.__STR_GIVES_NEWLINE__  # type: ignore
 
         s = []
-        s += ["%s={" % class_name]
+        s += [f"{class_name}={{"]
         if newline:
             s += ["\n"]
 
@@ -34,7 +34,7 @@ class StrMixin:
 
         for i, attr in enumerate(attrs):
             attr_obj = getattr(obj, attr)
-            s += ["%s=" % attr]
+            s += [f"{attr}="]
             if isinstance(attr_obj, dict):
                 s += [dictStr(attr_obj, newline)]
             else:
@@ -46,7 +46,7 @@ class StrMixin:
             if newline:
                 s += ["\n"]
 
-        s += ["/%s}" % class_name]
+        s += [f"/{class_name}}}"]
         return "".join(s)
 
 
@@ -56,7 +56,7 @@ def dictStr(d: dict, newline=False) -> str:
         return "{}"
     s = ["dict={"]
     for i, (k, v) in enumerate(d.items()):
-        s += ["'%s':%s" % (k, v)]
+        s += [f"'{k}':{v}"]
         if i < (len(d) - 1):
             s += [","]
         s += [" "]
