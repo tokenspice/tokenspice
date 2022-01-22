@@ -69,8 +69,7 @@ python3 -m venv venv
 #activate env
 source venv/bin/activate
 
-#install dependencies. Install wheel first to avoid errors.
-pip install wheel
+#install dependencies
 pip install -r requirements.txt
 ```
 
