@@ -196,10 +196,14 @@ kill 223429
 
 ## Debugging from Brownie Console
 
-Brownie console is a Python console, with some extra Brownie goodness, so that we can interactively play with deployed Solidity contracts as Python objects.
+Brownie console is a Python console, with some extra Brownie goodness, so that we can interactively play with Solidity contracts as Python classes, and deployed Solidity contracts as Python objects.
 
 From terminal:
-```console
+```
+#brownie needs a directory with ./contracts/. Go to one.
+cd sol057/
+
+#start console
 brownie console
 ```
 
