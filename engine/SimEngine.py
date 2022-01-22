@@ -111,8 +111,8 @@ class SimEngine:
                 f.write(", ".join(dataheader) + "\n")
 
         # add in row
-        datarow_s = ["%g" % dataval for dataval in datarow]
-        with open(full_filename, "a+") as f:
+        datarow_s = [f"{dataval}" for dataval in datarow]
+        with open(full_filename, mode="a+", encoding="UTF-8") as f:
             f.write(", ".join(datarow_s) + "\n")
 
     def elapsedSeconds(self) -> int:
