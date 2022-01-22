@@ -127,43 +127,76 @@ black ./
 
 From terminal:
 ```console
-#simulate 'scheduler' netlist, sending results to 'outdir_csv'
-tsp run netlists/scheduler/netlist.py outdir_csv
+#run simulation, sending results to 'outdir_csv' (clear dir first, to be sure)
+rm -rf outdir_csv; tsp run netlists/scheduler/netlist.py outdir_csv
+```
 
-#create output plots in 'outdir_png'
-tsp plot netlists/scheduler/netlist.py outdir_csv outdir_png
+You'll see an output like:
+```text
+Arguments: NETLIST=netlists/...
+Launching 'ganache-cli --accounts 10 --hardfork ...
+mnemonic: 'sausage bunker giant drum ...
+INFO:master:Begin.
+INFO:master:SimStrategy={OCEAN_funded=5.0, duration_seconds=157680000, ...}
+INFO:master:Tick=0 (0.0 h, 0.0 d, 0.0 mo, 0.0 y); timestamp=1642844072; OCEAN_vested=0, ...
+INFO:master:Tick=3 (2160.0 h, 90.0 d, 3.0 mo, 0.2 y); timestamp=1650620073; OCEAN_vested=0.0, ...
+INFO:master:Tick=6 (4320.0 h, 180.0 d, 6.0 mo, 0.5 y); timestamp=1658396073; OCEAN_vested=0.0, ...
+INFO:master:Tick=9 (6480.0 h, 270.0 d, 9.0 mo, 0.7 y); timestamp=1666172074; OCEAN_vested=0.0, ...
+INFO:master:Tick=12 (8640.0 h, 360.0 d, 12.0 mo, 1.0 y); timestamp=1673948074; OCEAN_vested=0.0, ...
+INFO:master:Tick=15 (10800.0 h, 450.0 d, 15.0 mo, 1.2 y); timestamp=1681724074; OCEAN_vested=0.232876 ...
+```
+
+Now, let's view the results visually. In the same terminal:
+```console
+#create output plots in 'outdir_png' (clear dir first, to be sure)
+rm -rf outdir_png; tsp plot netlists/scheduler/netlist.py outdir_csv outdir_png
 
 #view plots
 eog outdir_png
 ```
 
-In `tsp run`, it will dump all the ganache txs to stdout. To make this cleaner, open a new terminal and:
+To see the blockchain txs apart from the other logs: open a _new_ terminal and:
 ```console
 #activate env't
 cd tokenspice
 source venv/bin/activate
 
-#run ganache-cli with many arguments filled in
+#run ganache
+export PATH=$PATH:.
 tsp ganache
-
-#now TokenSPICE runs will auto-connect to your separately-running ganache.
 ```
 
-The [wsloop netlist](netlists/wsloop/about.md) is a more complex netlist. Below are sample results.
+Now, from your original terminal:
+```console
+#run the sim. It will auto-connect to ganache
+rm -rf outdir_csv; tsp run netlists/scheduler/netlist.py outdir_csv
+```
 
-<img src="images/wsloop-example-small.png">
-
-For runs that take more than a few seconds, it helps send stdout & stderr to a file while still monitoring the console in real-time. Here's how:
+For longer runs (eg wsloop), we can log to a file while watching the console in real-time:
 
 ```console
-#remove previous directory, then start running
+#run the sim in the background, logging to out.txt
 rm -rf outdir_csv; tsp run netlists/wsloop/netlist.py outdir_csv > out.txt 2>&1 &
 
 #monitor in real-time
 tail -f out.txt
 ```
 
+To kill a sim in the background:
+```console
+#find the background process
+ps ax |grep "tsp run"
+
+#example result:
+#223429 pts/4    Rl     0:02 python ./tsp run netlists/wsloop/netlist.py outdir_csv
+
+#to kill it:
+kill 223429
+```
+
 ## Debugging from Brownie Console
+
+Brownie console is a Python console, with some extra Brownie goodness, so that we can interactively play with deployed Solidity contracts as Python objects.
 
 From terminal:
 ```console
