@@ -71,7 +71,7 @@ class SimEngine:
         datarow = []  # for csv logging: list of float
 
         # columns always logged: Tick, Second, Min, Hour, Day, Month, Year
-        s += ["Tick=%d" % (state.tick)]
+        s += [f"Tick={state.tick}"]
         dataheader += ["Tick"]
         datarow += [state.tick]
 
@@ -83,7 +83,7 @@ class SimEngine:
             es / S_PER_MONTH,
             es / S_PER_YEAR,
         )
-        s += [" (%.1f h, %.1f d, %.1f mo, %.1f y)" % (eh, ed, emo, ey)]
+        s += [f" ({eh:.1f} h, {ed:.1f} d, {emo:.1f} mo, {ey:.1f} y)"]
         dataheader += ["Second", "Min", "Hour", "Day", "Month", "Year"]
         datarow += [es, emi, eh, ed, emo, ey]
 
@@ -107,7 +107,7 @@ class SimEngine:
 
         # if needed, create file and add header
         if not os.path.exists(full_filename):
-            with open(full_filename, "w+") as f:
+            with open(full_filename, mode="w+", encoding="UTF-8") as f:
                 f.write(", ".join(dataheader) + "\n")
 
         # add in row
