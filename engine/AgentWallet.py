@@ -109,7 +109,7 @@ class UsdNoEvmWalletMixIn:
             amt = round(amt, 12)
         if amt > self._USD:
             raise ValueError(
-                "USD withdraw amount (%s) exceeds holdings (%s)" % (amt, self._USD)
+                f"USD withdraw amount ({amt}) exceeds holdings ({self._USD})"
             )
         self._USD -= amt
 
@@ -147,7 +147,7 @@ class OceanNoEvmWalletMixIn:
             amt = round(amt, 12)
         if amt > self._OCEAN:
             raise ValueError(
-                "OCEAN withdraw amount (%s) exceeds holdings (%s)" % (amt, self._OCEAN)
+                f"OCEAN withdraw amount ({amt}) exceeds holdings ({self._USD})"
             )
         self._OCEAN -= amt
 
@@ -165,10 +165,10 @@ class StrMixIn:
     def __str__(self) -> str:
         s = []
         s += ["AgentWallet={\n"]
-        s += ["USD=%s" % asCurrency(self.USD())]  # type:ignore
-        s += ["; OCEAN=%.6f" % self.OCEAN()]  # type:ignore
-        s += ["; total_USD_in=%s" % asCurrency(self.totalUSDin())]  # type:ignore
-        s += ["; total_OCEAN_in=%.6f" % self.totalOCEANin()]  # type:ignore
+        s += [f"USD={asCurrency(self.USD())}"]  # type:ignore
+        s += [f"; OCEAN={self.OCEAN():.6f}"]  # type:ignore
+        s += [f"; total_USD_in={asCurrency(self.totalUSDin())}"]  # type:ignore
+        s += [f"; total_OCEAN_in={self.totalOCEANin():.6f}"]  # type:ignore
         s += [" /AgentWallet}"]
         return "".join(s)
 
@@ -314,8 +314,8 @@ class AgentWalletEvm(
 
         if amt_base > OCEAN_base:
             raise ValueError(
-                "transfer amt (%s) exceeds OCEAN holdings (%s)"
-                % (fromBase18(amt_base), fromBase18(OCEAN_base))
+                "transfer amt ({fromBase18(amt_base)})"
+                " exceeds OCEAN holdings ({fromBase18(OCEAN_base)})"
             )
 
         globaltokens.OCEANtoken().transfer(
@@ -436,8 +436,8 @@ class AgentWalletEvm(
 
         if amt_base > DT_base:
             raise ValueError(
-                "transfer amt (%s) exceeds DT holdings (%s)"
-                % (fromBase18(amt_base), fromBase18(DT_base))
+                f"transfer amt ({fromBase18(amt_base)})"
+                " exceeds DT holdings ({fromBase18(DT_base)})"
             )
 
         DT.transfer(dst_address, amt_base, {"from": self._account})
