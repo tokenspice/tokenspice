@@ -9,8 +9,12 @@ import sys
 
 import brownie
 
-from engine.SimEngine import SimEngine
-from util.plotutil import csvToPngs
+if len(sys.argv) > 0 and sys.argv[1] == "ganache":
+    os.system("./ganache.py")
+    sys.exit(0)
+
+from engine.SimEngine import SimEngine #pylint: disable=wrong-import-position
+from util.plotutil import csvToPngs    #pylint: disable=wrong-import-position
 
 INFO = logging.INFO
 DEBUG = logging.DEBUG
@@ -25,6 +29,7 @@ Usage: tsp run|plot|showstats
   tsp run -- run simulation
   tsp plot -- plot results
   tsp showstats -- see run stats
+  tsp ganache -- run local chain
  """
 
 
