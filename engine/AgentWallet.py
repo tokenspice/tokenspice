@@ -147,7 +147,7 @@ class OceanNoEvmWalletMixIn:
             amt = round(amt, 12)
         if amt > self._OCEAN:
             raise ValueError(
-                f"OCEAN withdraw amount ({amt}) exceeds holdings ({self._USD})"
+                f"OCEAN withdraw amount ({amt}) exceeds holdings ({self._OCEAN})"
             )
         self._OCEAN -= amt
 
