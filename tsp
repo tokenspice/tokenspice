@@ -61,7 +61,7 @@ def do_run():
         do_profile = True
 
     print(
-        f"Arguments: NETLIST={netlist_str}, OUTPUT_DIR={output_dir}," 
+        f"Arguments: NETLIST={netlist_str}, OUTPUT_DIR={output_dir},"
         f" DO_PROFILE={do_profile}"
     )
 
