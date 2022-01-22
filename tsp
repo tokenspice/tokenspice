@@ -9,30 +9,32 @@ import sys
 
 import brownie
 
-if len(sys.argv) > 0 and sys.argv[1] == "ganache":
-    os.system("./ganache.py")
-    sys.exit(0)
-
-from engine.SimEngine import SimEngine #pylint: disable=wrong-import-position
-from util.plotutil import csvToPngs    #pylint: disable=wrong-import-position
-
-INFO = logging.INFO
-DEBUG = logging.DEBUG
-WARNING = logging.WARNING
-
-# ==========================================================================
+# ========================================================================
 # tsp help
 HELP_MAIN = """
 TokenSPICE - EVM agent-based token simulator
                                             
-Usage: tsp run|plot|showstats
+Usage: tsp compile|ganache|run|plot|showstats
+  tsp compile -- compile Solidity code
+  tsp ganache -- run local chain
   tsp run -- run simulation
   tsp plot -- plot results
   tsp showstats -- see run stats
-  tsp ganache -- run local chain
- """
+"""
 
+def do_help():
+    print(HELP_MAIN)
 
+# ========================================================================
+# tsp ganache
+def do_ganache():
+    os.system("./ganache.py")
+
+# ========================================================================
+# tsp compile
+def do_compile():
+    os.system("./compile.sh")
+    
 # ========================================================================
 # tsp run
 
@@ -76,7 +78,7 @@ def do_run():
     netlist_state = netlist_module.SimState()
     netlist_log_func = netlist_module.netlist_createLogData
 
-
+    from engine.SimEngine import SimEngine #pylint: disable=wrong-import-position
     engine = SimEngine(netlist_state, output_dir, netlist_log_func)
     if not do_profile:
         engine.run()
@@ -153,6 +155,7 @@ def do_plot():
     netlist_plot_instrs_func = netlist_module.netlist_plotInstructions
 
     # main work
+    from util.plotutil import csvToPngs    #pylint: disable=wrong-import-position
     csvToPngs(input_csv_filename, output_png_dir, netlist_plot_instrs_func)
 
     print("Done")
@@ -225,16 +228,22 @@ def do_showstats():
 
     print("Done")
 
-
+    
 # ========================================================================
 # main
 def do_main():
     logging.basicConfig()
-    logging.getLogger("master").setLevel(INFO)
+    logging.getLogger("master").setLevel(logging.INFO)
 
     if len(sys.argv) == 1:
-        print(HELP_MAIN)
+        do_help()
 
+    elif sys.argv[1] == "compile":
+        do_compile()
+
+    elif sys.argv[1] == "ganache":
+        do_ganache()
+        
     elif sys.argv[1] == "run":
         do_run()
 
@@ -245,8 +254,7 @@ def do_main():
         do_showstats()
 
     else:
-        print(HELP_MAIN)
-
-
+        do_help()
+        
 if __name__ == "__main__":
     do_main()
