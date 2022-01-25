@@ -19,6 +19,7 @@ Here are some such tools, largely inspired by tools from circuit land.
 - 3-sigma verification - verification across random variables. E.g. via Monte Carlo analysis where all samples are drawn from the random variables' pdf, and each sample is simulated.
 - High-sigma verification - verification across random variables, where catastrophic failure happens rarely, e.g. 1 in a million times (4.5 sigma) or 1 in a billion (6 sigma). E.g. using tricks from "rare event estimation" literature or [this book](https://www.amazon.com/Variation-Aware-Design-Custom-Integrated-Circuits/dp/146142268X).
 - Behavioral modeling - auto-extract a lower-fidelity / faster-simulating TokenSPICE netlist from a higher-fidelity TokenSPICE netlist & simulation run, with minimal loss of error. 
+- Mixed-signal verification - include digital verification in the loop. Example: replace ganache with [hevm][https://fv.ethereum.org/2020/07/28/symbolic-hevm-release], which does fuzzing etc on Solidity.
 
 ## Design Space Exploration tools
 
