@@ -34,3 +34,12 @@ Here are some such tools, largely inspired by tools from circuit land.
 - Global optimization - search across all design variables, with affordances to not get stuck
 - Synthesis - search design variables *and structure*. E.g. Evolve solidity or EVM bytecode. AI DAOs that own themselves. Go nuts:)
 - Variation-aware synthesis - all of the above at once. This isn’t easy! But it’s possible. Example: use MOJITO (http://trent.st/mojito/), but use TokenSPICE (not SPICE) and Solidity building blocks (not circuit ones) 
+
+## More "Larger" Ideas for TokenSPICE
+
+- "tsp publish" - publish sim results to Ocean
+- Use Ocean to manage IP: contracts, agents, netlists, results. Or, using brownie pm? Result: TokenSPICE itself becomes super small, just an engine
+- TokenSPICE inputs SPICE netlists. Pros: well-defined, battle-tested, built-in hierarchy, IP mgmt hooks, specifications of time series, compact, interoperability with SPICE tools.
+- How to build / test the "SPICE format" and IP ideas: Make MOJITO work at the same time 
+- Deploy to pypi. Make it easy to install separately
+- Trading system using TokenSPICE predictions
