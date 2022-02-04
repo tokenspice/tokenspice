@@ -244,7 +244,7 @@ def _csvToHeaderValues(input_csv_filename: str):
     assert os.path.exists(input_csv_filename)
     header: Any = None
     values: Any = []
-    with open(input_csv_filename, newline="") as csvfile:
+    with open(input_csv_filename, newline="", encoding="utf-8") as csvfile:
         csvreader = csv.reader(csvfile, delimiter=",")
         for row in csvreader:  # row = ['Tick', 'Second', ..] or [1.0, 100.0, ..]
             if header is None:

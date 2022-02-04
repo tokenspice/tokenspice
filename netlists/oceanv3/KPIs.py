@@ -112,13 +112,13 @@ def netlist_createLogData(state):
 
     pool_agents = state.agents.filterToPool()
     n_pools = len(pool_agents)
-    s += ["; # pools=%d" % n_pools]
+    s += [f"; # pools={n_pools}"]
     dataheader += ["n_pools"]
     datarow += [n_pools]
 
     rugged_pool = state.rugged_pools
     n_rugged = len(rugged_pool)
-    s += ["; # rugged pools=%d" % n_rugged]
+    s += [f"; # rugged pools={n_rugged}"]
     dataheader += ["n_rugged"]
     datarow += [n_rugged]
 

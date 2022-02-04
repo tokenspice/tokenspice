@@ -9,24 +9,31 @@ import sys
 
 import brownie
 
-from engine.SimEngine import SimEngine
-from util.plotutil import csvToPngs
-
-INFO = logging.INFO
-DEBUG = logging.DEBUG
-WARNING = logging.WARNING
-
-# ==========================================================================
+# ========================================================================
 # tsp help
 HELP_MAIN = """
 TokenSPICE - EVM agent-based token simulator
                                             
-Usage: tsp run|plot|showstats
+Usage: tsp compile|ganache|run|plot|showstats
+  tsp compile -- compile Solidity code
+  tsp ganache -- run local chain
   tsp run -- run simulation
   tsp plot -- plot results
   tsp showstats -- see run stats
- """
+"""
 
+def do_help():
+    print(HELP_MAIN)
+
+# ========================================================================
+# tsp ganache
+def do_ganache():
+    os.system("./ganache.py")
+
+# ========================================================================
+# tsp compile
+def do_compile():
+    os.system("./compile.sh")
 
 # ========================================================================
 # tsp run
@@ -55,12 +62,12 @@ def do_run():
 
     print(
         f"Arguments: NETLIST={netlist_str}, OUTPUT_DIR={output_dir},"
-        " DO_PROFILE={do_profile}"
+        f" DO_PROFILE={do_profile}"
     )
 
     # handle corner cases
     if os.path.exists(output_dir):
-        print("\nOutput path '%s' already exists.  Exiting.\n" % output_dir)
+        print(f"\nOutput path '{output_dir}' already exists.  Exiting.\n")
         sys.exit(0)
 
     # make directory
@@ -71,7 +78,7 @@ def do_run():
     netlist_state = netlist_module.SimState()
     netlist_log_func = netlist_module.netlist_createLogData
 
-
+    from engine.SimEngine import SimEngine #pylint: disable=import-outside-toplevel
     engine = SimEngine(netlist_state, output_dir, netlist_log_func)
     if not do_profile:
         engine.run()
@@ -80,7 +87,7 @@ def do_run():
         cProfile.run("engine.run()", stats_filename)
         print(
             f"Output stats file: {stats_filename}. To see: tsp showstats "
-            "outdir_csv/stats 20 cumulative"
+            f"outdir_csv/stats 20 cumulative"
         )
     print(f"Output directory: {output_dir}")
 
@@ -124,7 +131,7 @@ def do_plot():
 
     print(
         f"Arguments: NETLIST={netlist_str}, INPUT_CSV_DIR={input_csv_dir}, "
-        "OUTPUT_PNG_DIR={output_pngdir}"
+        f"OUTPUT_PNG_DIR={output_png_dir}"
     )
     print(f"Base input filename: '{base_input_csv_filename}' (hardcoded)")
     print(f"Full input filename: '{input_csv_filename}'")
@@ -148,6 +155,7 @@ def do_plot():
     netlist_plot_instrs_func = netlist_module.netlist_plotInstructions
 
     # main work
+    from util.plotutil import csvToPngs    #pylint: disable=import-outside-toplevel
     csvToPngs(input_csv_filename, output_png_dir, netlist_plot_instrs_func)
 
     print("Done")
@@ -225,10 +233,16 @@ def do_showstats():
 # main
 def do_main():
     logging.basicConfig()
-    logging.getLogger("master").setLevel(INFO)
+    logging.getLogger("master").setLevel(logging.INFO)
 
     if len(sys.argv) == 1:
-        print(HELP_MAIN)
+        do_help()
+
+    elif sys.argv[1] == "compile":
+        do_compile()
+
+    elif sys.argv[1] == "ganache":
+        do_ganache()
 
     elif sys.argv[1] == "run":
         do_run()
@@ -240,8 +254,7 @@ def do_main():
         do_showstats()
 
     else:
-        print(HELP_MAIN)
-
+        do_help()
 
 if __name__ == "__main__":
     do_main()

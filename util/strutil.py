@@ -13,7 +13,7 @@ class StrMixin:
             newline = self.__STR_GIVES_NEWLINE__  # type: ignore
 
         s = []
-        s += ["%s={" % class_name]
+        s += [f"{class_name}={{"]
         if newline:
             s += ["\n"]
 
@@ -34,7 +34,7 @@ class StrMixin:
 
         for i, attr in enumerate(attrs):
             attr_obj = getattr(obj, attr)
-            s += ["%s=" % attr]
+            s += [f"{attr}="]
             if isinstance(attr_obj, dict):
                 s += [dictStr(attr_obj, newline)]
             else:
@@ -46,7 +46,7 @@ class StrMixin:
             if newline:
                 s += ["\n"]
 
-        s += ["/%s}" % class_name]
+        s += [f"/{class_name}}}"]
         return "".join(s)
 
 
@@ -56,7 +56,7 @@ def dictStr(d: dict, newline=False) -> str:
         return "{}"
     s = ["dict={"]
     for i, (k, v) in enumerate(d.items()):
-        s += ["'%s':%s" % (k, v)]
+        s += [f"'{k}':{v}"]
         if i < (len(d) - 1):
             s += [","]
         s += [" "]
@@ -70,13 +70,13 @@ def asCurrency(amount, decimals: bool = True) -> str:
     """Ref: https://stackoverflow.com/questions/21208376/converting-float-to-dollars-and-cents"""
     if decimals:
         if amount >= 0:
-            return "${:,.2f}".format(amount)
-        return "-${:,.2f}".format(-amount)
+            return f"${amount:,.2f}"
+        return f"-${-amount:,.2f}".format(-amount)
 
     if amount >= 0:
-        return "${:,.0f}".format(amount)
+        return f"${amount:,.0f}"
 
-    return "-${:,.0f}".format(-amount)
+    return f"-${-amount:,.0f}"
 
 
 def prettyBigNum(amount, remove_zeroes: bool = True) -> str:
@@ -88,7 +88,7 @@ def prettyBigNum(amount, remove_zeroes: bool = True) -> str:
     Remove zeros True vs False: 1.00M vs 1M
     """
     if remove_zeroes:
-        amount = float("%.2e" % amount)  # reduce to 3 sig figs
+        amount = float(f"{amount:.2e}")  # reduce to 3 sig figs
     if amount == 0:
         return "0"
 
@@ -99,16 +99,16 @@ def prettyBigNum(amount, remove_zeroes: bool = True) -> str:
         base = "e"
         s = s.replace("e", "X")
     elif a >= 1e9:
-        s = "%.2fX" % (a / 1e9)
+        s = f"{a/1e9:.2f}X"
         base = "B"
     elif a >= 1e6:
-        s = "%.2fX" % (a / 1e6)
+        s = f"{a/1e6:.2f}X"
         base = "M"
     elif a >= 1e3:
-        s = "%.2fX" % (a / 1e3)
+        s = f"{a/1e3:.2f}X"
         base = "K"
     else:
-        s = "%.2fX" % a
+        s = f"{a:.2f}X"
         base = ""
 
     if remove_zeroes:

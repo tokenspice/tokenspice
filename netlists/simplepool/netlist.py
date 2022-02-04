@@ -69,13 +69,13 @@ def netlist_createLogData(state):
     # So we log other things...
 
     publisher = state.getAgent("pub1")
-    s += ["; publisher OCEAN=%s" % prettyBigNum(publisher.OCEAN(), False)]
+    s += [f"; publisher OCEAN={prettyBigNum(publisher.OCEAN(), False)}"]
     dataheader += ["publisher_OCEAN"]
     datarow += [publisher.OCEAN()]
 
     pool_agents = state.agents.filterToPool()
     n_pools = len(pool_agents)
-    s += ["; # pools=%d" % n_pools]
+    s += [f"; # pools={n_pools}"]
     dataheader += ["n_pools"]
     datarow += [n_pools]
 
