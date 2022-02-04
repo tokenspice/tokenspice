@@ -11,7 +11,7 @@ def testStrMixin():
             self.y = 2
             self.d = {"a": 3, "b": 4}
             self.d2 = {}
-            self.__ignoreVal = "ignoreVal" #pylint: disable=unused-private-member
+            self.__ignoreVal = "ignoreVal"  # pylint: disable=unused-private-member
 
         def ignoreMethod(self):
             pass
