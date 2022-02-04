@@ -28,6 +28,9 @@ brownie.network.connect("development")
 GOD_ACCOUNT = brownie.network.accounts[9]
 GOD_ADDRESS = GOD_ACCOUNT.address
 
+OPF_ACCOUNT = brownie.network.accounts[8]
+OPF_ADDRESS = OPF_ACCOUNT.address
+
 SAFETY = config["general"].getboolean("SAFETY")
 assert SAFETY is not None
 
@@ -64,5 +67,4 @@ BITCOIN_NUM_HALF_LIVES = 34
 GASLIMIT_DEFAULT = 5000000
 BURN_ADDRESS = "0x000000000000000000000000000000000000dEaD"
 
-OPF_ACCOUNT = brownie.network.accounts[8]
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"

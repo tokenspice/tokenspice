@@ -18,3 +18,11 @@ out.txt
 build/
 .coverage
 codacy-analysis-cli-master/
+scenarios_csv/
+scenarios_png/
+sol080/scripts/
+
+sol080/scripts/deploy.py
+nbs/plot.ipynb
+
+scenario_netlist_v4/

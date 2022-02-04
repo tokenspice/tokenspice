@@ -2,11 +2,8 @@ import brownie
 from enforce_typing import enforce_types
 
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, GOD_ACCOUNT, OPF_ACCOUNT, ZERO_ADDRESS
+from util.constants import BROWNIE_PROJECT080, GOD_ACCOUNT, ZERO_ADDRESS, OPF_ADDRESS
 from util.globaltokens import OCEANtoken
-
-GOD_ADDRESS = GOD_ACCOUNT.address
-OPF_ADDRESS = OPF_ACCOUNT.address
 
 _ERC721_TEMPLATE = None
 
@@ -161,7 +158,7 @@ def createBPoolFromDatatoken(
     ss_DT_vested_blocks = 2500000  # = num blocks/year, if 15 s/block, require > 2426000
     ss_OCEAN_init_liquidity = OCEAN_init_liquidity
 
-    LP_swap_fee = 0.02
+    LP_swap_fee = 0.03
     mkt_swap_fee = 0.01
     pool_create_data = {
         "addresses": [

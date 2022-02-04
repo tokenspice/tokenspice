@@ -166,11 +166,11 @@ class SpeculatorAgentV4(SpeculatorAgentBaseV4):
 
         max_OCEAN_allow = self.OCEAN()
         if DT > 0.0 and random.random() < 0.50:  # magic number
-            DT_sell_amt = 1.0 * DT  # magic number
+            DT_sell_amt = 0.5 * DT  # magic number
             self._wallet.sellDTV4(pool, datatoken, DT_sell_amt)
 
         else:
-            DT_buy_amt = 1.0  # magic number
+            DT_buy_amt = 5.0  # magic number
             self._wallet.buyDTV4(pool, datatoken, DT_buy_amt, max_OCEAN_allow)
 
 
@@ -186,11 +186,11 @@ class StakerspeculatorAgentV4(SpeculatorAgentBaseV4):
         BPT = self.BPT(pool)
 
         if BPT > 0.0 and random.random() < 0.50:  # magic number
-            BPT_sell = 0.5 * BPT  # magic number
+            BPT_sell = 0.1 * BPT  # magic number
             self.unstakeOCEAN(BPT_sell, pool)
 
         else:
-            OCEAN_stake = min(0.1 * self.OCEAN(), 200)  # magic number
+            OCEAN_stake = 0.05 * self.OCEAN()  # magic number
             # OCEAN_stake = 200
             self.joinPoolAddOCEAN(OCEAN_stake, pool)
         # potentially other actions

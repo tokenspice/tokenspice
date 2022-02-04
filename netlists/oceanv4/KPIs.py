@@ -32,7 +32,8 @@ def get_OCEAN_in_DTs(state, agent) -> float:
     for pool_agent in state.agents.filterToPoolV4().values():
         pool = pool_agent._pool
         DT = pool_agent._dt
-        price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address, 0))
+        swapFee = pool.getSwapFee()
+        price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address, swapFee))
         amt_DT = agent.DT(DT)
         value_held += amt_DT * price
 
@@ -55,7 +56,6 @@ def get_DTs(state, agent) -> float:
     for pool_agent in state.agents.filterToPoolV4().values():
         pool = pool_agent._pool
         DT = pool_agent._dt
-        # price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address, 0))
         amt_DT = agent.DT(DT)
         datatokens_held.append(amt_DT)
 
@@ -80,7 +80,8 @@ def get_OCEAN_in_BPTs(state, agent):
         pool = pool_agent._pool
         DT = pool_agent._dt
 
-        price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address, 0))
+        swapFee = pool.getSwapFee()
+        price = fromBase18(pool.getSpotPrice(OCEAN_address, DT.address, swapFee))
         pool_value_DT = price * fromBase18(pool.getBalance(DT.address))
         pool_value_OCEAN = fromBase18(pool.getBalance(OCEAN_address))
         pool_value = pool_value_DT + pool_value_OCEAN
@@ -109,7 +110,8 @@ def netlist_createLogData(state):
         "consumer",
         "stakerSpeculator",
         "speculator",
-        # "maliciousPublisher",
+        "buySellRobot",
+        # "maliciousPublisher"
     ]
     # tracking OCEAN
     OCEANtoken = globaltokens.OCEANtoken()
@@ -152,29 +154,30 @@ def netlist_createLogData(state):
 
     # Track pool0
     #1. DT in pool, 
-    #2. DT balance of sideStaking
+    #2. DT balance of 1ss contract
     #3. BPT total supply, 
-    #4. BPT balance of sideStaking, 
+    #4. BPT balance of 1ss contract, 
     #5. DT spot price
     #6. OCEAN in pool
     dataheader += ["DT_pool"]
-    dataheader += ["DT_sideStaking"]
+    dataheader += ["DT_1ss_contract"]
     dataheader += ["BPT_total"]
-    dataheader += ["BPT_sideStaking"]
+    dataheader += ["BPT_1ss_contract"]
     dataheader += ["DT_price"]
     dataheader += ["pool_OCEAN"]
     if any(state.agents.filterToPoolV4().values()):
         poolAgent_0 = list(state.agents.filterToPoolV4().values())[0]
         pool0 = poolAgent_0._pool
         DT = poolAgent_0._dt
-        sideStakingAddress = pool0.getController()
-        sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
+        oneSSContractAddress = pool0.getController()
+        oneSSContract = BROWNIE_PROJECT080.SideStaking.at(oneSSContractAddress)
 
         datarow += [fromBase18(DT.balanceOf(pool0.address))] #1
-        datarow +=[fromBase18(DT.balanceOf(sideStakingAddress))] #2
+        datarow +=[fromBase18(DT.balanceOf(oneSSContractAddress))] #2
         datarow += [fromBase18(pool0.totalSupply())] #3
-        datarow += [fromBase18(pool0.balanceOf(sideStaking.address))] #4
-        datarow += [fromBase18(pool0.getSpotPrice(OCEAN_address, DT.address, 0))] #5
+        datarow += [fromBase18(pool0.balanceOf(oneSSContractAddress))] #4
+        swapFee = pool0.getSwapFee()
+        datarow += [fromBase18(pool0.getSpotPrice(OCEAN_address, DT.address, swapFee))] #5
         datarow += [fromBase18(OCEANtoken.balanceOf(pool0.address))]
     else:
         datarow +=[0,0,0,0,0,0]
@@ -216,14 +219,16 @@ def netlist_plotInstructions(header: List[str], values):
                 "consumer_OCEAN_networth",
                 "stakerSpeculator_OCEAN_networth",
                 "speculator_OCEAN_networth",
-                # "maliciousPublisher_OCEAN_networth",
+                # "buySellRobot_OCEAN_networth",
+                # "maliciousPublisher_OCEAN_networth"
             ],
             [
                 "publisher",
                 "consumer",
                 "stakerSpeculator",
                 "speculator",
-                # "maliciousPublisher",
+                # "buySellRobot",
+                # "maliciousPublisher"
             ],
             "Agents OCEAN networth",
             LINEAR,
@@ -236,14 +241,16 @@ def netlist_plotInstructions(header: List[str], values):
                 "consumer_OCEAN",
                 "stakerSpeculator_OCEAN",
                 "speculator_OCEAN",
-                # "maliciousPublisher_OCEAN",
+                # "buySellRobot_OCEAN",
+                # "maliciousPublisher_OCEAN"
             ],
             [
-            "publisher", 
-            "consumer", 
-            "staker", 
-            "speculator", 
-            # "maliciousPublisher"
+                "publisher",
+                "consumer", 
+                "staker", 
+                "speculator", 
+                # "buySellRobot",
+                # "maliciousPublisher"
             ],
             "Agents OCEAN wallet",
             LINEAR,
@@ -256,13 +263,15 @@ def netlist_plotInstructions(header: List[str], values):
                 "DT_consumer",
                 "DT_stakerSpeculator",
                 "DT_speculator",
+                "DT_buySellRobot"
                 # "DT_maliciousPublisher"
             ],
             [
                 "publisher",
                 "consumer", 
                 "staker", 
-                "speculator", 
+                "speculator",
+                "buySellRobot",
                 # "maliciousPublisher"
             ],
             "Agents Datatokens",
@@ -271,8 +280,8 @@ def netlist_plotInstructions(header: List[str], values):
             DOLLAR,
         ),
         YParam(
-            ["DT_pool", "DT_sideStaking"],
-            ["DT in pool","DT in side staking"],
+            ["DT_pool", "DT_1ss_contract"],
+            ["DT in pool","DT in one-sided staking contract"],
             "DT allocation",
             LINEAR,
             MULT1,
@@ -285,7 +294,7 @@ def netlist_plotInstructions(header: List[str], values):
                 "BPT_stakerSpeculator",
                 "BPT_speculator",
                 # "BPT_maliciousPublisher",
-                "BPT_sideStaking"
+                "BPT_1ss_contract"
             ],
             [
                 "publisher",
@@ -293,7 +302,7 @@ def netlist_plotInstructions(header: List[str], values):
                 "staker", 
                 "speculator", 
                 # "maliciousPublisher",
-                "sideStaking contract"
+                "one-sided staking contract"
             ],
             "BPT allocation",
             LINEAR,

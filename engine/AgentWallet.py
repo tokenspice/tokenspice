@@ -22,7 +22,7 @@ from enforce_typing import enforce_types
 from util import constants
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import GOD_ACCOUNT
+from util.constants import GOD_ACCOUNT, OPF_ACCOUNT, OPF_ADDRESS
 from util.strutil import asCurrency
 
 log = logging.getLogger("wallet")
@@ -464,7 +464,7 @@ class AgentWalletEvm(
 
         tokenIn_address = globaltokens.OCEAN_address()
         tokenOut_address = DT.address
-        marketFeeAddress = pool.getController()
+        marketFeeAddress = OPF_ADDRESS
 
         maxAmountIn_base = toBase18(max_OCEAN_allow)
         tokenAmountOut_base = toBase18(DT_buy_amt)
@@ -495,7 +495,7 @@ class AgentWalletEvm(
         tokenOut_address = globaltokens.OCEAN_address()  # leaving pool
         minAmountOut_base = toBase18(min_OCEAN_amt)  # ""
         maxPrice_base = 2 ** 255  # limit by min_OCEAN_amt, not price
-        marketFeeAddress = pool.getController()
+        marketFeeAddress = OPF_ADDRESS
         tokenInOutMarket = [
             tokenIn_address,
             tokenOut_address,

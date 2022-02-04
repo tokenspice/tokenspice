@@ -47,6 +47,25 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
+        # mal_pub_ss = PublisherStrategyV4(
+        #     DT_cap=self.ss.mal_DT_cap,
+        #     vested_amount=self.ss.mal_vested_amount,
+        #     s_between_create=self.ss.mal_s_between_create,
+        #     s_between_unstake=self.ss.mal_s_between_unstake,
+        #     s_between_sellDT=self.ss.mal_s_between_sellDT,
+        #     is_malicious=True,
+        #     s_wait_to_rug=self.ss.mal_s_wait_to_rug,
+        #     s_rug_time=self.ss.mal_s_rug_time,
+        # )
+        # new_agents.add(
+        #     PublisherAgentV4(
+        #         name="maliciousPublisher",
+        #         USD=0.0,
+        #         OCEAN=self.ss.mal_init_OCEAN,
+        #         pub_ss=mal_pub_ss,
+        #     )
+        # )
+
         new_agents.add(
             DataconsumerAgentV4(
                 name="consumer",
@@ -75,26 +94,14 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
-        # mal_pub_ss = PublisherStrategyV4(
-        #     DT_cap=self.ss.publisher_DT_cap,
-        #     vested_amount=self.ss.publisher_vested_amount,
-        #     # pool_weight_DT=self.ss.mal_pool_weight_DT,
-        #     # pool_weight_OCEAN=self.ss.mal_pool_weight_OCEAN,
-        #     s_between_create=self.ss.mal_s_between_create,
-        #     s_between_unstake=self.ss.mal_s_between_unstake,
-        #     s_between_sellDT=self.ss.mal_s_between_sellDT,
-        #     is_malicious=True,
-        #     s_wait_to_rug=self.ss.mal_s_wait_to_rug,
-        #     s_rug_time=self.ss.mal_s_rug_time,
-        # )
-        # new_agents.add(
-        #     PublisherAgentV4(
-        #         name="maliciousPublisher",
-        #         USD=0.0,
-        #         OCEAN=self.ss.mal_init_OCEAN,
-        #         pub_ss=mal_pub_ss,
-        #     )
-        # )
+        new_agents.add(
+            SpeculatorAgentV4(
+                name="buySellRobot",
+                USD=0.0,
+                OCEAN=self.ss.buySellRobot_init_OCEAN,
+                s_between_speculates=self.ss.buysell_s_between_speculates,
+            )
+        )
 
         for agent in new_agents:
             self.agents[agent.name] = agent
