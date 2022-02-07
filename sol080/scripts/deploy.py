@@ -38,6 +38,7 @@ def main():
         {"from": GOD_ACCOUNT},
     )
 
+    router.updateMinVestingPeriod(10, {"from":account0})
     # SETUP ERC721 Factory with template
     erc721_factory = BROWNIE_PROJECT080.ERC721Factory.deploy(
         erc721_template.address,
@@ -170,4 +171,4 @@ def main():
     assert pool.getSwapFee() == toBase18(LP_swap_fee)
 
     # return pool, dataNFT1, DT, OCEANtoken, router, sideStaking, pool_template
-    return dataNFT1, DT, OCEANtoken, sideStaking, pool
+    return dataNFT1, DT, OCEANtoken, sideStaking, pool, router
