@@ -1,5 +1,6 @@
 import random
 from typing import List
+import brownie
 
 from enforce_typing import enforce_types
 
@@ -9,7 +10,9 @@ from sol080.contracts.oceanv4 import oceanv4util
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18
-from util.constants import S_PER_DAY
+from util.constants import S_PER_DAY, S_PER_HOUR
+
+from util.constants import BROWNIE_PROJECT080
 
 # magic numbers
 DEFAULT_DT_init = 1000.0
@@ -28,6 +31,8 @@ DEFAULT_s_rug_time = int(DEFAULT_s_wait_to_rug / 5)
 # V4 params
 DEFAULT_DT_CAP = 1000.0
 DEFAULT_vested_amount = 100.0
+DEFAULT_s_between_getVesting = 12 * S_PER_HOUR
+ss_DT_vested_blocks = 600
 
 
 class PublisherStrategy:  # pylint: disable=too-many-instance-attributes
@@ -253,26 +258,23 @@ class PublisherStrategyV4:  # pylint: disable=too-many-instance-attributes
         self,
         DT_cap: float = DEFAULT_DT_CAP,
         vested_amount: float = DEFAULT_vested_amount,
-        # pool_weight_DT: float = DEFAULT_pool_weight_DT,
-        # pool_weight_OCEAN: float = DEFAULT_pool_weight_OCEAN,
         s_between_create: int = DEFAULT_s_between_create,
         s_between_unstake: int = DEFAULT_s_between_unstake,
         s_between_sellDT: int = DEFAULT_s_between_sellDT,
         is_malicious: bool = DEFAULT_is_malicious,
         s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
         s_rug_time: int = DEFAULT_s_rug_time,
+        s_between_getVesting = DEFAULT_s_between_getVesting
     ):  # pylint: disable=too-many-arguments
         self.DT_cap: float = DT_cap
         self.vested_amount: float = vested_amount
-        # self.pool_weight_DT: float = pool_weight_DT
-        # self.pool_weight_OCEAN: float = pool_weight_OCEAN
         self.s_between_create: int = s_between_create
         self.s_between_unstake: int = s_between_unstake
         self.s_between_sellDT: int = s_between_sellDT
-
         self.is_malicious: bool = is_malicious
         self.s_wait_to_rug: int = s_wait_to_rug
         self.s_rug_time: int = s_rug_time
+        self.s_between_getVesting = s_between_getVesting
 
 
 @enforce_types
@@ -294,14 +296,17 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         self._s_since_unstake: int = 0
         self._s_since_sellDT: int = 0
 
+        self._s_since_getVesing: int = 0
+
         self.pools: List[str] = []  # pools created by this agent
 
     def takeStep(self, state) -> None:
         self._s_since_create += state.ss.time_step
         self._s_since_unstake += state.ss.time_step
         self._s_since_sellDT += state.ss.time_step
+        self._s_since_getVesing += state.ss.time_step
 
-        if (self._doCreatePool()):# & (len(self.pools) < 1):
+        if (self._doCreatePool()) & (len(self.pools) < 1):
             self._s_since_create = 0
             self._createPoolAgent(state)
 
@@ -316,6 +321,10 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         if self._doRug():
             if (len(self.pools) > 0) & (self.pools[-1] not in state.rugged_pools):
                 state.rugged_pools.append(self.pools[-1])
+
+        if self._doGetVesting():
+            self._s_since_getVesing = 0
+            self._vest(state)
 
     def _doCreatePool(self) -> bool:
         if self.OCEAN() < 200.0:  # magic number
@@ -345,8 +354,6 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
 
         # new pool
         OCEAN_bind_amt = self.OCEAN() - 1  # magic number: use all the OCEAN
-        # import ipdb
-        # ipdb.set_trace()
 
         pool = self._createBpool(
             DT, self.pub_ss.vested_amount, OCEAN_bind_amt, erc721_factory
@@ -432,7 +439,6 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         assert self.pub_ss.is_malicious, "should only call if malicious"
         assert self.pools, "can't rug if no pools"
         assert hasattr(state, "rugged_pools"), "state needs 'rugged_pools attr"
-        # state.rugged_pools.append(self.pools[-1])
 
     @staticmethod
     def _poolsWithDT(state, DT) -> list:
@@ -475,3 +481,18 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
             datatoken, DT_vest_amount, OCEAN_init_liquidity, account, erc721_factory
         )
         return pool
+
+    def _doGetVesting(self):
+        return (brownie.chain.height >= ss_DT_vested_blocks) & (self._s_since_getVesing == self._s_since_getVesing)
+
+    def _vest(self, state):
+        account = self._wallet._account
+        pool_agents = state.agents.filterByNonzeroStakeV4(self).values()
+        for pool_agent in pool_agents:
+            pool = pool_agent.pool
+            DT = pool_agent._dt
+            oneSSContractAddress = pool.getController()
+            oneSSContract = BROWNIE_PROJECT080.SideStaking.at(oneSSContractAddress)
+
+            if oneSSContract.getvestingAmountSoFar(DT.address) < oneSSContract.getvestingAmount(DT.address):            
+                oneSSContract.getVesting(DT.address)

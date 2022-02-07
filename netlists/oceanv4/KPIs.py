@@ -1,4 +1,5 @@
 from typing import List
+import brownie
 
 from enforce_typing import enforce_types
 
@@ -107,11 +108,12 @@ def netlist_createLogData(state):
     # So we log other things...
     agents_names = [
         "publisher",
-        "consumer",
+        # "consumer",
         "stakerSpeculator",
         "speculator",
-        "buySellRobot",
+        # "buySellRobot",
         # "maliciousPublisher"
+        # "erc721"
     ]
     # tracking OCEAN
     OCEANtoken = globaltokens.OCEANtoken()
@@ -190,7 +192,8 @@ def netlist_createLogData(state):
 
     rugged_pool = state.rugged_pools
     n_rugged = len(rugged_pool)
-    s += ["; # rugged pools=%d" % n_rugged]
+    # s += ["; # rugged pools=%d" % n_rugged]
+    s += ["; # block height=%d" % brownie.chain.height]
     dataheader += ["n_rugged"]
     datarow += [n_rugged]    
 

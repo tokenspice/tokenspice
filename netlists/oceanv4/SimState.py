@@ -8,6 +8,7 @@ from agents.PublisherAgent import (
     PublisherStrategyV4,
 )
 from agents.SpeculatorAgent import SpeculatorAgentV4, StakerspeculatorAgentV4
+from agents import BuySellRobotAgent
 
 from engine import SimStateBase, AgentBase
 from .KPIs import KPIs
@@ -66,15 +67,15 @@ class SimState(SimStateBase.SimStateBase):
         #     )
         # )
 
-        new_agents.add(
-            DataconsumerAgentV4(
-                name="consumer",
-                USD=0.0,
-                OCEAN=self.ss.consumer_init_OCEAN,
-                s_between_buys=self.ss.consumer_s_between_buys,
-                profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
-            )
-        )
+        # new_agents.add(
+        #     DataconsumerAgentV4(
+        #         name="consumer",
+        #         USD=0.0,
+        #         OCEAN=self.ss.consumer_init_OCEAN,
+        #         s_between_buys=self.ss.consumer_s_between_buys,
+        #         profit_margin_on_consume=self.ss.consumer_profit_margin_on_consume,
+        #     )
+        # )
 
         new_agents.add(
             StakerspeculatorAgentV4(
@@ -94,14 +95,14 @@ class SimState(SimStateBase.SimStateBase):
             )
         )
 
-        new_agents.add(
-            SpeculatorAgentV4(
-                name="buySellRobot",
-                USD=0.0,
-                OCEAN=self.ss.buySellRobot_init_OCEAN,
-                s_between_speculates=self.ss.buysell_s_between_speculates,
-            )
-        )
+        # new_agents.add(
+        #     BuySellRobotAgent.SpeculatorAgentV4(
+        #         name="buySellRobot",
+        #         USD=0.0,
+        #         OCEAN=self.ss.buySellRobot_init_OCEAN,
+        #         s_between_speculates=self.ss.buysell_s_between_speculates,
+        #     )
+        # )
 
         for agent in new_agents:
             self.agents[agent.name] = agent
