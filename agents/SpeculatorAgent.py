@@ -55,7 +55,10 @@ class SpeculatorAgentBase(AgentBase.AgentBaseEvm):
 
         if hasattr(state, "rugged_pools"):
             for pool_name in state.rugged_pools:
-                del pool_agents[pool_name]
+                try:
+                    del pool_agents[pool_name]
+                except KeyError:
+                    pass
 
         pool_agents = pool_agents.values()
         return pool_agents
