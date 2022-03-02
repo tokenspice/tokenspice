@@ -98,7 +98,7 @@ From terminal:
 pytest sol057/contracts/simpletoken/test/test_Simpletoken.py::test_transfer
 
 #run all of a directory's tests
-pytest contracts/test
+pytest sol057/contracts/simpletoken/test
 
 #run all unit tests
 pytest
