@@ -1,12 +1,5 @@
 import brownie
-from sol080.contracts.oceanv4.oceanv4util import (
-    createDataNFT,
-    create_datatoken_from_dataNFT,
-    create_BPool_from_datatoken,
-    poolAddressFromNewBPoolTx,
-    ROUTER,
-    OCEANtoken,
-)
+from sol080.contracts.oceanv4 import oceanv4util
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
 
@@ -89,9 +82,9 @@ def test_direct():
     pub_mkt_fee_amt = 0.0  # in OCEAN
     uints = [toBase18(DT_cap), toBase18(pub_mkt_fee_amt)]
     addresses = [minter_addr, fee_mgr_addr, pub_mkt_addr, pub_mkt_fee_token_addr]
-    bytes = []
+    _bytes = []
     tx = dataNFT1.createERC20(
-        erc20_template_index, strings, addresses, uints, bytes, {"from": account0}
+        erc20_template_index, strings, addresses, uints, _bytes, {"from": account0}
     )
 
     DT_address = tx.events["TokenCreated"]["newTokenAddress"]
@@ -109,7 +102,7 @@ def test_direct():
     assert DT.balanceOf(address0) == 0
 
     # Once ERC20 DT has been created, publisher has 3 options:
-    # Details here: https://github.com/oceanprotocol/contracts/blob/v4main_postaudit/docs/quickstart_pubFlow.md
+    # Details here: https://github.com/oceanprotocol/contracts/blob/v4main_postaudit/docs/quickstart_pubFlow.md # pylint: disable=line-too-long
     # 1. Create pool
     # 2. Mint DTs and create fixed price exchange
     # 3. Mint DTs and created pools on any other market
@@ -159,7 +152,7 @@ def test_direct():
         pool_create_data["addresses"],
         {"from": account0},
     )
-    pool_address = poolAddressFromNewBPoolTx(tx)
+    pool_address = oceanv4util.poolAddressFromNewBPoolTx(tx)
     pool = BROWNIE_PROJECT080.BPool.at(pool_address)
 
     assert OCEANtoken.balanceOf(pool_address) == toBase18(ss_OCEAN_init_liquidity)
@@ -168,7 +161,7 @@ def test_direct():
 
 
 def test_createDataNFT_via_util():
-    dataNFT = createDataNFT("dataNFT", "DATANFT", account0)
+    dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0)
     assert dataNFT.name() == "dataNFT"
     assert dataNFT.symbol() == "DATANFT"
     assert dataNFT.getPermissions(account0.address) == (True, True, True, True)
@@ -176,8 +169,9 @@ def test_createDataNFT_via_util():
 
 
 def test_createDT_via_util():
-    dataNFT = createDataNFT("dataNFT", "DATANFT", account0)
-    DT = create_datatoken_from_dataNFT("DT", "DTSymbol", 10000, dataNFT, account0)
+    dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0)
+    DT = oceanv4util.create_datatoken_from_dataNFT(
+        "DT", "DTSymbol", 10000, dataNFT, account0)
     assert DT.name() == "DT"
     assert DT.symbol() == "DTSymbol"
     assert DT.cap() == toBase18(10000)
@@ -186,13 +180,14 @@ def test_createDT_via_util():
 
 def test_createBPool_via_util():
     brownie.chain.reset()
-    router = ROUTER()
-    dataNFT = createDataNFT("dataNFT", "DATANFT", account0, router)
-    DT = create_datatoken_from_dataNFT("DT", "DTSymbol", 10000, dataNFT, account0)
-    pool = create_BPool_from_datatoken(DT, 10, 2000, account0)
+    router = oceanv4util.ROUTER()
+    dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
+    DT = oceanv4util.create_datatoken_from_dataNFT(
+        "DT", "DTSymbol", 10000, dataNFT, account0)
+    pool = oceanv4util.create_BPool_from_datatoken(DT, 10, 2000, account0)
     pool_address = pool.address
 
-    OCEAN = OCEANtoken()
+    OCEAN = oceanv4util.OCEANtoken()
     assert pool.getBaseTokenAddress() == OCEAN.address
 
     assert OCEAN.balanceOf(pool_address) == toBase18(2000)
