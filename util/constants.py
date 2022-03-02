@@ -8,7 +8,7 @@ import os
 
 import brownie
 from brownie._config import CONFIG  # pylint: disable=no-name-in-module
-from enforce_typing import enforce_types
+from enforce_typing import enforce_types  # pylint: disable=unused-import
 
 # from sol080.contracts.oceanv4.test.test_SideStaking import ZERO_ADDRESS  # pylint: disable=unused-import
 
