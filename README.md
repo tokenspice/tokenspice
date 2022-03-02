@@ -69,9 +69,22 @@ python3 -m venv venv
 #activate env
 source venv/bin/activate
 
-#install dependencies. Install wheel first to avoid errors.
-pip install wheel
+#install dependencies
 pip install -r requirements.txt
+
+#install brownie packages (you can ignore FileExistsErrors)
+./brownie-install.sh
+```
+
+## TokenSPICE CLI
+
+`tsp` is the command-line interface for TokenSPICE. From the same terminal:
+```console
+#add pwd to bash path
+export PATH=$PATH:.
+
+#see tsp help
+tsp
 ```
 
 ## Compile the contracts
@@ -79,7 +92,7 @@ pip install -r requirements.txt
 From the same terminal:
 ```console
 #install 3rd party libs, then call "brownie compile" in sol057/ and sol080/
-./compile.sh
+tsp compile
 ```
 
 TokenSPICE sees smart contracts as classes. How:
@@ -90,15 +103,13 @@ TokenSPICE sees smart contracts as classes. How:
 
 ## Testing
 
-Note: this will fail if there is a `contracts` directory side-by-side with tokenspice/. If you have such a directory, delete or move it.
-
 From terminal:
 ```console
 #run single test. It uses brownie, which auto-starts Ganache local blockchain node.
 pytest sol057/contracts/simpletoken/test/test_Simpletoken.py::test_transfer
 
 #run all of a directory's tests
-pytest contracts/test
+pytest sol057/contracts/simpletoken/test
 
 #run all unit tests
 pytest
@@ -108,63 +119,94 @@ mypy ./
 
 #run linting on code style
 pylint *
+
+#auto-fix some pylint complaints
+black ./
 ```
 
 **[Go here](README-code-quality.md)** for details on linting / style.
 
-## TokenSPICE Command Line
+## Simulating with TokenSPICE
 
-Use `tsp`. From terminal:
+From terminal:
 ```console
-#add pwd to bash path
-export PATH=$PATH:.
+#run simulation, sending results to 'outdir_csv' (clear dir first, to be sure)
+rm -rf outdir_csv; tsp run netlists/scheduler/netlist.py outdir_csv
+```
 
-#see tsp help
-tsp
+You'll see an output like:
+```text
+Arguments: NETLIST=netlists/...
+Launching 'ganache-cli --accounts 10 --hardfork ...
+mnemonic: 'sausage bunker giant drum ...
+INFO:master:Begin.
+INFO:master:SimStrategy={OCEAN_funded=5.0, duration_seconds=157680000, ...}
+INFO:master:Tick=0 (0.0 h, 0.0 d, 0.0 mo, 0.0 y); timestamp=1642844072; OCEAN_vested=0, ...
+INFO:master:Tick=3 (2160.0 h, 90.0 d, 3.0 mo, 0.2 y); timestamp=1650620073; OCEAN_vested=0.0, ...
+INFO:master:Tick=6 (4320.0 h, 180.0 d, 6.0 mo, 0.5 y); timestamp=1658396073; OCEAN_vested=0.0, ...
+INFO:master:Tick=9 (6480.0 h, 270.0 d, 9.0 mo, 0.7 y); timestamp=1666172074; OCEAN_vested=0.0, ...
+INFO:master:Tick=12 (8640.0 h, 360.0 d, 12.0 mo, 1.0 y); timestamp=1673948074; OCEAN_vested=0.0, ...
+INFO:master:Tick=15 (10800.0 h, 450.0 d, 15.0 mo, 1.2 y); timestamp=1681724074; OCEAN_vested=0.232876 ...
+```
 
-#simulate 'scheduler' netlist, sending results to 'outdir_csv'
-tsp run netlists/scheduler/netlist.py outdir_csv
-
-#create output plots in 'outdir_png'
-tsp plot netlists/scheduler/netlist.py outdir_csv outdir_png
+Now, let's view the results visually. In the same terminal:
+```console
+#create output plots in 'outdir_png' (clear dir first, to be sure)
+rm -rf outdir_png; tsp plot netlists/scheduler/netlist.py outdir_csv outdir_png
 
 #view plots
 eog outdir_png
 ```
 
-In `tsp run`, it will dump all the ganache txs to stdout. To make this cleaner, open a new terminal and:
+To see the blockchain txs apart from the other logs: open a _new_ terminal and:
 ```console
-#Do a workaround for a bug introduced in Node 17.0.1 in Oct 2021
-export NODE_OPTIONS=--openssl-legacy-provider
-
 #activate env't
 cd tokenspice
 source venv/bin/activate
 
-#run ganache.py. It calls ganache cli and fills in many arguments for you.
-./ganache.py
-
-#now TokenSPICE runs will auto-connect to your separately-running ganache.
+#run ganache
+export PATH=$PATH:.
+tsp ganache
 ```
 
-The [wsloop netlist](netlists/wsloop/about.md) is a more complex netlist. Below are sample results.
+Now, from your original terminal:
+```console
+#run the sim. It will auto-connect to ganache
+rm -rf outdir_csv; tsp run netlists/scheduler/netlist.py outdir_csv
+```
 
-<img src="images/wsloop-example-small.png">
-
-For runs that take more than a few seconds, it helps send stdout & stderr to a file while still monitoring the console in real-time. Here's how:
+For longer runs (eg wsloop), we can log to a file while watching the console in real-time:
 
 ```console
-#remove previous directory, then start running
+#run the sim in the background, logging to out.txt
 rm -rf outdir_csv; tsp run netlists/wsloop/netlist.py outdir_csv > out.txt 2>&1 &
 
 #monitor in real-time
 tail -f out.txt
 ```
 
+To kill a sim in the background:
+```console
+#find the background process
+ps ax |grep "tsp run"
+
+#example result:
+#223429 pts/4    Rl     0:02 python ./tsp run netlists/wsloop/netlist.py outdir_csv
+
+#to kill it:
+kill 223429
+```
+
 ## Debugging from Brownie Console
 
+Brownie console is a Python console, with some extra Brownie goodness, so that we can interactively play with Solidity contracts as Python classes, and deployed Solidity contracts as Python objects.
+
 From terminal:
-```console
+```
+#brownie needs a directory with ./contracts/. Go to one.
+cd sol057/
+
+#start console
 brownie console
 ```
 
@@ -277,4 +319,4 @@ Art:
 
 The license is MIT. [Details](LICENSE)
 
-<img src="images/fishnado2-crop.jpeg" width="100%">
+<img src="images/fishnado2-crop.jpeg" width="100%"> 

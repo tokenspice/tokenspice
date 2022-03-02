@@ -83,10 +83,12 @@ def test_get_OCEAN_in_BPTs(alice_info):
 
     # case: foo_agent no BPTs
     value_held = KPIs.get_OCEAN_in_BPTs(state, foo_agent)
-    assert value_held == approx(0.0 * pool_value)
+    foo_agent_pool_shape = foo_agent._BPT/fromBase18(pool.totalSupply())
+
+    assert value_held == approx(foo_agent_pool_shape * pool_value)
 
     # case: foo_agent has all BPTs
-    foo_agent._BPT = pool.totalSupply()  # make pool think agent has 100% of BPTs
+    foo_agent._BPT = fromBase18(pool.totalSupply())  # make pool think agent has 100% of BPTs
     value_held = KPIs.get_OCEAN_in_BPTs(state, foo_agent)
 
     assert value_held == 1.0 * pool_value

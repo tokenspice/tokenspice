@@ -89,12 +89,12 @@ def netlist_createLogData(state):
         OCEAN_released = vw.released(OCEAN_address()) / 1e18
     else:
         OCEAN_vested = OCEAN_released = 0
-    s += [f"; OCEAN_vested={OCEAN_vested}, OCEAN_released={OCEAN_released}"]
+    s += [f"; OCEAN_vested={OCEAN_vested:.6f}, OCEAN_released={OCEAN_released:.6f}"]
     dataheader += ["OCEAN_vested", "OCEAN_released"]
     datarow += [OCEAN_vested, OCEAN_released]
 
     beneficiary_OCEAN = state.getAgent("beneficiary1").OCEAN()
-    s += [f"; beneficiary_OCEAN={beneficiary_OCEAN}"]
+    s += [f"; beneficiary_OCEAN={beneficiary_OCEAN:.6f}"]
     dataheader += ["beneficiary_OCEAN"]
     datarow += [beneficiary_OCEAN]
 

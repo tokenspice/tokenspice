@@ -8,8 +8,12 @@ Here are some such tools, largely inspired by tools from circuit land.
 
 ## Design entry tools
 
-- Schematic editor - be able to input netlists by editing a schematic. [[Examples from circuit land](https://www.google.com/search?q=spice+schematic+editor&sxsrf=ALeKk01lEnlL27hPsWzA_sBTOoxQLAlUJg:1626253838940&source=lnms&tbm=isch&sa=X&ved=2ahUKEwinnInTm-LxAhUNnYsKHe0mA1wQ_AUoAXoECAEQAw&biw=1600&bih=721#imgrc=TUv3yDrlTDLNVM)]. [[Example from video game land: machinations.io](https://machinations.io/)]
-- Waveform viewer - build on `tsp.do_plot` with more a interactive tool. [[Examples from circuit land](https://www.google.com/search?q=spice+waveform+viewer&sxsrf=ALeKk02nY3U9rkOZuz58PNXWjoFY4MCcUQ:1626255741604&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj9zareouLxAhXm-ioKHW0MCtgQ_AUoAXoECAEQAw&biw=1600&bih=721)]
+- Schematic editor - be able to input netlists by editing a schematic. Examples:
+  - [Circuits](https://www.google.com/search?q=spice+schematic+editor&sxsrf=ALeKk01lEnlL27hPsWzA_sBTOoxQLAlUJg:1626253838940&source=lnms&tbm=isch&sa=X&ved=2ahUKEwinnInTm-LxAhUNnYsKHe0mA1wQ_AUoAXoECAEQAw&biw=1600&bih=721#imgrc=TUv3yDrlTDLNVM)
+  - [Videogames: machinations.io](https://machinations.io/)
+  - [System Dynamics](https://systemdynamics.org/what-is-system-dynamics/): [stock and flow diagrams](https://www.google.com/search?q=stock+and+flow+diagram&sxsrf=AOaemvK9W36reEyVfw54RGs3JmLiwZbTDQ:1643101186893&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj358v0xMz1AhUXSPEDHZU7CwkQ_AUoAXoECAEQAw&cshid=1643101212647476&biw=1514&bih=934&dpr=1) in [Stella](https://www.iseesystems.com/store/products/stella-professional.aspx) and [Vensim](https://vensim.com/) (commercial); [full sw list](https://en.wikipedia.org/wiki/Comparison_of_system_dynamics_software)
+- Auto schematic import - input a netlist, auto-generate a schematic visually. Uses optimization etc.
+- Waveform viewer - build on `tsp.do_plot` with more a interactive tool. [Examples from circuits](https://www.google.com/search?q=spice+waveform+viewer&sxsrf=ALeKk02nY3U9rkOZuz58PNXWjoFY4MCcUQ:1626255741604&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj9zareouLxAhXm-ioKHW0MCtgQ_AUoAXoECAEQAw&biw=1600&bih=721).
 
 ## Verification tools
 
@@ -19,6 +23,7 @@ Here are some such tools, largely inspired by tools from circuit land.
 - 3-sigma verification - verification across random variables. E.g. via Monte Carlo analysis where all samples are drawn from the random variables' pdf, and each sample is simulated.
 - High-sigma verification - verification across random variables, where catastrophic failure happens rarely, e.g. 1 in a million times (4.5 sigma) or 1 in a billion (6 sigma). E.g. using tricks from "rare event estimation" literature or [this book](https://www.amazon.com/Variation-Aware-Design-Custom-Integrated-Circuits/dp/146142268X).
 - Behavioral modeling - auto-extract a lower-fidelity / faster-simulating TokenSPICE netlist from a higher-fidelity TokenSPICE netlist & simulation run, with minimal loss of error. 
+- Mixed-signal verification - include digital verification in the loop. Example: replace ganache with [hevm](https://fv.ethereum.org/2020/07/28/symbolic-hevm-release), which does fuzzing etc on Solidity.
 
 ## Design Space Exploration tools
 
@@ -29,3 +34,12 @@ Here are some such tools, largely inspired by tools from circuit land.
 - Global optimization - search across all design variables, with affordances to not get stuck
 - Synthesis - search design variables *and structure*. E.g. Evolve solidity or EVM bytecode. AI DAOs that own themselves. Go nuts:)
 - Variation-aware synthesis - all of the above at once. This isn’t easy! But it’s possible. Example: use MOJITO (http://trent.st/mojito/), but use TokenSPICE (not SPICE) and Solidity building blocks (not circuit ones) 
+
+## More "Larger" Ideas for TokenSPICE
+
+- "tsp publish" - publish sim results to Ocean
+- Use Ocean to manage IP: contracts, agents, netlists, results. Or, using brownie pm? Result: TokenSPICE itself becomes super small, just an engine
+- TokenSPICE inputs SPICE netlists. Pros: well-defined, battle-tested, built-in hierarchy, IP mgmt hooks, specifications of time series, compact, interoperability with SPICE tools.
+- How to build / test the "SPICE format" and IP ideas: Make MOJITO work at the same time 
+- Deploy to pypi. Make it easy to install separately
+- Trading system using TokenSPICE predictions

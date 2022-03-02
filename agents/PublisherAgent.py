@@ -91,7 +91,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
             self._sellDTsomewhere(state)
 
         if self._doRug():
-            if len(self.pools) > 0:
+            if (len(self.pools) > 0) & (self.pools[-1] not in state.rugged_pools):
                 state.rugged_pools.append(self.pools[-1])
 
     def _doCreatePool(self) -> bool:
@@ -217,7 +217,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         assert self.pub_ss.is_malicious, "should only call if malicious"
         assert self.pools, "can't rug if no pools"
         assert hasattr(state, "rugged_pools"), "state needs 'rugged_pools attr"
-        state.rugged_pools.append(self.pools[-1])
+        # state.rugged_pools.append(self.pools[-1])
 
     @staticmethod
     def _poolsWithDT(state, DT) -> list:
