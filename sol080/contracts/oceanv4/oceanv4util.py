@@ -196,10 +196,10 @@ def create_datatoken_from_dataNFT(DT_name, DT_symbol, DT_cap, dataNFT, account):
     pub_mkt_fee_amt = 0.0  # in OCEAN
     uints = [toBase18(DT_cap), toBase18(pub_mkt_fee_amt)]
     addresses = [minter_addr, fee_mgr_addr, pub_mkt_addr, pub_mkt_fee_token_addr]
-    bytes = []
+    _bytes = []
 
     tx = dataNFT.createERC20(
-        erc20_template_index, strings, addresses, uints, bytes, {"from": account}
+        erc20_template_index, strings, addresses, uints, _bytes, {"from": account}
     )
     DT_address = tx.events["TokenCreated"]["newTokenAddress"]
     return BROWNIE_PROJECT080.ERC20Template.at(DT_address)
