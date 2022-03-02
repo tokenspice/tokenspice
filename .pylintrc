@@ -13,6 +13,7 @@ fail-under=10.0
 ignore=
   CVS,
   venv,
+  sol057, sol080,
   mypy.ini, pytest.ini, tokenspice.ini,
   README.md, README-code-quality.md, README-tools.md,
   logging.conf,
