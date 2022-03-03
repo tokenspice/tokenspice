@@ -11,7 +11,7 @@ import '../utils/SafeERC20.sol';
  * @title OPFCommunityFeeCollector
  * @dev Ocean Protocol Foundation Community Fee Collector contract
  *      allows consumers to pay very small fee as part of the exchange of 
- *      data tokens with ocean token in order to support the community of  
+ *      datatokens with ocean token in order to support the community of  
  *      ocean protocol and provide a sustainble development.
  */
 contract OPFCommunityFeeCollector is Ownable {

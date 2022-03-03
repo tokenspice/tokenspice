@@ -14,14 +14,15 @@ import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/extensio
 import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/IERC20.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/utils/math/SafeMath.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/utils/SafeERC20.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/security/ReentrancyGuard.sol";
 import "../utils/ERC20Roles.sol";
 
 /**
- * @title DataTokenTemplate
+ * @title DatatokenTemplate
  *
  * @dev ERC20TemplateEnterprise is an ERC20 compliant token template
  *      Used by the factory contract as a bytecode reference to
- *      deploy new DataTokens.
+ *      deploy new Datatokens.
  * IMPORTANT CHANGES:
  *  - buyFromFreAndOrder function:  one call to buy a DT from the minting capable FRE, startOrder and burn the DT
  *  - buyFromDispenserAndOrder function:  one call to fetch a DT from the Dispenser, startOrder and burn the DT
@@ -30,7 +31,8 @@ import "../utils/ERC20Roles.sol";
 contract ERC20TemplateEnterprise is
     ERC20("test", "testSymbol"),
     ERC20Roles,
-    ERC20Burnable
+    ERC20Burnable,
+    ReentrancyGuard
 {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -45,10 +47,9 @@ contract ERC20TemplateEnterprise is
     address private publishMarketFeeAddress;
     address private publishMarketFeeToken;
     uint256 private publishMarketFeeAmount;
-    uint8 private constant templateId = 2;
-
+    
     uint256 public constant BASE = 10**18;
-    uint256 public constant BASE_COMMUNITY_FEE_PERCENTAGE = BASE / 100; // == OPF takes 1% of the fees
+    
 
     // EIP 2612 SUPPORT
     bytes32 public DOMAIN_SEPARATOR;
@@ -58,6 +59,30 @@ contract ERC20TemplateEnterprise is
 
     mapping(address => uint256) public nonces;
     address public router;
+    
+    struct fixedRate{
+        address contractAddress;
+        bytes32 id;
+    }
+    fixedRate[] fixedRateExchanges;
+    address[] dispensers;
+
+    struct providerFee{
+        address providerFeeAddress;
+        address providerFeeToken; // address of the token 
+        uint256 providerFeeAmount; // amount to be transfered to provider
+        uint8 v; // v of provider signed message
+        bytes32 r; // r of provider signed message
+        bytes32 s; // s of provider signed message
+        uint256 validUntil; //validity expresses in unix timestamp
+        bytes providerData; //data encoded by provider   
+    }
+
+    struct consumeMarketFee{
+        address consumeMarketFeeAddress;
+        address consumeMarketFeeToken; // address of the token marketplace wants to add fee on top
+        uint256 consumeMarketFeeAmount; // amount to be transfered to marketFeeCollector
+    }
 
     event OrderStarted(
         address indexed consumer,
@@ -69,47 +94,69 @@ contract ERC20TemplateEnterprise is
         uint256 blockNumber
     );
 
-    event PublishMarketFees(
+    event OrderReused(
+            bytes32 orderTxId,
+            address caller,
+            uint256 timestamp,
+            uint256 number
+    );
+
+    event OrderExecuted( 
+        address indexed providerAddress,
+        address indexed consumerAddress,
+        bytes32 orderTxId,
+        bytes providerData,
+        bytes providerSignature,
+        bytes consumerData,
+        bytes consumerSignature,
+        uint256 timestamp,
+        uint256 blockNumber
+    );
+    
+    // emited for every order
+    event PublishMarketFee(
         address indexed PublishMarketFeeAddress,
         address indexed PublishMarketFeeToken,
         uint256 PublishMarketFeeAmount
     );
-    event PublishMarketFeesChanged(
+
+    // emited for every order
+    event ConsumeMarketFee(
+        address indexed consumeMarketFeeAddress,
+        address indexed consumeMarketFeeToken,
+        uint256 consumeMarketFeeAmount
+    );
+
+    event PublishMarketFeeChanged(
         address caller,
         address PublishMarketFeeAddress,
         address PublishMarketFeeToken,
         uint256 PublishMarketFeeAmount
     );
 
-    event ProviderFees(
+    event ProviderFee(
         address indexed providerFeeAddress,
         address indexed providerFeeToken, 
-        uint256 providerFeeAmount
+        uint256 providerFeeAmount,
+        bytes providerData,
+        uint8 v, 
+        bytes32 r, 
+        bytes32 s,
+        uint256 validUntil
     );
 
     event MinterProposed(address currentMinter, address newMinter);
 
     event MinterApproved(address currentMinter, address newMinter);
 
-    event NewPool(
-        address poolAddress,
-        address ssContract,
-        address basetokenAddress
-    );
-
-    event NewFixedRate(bytes32 exchangeId, address owner);
-
+    event NewFixedRate(bytes32 exchangeId, address indexed owner, address exchangeContract, address indexed baseToken);
+    event NewDispenser(address dispenserContract);
+    
     event NewPaymentCollector(
         address indexed caller,
         address indexed _newPaymentCollector,
         uint256 timestamp,
         uint256 blockNumber
-    );
-
-    event BuyAndOrder(
-        address buyer,
-        uint256 baseTokenAmount,
-        uint256 marketFeeAmount
     );
 
     modifier onlyNotInitialized() {
@@ -147,7 +194,7 @@ contract ERC20TemplateEnterprise is
 
     /**
      * @dev initialize
-     *      Called prior contract initialization (e.g creating new DataToken instance)
+     *      Called prior contract initialization (e.g creating new Datatoken instance)
      *      Calls private _initialize function. Only if contract is not initialized.
      * @param strings_ refers to an array of strings
      *                      [0] = name token
@@ -226,7 +273,7 @@ contract ERC20TemplateEnterprise is
             "ERC20Template: Invalid community fee collector, zero address"
         );
 
-        require(uints_[0] != 0, "DataTokenTemplate: Invalid cap value");
+        require(uints_[0] != 0, "DatatokenTemplate: Invalid cap value");
         _cap = uints_[0];
         _name = strings_[0];
         _symbol = strings_[1];
@@ -248,6 +295,12 @@ contract ERC20TemplateEnterprise is
         publishMarketFeeAddress = addresses_[2];
         publishMarketFeeToken = addresses_[3];
         publishMarketFeeAmount = uints_[1];
+        emit PublishMarketFeeChanged(
+            msg.sender,
+            publishMarketFeeAddress,
+            publishMarketFeeToken,
+            publishMarketFeeAmount
+        );
         uint256 chainId;
         assembly {
             chainId := chainid()
@@ -272,14 +325,14 @@ contract ERC20TemplateEnterprise is
      *      Creates a new FixedRateExchange setup.
      * @param fixedPriceAddress fixedPriceAddress
      * @param addresses array of addresses [baseToken,owner,marketFeeCollector]
-     * @param uints array of uints [baseTokenDecimals,dataTokenDecimals, fixedRate, marketFee, withMint]
+     * @param uints array of uints [baseTokenDecimals,datatokenDecimals, fixedRate, marketFee, withMint]
      * @return exchangeId
      */
     function createFixedRate(
         address fixedPriceAddress,
         address[] memory addresses,
         uint256[] memory uints
-    ) external onlyERC20Deployer returns (bytes32 exchangeId) {
+    ) external onlyERC20Deployer nonReentrant returns (bytes32 exchangeId) {
         //force FRE allowedSwapper to this contract address. no one else can swap
         addresses[3] = address(this);
         exchangeId = IFactoryRouter(router).deployFixedRate(
@@ -288,7 +341,8 @@ contract ERC20TemplateEnterprise is
             uints
         );
         if (uints[4] > 0) _addMinter(fixedPriceAddress);
-        emit NewFixedRate(exchangeId, addresses[0]);
+        emit NewFixedRate(exchangeId, addresses[1], fixedPriceAddress, addresses[0]);
+        fixedRateExchanges.push(fixedRate(fixedPriceAddress,exchangeId));
     }
 
     /**
@@ -297,13 +351,16 @@ contract ERC20TemplateEnterprise is
      * @param _dispenser dispenser contract address
      * @param maxTokens - max tokens to dispense
      * @param maxBalance - max balance of requester.
+     * @param withMint - with MinterRole
+     * @param allowedSwapper - have it here for compat reasons, will be overwritten
      */
     function createDispenser(
         address _dispenser,
         uint256 maxTokens,
         uint256 maxBalance,
-        bool withMint
-    ) external onlyERC20Deployer {
+        bool withMint,
+        address allowedSwapper
+    ) external onlyERC20Deployer nonReentrant {
         IFactoryRouter(router).deployDispenser(
             _dispenser,
             address(this),
@@ -314,6 +371,8 @@ contract ERC20TemplateEnterprise is
         );
         // add FixedPriced contract as minter if withMint == true
         if (withMint) _addMinter(_dispenser);
+        dispensers.push(_dispenser);
+        emit NewDispenser(_dispenser);
     }
 
     /**
@@ -327,7 +386,7 @@ contract ERC20TemplateEnterprise is
         require(permissions[msg.sender].minter, "ERC20Template: NOT MINTER");
         require(
             totalSupply().add(value) <= _cap,
-            "DataTokenTemplate: cap exceeded"
+            "DatatokenTemplate: cap exceeded"
         );
         _mint(account, value);
     }
@@ -341,42 +400,88 @@ contract ERC20TemplateEnterprise is
         return (permissions[account].minter);
     }
 
+
+    /**
+     * @dev checkProviderFee
+     *      Checks if a providerFee structure is valid, signed and 
+     *      transfers fee to providerAddress
+     * @param _providerFee providerFee structure
+     */
+    function checkProviderFee(providerFee calldata _providerFee) internal{
+        // check if they are signed
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes32 message = keccak256(
+            abi.encodePacked(prefix,
+                keccak256(
+                    abi.encodePacked(
+                        _providerFee.providerData,
+                        _providerFee.providerFeeAddress,
+                        _providerFee.providerFeeToken,
+                        _providerFee.providerFeeAmount,
+                        _providerFee.validUntil
+                    )
+                )
+            )
+        );
+        address signer = ecrecover(message, _providerFee.v, _providerFee.r, _providerFee.s);
+        require(signer == _providerFee.providerFeeAddress, "Invalid provider fee");
+        emit ProviderFee(
+            _providerFee.providerFeeAddress,
+            _providerFee.providerFeeToken,
+            _providerFee.providerFeeAmount,
+            _providerFee.providerData,
+            _providerFee.v,
+            _providerFee.r,
+            _providerFee.s,
+            _providerFee.validUntil
+        );
+        // skip fee if amount == 0 or feeToken == 0x0 address or feeAddress == 0x0 address
+        // Requires approval for the providerFeeToken of providerFeeAmount
+        if (
+            _providerFee.providerFeeAmount > 0 &&
+            _providerFee.providerFeeToken != address(0) &&
+            _providerFee.providerFeeAddress != address(0)
+        ) {
+            uint256 OPCFee = IFactoryRouter(router).getOPCProviderFee();
+            uint256 OPCcut = 0;
+            if(OPCFee > 0)
+                OPCcut = _providerFee.providerFeeAmount.mul(OPCFee).div(BASE);
+            uint256 providerCut = _providerFee.providerFeeAmount.sub(OPCcut);
+            _pullUnderlying(_providerFee.providerFeeToken,msg.sender,
+                address(this),
+                _providerFee.providerFeeAmount);
+            IERC20(_providerFee.providerFeeToken).safeTransfer(
+                _providerFee.providerFeeAddress,
+                providerCut
+            );
+            if(OPCcut > 0){
+              IERC20(_providerFee.providerFeeToken).safeTransfer(
+                _communityFeeCollector,
+                OPCcut
+            );  
+            }
+        }
+    }
     /**
      * @dev startOrder
      *      called by payer or consumer prior ordering a service consume on a marketplace.
      *      Requires previous approval of consumeFeeToken and publishMarketFeeToken
      * @param consumer is the consumer address (payer could be different address)
-     * @param amount refers to amount of tokens that is going to be transfered.
      * @param serviceIndex service index in the metadata
-     * @param providerFeeAddress consume marketplace fee address
-     * @param providerFeeToken // address of the token marketplace wants to add fee on top
-     * @param providerFeeAmount // fee amount       
+     * @param _providerFee provider fee
+     * @param _consumeMarketFee consume market fee
      */
     function startOrder(
         address consumer,
-        uint256 amount,
         uint256 serviceIndex,
-        address providerFeeAddress,
-        address providerFeeToken, // address of the token marketplace wants to add fee on top
-        uint256 providerFeeAmount // amount to be transfered to marketFeeCollector 
-    ) external {
-        _startOrder(consumer, amount, serviceIndex,
-        providerFeeAddress,providerFeeToken,providerFeeAmount);
-    }
-
-    function _startOrder(
-        address consumer,
-        uint256 amount,
-        uint256 serviceIndex,
-        address providerFeeAddress,
-        address providerFeeToken, // address of the token marketplace wants to add fee on top
-        uint256 providerFeeAmount // amount to be transfered to marketFeeCollector 
-    ) private {
-       
+        providerFee calldata _providerFee,
+        consumeMarketFee calldata _consumeMarketFee
+    ) public {
+        uint256 amount = 1e18; // we always pay 1 DT. No more, no less
         uint256 communityFeePublish = 0;
         require(
             balanceOf(msg.sender) >= amount,
-            "Not enough Data Tokens to start Order"
+            "Not enough datatokens to start Order"
         );
         emit OrderStarted(
             consumer,
@@ -387,7 +492,7 @@ contract ERC20TemplateEnterprise is
             publishMarketFeeAddress,
             block.number
         );
-        // publishMarketFees
+        // publishMarketFee
         // Requires approval for the publishMarketFeeToken of publishMarketFeeAmount
         // skip fee if amount == 0 or feeToken == 0x0 address or feeAddress == 0x0 address
         if (
@@ -395,29 +500,29 @@ contract ERC20TemplateEnterprise is
             publishMarketFeeToken != address(0) &&
             publishMarketFeeAddress != address(0)
         ) {
-            IERC20(publishMarketFeeToken).safeTransferFrom(
-                msg.sender,
+            _pullUnderlying(publishMarketFeeToken,msg.sender,
                 address(this),
-                publishMarketFeeAmount
-            );
-            communityFeePublish = publishMarketFeeAmount.div(100); //hardcode 1% goes to OPF
+                publishMarketFeeAmount);
+            uint256 OPCFee = IFactoryRouter(router).getOPCConsumeFee();
+            if(OPCFee > 0)
+                communityFeePublish = publishMarketFeeAmount.mul(OPCFee).div(BASE); 
             //send publishMarketFee
             IERC20(publishMarketFeeToken).safeTransfer(
                 publishMarketFeeAddress,
                 publishMarketFeeAmount.sub(communityFeePublish)
             );
-            emit PublishMarketFees(
+            emit PublishMarketFee(
                 publishMarketFeeAddress,
                 publishMarketFeeToken,
                 publishMarketFeeAmount.sub(communityFeePublish)
             );
-            //send fees to OPF
+            //send fee to OPC
             if (communityFeePublish > 0) {
                 IERC20(publishMarketFeeToken).safeTransfer(
                     _communityFeeCollector,
                     communityFeePublish
                 );
-                emit PublishMarketFees(
+                emit PublishMarketFee(
                     _communityFeeCollector,
                     publishMarketFeeToken,
                     communityFeePublish
@@ -425,27 +530,71 @@ contract ERC20TemplateEnterprise is
             }
         }
 
-       
-        
-
-        // providerFees
-        // Requires approval for the providerFeeToken of providerFeeAmount
+        // consumeMarketFee
+        // Requires approval for the FeeToken 
         // skip fee if amount == 0 or feeToken == 0x0 address or feeAddress == 0x0 address
-        if (providerFeeAmount > 0 && providerFeeToken!=address(0) && providerFeeAddress!=address(0)) {
-            IERC20(providerFeeToken).safeTransferFrom(
-                msg.sender,
+        if (
+            _consumeMarketFee.consumeMarketFeeAmount > 0 &&
+            _consumeMarketFee.consumeMarketFeeToken != address(0) &&
+            _consumeMarketFee.consumeMarketFeeAddress != address(0)
+        ) {
+            _pullUnderlying(_consumeMarketFee.consumeMarketFeeToken,msg.sender,
                 address(this),
-                providerFeeAmount
+                _consumeMarketFee.consumeMarketFeeAmount);
+            uint256 OPCFee = IFactoryRouter(router).getOPCConsumeFee();
+            if(OPCFee > 0)
+                communityFeePublish = _consumeMarketFee.consumeMarketFeeAmount.mul(OPCFee).div(BASE); 
+            //send publishMarketFee
+            IERC20(_consumeMarketFee.consumeMarketFeeToken).safeTransfer(
+                _consumeMarketFee.consumeMarketFeeAddress,
+                _consumeMarketFee.consumeMarketFeeAmount.sub(communityFeePublish)
             );
-            //send providerFee
-            IERC20(providerFeeToken)
-            .safeTransfer(providerFeeAddress,providerFeeAmount);
-            //send to OPC
-            emit ProviderFees(providerFeeAddress, providerFeeToken, providerFeeAmount);
-        }   
+
+            emit ConsumeMarketFee(
+                _consumeMarketFee.consumeMarketFeeAddress,
+                _consumeMarketFee.consumeMarketFeeToken,
+                _consumeMarketFee.consumeMarketFeeAmount.sub(communityFeePublish)
+            );
+            //send fee to OPC
+            if (communityFeePublish > 0) {
+                //since both fees are in the same token, have just one transaction for both, to save gas
+                IERC20(_consumeMarketFee.consumeMarketFeeToken).safeTransfer(
+                    _communityFeeCollector,
+                    communityFeePublish
+                );
+                emit ConsumeMarketFee(
+                    _communityFeeCollector,
+                    _consumeMarketFee.consumeMarketFeeToken,
+                    communityFeePublish
+                );
+            }
+        }
+
+        checkProviderFee(_providerFee);
         
         // instead of sending datatoken to publisher, we burn them
         burn(amount);
+    }
+
+    /**
+     * @dev reuseOrder
+     *      called by payer or consumer having a valid order, but with expired provider access
+     *      Pays the provider fee again, but it will not require a new datatoken payment
+     *      Requires previous approval of provider fee.
+     * @param orderTxId previous valid order
+     * @param _providerFee provider feee
+     */
+    function reuseOrder(
+        bytes32 orderTxId,
+        providerFee calldata _providerFee
+    ) external {
+        emit OrderReused(
+            orderTxId,
+            msg.sender,
+            block.timestamp,
+            block.number
+        );
+        checkProviderFee(_providerFee);
     }
 
     /**
@@ -576,7 +725,7 @@ contract ERC20TemplateEnterprise is
 
     /**
      * @dev getPublishingMarketFee
-     *      Get publishingMarket Fees
+     *      Get publishingMarket Fee
      *      This function allows to get the current fee set by the publishing market
      */
     function getPublishingMarketFee()
@@ -598,7 +747,7 @@ contract ERC20TemplateEnterprise is
     /**
      * @dev setPublishingMarketFee
      *      Only publishMarketFeeAddress can call it
-     *      This function allows to set the fees required by the publisherMarket
+     *      This function allows to set the fee required by the publisherMarket
      * @param _publishMarketFeeAddress  new _publishMarketFeeAddress
      * @param _publishMarketFeeToken new _publishMarketFeeToken
      * @param _publishMarketFeeAmount new fee amount
@@ -612,10 +761,14 @@ contract ERC20TemplateEnterprise is
             _publishMarketFeeAddress != address(0),
             "Invalid _publishMarketFeeAddress address"
         );
+        require(
+            _publishMarketFeeToken != address(0),
+            "Invalid _publishMarketFeeToken address"
+        );
         publishMarketFeeAddress = _publishMarketFeeAddress;
         publishMarketFeeToken = _publishMarketFeeToken;
         publishMarketFeeAmount = _publishMarketFeeAmount;
-        emit PublishMarketFeesChanged(
+        emit PublishMarketFeeChanged(
             msg.sender,
             _publishMarketFeeAddress,
             _publishMarketFeeToken,
@@ -625,16 +778,17 @@ contract ERC20TemplateEnterprise is
 
     /**
      * @dev getId
-     *      Return template id
+     *      Return template id in case we need different ABIs. 
+     *      If you construct your own template, please make sure to change the hardcoded value
      */
-    function getId() external pure returns (uint8) {
-        return templateId;
+    function getId() pure public returns (uint8) {
+        return 2;
     }
 
     /**
      * @dev name
      *      It returns the token name.
-     * @return DataToken name.
+     * @return Datatoken name.
      */
     function name() public view override returns (string memory) {
         return _name;
@@ -643,7 +797,7 @@ contract ERC20TemplateEnterprise is
     /**
      * @dev symbol
      *      It returns the token symbol.
-     * @return DataToken symbol.
+     * @return Datatoken symbol.
      */
     function symbol() public view override returns (string memory) {
         return _symbol;
@@ -662,7 +816,7 @@ contract ERC20TemplateEnterprise is
      * @dev decimals
      *      It returns the token decimals.
      *      how many supported decimal points
-     * @return DataToken decimals.
+     * @return Datatoken decimals.
      */
     function decimals() public pure override returns (uint8) {
         return _decimals;
@@ -671,7 +825,7 @@ contract ERC20TemplateEnterprise is
     /**
      * @dev cap
      *      it returns the capital.
-     * @return DataToken cap.
+     * @return Datatoken cap.
      */
     function cap() external view returns (uint256) {
         return _cap;
@@ -809,11 +963,9 @@ contract ERC20TemplateEnterprise is
 
     struct OrderParams {
         address consumer;
-        uint256 amount;
         uint256 serviceIndex;
-        address providerFeeAddress;
-        address providerFeeToken; // address of the token marketplace wants to add fee on top
-        uint256 providerFeeAmount; 
+        providerFee _providerFee;
+        consumeMarketFee _consumeMarketFee;
     }
     struct FreParams {
         address exchangeContract;
@@ -828,9 +980,9 @@ contract ERC20TemplateEnterprise is
      *      Buys 1 DT from the FRE and then startsOrder, while burning that DT
      */
     function buyFromFreAndOrder(
-        OrderParams memory _orderParams,
-        FreParams memory _freParams
-    ) external {
+        OrderParams calldata _orderParams,
+        FreParams calldata _freParams
+    ) external nonReentrant{
         // get exchange info
         (
             ,
@@ -854,31 +1006,26 @@ contract ERC20TemplateEnterprise is
         );
         // get token amounts needed
         (
-            uint256 baseTokenAmount,
-            uint256 baseTokenAmountBeforeFee,
+            uint256 baseTokenAmount
+            ,
+            ,
             ,
 
         ) = IFixedRateExchange(_freParams.exchangeContract)
                 .calcBaseInGivenOutDT(
                     _freParams.exchangeId,
-                    _orderParams.amount
+                    1e18,  // we always take 1 DT
+                    _freParams.swapMarketFee
                 );
         require(
             baseTokenAmount <= _freParams.maxBaseTokenAmount,
             "FixedRateExchange: Too many base tokens"
         );
-        // we calculate the dynamic market fee and add it to the baseTokenAmount to be transferred
-        uint256 marketFeeAmount = (baseTokenAmountBeforeFee *
-            _freParams.swapMarketFee) / 1e18;
-        baseTokenAmount = baseTokenAmount + marketFeeAmount;
 
         //transfer baseToken to us first
-        IERC20(baseToken).safeTransferFrom(
-            msg.sender,
-            address(this),
-            baseTokenAmount
-        );
-
+        _pullUnderlying(baseToken,msg.sender,
+                address(this),
+                baseTokenAmount);
         //approve FRE to spend baseTokens
         IERC20(baseToken).safeIncreaseAllowance(
             _freParams.exchangeContract,
@@ -887,31 +1034,20 @@ contract ERC20TemplateEnterprise is
         //buy DT
         IFixedRateExchange(_freParams.exchangeContract).buyDT(
             _freParams.exchangeId,
-            _orderParams.amount,
-            baseTokenAmount
+            1e18, // we always take 1 dt
+            baseTokenAmount,
+            _freParams.marketFeeAddress,
+            _freParams.swapMarketFee
         );
         require(
-            balanceOf(address(this)) >= _orderParams.amount,
+            balanceOf(address(this)) >= 1e18,
             "Unable to buy DT from FixedRate"
         );
         //we need the following because startOrder expects msg.sender to have dt
-        _transfer(address(this), msg.sender, _orderParams.amount);
+        _transfer(address(this), msg.sender, 1e18);
         //startOrder and burn it
-        _startOrder(
-            _orderParams.consumer,
-            _orderParams.amount,
-            _orderParams.serviceIndex,
-        _orderParams.providerFeeAddress, _orderParams.providerFeeToken, _orderParams.providerFeeAmount);
-
-        // Transfer Market Fee to market fee collector
-        if (marketFeeAmount > 0) {
-            IERC20(baseToken).safeTransfer(
-                _freParams.marketFeeAddress,
-                marketFeeAmount
-            );
-        }
-
-        emit BuyAndOrder(msg.sender, baseTokenAmount, marketFeeAmount);
+        startOrder(_orderParams.consumer, _orderParams.serviceIndex,
+        _orderParams._providerFee, _orderParams._consumeMarketFee);
     }
 
     /**
@@ -919,25 +1055,23 @@ contract ERC20TemplateEnterprise is
      *      Gets DT from dispenser and then startsOrder, while burning that DT
      */
     function buyFromDispenserAndOrder(
-        OrderParams memory _orderParams,
+        OrderParams calldata _orderParams,
         address dispenserContract
-    ) external {
+    ) external nonReentrant {
+        uint256 amount = 1e18;
         //get DT
         IDispenser(dispenserContract).dispense(
             address(this),
-            _orderParams.amount,
+            amount,
             msg.sender
         );
         require(
-            balanceOf(address(msg.sender)) >= _orderParams.amount,
+            balanceOf(address(msg.sender)) >= amount,
             "Unable to get DT from Dispenser"
         );
         //startOrder and burn it
-        _startOrder(
-            _orderParams.consumer,
-            _orderParams.amount,
-            _orderParams.serviceIndex,
-        _orderParams.providerFeeAddress, _orderParams.providerFeeToken, _orderParams.providerFeeAmount);
+        startOrder(_orderParams.consumer, _orderParams.serviceIndex,
+        _orderParams._providerFee, _orderParams._consumeMarketFee);
     }
 
      /**
@@ -947,5 +1081,100 @@ contract ERC20TemplateEnterprise is
     function isERC20Deployer(address user) public returns(bool deployer){
         deployer = IERC721Template(_erc721Address).getPermissions(user).deployERC20;
         return(deployer);
+    }
+
+    /**
+     * @dev getFixedRates
+     *      Returns the list of fixedRateExchanges created for this datatoken
+     */
+    function getFixedRates() public view returns(fixedRate[] memory) {
+        return(fixedRateExchanges);
+    }
+    /**
+     * @dev getDispensers
+     *      Returns the list of dispensers created for this datatoken
+     */
+    function getDispensers() public view returns(address[] memory) {
+        return(dispensers);
+    }
+
+     function _pullUnderlying(
+        address erc20,
+        address from,
+        address to,
+        uint256 amount
+    ) internal {
+        uint256 balanceBefore = IERC20(erc20).balanceOf(to);
+        IERC20(erc20).safeTransferFrom(from, to, amount);
+        require(IERC20(erc20).balanceOf(to) >= balanceBefore.add(amount),
+                    "Transfer amount is too low");
+    }
+
+    /**
+     * @dev orderExecuted
+     *      Providers should call this to prove order execution
+     * @param orderTxId order tx
+     * @param providerData provider data
+     * @param providerSignature provider signature
+     * @param consumerData consumer data
+     * @param consumerSignature consumer signature
+     * @param consumerAddress consumer address
+     */
+    function orderExecuted(
+        bytes32 orderTxId,
+        bytes calldata providerData,
+        bytes calldata providerSignature,
+        bytes calldata consumerData,
+        bytes calldata consumerSignature,
+        address consumerAddress
+    ) external {
+        require(msg.sender != consumerAddress, "Provider cannot be the consumer");
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes32 providerHash = keccak256(
+            abi.encodePacked(prefix,
+                keccak256(
+                    abi.encodePacked(
+                        orderTxId,
+                        providerData
+                    )
+                )
+            )
+        );
+        require(ecrecovery(providerHash, providerSignature) == msg.sender, "Provider signature check failed");
+        bytes32 consumerHash = keccak256(
+            abi.encodePacked(prefix,
+                keccak256(
+                    abi.encodePacked(
+                        consumerData
+                    )
+                )
+            )
+        );
+        require(ecrecovery(consumerHash, consumerSignature) == consumerAddress, "Consumer signature check failed");
+        emit OrderExecuted(msg.sender, consumerAddress ,orderTxId, providerData, providerSignature,
+                consumerData, consumerSignature, block.timestamp, block.number);
+    }
+
+
+
+    function ecrecovery(bytes32 hash, bytes memory sig) pure internal returns (address) {
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+        if (sig.length != 65) {
+          return address(0);
+        }
+        assembly {
+          r := mload(add(sig, 32))
+        s := mload(add(sig, 64))
+        v := and(mload(add(sig, 65)), 255)
+        }
+        if (v < 27) {
+          v += 27;
+        }   
+        if (v != 27 && v != 28) {
+        return address(0);
+        }
+        return ecrecover(hash, v, r, s);
     }
 }

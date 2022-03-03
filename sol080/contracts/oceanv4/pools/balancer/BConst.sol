@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: Unknown
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -13,6 +12,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 pragma solidity 0.8.10;
+// Copyright Balancer, BigchainDB GmbH and Ocean Protocol contributors
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+// Code is Apache-2.0 and docs are CC-BY-4.0
 
 contract BConst {
     uint public constant BONE              = 10**18;
@@ -20,7 +22,7 @@ contract BConst {
     uint public constant MIN_BOUND_TOKENS  = 2;
     uint public constant MAX_BOUND_TOKENS  = 2;
 
-    uint public constant MIN_FEE           = BONE / 10**6;
+    uint public constant MIN_FEE           = BONE / 10**4;
     uint public constant MAX_FEE           = BONE / 10;
     uint public constant EXIT_FEE          = 0;
 

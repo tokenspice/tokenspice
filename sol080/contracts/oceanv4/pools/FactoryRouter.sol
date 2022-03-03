@@ -433,6 +433,7 @@ contract FactoryRouter is BFactory {
     /**
      * @dev Deploys a new `OceanPool` on Ocean Friendly Fork modified for 1SS.
      This function cannot be called directly, but ONLY through the ERC20DT contract from a ERC20DEployer role
+
       ssContract address
      tokens [datatokenAddress, baseTokenAddress]
      publisherAddress user which will be assigned the vested amount.

@@ -1,5 +1,7 @@
-// SPDX-License-Identifier: Unknown
 pragma solidity 0.8.10;
+// Copyright BigchainDB GmbH and Ocean Protocol contributors
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+// Code is Apache-2.0 and docs are CC-BY-4.0
 
 contract ERC721RolesAddress {
     mapping(address => Roles) internal permissions;
@@ -117,6 +119,13 @@ contract ERC721RolesAddress {
         uint256 blockNumber
     );
     function addToMetadataList(address _allowedAddress) public onlyManager {
+        Roles storage user = permissions[_allowedAddress];
+        user.updateMetadata = true;
+        auth.push(_allowedAddress);
+        emit AddedToMetadataList(_allowedAddress,msg.sender,block.timestamp,block.number);
+    }
+    //it's only called internally, so is without checking onlyManager
+    function _addToMetadataList(address _allowedAddress) internal {
         Roles storage user = permissions[_allowedAddress];
         user.updateMetadata = true;
         auth.push(_allowedAddress);
