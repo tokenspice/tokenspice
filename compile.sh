@@ -13,7 +13,7 @@ echo "compile.sh: Compile sol080/..."
 cd sol080
 echo """compiler:
    solc:
-       version: 0.8.0""" > brownie-config.yaml
+       version: 0.8.10""" > brownie-config.yaml
 brownie compile
 rm brownie-config.yaml
 cd ..

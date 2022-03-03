@@ -1,14 +1,18 @@
-pragma solidity >=0.5.7;
+pragma solidity 0.8.10;
 // Copyright BigchainDB GmbH and Ocean Protocol contributors
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
 
+import "../../interfaces/IERC20.sol";
 import "../../interfaces/IERC20Template.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/utils/math/SafeMath.sol";
 
+import "../../utils/SafeERC20.sol";
+import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/security/ReentrancyGuard.sol";
 
-contract Dispenser {
+contract Dispenser is ReentrancyGuard{
     using SafeMath for uint256;
+    using SafeERC20 for IERC20;
     address public router;
 
     struct DataToken {
@@ -193,13 +197,13 @@ contract Dispenser {
      * @param amount amount of datatokens required.
      * @param destination refers to who will receive the tokens
      */
-    function dispense(address datatoken, uint256 amount, address destination) external payable{
+    function dispense(address datatoken, uint256 amount, address destination) external nonReentrant payable{
         require(
             datatoken != address(0),
             'Invalid token contract address'
         );
         require(
-            datatokens[datatoken].active == true,
+            datatokens[datatoken].active,
             'Dispenser not active'
         );
         require(
@@ -233,7 +237,7 @@ contract Dispenser {
             ourBalance>=amount,
             'Not enough reserves'
         );
-        tokenInstance.transfer(destination,amount);
+        IERC20(datatoken).safeTransfer(destination,amount);
         emit TokensDispensed(datatoken, destination, amount);
     }
 
@@ -242,7 +246,7 @@ contract Dispenser {
      *      Allow owner to withdraw all datatokens in this dispenser balance
      * @param datatoken refers to datatoken address.
      */
-    function ownerWithdraw(address datatoken) external{
+    function ownerWithdraw(address datatoken) external nonReentrant {
         require(
             datatoken != address(0),
             'Invalid token contract address'
@@ -254,7 +258,7 @@ contract Dispenser {
         IERC20Template tokenInstance = IERC20Template(datatoken);
         uint256 ourBalance = tokenInstance.balanceOf(address(this));
         if(ourBalance>0){
-            tokenInstance.transfer(msg.sender,ourBalance);
+            IERC20(datatoken).safeTransfer(msg.sender,ourBalance);
             emit OwnerWithdrawed(datatoken, msg.sender, ourBalance);
         }
     }

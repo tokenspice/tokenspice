@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Unknown
-pragma solidity >=0.5.7;
-pragma experimental ABIEncoderV2;
+
+pragma solidity 0.8.10;
+
 interface IFactory {
     function initialize(
         string calldata _name,

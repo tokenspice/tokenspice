@@ -1,9 +1,10 @@
-pragma solidity >=0.6.0;
+pragma solidity 0.8.10;
 // Copyright BigchainDB GmbH and Ocean Protocol contributors
 // SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 // Code is Apache-2.0 and docs are CC-BY-4.0
-import '../interfaces/IERC20Template.sol';
+import '../interfaces/IERC20.sol';
 import 'OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/access/Ownable.sol';
+import '../utils/SafeERC20.sol';
 
 
 /**
@@ -14,6 +15,7 @@ import 'OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/access/Ownable.sol';
  *      ocean protocol and provide a sustainble development.
  */
 contract OPFCommunityFeeCollector is Ownable {
+    using SafeERC20 for IERC20;
     address payable private collector;
     /**
      * @dev constructor
@@ -70,13 +72,10 @@ contract OPFCommunityFeeCollector is Ownable {
             'OPFCommunityFeeCollector: invalid token contract address'
         );
 
-        require (
-            IERC20Template(tokenAddress).transfer(
+            IERC20(tokenAddress).safeTransfer(
                 collector,
-                IERC20Template(tokenAddress).balanceOf(address(this))
-            ),
-            'OPFCommunityFeeCollector: failed to withdraw tokens'
-        );
+                IERC20(tokenAddress).balanceOf(address(this))
+            );
     }
 
     /**

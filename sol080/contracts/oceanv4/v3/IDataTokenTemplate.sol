@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unknown
-pragma solidity >=0.5.7;
+pragma solidity 0.8.10;
 
 interface IDataTokenTemplate {
     function initialize(

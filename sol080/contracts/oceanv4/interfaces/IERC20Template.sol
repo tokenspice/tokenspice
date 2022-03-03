@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Unknown
-pragma solidity >=0.5.0;
-pragma experimental ABIEncoderV2;
+
+pragma solidity 0.8.10;
 
 interface IERC20Template {
     struct RolesERC20 {
@@ -96,11 +96,13 @@ interface IERC20Template {
         address consumer,
         uint256 amount,
         uint256 serviceId,
-        address consumeFeeAddress,
-        address consumeFeeToken, 
-        uint256 consumeFeeAmount
+        address providerFeeAddress,
+        address providerFeeToken, 
+        uint256 providerFeeAmount
      ) external;
   
     function burn(uint256 amount) external;
     function burnFrom(address account, uint256 amount) external;
+    function getERC721Address() external view returns (address);
+    function isERC20Deployer(address user) external returns(bool);
 }
