@@ -16,8 +16,8 @@ address1 = account1.address
 def test_sideStaking_properties():
     pool = _deployBPool()
     pool_address = pool.address
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
-    dt_address = datatoken.address
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    dt_address = DT.address
     OCEAN = oceanv4util.OCEANtoken()
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
@@ -28,28 +28,28 @@ def test_sideStaking_properties():
     assert sideStaking.getBaseTokenAddress(dt_address) == OCEAN.address
     assert sideStaking.getPublisherAddress(dt_address) == address0
 
-    assert datatoken.balanceOf(sideStaking.address) == toBase18(
+    assert DT.balanceOf(sideStaking.address) == toBase18(
         9800
     )  # depend on ss_rate, DT_vest_amount, ss_OCEAN_init_liquidity
-    assert sideStaking.getDatatokenCirculatingSupply(datatoken.address) == toBase18(
+    assert sideStaking.getDatatokenCirculatingSupply(DT.address) == toBase18(
         1200
     )
 
-    assert sideStaking.getBaseTokenBalance(datatoken.address) == 0
-    assert sideStaking.getDatatokenBalance(datatoken.address) == toBase18(8800)
+    assert sideStaking.getBaseTokenBalance(DT.address) == 0
+    assert sideStaking.getDatatokenBalance(DT.address) == toBase18(8800)
 
     assert sideStaking.getDatatokenCurrentCirculatingSupply(
-        datatoken.address
+        DT.address
     ) == toBase18(
         2000 * 0.1
     )  # ss_rate*ss_OCEAN_init_liquidity
 
     assert sideStaking.getvestingAmountSoFar(dt_address) == 0
-    assert sideStaking.getvestingAmount(datatoken.address) == toBase18(1000)
+    assert sideStaking.getvestingAmount(DT.address) == toBase18(1000)
 
-    assert sideStaking.getvestingLastBlock(datatoken.address) == initialBlockNum
+    assert sideStaking.getvestingLastBlock(DT.address) == initialBlockNum
     assert (
-        sideStaking.getvestingEndBlock(datatoken.address) == initialBlockNum + 2500000
+        sideStaking.getvestingEndBlock(DT.address) == initialBlockNum + 2500000
     )
 
 
@@ -58,29 +58,29 @@ def test_swapExactAmountIn():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
-    tokenInOutMarket = [OCEAN.address, datatoken.address, address0]
+    tokenInOutMarket = [OCEAN.address, DT.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
     amountsInOutMaxFee = [toBase18(100), toBase18(1), toBase18(100), 0]
     # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
 
-    assert datatoken.balanceOf(address0) == 0
+    assert DT.balanceOf(address0) == 0
     pool.swapExactAmountIn(tokenInOutMarket, amountsInOutMaxFee, {"from": account0})
-    assert datatoken.balanceOf(address0) > 0
+    assert DT.balanceOf(address0) > 0
 
     # swaps some DT back to Ocean swapExactAmountIn
-    dt_balance_before = datatoken.balanceOf(address0)
+    dt_balance_before = DT.balanceOf(address0)
     ocean_balance_before = OCEAN.balanceOf(address0)
 
-    datatoken.approve(pool.address, toBase18(1000), {"from": account0})
-    tokenInOutMarket = [datatoken.address, OCEAN.address, address0]
+    DT.approve(pool.address, toBase18(1000), {"from": account0})
+    tokenInOutMarket = [DT.address, OCEAN.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
     amountsInOutMaxFee = [toBase18(1), toBase18(1), toBase18(100), 0]
     # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
     pool.swapExactAmountIn(tokenInOutMarket, amountsInOutMaxFee, {"from": account0})
 
-    assert datatoken.balanceOf(address0) < dt_balance_before
+    assert DT.balanceOf(address0) < dt_balance_before
     assert OCEAN.balanceOf(address0) > ocean_balance_before
 
 
@@ -89,18 +89,18 @@ def test_swapExactAmountOut():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
     tokenInOutMarket = [
         OCEAN.address,
-        datatoken.address,
+        DT.address,
         address0,
     ]  # // [tokenIn,tokenOut,marketFeeAddress]
     amountsInOutMaxFee = [toBase18(1000), toBase18(10), toBase18(1000), 0]
 
-    assert datatoken.balanceOf(address0) == 0
+    assert DT.balanceOf(address0) == 0
     pool.swapExactAmountOut(tokenInOutMarket, amountsInOutMaxFee, {"from": account0})
-    assert datatoken.balanceOf(address0) > 0
+    assert DT.balanceOf(address0) > 0
 
 
 def test_joinPool_addTokens():
@@ -108,34 +108,34 @@ def test_joinPool_addTokens():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
-    tokenInOutMarket = [OCEAN.address, datatoken.address, address0]
+    tokenInOutMarket = [OCEAN.address, DT.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
     amountsInOutMaxFee = [toBase18(100), toBase18(1), toBase18(100), 0]
     # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
 
-    assert datatoken.balanceOf(address0) == 0
+    assert DT.balanceOf(address0) == 0
     pool.swapExactAmountIn(tokenInOutMarket, amountsInOutMaxFee, {"from": account0})
 
-    account0_DT_balance = datatoken.balanceOf(address0)
+    account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+    ssContractDTbalance = DT.balanceOf(sideStaking.address)
     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
 
     BPTAmountOut = toBase18(0.01)
     maxAmountsIn = [toBase18(50), toBase18(50)]
-    datatoken.approve(pool.address, toBase18(50), {"from": account0})
+    DT.approve(pool.address, toBase18(50), {"from": account0})
     tx = pool.joinPool(BPTAmountOut, maxAmountsIn, {"from": account0})
 
-    assert tx.events["LOG_JOIN"][0]["tokenIn"] == datatoken.address
+    assert tx.events["LOG_JOIN"][0]["tokenIn"] == DT.address
     assert tx.events["LOG_JOIN"][1]["tokenIn"] == OCEAN.address
 
     assert (
-        tx.events["LOG_JOIN"][0]["tokenAmountIn"] + datatoken.balanceOf(address0)
+        tx.events["LOG_JOIN"][0]["tokenAmountIn"] + DT.balanceOf(address0)
         == account0_DT_balance
     )
     assert (
@@ -146,7 +146,7 @@ def test_joinPool_addTokens():
 
     # check ssContract BPT and DT balance didn't change
     assert ssContractBPTbalance == pool.balanceOf(sideStaking.address)
-    assert ssContractDTbalance == datatoken.balanceOf(sideStaking.address)
+    assert ssContractDTbalance == DT.balanceOf(sideStaking.address)
 
 
 def test_joinswapExternAmountIn_addOCEAN():
@@ -154,12 +154,12 @@ def test_joinswapExternAmountIn_addOCEAN():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address1, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
-    account0_DT_balance = datatoken.balanceOf(address0)
-    ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+    account0_DT_balance = DT.balanceOf(address0)
+    ssContractDTbalance = DT.balanceOf(sideStaking.address)
     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
 
     oceanAmountIn = toBase18(100)
@@ -172,13 +172,13 @@ def test_joinswapExternAmountIn_addOCEAN():
     assert tx.events["LOG_JOIN"][0]["tokenIn"] == OCEAN.address
     assert tx.events["LOG_JOIN"][0]["tokenAmountIn"] == oceanAmountIn
 
-    assert tx.events["LOG_JOIN"][1]["tokenIn"] == datatoken.address
-    sideStakingAmountIn = ssContractDTbalance - datatoken.balanceOf(sideStaking.address)
+    assert tx.events["LOG_JOIN"][1]["tokenIn"] == DT.address
+    sideStakingAmountIn = ssContractDTbalance - DT.balanceOf(sideStaking.address)
     assert sideStakingAmountIn == tx.events["LOG_JOIN"][1]["tokenAmountIn"]
 
     # we check ssContract actually moved DT and got back BPT
     assert (
-        datatoken.balanceOf(sideStaking.address)
+        DT.balanceOf(sideStaking.address)
         == ssContractDTbalance - tx.events["LOG_JOIN"][1]["tokenAmountIn"]
     )
     assert (
@@ -187,7 +187,7 @@ def test_joinswapExternAmountIn_addOCEAN():
     )
 
     # no datatoken where taken from account0
-    assert account0_DT_balance == datatoken.balanceOf(address0)
+    assert account0_DT_balance == DT.balanceOf(address0)
 
 
 def test_joinswapPoolAmountOut_addOCEAN():
@@ -195,14 +195,14 @@ def test_joinswapPoolAmountOut_addOCEAN():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
-    account0_DT_balance = datatoken.balanceOf(address0)
+    account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+    ssContractDTbalance = DT.balanceOf(sideStaking.address)
     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
 
     BPTAmountOut = toBase18(0.1)
@@ -213,7 +213,7 @@ def test_joinswapPoolAmountOut_addOCEAN():
     )
 
     assert tx.events["LOG_JOIN"][0]["tokenIn"] == OCEAN.address
-    assert tx.events["LOG_JOIN"][1]["tokenIn"] == datatoken.address
+    assert tx.events["LOG_JOIN"][1]["tokenIn"] == DT.address
 
     # Check balance
     assert tx.events["LOG_JOIN"][0]["tokenAmountIn"] + OCEAN.balanceOf(address0) \
@@ -225,10 +225,10 @@ def test_joinswapPoolAmountOut_addOCEAN():
 
     #  DT balance lowered in the ssContract
     ssContractDTbalance - tx.events["LOG_JOIN"][1]["tokenAmountIn"] == \
-        datatoken.balanceOf(sideStaking.address)
+        DT.balanceOf(sideStaking.address)
 
     # no datatoken where taken from account0
-    assert account0_DT_balance == datatoken.balanceOf(address0)
+    assert account0_DT_balance == DT.balanceOf(address0)
 
 
 def test_exitPool_receiveTokens():
@@ -236,26 +236,26 @@ def test_exitPool_receiveTokens():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
-    account0_DT_balance = datatoken.balanceOf(address0)
+    account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+    ssContractDTbalance = DT.balanceOf(sideStaking.address)
     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
 
     BPTAmountIn = toBase18(0.5)
     minAmountOut = [toBase18(1), toBase18(1)]
     tx = pool.exitPool(BPTAmountIn, minAmountOut, {"from": account0})
 
-    assert tx.events["LOG_EXIT"][0]["tokenOut"] == datatoken.address
+    assert tx.events["LOG_EXIT"][0]["tokenOut"] == DT.address
     assert tx.events["LOG_EXIT"][1]["tokenOut"] == OCEAN.address
 
     assert tx.events["LOG_EXIT"][0][
         "tokenAmountOut"
-    ] + account0_DT_balance == datatoken.balanceOf(address0)
+    ] + account0_DT_balance == DT.balanceOf(address0)
     assert tx.events["LOG_EXIT"][1][
         "tokenAmountOut"
     ] + account0_Ocean_balance == OCEAN.balanceOf(address0)
@@ -263,7 +263,7 @@ def test_exitPool_receiveTokens():
 
     # check the ssContract BPT and DT balance didn"t change
     assert ssContractBPTbalance == pool.balanceOf(sideStaking.address)
-    assert ssContractDTbalance == datatoken.balanceOf(sideStaking.address)
+    assert ssContractDTbalance == DT.balanceOf(sideStaking.address)
 
 
 def test_exitswapPoolAmountIn_receiveOcean():
@@ -271,14 +271,14 @@ def test_exitswapPoolAmountIn_receiveOcean():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
-    account0_DT_balance = datatoken.balanceOf(address0)
+    account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+    ssContractDTbalance = DT.balanceOf(sideStaking.address)
     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
 
     BPTAmountIn = toBase18(0.5)
@@ -288,12 +288,12 @@ def test_exitswapPoolAmountIn_receiveOcean():
         OCEAN.address, BPTAmountIn, minOceanOut, {"from": account0}
     )
 
-    assert datatoken.balanceOf(address0) == account0_DT_balance
+    assert DT.balanceOf(address0) == account0_DT_balance
 
     # check event argument
     assert tx.events["LOG_EXIT"][0]["caller"] == address0
     assert tx.events["LOG_EXIT"][0]["tokenOut"] == OCEAN.address
-    assert tx.events["LOG_EXIT"][1]["tokenOut"] == datatoken.address
+    assert tx.events["LOG_EXIT"][1]["tokenOut"] == DT.address
 
     # check user ocean balance
     assert tx.events["LOG_EXIT"][0][
@@ -309,7 +309,7 @@ def test_exitswapPoolAmountIn_receiveOcean():
     # ssContract got back his dt when redeeeming BPT
     assert ssContractDTbalance + tx.events["LOG_EXIT"][1][
         "tokenAmountOut"
-    ] == datatoken.balanceOf(sideStaking.address)
+    ] == DT.balanceOf(sideStaking.address)
 
 
 def test_exitswapPoolAmountIn_receiveDT():
@@ -317,21 +317,21 @@ def test_exitswapPoolAmountIn_receiveDT():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
-    account0_DT_balance = datatoken.balanceOf(address0)
+    account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+    ssContractDTbalance = DT.balanceOf(sideStaking.address)
     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
 
     BPTAmountIn = toBase18(0.5)
     minDTOut = toBase18(0.5)
 
     tx = pool.exitswapPoolAmountIn(
-        datatoken.address, BPTAmountIn, minDTOut, {"from": account0}
+        DT.address, BPTAmountIn, minDTOut, {"from": account0}
     )
 
     assert OCEAN.balanceOf(address0) == account0_Ocean_balance
@@ -342,19 +342,19 @@ def test_exitswapPoolAmountIn_receiveDT():
 
     # check exit event argument
     assert tx.events["LOG_EXIT"][0]["caller"] == address0
-    assert tx.events["LOG_EXIT"][0]["tokenOut"] == datatoken.address
+    assert tx.events["LOG_EXIT"][0]["tokenOut"] == DT.address
 
     # check DT balance before and after
     assert tx.events["LOG_EXIT"][0][
         "tokenAmountOut"
-    ] + account0_DT_balance == datatoken.balanceOf(address0)
+    ] + account0_DT_balance == DT.balanceOf(address0)
 
     # chekc BPT
     assert account0_BPT_balance == pool.balanceOf(address0) + BPTAmountIn
 
     # ssContract BPT and DT balance didn't change
     assert ssContractBPTbalance == pool.balanceOf(sideStaking.address)
-    assert ssContractDTbalance == datatoken.balanceOf(sideStaking.address)
+    assert ssContractDTbalance == DT.balanceOf(sideStaking.address)
 
 
 def test_exitswapExternAmountOut_receiveOcean():
@@ -362,14 +362,14 @@ def test_exitswapExternAmountOut_receiveOcean():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
-    account0_DT_balance = datatoken.balanceOf(address0)
+    account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+    ssContractDTbalance = DT.balanceOf(sideStaking.address)
     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
 
     maxBPTIn = toBase18(0.5)
@@ -379,7 +379,7 @@ def test_exitswapExternAmountOut_receiveOcean():
         OCEAN.address, maxBPTIn, exactOceanOut, {"from": account0}
     )
 
-    assert datatoken.balanceOf(address0) == account0_DT_balance
+    assert DT.balanceOf(address0) == account0_DT_balance
     assert (
         pool.balanceOf(address0)
         == account0_BPT_balance - tx.events["LOG_BPT"][0]["bptAmount"]
@@ -393,7 +393,7 @@ def test_exitswapExternAmountOut_receiveOcean():
     ] == pool.balanceOf(sideStaking.address)
     assert ssContractDTbalance + tx.events["LOG_EXIT"][1][
         "tokenAmountOut"
-    ] == datatoken.balanceOf(sideStaking.address)
+    ] == DT.balanceOf(sideStaking.address)
 
 
 def test_exitswapExternAmountOut_receiveDT():
@@ -401,21 +401,21 @@ def test_exitswapExternAmountOut_receiveDT():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
+    DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
-    account0_DT_balance = datatoken.balanceOf(address0)
+    account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+    ssContractDTbalance = DT.balanceOf(sideStaking.address)
     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
 
     maxBPTIn = toBase18(0.5)
     exacDTOut = toBase18(1)
 
     tx = pool.exitswapExternAmountOut(
-        datatoken.address, maxBPTIn, exacDTOut, {"from": account0}
+        DT.address, maxBPTIn, exacDTOut, {"from": account0}
     )
 
     assert OCEAN.balanceOf(address0) == account0_Ocean_balance
@@ -426,9 +426,9 @@ def test_exitswapExternAmountOut_receiveDT():
 
     assert tx.events["LOG_EXIT"][0][
         "tokenAmountOut"
-    ] + account0_DT_balance == datatoken.balanceOf(address0)
+    ] + account0_DT_balance == DT.balanceOf(address0)
     assert ssContractBPTbalance == pool.balanceOf(sideStaking.address)
-    assert ssContractDTbalance == datatoken.balanceOf(sideStaking.address)
+    assert ssContractDTbalance == DT.balanceOf(sideStaking.address)
 
 
 def _deployBPool():
@@ -437,8 +437,8 @@ def _deployBPool():
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
         "dataNFT", "DATANFTSYMBOL", account0, router)
-    datatoken = oceanv4util.createDatatokenFromDataNFT(
+    DT = oceanv4util.createDatatokenFromDataNFT(
         "DT", "DTSYMBOL", 10000, dataNFT, account0)
     pool = oceanv4util.createBPoolFromDatatoken(
-        datatoken, 1000, 2000, account0, erc721_factory)
+        DT, 1000, 2000, account0, erc721_factory)
     return pool
