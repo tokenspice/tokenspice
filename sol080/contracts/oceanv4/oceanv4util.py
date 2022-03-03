@@ -215,15 +215,13 @@ def create_BPool_from_datatoken(
     datatoken, DT_vest_amount, OCEAN_init_liquidity, account
 ):
     router = ROUTER()
-    if router.routerOwner() == GOD_ADDRESS:
-        router.changeRouterOwner(account.address, {"from": GOD_ACCOUNT})
     OCEAN = OCEANtoken()
     poolTemplate = POOLTemplate()
     erc721_factory = ERC721Factory(router.address)
 
     sideStaking = SIDESTAKING()
-    router.addSSContract(sideStaking.address, {"from": account})
-    router.addFactory(erc721_factory.address, {"from": account})
+    router.addSSContract(sideStaking.address, {"from": GOD_ACCOUNT})
+    router.addFactory(erc721_factory.address, {"from": GOD_ACCOUNT})
 
     ss_rate = 0.1
     ss_OCEAN_decimals = 18

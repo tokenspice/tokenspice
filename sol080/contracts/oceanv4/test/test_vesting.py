@@ -1,15 +1,9 @@
 import brownie
 
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
+from util.constants import BROWNIE_PROJECT080
 import sol080.contracts.oceanv4.oceanv4util
-from sol080.contracts.oceanv4.oceanv4util import (
-    ROUTER,
-    SIDESTAKING,
-)
-
-GOD_ADDRESS = GOD_ACCOUNT.address
-OPF_ADDRESS = OPF_ACCOUNT.address
+from sol080.contracts.oceanv4.oceanv4util import ROUTER, SIDESTAKING
 
 accounts = brownie.network.accounts
 
@@ -25,6 +19,7 @@ def test_fail_to_mint():
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
 
     assert datatoken.isMinter(address0)
+
     try:
         datatoken.mint(address0, toBase18(1), {"from": account0})
     except brownie.exceptions.VirtualMachineError:
@@ -38,10 +33,6 @@ def test_vesting_amount():
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
     sideStaking = SIDESTAKING()
     assert sideStaking.getvestingAmount(datatoken.address) == toBase18(1000)
-
-    # TO DO: https://github.com/oceanprotocol/contracts/blob/v4main_postaudit/test/flow/Vesting.test.js#L292 #pylint: disable=line-too-long
-    # can use brownie.chain.sleep
-
 
 def _deployBPool():
     brownie.chain.reset()

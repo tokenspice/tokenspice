@@ -1,6 +1,7 @@
 import brownie
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
+from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, \
+    ZERO_ADDRESS
 from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
@@ -171,7 +172,8 @@ def test_createDataNFT_via_util():
 def test_createDT_via_util():
     dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0)
     DT = oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSymbol", 10000, dataNFT, account0)
+        "DT", "DTSymbol", 10000, dataNFT, account0
+    )
     assert DT.name() == "DT"
     assert DT.symbol() == "DTSymbol"
     assert DT.cap() == toBase18(10000)
@@ -183,7 +185,8 @@ def test_createBPool_via_util():
     router = oceanv4util.ROUTER()
     dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
     DT = oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSymbol", 10000, dataNFT, account0)
+        "DT", "DTSymbol", 10000, dataNFT, account0
+    )
     pool = oceanv4util.create_BPool_from_datatoken(DT, 10, 2000, account0)
     pool_address = pool.address
 

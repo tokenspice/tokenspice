@@ -1,17 +1,8 @@
 import brownie
 
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
-import sol080.contracts.oceanv4.oceanv4util
-from sol080.contracts.oceanv4.oceanv4util import (
-    OCEANtoken,
-    fundOCEANFromAbove,
-    ROUTER,
-    SIDESTAKING,
-)
-
-GOD_ADDRESS = GOD_ACCOUNT.address
-OPF_ADDRESS = OPF_ACCOUNT.address
+from util.constants import BROWNIE_PROJECT080
+from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
 
@@ -21,14 +12,13 @@ address0 = account0.address
 account1 = accounts[1]
 address1 = account1.address
 
-
 def test_sideStaking_properties():
     pool = _deployBPool()
     pool_address = pool.address
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
     dt_address = datatoken.address
-    OCEAN = OCEANtoken()
-    sideStaking = SIDESTAKING()
+    OCEAN = oceanv4util.OCEANtoken()
+    sideStaking = oceanv4util.SIDESTAKING()
     initialBlockNum = brownie.chain.height
 
     assert sideStaking.getPoolAddress(dt_address) == pool_address
@@ -63,8 +53,8 @@ def test_sideStaking_properties():
 
 def test_swapExactAmountIn():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
 
@@ -94,8 +84,8 @@ def test_swapExactAmountIn():
 
 def test_swapExactAmountOut():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
 
@@ -113,11 +103,11 @@ def test_swapExactAmountOut():
 
 def test_joinPool_addTokens():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStaking = oceanv4util.SIDESTAKING()
     tokenInOutMarket = [OCEAN.address, datatoken.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
     amountsInOutMaxFee = [toBase18(100), toBase18(1), toBase18(100), 0]
@@ -157,11 +147,11 @@ def test_joinPool_addTokens():
 
 def test_joinswapExternAmountIn_addOCEAN():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStaking = oceanv4util.SIDESTAKING()
 
     account0_DT_balance = datatoken.balanceOf(address0)
     ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
@@ -197,11 +187,11 @@ def test_joinswapExternAmountIn_addOCEAN():
 
 def test_joinswapPoolAmountOut_addOCEAN():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStaking = oceanv4util.SIDESTAKING()
 
     account0_DT_balance = datatoken.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -239,11 +229,11 @@ def test_joinswapPoolAmountOut_addOCEAN():
 
 def test_exitPool_receiveTokens():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStaking = oceanv4util.SIDESTAKING()
 
     account0_DT_balance = datatoken.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -273,11 +263,11 @@ def test_exitPool_receiveTokens():
 
 def test_exitswapPoolAmountIn_receiveOcean():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStaking = oceanv4util.SIDESTAKING()
 
     account0_DT_balance = datatoken.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -318,11 +308,11 @@ def test_exitswapPoolAmountIn_receiveOcean():
 
 def test_exitswapPoolAmountIn_receiveDT():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStaking = oceanv4util.SIDESTAKING()
 
     account0_DT_balance = datatoken.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -362,11 +352,11 @@ def test_exitswapPoolAmountIn_receiveDT():
 
 def test_exitswapExternAmountOut_receiveOcean():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStaking = oceanv4util.SIDESTAKING()
 
     account0_DT_balance = datatoken.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -400,11 +390,11 @@ def test_exitswapExternAmountOut_receiveOcean():
 
 def test_exitswapExternAmountOut_receiveDT():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStaking = oceanv4util.SIDESTAKING()
 
     account0_DT_balance = datatoken.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -434,14 +424,12 @@ def test_exitswapExternAmountOut_receiveDT():
 
 def _deployBPool():
     brownie.chain.reset()
-    router = ROUTER()
-    dataNFT = sol080.contracts.oceanv4.oceanv4util.createDataNFT(
-        "dataNFT", "DATANFTSYMBOL", account0, router
-    )
-    datatoken = sol080.contracts.oceanv4.oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSYMBOL", 10000, dataNFT, account0
-    )
-    pool = sol080.contracts.oceanv4.oceanv4util.create_BPool_from_datatoken(
-        datatoken, 1000, 2000, account0
-    )
+    router = oceanv4util.ROUTER()
+    dataNFT = oceanv4util.createDataNFT(
+        "dataNFT", "DATANFTSYMBOL", account0, router)
+    datatoken = oceanv4util.create_datatoken_from_dataNFT(
+        "DT", "DTSYMBOL", 10000, dataNFT, account0)
+    pool = oceanv4util.create_BPool_from_datatoken(
+        datatoken, 1000, 2000, account0)
+
     return pool
