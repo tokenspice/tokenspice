@@ -39,10 +39,16 @@ def _deployBPool():
     brownie.chain.reset()
     router = oceanv4util.deployRouter(account0)
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
+    
     (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
         "dataNFT", "DATANFTSYMBOL", account0, router)
+    
     datatoken = oceanv4util.createDatatokenFromDataNFT(
         "DT", "DTSYMBOL", 10000, dataNFT, account0)
+    
+    DT_vest_amt = 1000
+    OCEAN_init_liquidity = 2000
     pool = oceanv4util.createBPoolFromDatatoken(
-        datatoken, 1000, 2000, account0, erc721_factory)
+        datatoken, erc721_factory, account0, DT_vest_amt, OCEAN_init_liquidity)
+    
     return pool

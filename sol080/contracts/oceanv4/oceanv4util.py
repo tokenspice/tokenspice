@@ -124,7 +124,7 @@ def createDatatokenFromDataNFT(
         from_account.address, # minter
         from_account.address, # fee mgr
         from_account.address, # pub mkt
-        ZERO_ADDRESS,    # pub mkt fee token addr
+        ZERO_ADDRESS,         # pub mkt fee token addr
     ]   
     uints = [
         toBase18(DT_cap),
@@ -149,8 +149,9 @@ def deploySideStaking(from_account, router):
 
 @enforce_types
 def createBPoolFromDatatoken(
-        datatoken, DT_vest_amt, OCEAN_init_liquidity, from_account,
-        erc721_factory, LP_swap_fee = 0.03, mkt_swap_fee = 0.01):
+        datatoken, erc721_factory, from_account,
+        DT_vest_amt, OCEAN_init_liquidity,
+        LP_swap_fee = 0.03, mkt_swap_fee = 0.01):
         
     OCEAN = OCEANtoken()
     pool_template = POOLTemplate()

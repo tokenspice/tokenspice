@@ -475,8 +475,8 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
     ):
         account = self._wallet._account
         pool = oceanv4util.createBPoolFromDatatoken(
-            datatoken, DT_vest_amount, OCEAN_init_liquidity, account, erc721_factory
-        )
+            datatoken, erc721_factory, account,
+            DT_vest_amount, OCEAN_init_liquidity)
         return pool
 
     def _doGetVesting(self):

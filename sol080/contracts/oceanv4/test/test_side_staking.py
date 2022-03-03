@@ -1,6 +1,6 @@
 import brownie
 
-from util.base18 import toBase18
+from util.base18 import toBase18, fromBase18
 from util.constants import BROWNIE_PROJECT080
 from util.globaltokens import fundOCEANFromAbove, OCEANtoken
 from sol080.contracts.oceanv4 import oceanv4util
@@ -18,16 +18,29 @@ def test_sideStaking_properties():
     brownie.chain.reset()
     init_block_height = brownie.chain.height
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=False)
+
+    DT_cap = 10000
+    DT_vest_amt = 1000
+    (DT, pool, ss_bot) = _deployBPool(
+        fund_extra=False, DT_cap=DT_cap, DT_vest_amt=DT_vest_amt)
 
     assert ss_bot.getPoolAddress(DT.address) == pool.address
     assert ss_bot.getBaseTokenAddress(DT.address) == pool.getBaseTokenAddress()
     assert ss_bot.getBaseTokenAddress(DT.address) == OCEAN.address
     assert ss_bot.getPublisherAddress(DT.address) == address0
 
-    # depends on ss_rate, DT_vest_amount, ss_OCEAN_init_liquidity
-    assert DT.balanceOf(ss_bot.address) == toBase18(9800)
-    assert ss_bot.getDatatokenCirculatingSupply(DT.address) == toBase18(1200)
+    ss_bot_DT_balance = fromBase18(DT.balanceOf(ss_bot.address))
+    assert ss_bot_DT_balance == 9800 #Trang had 9800, why?
+
+    ss_bot_amt_vested = fromBase18(ss_bot.getVestingAmountSoFar(DT.address))
+    assert ss_bot_amt_vested == 0
+
+    # DT circ_supply = (DT cap) - (ss_bot DT balance) - (ss_bot amt vested)
+    #                = 10000    - __??__              - 0
+    #                = __??__
+    expected_DT_circ_supply = DT_cap - ss_bot_DT_balance - ss_bot_amt_vested #Trang had 1200, why?
+    DT_circ_supply = fromBase18(ss_bot.getDatatokenCirculatingSupply(DT.address))
+    assert DT_circ_supply == expected_DT_circ_supply
 
     assert ss_bot.getBaseTokenBalance(DT.address) == 0
     assert ss_bot.getDatatokenBalance(DT.address) == toBase18(8800)
@@ -383,25 +396,30 @@ def test_exitswapExternAmountOut_receiveDT():
     assert ssContractDTbalance == DT.balanceOf(ss_bot.address)
 
 
-def _deployBPool(fund_extra: bool):
-    fundOCEANFromAbove(address0, toBase18(10000))
+def _deployBPool(
+        fund_extra: bool,
+        OCEAN_base_funding=10000, OCEAN_extra_funding=10000,
+        DT_cap=10000, DT_vest_amt=1000, OCEAN_init_liquidity=2000):
+
+    fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
     
     router = oceanv4util.deployRouter(account0)
     
-    (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
+    (data_NFT, erc721_factory) = oceanv4util.createDataNFT(
         "dataNFT", "DATANFTSYMBOL", account0, router)
-    
+
     DT = oceanv4util.createDatatokenFromDataNFT(
-        "DT", "DTSYMBOL", 10000, dataNFT, account0)
-    
+        "DT", "DTSYMBOL", DT_cap, data_NFT, account0)
+
     pool = oceanv4util.createBPoolFromDatatoken(
-        DT, 1000, 2000, account0, erc721_factory)
+        DT, erc721_factory, account0, DT_vest_amt, OCEAN_init_liquidity)
     
     ss_bot_address = pool.getController()
     ss_bot = BROWNIE_PROJECT080.SideStaking.at(ss_bot_address)
 
     if fund_extra:
-        fundOCEANFromAbove(address0, toBase18(10000))
-        OCEAN.approve(pool.address, toBase18(10000), {"from": account0})        
+        fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
+        OCEAN.approve(
+            pool.address, toBase18(OCEAN_extra_funding), {"from": account0})
     
     return (DT, pool, ss_bot)
