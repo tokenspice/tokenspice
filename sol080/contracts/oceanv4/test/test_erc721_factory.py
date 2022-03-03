@@ -30,7 +30,6 @@ def test_direct(): # pylint: disable=too-many-statements
     erc721_factory = BROWNIE_PROJECT080.ERC721Factory.deploy(
         erc721_template.address, erc20_template.address,
         OPF_ADDRESS, router.address, {"from": account0})
-    router.addFactory(erc721_factory.address, {"from": account0})
     assert erc721_factory.owner() == address0
     current_nft_count = erc721_factory.getCurrentNFTCount()
     
@@ -76,27 +75,28 @@ def test_direct(): # pylint: disable=too-many-statements
     # Here, we do option (a)...
 
     # Publisher approves staking OCEAN
-    ss_OCEAN_init_liquidity = 2000.0
+    OCEAN_init_liquidity = 2000.0
     OCEANtoken.approve(
-        router.address, toBase18(ss_OCEAN_init_liquidity), {"from": account0})
+        router.address, toBase18(OCEAN_init_liquidity), {"from": account0})
 
-    # Publisher deploys 1-sided staking bot, and reports it to the router
+    # Publisher deploys 1-sided staking bot, reports info to router.
     ss_bot = BROWNIE_PROJECT080.SideStaking.deploy(
         router.address, {"from": GOD_ACCOUNT})
     router.addSSContract(ss_bot.address, {"from": account0})
+    router.addFactory(erc721_factory.address, {"from": account0})
 
     # Publisher deploys pool, which includes a 1-sided staking bot
     ss_params = [
         toBase18(0.1),         # rate (wei)
-        18,                    # baseToken decimals
+        18,                    # OCEAN decimals
         toBase18(0.05*DT_cap), # vesting amount (wei)
-        int(2.5e6),            # vested blocks. 2.5e6 = one year if 15 s/block
-        toBase18(ss_OCEAN_init_liquidity), #init liquidity in baseToken
+        int(2.5e6),            # vested blocks
+        toBase18(OCEAN_init_liquidity),
     ]
-
-    LP_swap_fee = 0.02  # 2%
-    mkt_swap_fee = 0.01  # 1%
-    swap_fees = [toBase18(LP_swap_fee), toBase18(mkt_swap_fee)]
+    swap_fees = [
+        toBase18(0.02), #LP swap fee
+        toBase18(0.01), #mkt swap fee
+    ]
     addresses = [
         ss_bot.address, OCEAN_address, address0, address0,
         OPF_ADDRESS, pool_template.address]
@@ -105,15 +105,15 @@ def test_direct(): # pylint: disable=too-many-statements
     pool_address = oceanv4util.poolAddressFromNewBPoolTx(tx)
     pool = BROWNIE_PROJECT080.BPool.at(pool_address)
 
-    assert OCEANtoken.balanceOf(pool_address) == \
-        toBase18(ss_OCEAN_init_liquidity)
-    assert pool.getMarketFee() == toBase18(mkt_swap_fee)
-    assert pool.getSwapFee() == toBase18(LP_swap_fee)
+    assert OCEANtoken.balanceOf(pool_address) == toBase18(OCEAN_init_liquidity)
+    assert pool.getSwapFee() == toBase18(0.02)
+    assert pool.getMarketFee() == toBase18(0.01)
 
 
 def test_createDataNFT_via_util():
     router = oceanv4util.deployRouter(account0)
-    (dataNFT, f) = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
+    (dataNFT, f) = oceanv4util.createDataNFT(
+        "dataNFT", "DATANFT", account0, router)
     assert dataNFT.name() == "dataNFT"
     assert dataNFT.symbol() == "DATANFT"
     assert dataNFT.getPermissions(account0.address) == (True, True, True, True)
@@ -141,11 +141,15 @@ def test_createBPool_via_util():
 
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000.0))
     OCEAN = oceanv4util.OCEANtoken()
+
+    LP_swap_fee = 0.03
+    mkt_swap_fee = 0.01
     pool = oceanv4util.createBPoolFromDatatoken(
-        DT, 100, 2000.0, account0, erc721_factory)
+        DT, 100, 2000.0, account0, erc721_factory,
+        LP_swap_fee, mkt_swap_fee)
     pool_address = pool.address
 
     assert pool.getBaseTokenAddress() == OCEAN.address
     assert OCEAN.balanceOf(pool_address) < toBase18(10000.0)
-    assert pool.getMarketFee() == toBase18(0.01)
-    assert pool.getSwapFee() == toBase18(0.02)
+    assert pool.getMarketFee() == toBase18(mkt_swap_fee)
+    assert pool.getSwapFee() == toBase18(LP_swap_fee)

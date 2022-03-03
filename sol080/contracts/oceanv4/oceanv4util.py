@@ -133,63 +133,50 @@ def createDatatokenFromDataNFT(DT_name, DT_symbol, DT_cap, dataNFT, account):
 
 @enforce_types
 def deploySideStaking(account, router):
-    return BROWNIE_PROJECT080.SideStaking.deploy(router.address, {"from": account})
+    return BROWNIE_PROJECT080.SideStaking.deploy(
+        router.address, {"from": account})
 
 
 @enforce_types
 def createBPoolFromDatatoken(
-    datatoken, DT_vest_amount, OCEAN_init_liquidity, account, erc721_factory
+        datatoken, DT_vest_amt, OCEAN_init_liquidity, account, erc721_factory,
+        LP_swap_fee = 0.03, mkt_swap_fee = 0.01
 ):
+        
     OCEAN = OCEANtoken()
     poolTemplate = POOLTemplate()
-    routerAddress = datatoken.router()
-    router = BROWNIE_PROJECT080.FactoryRouter.at(routerAddress)
-    router.updateMinVestingPeriod(500, {"from":account}) # update MinVestingPeriod, experencing smart contracts
-    erc721_factory_address = erc721_factory.address
+    
+    router_address = datatoken.router()
+    router = BROWNIE_PROJECT080.FactoryRouter.at(router_address)
+    router.updateMinVestingPeriod(500, {"from":account})
 
-    sideStaking = deploySideStaking(account, router)
-    router.addSSContract(sideStaking.address, {"from": account})
-    router.addFactory(erc721_factory_address, {"from": account})
+    OCEAN.approve(
+        router.address, toBase18(OCEAN_init_liquidity), {"from": account})
+    
+    ss_bot = deploySideStaking(account, router)
+    router.addSSContract(ss_bot.address, {"from": account})
+    router.addFactory(erc721_factory.address, {"from": account})
 
-    OCEAN.approve(router.address, toBase18(OCEAN_init_liquidity), {"from": account})
+    ss_params = [
+        toBase18(0.1),         # rate (wei)
+        18,                    # OCEAN decimals
+        toBase18(DT_vest_amt), # vesting amount (wei)
+        600,                   # vested blocks
+        toBase18(OCEAN_init_liquidity),
+        ]
+    swap_fees = [
+        toBase18(LP_swap_fee), #LP swap fee
+        toBase18(mkt_swap_fee), #mkt swap fee
+    ]
+    addresses = [
+        ss_bot.address, OCEAN.address, account.address, account.address,
+        OPF_ADDRESS, poolTemplate.address]
 
-    ss_rate = 0.1
-    # ss_rate = 0.15
-    ss_OCEAN_decimals = 18
-    ss_DT_vest_amt = DT_vest_amount  # max 10% 
-    ss_DT_vested_blocks = 600  # = num blocks/year, if 15 s/block, require > 2426000
-    ss_OCEAN_init_liquidity = OCEAN_init_liquidity
-
-    LP_swap_fee = 0.03
-    mkt_swap_fee = 0.01
-    pool_create_data = {
-        "addresses": [
-            sideStaking.address,
-            OCEAN.address,
-            account.address,
-            account.address,
-            OPF_ADDRESS,
-            poolTemplate.address,
-        ],
-        "ssParams": [
-            toBase18(ss_rate),
-            ss_OCEAN_decimals,
-            toBase18(ss_DT_vest_amt),
-            ss_DT_vested_blocks,
-            toBase18(ss_OCEAN_init_liquidity),
-        ],
-        "swapFees": [toBase18(LP_swap_fee), toBase18(mkt_swap_fee)],
-    }
-
-    assert router.ssContracts(sideStaking.address)
     tx = datatoken.deployPool(
-        pool_create_data["ssParams"],
-        pool_create_data["swapFees"],
-        pool_create_data["addresses"],
-        {"from": account},
-    )
+        ss_params, swap_fees, addresses, {"from": account})
     pool_address = poolAddressFromNewBPoolTx(tx)
     pool = BROWNIE_PROJECT080.BPool.at(pool_address)
+    
     return pool
 
 
