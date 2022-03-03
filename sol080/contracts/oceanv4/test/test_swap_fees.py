@@ -18,7 +18,7 @@ def test_exactAmountIn_fee():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
     assert datatoken.balanceOf(address0) == 0
     account0_DT_balance = datatoken.balanceOf(address0)
@@ -63,7 +63,7 @@ def test_exactAmountIn_fee():
 #     OCEAN = oceanv4util.OCEANtoken()
 #     oceanv4util.fundOCEANFromAbove(address1, toBase18(100000))
 #     OCEAN.approve(pool.address, toBase18(100000), {"from": account1})
-#     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+#     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
 #     sideStakingAddress = pool.getController()
 #     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)

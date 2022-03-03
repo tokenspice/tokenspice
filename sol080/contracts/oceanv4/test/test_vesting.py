@@ -15,7 +15,7 @@ address1 = account1.address
 
 def test_fail_to_mint():
     pool = _deployBPool()
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
     assert datatoken.isMinter(address0)
 
@@ -29,7 +29,7 @@ def test_fail_to_mint():
 
 def test_vesting_amount():
     pool = _deployBPool()
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
     assert sideStaking.getvestingAmount(datatoken.address) == toBase18(1000)

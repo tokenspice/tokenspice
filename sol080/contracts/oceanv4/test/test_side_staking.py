@@ -16,7 +16,7 @@ address1 = account1.address
 def test_sideStaking_properties():
     pool = _deployBPool()
     pool_address = pool.address
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     dt_address = datatoken.address
     OCEAN = oceanv4util.OCEANtoken()
     sideStakingAddress = pool.getController()
@@ -31,14 +31,14 @@ def test_sideStaking_properties():
     assert datatoken.balanceOf(sideStaking.address) == toBase18(
         9800
     )  # depend on ss_rate, DT_vest_amount, ss_OCEAN_init_liquidity
-    assert sideStaking.getDataTokenCirculatingSupply(datatoken.address) == toBase18(
+    assert sideStaking.getDatatokenCirculatingSupply(datatoken.address) == toBase18(
         1200
     )
 
     assert sideStaking.getBaseTokenBalance(datatoken.address) == 0
-    assert sideStaking.getDataTokenBalance(datatoken.address) == toBase18(8800)
+    assert sideStaking.getDatatokenBalance(datatoken.address) == toBase18(8800)
 
-    assert sideStaking.getDataTokenCurrentCirculatingSupply(
+    assert sideStaking.getDatatokenCurrentCirculatingSupply(
         datatoken.address
     ) == toBase18(
         2000 * 0.1
@@ -58,7 +58,7 @@ def test_swapExactAmountIn():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
     tokenInOutMarket = [OCEAN.address, datatoken.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
@@ -89,7 +89,7 @@ def test_swapExactAmountOut():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
     tokenInOutMarket = [
         OCEAN.address,
@@ -108,7 +108,7 @@ def test_joinPool_addTokens():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
@@ -154,7 +154,7 @@ def test_joinswapExternAmountIn_addOCEAN():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address1, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
@@ -195,7 +195,7 @@ def test_joinswapPoolAmountOut_addOCEAN():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
@@ -236,7 +236,7 @@ def test_exitPool_receiveTokens():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
@@ -271,7 +271,7 @@ def test_exitswapPoolAmountIn_receiveOcean():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
@@ -317,7 +317,7 @@ def test_exitswapPoolAmountIn_receiveDT():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
@@ -362,7 +362,7 @@ def test_exitswapExternAmountOut_receiveOcean():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
@@ -401,7 +401,7 @@ def test_exitswapExternAmountOut_receiveDT():
     OCEAN = oceanv4util.OCEANtoken()
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     sideStakingAddress = pool.getController()
     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
 
