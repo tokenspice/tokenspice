@@ -229,7 +229,7 @@ def test_joinswapPoolAmountOut_addOCEAN():
     assert ssContractBPTbalance + BPTAmountOut == pool.balanceOf(sideStaking.address)
 
     #  DT balance lowered in the ssContract
-    ssContractDTbalance - tx.events["LOG_JOIN"][1][
+    assert ssContractDTbalance - tx.events["LOG_JOIN"][1][
         "tokenAmountIn"
     ] == datatoken.balanceOf(sideStaking.address)
 

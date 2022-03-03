@@ -6,7 +6,7 @@ from sol080.contracts.oceanv4.oceanv4util import (
     SIDESTAKING,
 )
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
+from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
 
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
@@ -24,7 +24,7 @@ def test_fail_to_mint():
     pool = _deployBPool()
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
 
-    assert datatoken.isMinter(address0) == True
+    assert datatoken.isMinter(address0) is True
     try:
         datatoken.mint(address0, toBase18(1), {"from": account0})
     except brownie.exceptions.VirtualMachineError:
@@ -38,9 +38,6 @@ def test_vesting_amount():
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
     sideStaking = SIDESTAKING()
     assert sideStaking.getvestingAmount(datatoken.address) == toBase18(1000)
-
-    # TODO: https://github.com/oceanprotocol/contracts/blob/v4main_postaudit/test/flow/Vesting.test.js#L292
-    # can use brownie.chain.sleep
 
 
 def _deployBPool():

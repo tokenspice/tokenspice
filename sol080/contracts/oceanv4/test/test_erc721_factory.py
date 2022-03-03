@@ -10,7 +10,7 @@ address0 = account0.address
 OPF_ADDRESS = OPF_ACCOUNT.address
 
 
-def test_direct():
+def test_direct():  # pylint: disable=too-many-statements
     erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
 
     erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy({"from": GOD_ACCOUNT})
@@ -96,7 +96,7 @@ def test_direct():
 
     # Tests ERC20 token template list
     assert erc721_factory.getTokenTemplate(1)[0] == erc20_template.address
-    assert erc721_factory.getTokenTemplate(1)[1] == True
+    assert erc721_factory.getTokenTemplate(1)[1] is True
 
     # Tests balanceOf
     assert DT.balanceOf(address0) == 0
@@ -171,7 +171,8 @@ def test_createDataNFT_via_util():
 def test_createDT_via_util():
     dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0)
     DT = oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSymbol", 10000, dataNFT, account0)
+        "DT", "DTSymbol", 10000, dataNFT, account0
+    )
     assert DT.name() == "DT"
     assert DT.symbol() == "DTSymbol"
     assert DT.cap() == toBase18(10000)
@@ -183,7 +184,8 @@ def test_createBPool_via_util():
     router = oceanv4util.ROUTER()
     dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
     DT = oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSymbol", 10000, dataNFT, account0)
+        "DT", "DTSymbol", 10000, dataNFT, account0
+    )
     pool = oceanv4util.create_BPool_from_datatoken(DT, 10, 2000, account0)
     pool_address = pool.address
 
