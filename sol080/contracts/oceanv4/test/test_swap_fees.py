@@ -1,12 +1,8 @@
 import brownie
 
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
-import sol080.contracts.oceanv4.oceanv4util
-from sol080.contracts.oceanv4.oceanv4util import OCEANtoken, fundOCEANFromAbove, ROUTER
-
-GOD_ADDRESS = GOD_ACCOUNT.address
-OPF_ADDRESS = OPF_ACCOUNT.address
+from util.constants import BROWNIE_PROJECT080
+from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
 
@@ -19,8 +15,8 @@ address1 = account1.address
 
 def test_exactAmountIn_fee():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
 
@@ -62,16 +58,44 @@ def test_exactAmountIn_fee():
     ] == datatoken.balanceOf(address0)
 
 
+# def test_vesting_available():
+#     pool = _deployBPool()
+#     OCEAN = oceanv4util.OCEANtoken()
+#     oceanv4util.fundOCEANFromAbove(address1, toBase18(100000))
+#     OCEAN.approve(pool.address, toBase18(100000), {"from": account1})
+#     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+
+#     sideStakingAddress = pool.getController()
+#     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
+    
+#     ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
+#     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
+
+#     assert datatoken.balanceOf(address1) == 0
+
+#     OceanAmountIn = toBase18(50000) # try amount big enough so that the staking contract won't stake
+#     minBPTOut = toBase18(0.001)
+
+#     # try:
+#     receipt = pool.joinswapExternAmountIn(
+#         OCEAN.address,
+#         OceanAmountIn,
+#         minBPTOut,
+#         {"from": account1}
+#     )
+#     # except:
+#     #     brownie.exceptions.VirtualMachineError
+
+#     assert datatoken.balanceOf(address1) == 0
+
 def _deployBPool():
     brownie.chain.reset()
-    router = ROUTER()
-    dataNFT = sol080.contracts.oceanv4.oceanv4util.createDataNFT(
-        "dataNFT", "DATANFTSYMBOL", account0, router
-    )
-    datatoken = sol080.contracts.oceanv4.oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSYMBOL", 10000, dataNFT, account0
-    )
-    pool = sol080.contracts.oceanv4.oceanv4util.create_BPool_from_datatoken(
-        datatoken, 1000, 2000, account0
-    )
+    router = oceanv4util.deployRouter(account0)
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(100000))
+    (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
+        "dataNFT", "DATANFTSYMBOL", account0, router)
+    datatoken = oceanv4util.createDatatokenFromDataNFT(
+        "DT", "DTSYMBOL", 10000, dataNFT, account0)
+    pool = oceanv4util.createBPoolFromDatatoken(
+        datatoken, 1000, 80000, account0, erc721_factory)
     return pool

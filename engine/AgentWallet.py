@@ -22,7 +22,7 @@ from enforce_typing import enforce_types
 from util import constants
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import GOD_ACCOUNT
+from util.constants import GOD_ACCOUNT, OPF_ACCOUNT, OPF_ADDRESS
 from util.strutil import asCurrency
 
 log = logging.getLogger("wallet")
@@ -441,6 +441,79 @@ class AgentWalletEvm(
             )
 
         DT.transfer(dst_address, amt_base, {"from": self._account})
+
+    def joinPoolAddOCEAN(self, OCEAN_stake: float, pool):
+        """adds more liquidity with joinswapExternAmountIn (only OCEAN), oceanv4 contracts"""
+        OCEAN = globaltokens.OCEANtoken()
+        OCEAN.approve(pool.address, toBase18(OCEAN_stake), {"from": self._account})
+        tokenAmountIn_base = toBase18(OCEAN_stake)
+        minPoolAmountOut_base = toBase18(0.1)
+
+        pool.joinswapExternAmountIn(
+            OCEAN.address,
+            tokenAmountIn_base,
+            minPoolAmountOut_base,
+            {"from": self._account},
+        )
+        self.resetCachedInfo()
+
+    def buyDTV4(self, pool, DT, DT_buy_amt: float, max_OCEAN_allow: float):
+        """Swap OCEAN for DT, oceanv4 contracts"""
+        OCEAN = globaltokens.OCEANtoken()
+        OCEAN.approve(pool.address, toBase18(max_OCEAN_allow), {"from": self._account})
+
+        tokenIn_address = globaltokens.OCEAN_address()
+        tokenOut_address = DT.address
+        marketFeeAddress = OPF_ADDRESS
+
+        maxAmountIn_base = toBase18(max_OCEAN_allow)
+        tokenAmountOut_base = toBase18(DT_buy_amt)
+        maxPrice_base = 2 ** 255
+
+        tokenInOutMarket = [
+            tokenIn_address,
+            tokenOut_address,
+            marketFeeAddress,
+        ]  # // [tokenIn,tokenOut,marketFeeAddress]
+        amountsInOutMaxFee = [
+            maxAmountIn_base,
+            tokenAmountOut_base,
+            maxPrice_base,
+            0,
+        ]  # [maxAmountIn,exactAmountOut,maxPrice,_swapMarketFee]
+        pool.swapExactAmountOut(
+            tokenInOutMarket, amountsInOutMaxFee, {"from": self._account}
+        )
+        self.resetCachedInfo()
+
+    def sellDTV4(self, pool, DT, DT_sell_amt: float, min_OCEAN_amt: float = 0.0):
+        """Swap DT for OCEAN. min_OCEAN_amt>0 protects from slippage."""
+        DT.approve(pool.address, toBase18(DT_sell_amt), {"from": self._account})
+
+        tokenIn_address = DT.address  # entering pool
+        tokenAmountIn_base = toBase18(DT_sell_amt)  # ""
+        tokenOut_address = globaltokens.OCEAN_address()  # leaving pool
+        minAmountOut_base = toBase18(min_OCEAN_amt)  # ""
+        maxPrice_base = 2 ** 255  # limit by min_OCEAN_amt, not price
+        marketFeeAddress = OPF_ADDRESS
+        tokenInOutMarket = [
+            tokenIn_address,
+            tokenOut_address,
+            marketFeeAddress,
+        ]  # [tokenIn,tokenOut,marketFeeAddress]
+        amountsInOutMaxFee = [
+            tokenAmountIn_base,
+            minAmountOut_base,
+            maxPrice_base,
+            0,
+        ]  # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee]
+
+        pool.swapExactAmountIn(
+            tokenInOutMarket,
+            amountsInOutMaxFee,
+            {"from": self._account},
+        )
+        self.resetCachedInfo()
 
 
 # ========================================================================

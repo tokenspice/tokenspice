@@ -2,8 +2,7 @@ import brownie
 
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080
-import sol080.contracts.oceanv4.oceanv4util
-from sol080.contracts.oceanv4.oceanv4util import ROUTER, SIDESTAKING
+from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
 
@@ -31,19 +30,19 @@ def test_fail_to_mint():
 def test_vesting_amount():
     pool = _deployBPool()
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
-    sideStaking = SIDESTAKING()
+    sideStakingAddress = pool.getController()
+    sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
     assert sideStaking.getvestingAmount(datatoken.address) == toBase18(1000)
+
 
 def _deployBPool():
     brownie.chain.reset()
-    router = ROUTER()
-    dataNFT = sol080.contracts.oceanv4.oceanv4util.createDataNFT(
-        "dataNFT", "DATANFTSYMBOL", account0, router
-    )
-    datatoken = sol080.contracts.oceanv4.oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSYMBOL", 10000, dataNFT, account0
-    )
-    pool = sol080.contracts.oceanv4.oceanv4util.create_BPool_from_datatoken(
-        datatoken, 1000, 2000, account0
-    )
+    router = oceanv4util.deployRouter(account0)
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
+    (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
+        "dataNFT", "DATANFTSYMBOL", account0, router)
+    datatoken = oceanv4util.createDatatokenFromDataNFT(
+        "DT", "DTSYMBOL", 10000, dataNFT, account0)
+    pool = oceanv4util.createBPoolFromDatatoken(
+        datatoken, 1000, 2000, account0, erc721_factory)
     return pool

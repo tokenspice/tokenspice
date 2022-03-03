@@ -1,10 +1,9 @@
 from enforce_typing import enforce_types
 
 from agents.PublisherAgent import PublisherAgent
-from agents.PoolAgent import PoolAgent
+from agents.PoolAgent import PoolAgent, PoolAgentV4
 from agents.DataconsumerAgent import DataconsumerAgent
 from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
-
 
 @enforce_types
 class AgentDict(dict):
@@ -36,6 +35,19 @@ class AgentDict(dict):
 
     def filterToSpeculator(self):
         return self.filterByClass(SpeculatorAgent)
+
+    def filterToPoolV4(self):
+        return self.filterByClass(PoolAgentV4)
+
+    def filterByNonzeroStakeV4(self, agent):
+        """Which pools has 'agent' staked on?"""
+        return AgentDict(
+            {
+                pool_agent.name: pool_agent
+                for pool_agent in self.filterToPoolV4().values()
+                if agent.BPT(pool_agent.pool) > 0.0
+            }
+        )
 
     def filterByClass(self, _class):
         return AgentDict(

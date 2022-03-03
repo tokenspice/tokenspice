@@ -1,19 +1,15 @@
 import brownie
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, \
-    ZERO_ADDRESS
+from util.constants import BROWNIE_PROJECT080, GOD_ACCOUNT, ZERO_ADDRESS, \
+    OPF_ACCOUNT, OPF_ADDRESS
 from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
 account0 = accounts[0]
 address0 = account0.address
 
-OPF_ADDRESS = OPF_ACCOUNT.address
-
-
 def test_direct(): # pylint: disable=too-many-statements
     erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
-
     erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy({"from": GOD_ACCOUNT})
     OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address0, {"from": GOD_ACCOUNT})
     OCEAN_address = OCEANtoken.address
@@ -110,6 +106,7 @@ def test_direct(): # pylint: disable=too-many-statements
 
     # FOCUS on option 1
     # 3 Publisher creating bpool, from ERC20 datatoken
+
     ss_rate = 0.1
     ss_OCEAN_decimals = 18
     ss_DT_vest_amt = 9999.0  # max 10% but 10000 gives error
@@ -144,8 +141,7 @@ def test_direct(): # pylint: disable=too-many-statements
     }
 
     OCEANtoken.approve(
-        router.address, toBase18(ss_OCEAN_init_liquidity), {"from": account0}
-    )
+        router.address, toBase18(ss_OCEAN_init_liquidity), {"from": account0})
 
     tx = DT.deployPool(
         pool_create_data["ssParams"],
@@ -162,7 +158,8 @@ def test_direct(): # pylint: disable=too-many-statements
 
 
 def test_createDataNFT_via_util():
-    dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0)
+    router = oceanv4util.deployRouter(account0)
+    (dataNFT, f) = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
     assert dataNFT.name() == "dataNFT"
     assert dataNFT.symbol() == "DATANFT"
     assert dataNFT.getPermissions(account0.address) == (True, True, True, True)
@@ -170,10 +167,10 @@ def test_createDataNFT_via_util():
 
 
 def test_createDT_via_util():
-    dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0)
-    DT = oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSymbol", 10000, dataNFT, account0
-    )
+    router = oceanv4util.deployRouter(account0)
+    (dataNFT, f) = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
+    DT = oceanv4util.createDatatokenFromDataNFT(
+        "DT", "DTSymbol", 10000, dataNFT, account0)
     assert DT.name() == "DT"
     assert DT.symbol() == "DTSymbol"
     assert DT.cap() == toBase18(10000)
@@ -182,17 +179,19 @@ def test_createDT_via_util():
 
 def test_createBPool_via_util():
     brownie.chain.reset()
-    router = oceanv4util.ROUTER()
-    dataNFT = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
-    DT = oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSymbol", 10000, dataNFT, account0
-    )
-    pool = oceanv4util.create_BPool_from_datatoken(DT, 10, 2000, account0)
+    router = oceanv4util.deployRouter(account0)
+    (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
+        "dataNFT", "DATANFT", account0, router)
+    DT = oceanv4util.createDatatokenFromDataNFT(
+        "DT", "DTSymbol", 10000, dataNFT, account0)
+
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000.0))
+    OCEAN = oceanv4util.OCEANtoken()
+    pool = oceanv4util.createBPoolFromDatatoken(
+        DT, 100, 2000.0, account0, erc721_factory)
     pool_address = pool.address
 
-    OCEAN = oceanv4util.OCEANtoken()
     assert pool.getBaseTokenAddress() == OCEAN.address
-
-    assert OCEAN.balanceOf(pool_address) == toBase18(2000)
+    assert OCEAN.balanceOf(pool_address) < toBase18(10000.0)
     assert pool.getMarketFee() == toBase18(0.01)
     assert pool.getSwapFee() == toBase18(0.02)
