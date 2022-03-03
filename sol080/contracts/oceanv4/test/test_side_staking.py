@@ -2,7 +2,7 @@ import brownie
 
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080
-from util.globaltokens import fundOCEANfromAbove, OCEANtoken
+from util.globaltokens import fundOCEANFromAbove, OCEANtoken
 from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
