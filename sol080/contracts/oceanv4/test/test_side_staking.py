@@ -23,11 +23,12 @@ def test_sideStaking_properties():
     OCEAN_base_funding = 10000
     OCEAN_extra_funding = 10000
     DT_cap = 10000
-    DT_vest_amt = 1000
     OCEAN_init_liquidity = 2000
+    DT_vest_amt = 1000
+    DT_vest_num_blocks = 600
     (DT, pool, ss_bot) = _deployBPool(
         fund_extra, OCEAN_base_funding, OCEAN_extra_funding,
-        DT_cap, DT_vest_amt, OCEAN_init_liquidity)
+        DT_cap, OCEAN_init_liquidity, DT_vest_amt, DT_vest_num_blocks)
 
     assert ss_bot.getPoolAddress(DT.address) == pool.address
     assert ss_bot.getBaseTokenAddress(DT.address) == pool.getBaseTokenAddress()
@@ -403,7 +404,8 @@ def test_exitswapExternAmountOut_receiveDT():
 
 def _deployBPool(
         fund_extra: bool, OCEAN_base_funding=10000, OCEAN_extra_funding=10000,
-        DT_cap=10000, DT_vest_amt=1000, OCEAN_init_liquidity=2000):
+        DT_cap=10000, OCEAN_init_liquidity=2000,
+        DT_vest_amt=1000, DT_vest_num_blocks=600):
 
     fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
     
@@ -415,8 +417,10 @@ def _deployBPool(
     DT = oceanv4util.createDatatokenFromDataNFT(
         "DT", "DTSYMBOL", DT_cap, data_NFT, account0)
 
+    DT_vest_num_blocks = 600
     pool = oceanv4util.createBPoolFromDatatoken(
-        DT, erc721_factory, account0, DT_vest_amt, OCEAN_init_liquidity)
+        DT, erc721_factory, account0,
+        OCEAN_init_liquidity, DT_vest_amt, DT_vest_num_blocks)
     
     ss_bot_address = pool.getController()
     ss_bot = BROWNIE_PROJECT080.SideStaking.at(ss_bot_address)

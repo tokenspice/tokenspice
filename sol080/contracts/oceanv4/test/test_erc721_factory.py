@@ -142,13 +142,14 @@ def test_createBPool_via_util():
     oceanv4util.fundOCEANFromAbove(address0, toBase18(10000.0))
     OCEAN = oceanv4util.OCEANtoken()
 
-    DT_vest_amt = 100
     OCEAN_init_liquidity = 2000.0
+    DT_vest_amt = 100
+    DT_vest_num_blocks = 600
     LP_swap_fee = 0.03
     mkt_swap_fee = 0.01
     pool = oceanv4util.createBPoolFromDatatoken(
         DT, erc721_factory, account0,
-        DT_vest_amt, OCEAN_init_liquidity,
+        OCEAN_init_liquidity, DT_vest_amt, DT_vest_num_blocks,
         LP_swap_fee, mkt_swap_fee)
     pool_address = pool.address
 

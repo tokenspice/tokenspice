@@ -99,9 +99,11 @@ def _deployBPool():
     datatoken = oceanv4util.createDatatokenFromDataNFT(
         "DT", "DTSYMBOL", 10000, dataNFT, account0)
 
-    DT_vest_amt = 1000
     OCEAN_init_liquidity = 80000
+    DT_vest_amt = 1000
+    DT_vest_num_blocks = 600
     pool = oceanv4util.createBPoolFromDatatoken(
-        datatoken, erc721_factory, account0, DT_vest_amt, OCEAN_init_liquidity)
+        datatoken, erc721_factory, account0,
+        OCEAN_init_liquidity, DT_vest_amt, DT_vest_num_blocks)
     
     return pool
