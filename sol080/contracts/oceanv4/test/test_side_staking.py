@@ -19,10 +19,15 @@ def test_sideStaking_properties():
     init_block_height = brownie.chain.height
     OCEAN = OCEANtoken()
 
+    fund_extra = False
+    OCEAN_base_funding = 10000
+    OCEAN_extra_funding = 10000
     DT_cap = 10000
     DT_vest_amt = 1000
+    OCEAN_init_liquidity = 2000
     (DT, pool, ss_bot) = _deployBPool(
-        fund_extra=False, DT_cap=DT_cap, DT_vest_amt=DT_vest_amt)
+        fund_extra, OCEAN_base_funding, OCEAN_extra_funding,
+        DT_cap, DT_vest_amt, OCEAN_init_liquidity)
 
     assert ss_bot.getPoolAddress(DT.address) == pool.address
     assert ss_bot.getBaseTokenAddress(DT.address) == pool.getBaseTokenAddress()
@@ -32,7 +37,7 @@ def test_sideStaking_properties():
     ss_bot_DT_balance = fromBase18(DT.balanceOf(ss_bot.address))
     assert ss_bot_DT_balance == 9800 #Trang had 9800, why?
 
-    ss_bot_amt_vested = fromBase18(ss_bot.getVestingAmountSoFar(DT.address))
+    ss_bot_amt_vested = fromBase18(ss_bot.getvestingAmountSoFar(DT.address))
     assert ss_bot_amt_vested == 0
 
     # DT circ_supply = (DT cap) - (ss_bot DT balance) - (ss_bot amt vested)
@@ -397,8 +402,7 @@ def test_exitswapExternAmountOut_receiveDT():
 
 
 def _deployBPool(
-        fund_extra: bool,
-        OCEAN_base_funding=10000, OCEAN_extra_funding=10000,
+        fund_extra: bool, OCEAN_base_funding=10000, OCEAN_extra_funding=10000,
         DT_cap=10000, DT_vest_amt=1000, OCEAN_init_liquidity=2000):
 
     fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
