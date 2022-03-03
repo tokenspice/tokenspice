@@ -15,10 +15,9 @@ address1 = account1.address
 
 
 def test_sideStaking_properties():
+    brownie.chain.reset()
     init_block_height = brownie.chain.height
-    
     OCEAN = OCEANtoken()
-    
     pool = _deployBPool()
     DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     ss_bot_address = pool.getController()
@@ -47,6 +46,7 @@ def test_sideStaking_properties():
 
 
 def test_swapExactAmountIn():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -78,6 +78,7 @@ def test_swapExactAmountIn():
 
 
 def test_swapExactAmountOut():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -97,6 +98,7 @@ def test_swapExactAmountOut():
 
 
 def test_joinPool_addTokens():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -143,6 +145,7 @@ def test_joinPool_addTokens():
 
 
 def test_joinswapExternAmountIn_addOCEAN():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address1, toBase18(10000))
@@ -184,6 +187,7 @@ def test_joinswapExternAmountIn_addOCEAN():
 
 
 def test_joinswapPoolAmountOut_addOCEAN():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -225,6 +229,7 @@ def test_joinswapPoolAmountOut_addOCEAN():
 
 
 def test_exitPool_receiveTokens():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -260,6 +265,7 @@ def test_exitPool_receiveTokens():
 
 
 def test_exitswapPoolAmountIn_receiveOcean():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -306,6 +312,7 @@ def test_exitswapPoolAmountIn_receiveOcean():
 
 
 def test_exitswapPoolAmountIn_receiveDT():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -351,6 +358,7 @@ def test_exitswapPoolAmountIn_receiveDT():
 
 
 def test_exitswapExternAmountOut_receiveOcean():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -390,6 +398,7 @@ def test_exitswapExternAmountOut_receiveOcean():
 
 
 def test_exitswapExternAmountOut_receiveDT():
+    brownie.chain.reset()
     pool = _deployBPool()
     OCEAN = OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
@@ -425,7 +434,6 @@ def test_exitswapExternAmountOut_receiveDT():
 
 
 def _deployBPool():
-    brownie.chain.reset()
     router = oceanv4util.deployRouter(account0)
     fundOCEANFromAbove(address0, toBase18(10000))
     (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
