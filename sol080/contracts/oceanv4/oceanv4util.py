@@ -105,6 +105,7 @@ def createDataNFT(
         symbol,
         erc721_template_index,
         router.address,
+        ZERO_ADDRESS, # additionalMetaDataUpdater set to 0x00 for now
         token_URI,
         {"from": account},
     )
