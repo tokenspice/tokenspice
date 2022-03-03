@@ -12,16 +12,16 @@ _ERC721_TEMPLATE = None
 def ERC721Template():
     global _ERC721_TEMPLATE  # pylint: disable=global-statement
     try:
-        erc721template = _ERC721_TEMPLATE  # may trigger failure
-        if erc721template is not None:
-            x = erc721template.address  # "" # pylint: disable=unused-variable
+        erc721_template = _ERC721_TEMPLATE  # may trigger failure
+        if erc721_template is not None:
+            x = erc721_template.address  # "" # pylint: disable=unused-variable
     except brownie.exceptions.ContractNotFound:
-        erc721template = None
-    if erc721template is None:
+        erc721_template = None
+    if erc721_template is None:
         _ERC721_TEMPLATE = BROWNIE_PROJECT080.ERC721Template.deploy(
             {"from": GOD_ACCOUNT})
-        erc721template = _ERC721_TEMPLATE
-    return erc721template
+        erc721_template = _ERC721_TEMPLATE
+    return erc721_template
 
 
 _ERC20_TEMPLATE = None
@@ -30,17 +30,17 @@ _ERC20_TEMPLATE = None
 def ERC20Template():
     global _ERC20_TEMPLATE  # pylint: disable=global-statement
     try:
-        erc20template = _ERC20_TEMPLATE  # may trigger failure
-        if erc20template is not None:
-            x = erc20template.address  # "" # pylint: disable=unused-variable
+        erc20_template = _ERC20_TEMPLATE  # may trigger failure
+        if erc20_template is not None:
+            x = erc20_template.address  # "" # pylint: disable=unused-variable
     except brownie.exceptions.ContractNotFound:
-        erc20template = None
-    if erc20template is None:
+        erc20_template = None
+    if erc20_template is None:
         _ERC20_TEMPLATE = BROWNIE_PROJECT080.ERC20Template.deploy(
             {"from": GOD_ACCOUNT}
         )
-        erc20_template = erc20template
-    return erc20template
+        erc20_template = _ERC20_TEMPLATE
+    return erc20_template
 
 
 _POOL_TEMPLATE = None
@@ -49,52 +49,52 @@ _POOL_TEMPLATE = None
 def POOLTemplate():
     global _POOL_TEMPLATE  # pylint: disable=global-statement
     try:
-        pooltemplate = _POOL_TEMPLATE  # may trigger failure
-        if pooltemplate is not None:
-            x = pooltemplate.address  # "" # pylint: disable=unused-variable
+        pool_template = _POOL_TEMPLATE  # may trigger failure
+        if pool_template is not None:
+            x = pool_template.address  # "" # pylint: disable=unused-variable
     except brownie.exceptions.ContractNotFound:
-        pooltemplate = None
-    if pooltemplate is None:
+        pool_template = None
+    if pool_template is None:
         _POOL_TEMPLATE = BROWNIE_PROJECT080.BPool.deploy(
             {"from": GOD_ACCOUNT}
         )
-        pooltemplate = _POOL_TEMPLATE
+        pool_template = _POOL_TEMPLATE
         
-    return pooltemplate
+    return pool_template
 
 
 @enforce_types
-def deployRouter(account: str):
+def deployRouter(from_account):
     OCEAN = OCEANtoken()
-    poolTemplate = POOLTemplate()
+    pool_template = POOLTemplate()
     router = BROWNIE_PROJECT080.FactoryRouter.deploy(
-        account.address,
+        from_account.address,
         OCEAN.address,
-        poolTemplate,
+        pool_template,
         OPF_ADDRESS,
         [],
-        {"from": account},
+        {"from": from_account},
     )
     return router
 
 
 @enforce_types
-def deployERC721Factory(account, router):
-    erc721Template = ERC721Template()
-    erc20Template = ERC20Template()
+def deployERC721Factory(from_account, router):
+    erc721_template = ERC721Template()
+    erc20_template = ERC20Template()
     factory = BROWNIE_PROJECT080.ERC721Factory.deploy(
-        erc721Template.address,
-        erc20Template.address,
+        erc721_template.address,
+        erc20_template.address,
         OPF_ADDRESS,
         router.address,
-        {"from": account},
+        {"from": from_account},
     )
     return factory
 
 
 @enforce_types
-def createDataNFT(name: str, symbol: str, account: str, router):
-    erc721_factory = deployERC721Factory(account, router)
+def createDataNFT(name: str, symbol: str, from_account, router):
+    erc721_factory = deployERC721Factory(from_account, router)
     erc721_template_index = 1
     token_URI = "https://mystorage.com/mytoken.png"
     tx = erc721_factory.deployERC721Contract(
@@ -104,7 +104,7 @@ def createDataNFT(name: str, symbol: str, account: str, router):
         router.address,
         ZERO_ADDRESS, # additionalMetaDataUpdater set to 0x00 for now
         token_URI,
-        {"from": account},
+        {"from": from_account},
     )
     data_NFT_address = tx.events["NFTCreated"]["newTokenAddress"]
     data_NFT = BROWNIE_PROJECT080.ERC721Template.at(data_NFT_address)
@@ -113,7 +113,7 @@ def createDataNFT(name: str, symbol: str, account: str, router):
 
 @enforce_types
 def createDatatokenFromDataNFT(
-        DT_name: str, DT_symbol: str, DT_cap: int, dataNFT, account: str):
+        DT_name: str, DT_symbol: str, DT_cap: int, dataNFT, from_account):
 
     erc20_template_index = 1
     strings = [
@@ -121,9 +121,9 @@ def createDatatokenFromDataNFT(
         DT_symbol,
     ]
     addresses = [
-        account.address, # minter
-        account.address, # fee mgr
-        account.address, # pub mkt
+        from_account.address, # minter
+        from_account.address, # fee mgr
+        from_account.address, # pub mkt
         ZERO_ADDRESS,    # pub mkt fee token addr
     ]   
     uints = [
@@ -134,7 +134,7 @@ def createDatatokenFromDataNFT(
 
     tx = dataNFT.createERC20(
         erc20_template_index, strings, addresses, uints, _bytes,
-        {"from": account})
+        {"from": from_account})
     DT_address = tx.events["TokenCreated"]["newTokenAddress"]
     DT = BROWNIE_PROJECT080.ERC20Template.at(DT_address)
 
@@ -142,30 +142,29 @@ def createDatatokenFromDataNFT(
 
 
 @enforce_types
-def deploySideStaking(account, router):
+def deploySideStaking(from_account, router):
     return BROWNIE_PROJECT080.SideStaking.deploy(
-        router.address, {"from": account})
+        router.address, {"from": from_account})
 
 
 @enforce_types
 def createBPoolFromDatatoken(
-        datatoken, DT_vest_amt, OCEAN_init_liquidity, account, erc721_factory,
-        LP_swap_fee = 0.03, mkt_swap_fee = 0.01
-):
+        datatoken, DT_vest_amt, OCEAN_init_liquidity, from_account,
+        erc721_factory, LP_swap_fee = 0.03, mkt_swap_fee = 0.01):
         
     OCEAN = OCEANtoken()
-    poolTemplate = POOLTemplate()
+    pool_template = POOLTemplate()
     
     router_address = datatoken.router()
     router = BROWNIE_PROJECT080.FactoryRouter.at(router_address)
-    router.updateMinVestingPeriod(500, {"from":account})
+    router.updateMinVestingPeriod(500, {"from":from_account})
 
     OCEAN.approve(
-        router.address, toBase18(OCEAN_init_liquidity), {"from": account})
+        router.address, toBase18(OCEAN_init_liquidity), {"from": from_account})
     
-    ss_bot = deploySideStaking(account, router)
-    router.addSSContract(ss_bot.address, {"from": account})
-    router.addFactory(erc721_factory.address, {"from": account})
+    ss_bot = deploySideStaking(from_account, router)
+    router.addSSContract(ss_bot.address, {"from": from_account})
+    router.addFactory(erc721_factory.address, {"from": from_account})
 
     ss_params = [
         toBase18(0.1),         # rate (wei)
@@ -179,11 +178,11 @@ def createBPoolFromDatatoken(
         toBase18(mkt_swap_fee), #mkt swap fee
     ]
     addresses = [
-        ss_bot.address, OCEAN.address, account.address, account.address,
-        OPF_ADDRESS, poolTemplate.address]
+        ss_bot.address, OCEAN.address, from_account.address,
+        from_account.address, OPF_ADDRESS, pool_template.address]
 
     tx = datatoken.deployPool(
-        ss_params, swap_fees, addresses, {"from": account})
+        ss_params, swap_fees, addresses, {"from": from_account})
     pool_address = poolAddressFromNewBPoolTx(tx)
     pool = BROWNIE_PROJECT080.BPool.at(pool_address)
     
