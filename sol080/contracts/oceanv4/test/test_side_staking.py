@@ -384,13 +384,16 @@ def test_exitswapExternAmountOut_receiveDT():
 
 
 def _deployBPool(fund_extra: bool):
-    router = oceanv4util.deployRouter(account0)
     fundOCEANFromAbove(address0, toBase18(10000))
+    
+    router = oceanv4util.deployRouter(account0)
     
     (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
         "dataNFT", "DATANFTSYMBOL", account0, router)
+    
     DT = oceanv4util.createDatatokenFromDataNFT(
         "DT", "DTSYMBOL", 10000, dataNFT, account0)
+    
     pool = oceanv4util.createBPoolFromDatatoken(
         DT, 1000, 2000, account0, erc721_factory)
     
