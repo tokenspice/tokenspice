@@ -115,20 +115,31 @@ def createDataNFT(
 
 @enforce_types
 def createDatatokenFromDataNFT(DT_name, DT_symbol, DT_cap, dataNFT, account):
-    erc20_template_index = 1  # refer to erc20_template
-    strings = [DT_name, DT_symbol]
-    minter_addr = fee_mgr_addr = pub_mkt_addr = account.address
-    pub_mkt_fee_token_addr = ZERO_ADDRESS
-    pub_mkt_fee_amt = 0.0  # in OCEAN
-    uints = [toBase18(DT_cap), toBase18(pub_mkt_fee_amt)]
-    addresses = [minter_addr, fee_mgr_addr, pub_mkt_addr, pub_mkt_fee_token_addr]
-    bytes = []
+    erc20_template_index = 1
+    strings = [
+        DT_name,
+        DT_symbol,
+    ]
+    addresses = [
+        account.address, # minter
+        account.address, # fee mgr
+        account.address, # pub mkt
+        ZERO_ADDRESS,    # pub mkt fee token addr
+    ]   
+    uints = [
+        toBase18(DT_cap),
+        toBase18(0.0), # pub mkt fee amt
+    ]
+    _bytes = []
 
     tx = dataNFT.createERC20(
-        erc20_template_index, strings, addresses, uints, bytes, {"from": account}
-    )
+        erc20_template_index, strings, addresses, uints, _bytes,
+        {"from": account})
+    
     DT_address = tx.events["TokenCreated"]["newTokenAddress"]
-    return BROWNIE_PROJECT080.ERC20Template.at(DT_address)
+    DT = BROWNIE_PROJECT080.ERC20Template.at(DT_address)
+
+    return DT
 
 
 @enforce_types
