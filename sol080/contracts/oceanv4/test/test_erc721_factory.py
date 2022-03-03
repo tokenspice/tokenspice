@@ -1,7 +1,7 @@
 import brownie
-from sol080.contracts.oceanv4 import oceanv4util
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT, ZERO_ADDRESS
+from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
 account0 = accounts[0]
@@ -10,7 +10,7 @@ address0 = account0.address
 OPF_ADDRESS = OPF_ACCOUNT.address
 
 
-def test_direct():
+def test_direct(): # pylint: disable=too-many-statements
     erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
 
     erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy({"from": GOD_ACCOUNT})
@@ -96,7 +96,7 @@ def test_direct():
 
     # Tests ERC20 token template list
     assert erc721_factory.getTokenTemplate(1)[0] == erc20_template.address
-    assert erc721_factory.getTokenTemplate(1)[1] == True
+    assert erc721_factory.getTokenTemplate(1)[1]
 
     # Tests balanceOf
     assert DT.balanceOf(address0) == 0

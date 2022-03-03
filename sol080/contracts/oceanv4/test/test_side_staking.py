@@ -1,4 +1,7 @@
 import brownie
+
+from util.base18 import toBase18
+from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
 import sol080.contracts.oceanv4.oceanv4util
 from sol080.contracts.oceanv4.oceanv4util import (
     OCEANtoken,
@@ -6,8 +9,6 @@ from sol080.contracts.oceanv4.oceanv4util import (
     ROUTER,
     SIDESTAKING,
 )
-from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
 
 GOD_ADDRESS = GOD_ACCOUNT.address
 OPF_ADDRESS = OPF_ACCOUNT.address
@@ -229,9 +230,8 @@ def test_joinswapPoolAmountOut_addOCEAN():
     assert ssContractBPTbalance + BPTAmountOut == pool.balanceOf(sideStaking.address)
 
     #  DT balance lowered in the ssContract
-    ssContractDTbalance - tx.events["LOG_JOIN"][1][
-        "tokenAmountIn"
-    ] == datatoken.balanceOf(sideStaking.address)
+    assert ssContractDTbalance - tx.events["LOG_JOIN"][1]["tokenAmountIn"] \
+        == datatoken.balanceOf(sideStaking.address)
 
     # no datatoken where taken from account0
     assert account0_DT_balance == datatoken.balanceOf(address0)
