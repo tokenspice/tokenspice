@@ -15,41 +15,32 @@ address1 = account1.address
 
 def test_sideStaking_properties():
     pool = _deployBPool()
-    pool_address = pool.address
     DT = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
     OCEAN = oceanv4util.OCEANtoken()
     ss_bot_address = pool.getController()
     ss_bot = BROWNIE_PROJECT080.SideStaking.at(ss_bot_address)
-    initialBlockNum = brownie.chain.height
+    init_block_height = brownie.chain.height
 
-    assert ss_bot.getPoolAddress(DT.address) == pool_address
+    assert ss_bot.getPoolAddress(DT.address) == pool.address
     assert ss_bot.getBaseTokenAddress(DT.address) == pool.getBaseTokenAddress()
     assert ss_bot.getBaseTokenAddress(DT.address) == OCEAN.address
     assert ss_bot.getPublisherAddress(DT.address) == address0
 
-    assert DT.balanceOf(ss_bot.address) == toBase18(
-        9800
-    )  # depend on ss_rate, DT_vest_amount, ss_OCEAN_init_liquidity
-    assert ss_bot.getDatatokenCirculatingSupply(DT.address) == toBase18(
-        1200
-    )
+    # depends on ss_rate, DT_vest_amount, ss_OCEAN_init_liquidity
+    assert DT.balanceOf(ss_bot.address) == toBase18(9800)
+    assert ss_bot.getDatatokenCirculatingSupply(DT.address) == toBase18(1200)
 
     assert ss_bot.getBaseTokenBalance(DT.address) == 0
     assert ss_bot.getDatatokenBalance(DT.address) == toBase18(8800)
 
-    assert ss_bot.getDatatokenCurrentCirculatingSupply(
-        DT.address
-    ) == toBase18(
-        2000 * 0.1
-    )  # ss_rate*ss_OCEAN_init_liquidity
+    assert ss_bot.getDatatokenCurrentCirculatingSupply(DT.address) == \
+        toBase18(2000 * 0.1)  # ss_rate*ss_OCEAN_init_liquidity
 
     assert ss_bot.getvestingAmountSoFar(DT.address) == 0
     assert ss_bot.getvestingAmount(DT.address) == toBase18(1000)
 
-    assert ss_bot.getvestingLastBlock(DT.address) == initialBlockNum
-    assert (
-        ss_bot.getvestingEndBlock(DT.address) == initialBlockNum + 2500000
-    )
+    assert ss_bot.getvestingLastBlock(DT.address) == init_block_height
+    assert ss_bot.getvestingEndBlock(DT.address) == (init_block_height+2500000)
 
 
 def test_swapExactAmountIn():
