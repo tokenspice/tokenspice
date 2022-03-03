@@ -9,13 +9,16 @@ account0 = accounts[0]
 address0 = account0.address
 
 def test_direct(): # pylint: disable=too-many-statements
-    erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
-    erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy({"from": GOD_ACCOUNT})
-    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address0, {"from": GOD_ACCOUNT})
+    erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy(
+        {"from": GOD_ACCOUNT})
+    erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy(
+        {"from": GOD_ACCOUNT})
+    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(
+        address0, {"from": GOD_ACCOUNT})
     OCEAN_address = OCEANtoken.address
     pool_template = BROWNIE_PROJECT080.BPool.deploy({"from": GOD_ACCOUNT})
 
-    # DEPLOY ROUTER, SETTING OWNER
+    # DEPLOY Factory Router, setting owner
     router = BROWNIE_PROJECT080.FactoryRouter.deploy(
         address0,
         OCEAN_address,
@@ -25,7 +28,7 @@ def test_direct(): # pylint: disable=too-many-statements
         {"from": GOD_ACCOUNT},
     )
 
-    # SETUP ERC721 Factory with template
+    # Deploy ERC721 Factory, with templates
     erc721_factory = BROWNIE_PROJECT080.ERC721Factory.deploy(
         erc721_template.address,
         erc20_template.address,
