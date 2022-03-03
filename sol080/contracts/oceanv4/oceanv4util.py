@@ -65,11 +65,11 @@ def POOLTemplate():
 
 @enforce_types
 def deployRouter(account: str):
-    oceanToken = OCEANtoken()
+    OCEAN = OCEANtoken()
     poolTemplate = POOLTemplate()
     router = BROWNIE_PROJECT080.FactoryRouter.deploy(
         account.address,
-        oceanToken.address,
+        OCEAN.address,
         poolTemplate,
         OPF_ADDRESS,
         [],
