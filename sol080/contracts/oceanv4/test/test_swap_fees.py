@@ -38,55 +38,20 @@ def test_exactAmountIn_fee():
     assert tx.events["SWAP_FEES"][0]["marketFeeAmount"] == toBase18(
         0.01 * 100
     )  # 0.01: mkt_swap_fee in oceanv4util.create_BPool_from_datatoken, 100: exactAmountIn
-    assert tx.events["SWAP_FEES"][0]["tokenFees"] == OCEAN.address
-    assert oceanMarketFeeBal + tx.events["SWAP_FEES"][0][
-        "marketFeeAmount"
-    ] == pool.publishMarketFees(tx.events["SWAP_FEES"][0]["tokenFees"])
+    assert tx.events["SWAP_FEES"][0]["tokenFeeAddress"] == OCEAN.address
 
     # account1 received fee
     assert OCEAN.balanceOf(address1) == toBase18(0.001 * 100)
 
     # account0 ocean balance decreased
-    assert (
-        OCEAN.balanceOf(address0) + tx.events["LOG_SWAP"][0]["tokenAmountIn"]
+    assert (OCEAN.balanceOf(address0)
+            + tx.events["LOG_SWAP"][0]["tokenAmountIn"]) \
         == account0_Ocean_balance
-    )
 
     # account0 DT balance increased
-    assert account0_DT_balance + tx.events["LOG_SWAP"][0][
-        "tokenAmountOut"
-    ] == datatoken.balanceOf(address0)
+    assert account0_DT_balance + tx.events["LOG_SWAP"][0]["tokenAmountOut"] \
+        == datatoken.balanceOf(address0)
 
-
-# def test_vesting_available():
-#     pool = _deployBPool()
-#     OCEAN = oceanv4util.OCEANtoken()
-#     oceanv4util.fundOCEANFromAbove(address1, toBase18(100000))
-#     OCEAN.approve(pool.address, toBase18(100000), {"from": account1})
-#     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
-
-#     sideStakingAddress = pool.getController()
-#     sideStaking = BROWNIE_PROJECT080.SideStaking.at(sideStakingAddress)
-    
-#     ssContractDTbalance = datatoken.balanceOf(sideStaking.address)
-#     ssContractBPTbalance = pool.balanceOf(sideStaking.address)
-
-#     assert datatoken.balanceOf(address1) == 0
-
-#     OceanAmountIn = toBase18(50000) # try amount big enough so that the staking contract won't stake
-#     minBPTOut = toBase18(0.001)
-
-#     # try:
-#     receipt = pool.joinswapExternAmountIn(
-#         OCEAN.address,
-#         OceanAmountIn,
-#         minBPTOut,
-#         {"from": account1}
-#     )
-#     # except:
-#     #     brownie.exceptions.VirtualMachineError
-
-#     assert datatoken.balanceOf(address1) == 0
 
 def _deployBPool():
     brownie.chain.reset()
