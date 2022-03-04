@@ -207,7 +207,7 @@ def test_joinPool_addTokens():
 def test_joinswapExternAmountIn_addOCEAN():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ssbot) = _deployBPool(do_extra_funding=Fales)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=False)
 
     account0_DT_balance = DT.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ssbot.address)
