@@ -287,7 +287,7 @@ def test_exitswapPoolAmountIn_receiveOcean():
     minOceanOut = toBase18(0.5)
 
     tx = pool.exitswapPoolAmountIn(
-        OCEAN.address, BPTAmountIn, minOceanOut, {"from": account0}
+        BPTAmountIn, minOceanOut, {"from": account0}
     )
 
     assert DT.balanceOf(address0) == account0_DT_balance
