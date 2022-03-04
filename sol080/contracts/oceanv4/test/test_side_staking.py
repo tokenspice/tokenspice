@@ -241,43 +241,6 @@ def test_joinswapExternAmountIn_addOCEAN():
     assert account0_DT_balance == DT.balanceOf(address0)
 
 
-def test_joinswapPoolAmountOut_addOCEAN():
-    brownie.chain.reset()
-    OCEAN = OCEANtoken()
-    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
-
-    account0_DT_balance = DT.balanceOf(address0)
-    account0_Ocean_balance = OCEAN.balanceOf(address0)
-    account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ssbot.address)
-    ssContractBPTbalance = pool.balanceOf(ssbot.address)
-
-    BPTAmountOut = toBase18(0.1)
-    maxOceanIn = toBase18(100)
-
-    tx = pool.joinswapPoolAmountOut(
-        OCEAN.address, BPTAmountOut, maxOceanIn, {"from": account0}
-    )
-
-    assert tx.events["LOG_JOIN"][0]["tokenIn"] == OCEAN.address
-    assert tx.events["LOG_JOIN"][1]["tokenIn"] == DT.address
-
-    # Check balance
-    assert tx.events["LOG_JOIN"][0]["tokenAmountIn"] + OCEAN.balanceOf(address0) \
-        == account0_Ocean_balance
-    assert BPTAmountOut + account0_BPT_balance == pool.balanceOf(address0)
-
-    # we check ssContract received the same amount of BPT
-    assert ssContractBPTbalance + BPTAmountOut == pool.balanceOf(ssbot.address)
-
-    #  DT balance lowered in the ssContract
-    ssContractDTbalance - tx.events["LOG_JOIN"][1]["tokenAmountIn"] == \
-        DT.balanceOf(ssbot.address)
-
-    # no datatoken where taken from account0
-    assert account0_DT_balance == DT.balanceOf(address0)
-
-
 def test_exitPool_receiveTokens():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
