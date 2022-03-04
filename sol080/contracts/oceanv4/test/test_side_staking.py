@@ -207,7 +207,7 @@ def test_joinPool_addTokens():
 def test_joinswapExternAmountIn_addOCEAN():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ssbot) = _deployBPool(do_extra_funding=False)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ssbot.address)
@@ -217,7 +217,7 @@ def test_joinswapExternAmountIn_addOCEAN():
     minBPTOut = toBase18(0.1)
 
     tx = pool.joinswapExternAmountIn(
-        OCEAN.address, oceanAmountIn, minBPTOut, {"from": account0}
+        oceanAmountIn, minBPTOut, {"from": account0}
     )
 
     assert tx.events["LOG_JOIN"][0]["tokenIn"] == OCEAN.address
