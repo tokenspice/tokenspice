@@ -32,10 +32,10 @@ def test_sideStaking_properties():
         OCEAN_init_liquidity,
         DT_cap, DT_vest_amt, DT_vest_num_blocks)
 
-    assert ss_bot.getPoolAddress(DT.address) == pool.address
-    assert ss_bot.getBaseTokenAddress(DT.address) == pool.getBaseTokenAddress()
-    assert ss_bot.getBaseTokenAddress(DT.address) == OCEAN.address
+    assert pool.getBaseTokenAddress() == OCEAN.address
     assert ss_bot.getPublisherAddress(DT.address) == address0
+    assert ss_bot.getPoolAddress(DT.address) == pool.address
+    assert ss_bot.getBaseTokenAddress(DT.address) == OCEAN.address
 
     ss_bot_DT_balance = fromBase18(DT.balanceOf(ss_bot.address))
     assert ss_bot_DT_balance == 9800 #Trang had 9800, why?
