@@ -23,7 +23,6 @@ def test_exactAmountIn_fee():
     assert datatoken.balanceOf(address0) == 0
     account0_DT_balance = datatoken.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
-    oceanMarketFeeBal = pool.publishMarketFees(OCEAN.address)
 
     tokenInOutMarket = [OCEAN.address, datatoken.address, address1]
     # [tokenIn,tokenOut,marketFeeAddress]

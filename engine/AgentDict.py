@@ -5,6 +5,7 @@ from agents.PoolAgent import PoolAgent, PoolAgentV4
 from agents.DataconsumerAgent import DataconsumerAgent
 from agents.SpeculatorAgent import SpeculatorAgent, StakerspeculatorAgent
 
+
 @enforce_types
 class AgentDict(dict):
     def __init__(self, *arg, **kw):  # pylint: disable=useless-super-delegation

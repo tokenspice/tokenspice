@@ -2,7 +2,6 @@ from typing import Set, List
 
 from enforce_typing import enforce_types
 
-from agents.DataconsumerAgent import DataconsumerAgentV4
 from agents.PublisherAgent import (
     PublisherAgentV4,
     PublisherStrategyV4,

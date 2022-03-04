@@ -4,7 +4,6 @@ from util.constants import (
     BROWNIE_PROJECT080,
     GOD_ACCOUNT,
     ZERO_ADDRESS,
-    OPF_ACCOUNT,
     OPF_ADDRESS,
 )
 from sol080.contracts.oceanv4 import oceanv4util
@@ -136,7 +135,7 @@ def test_direct():  # pylint: disable=too-many-statements
 
 def test_createDataNFT_via_util():
     router = oceanv4util.deployRouter(account0)
-    (dataNFT, f) = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
+    (dataNFT, _) = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
     assert dataNFT.name() == "dataNFT"
     assert dataNFT.symbol() == "DATANFT"
     assert dataNFT.getPermissions(account0.address) == (True, True, True, True)
@@ -145,7 +144,7 @@ def test_createDataNFT_via_util():
 
 def test_createDT_via_util():
     router = oceanv4util.deployRouter(account0)
-    (dataNFT, f) = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
+    (dataNFT, _) = oceanv4util.createDataNFT("dataNFT", "DATANFT", account0, router)
     DT = oceanv4util.createDatatokenFromDataNFT(
         "DT", "DTSymbol", 10000, dataNFT, account0
     )

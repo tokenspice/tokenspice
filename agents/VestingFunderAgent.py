@@ -7,7 +7,6 @@ from util.base18 import toBase18
 from agents.VestingWalletAgent import VestingWalletAgent
 
 
-
 @enforce_types
 class VestingFunderAgent(AgentBase.AgentBaseEvm):
     """Will create and fund a VestingWalletAgent with specified name.

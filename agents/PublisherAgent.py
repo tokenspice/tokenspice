@@ -496,10 +496,10 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
             pool = pool_agent.pool
             DT = pool_agent._dt
             oneSSContractAddress = pool.getController()
-            oneSSContract = BROWNIE_PROJECT080.SideStaking.at(
-                oneSSContractAddress)
+            oneSSContract = BROWNIE_PROJECT080.SideStaking.at(oneSSContractAddress)
 
-            get_vest = (oneSSContract.getvestingAmountSoFar(DT.address)
-                        < oneSSContract.getvestingAmount(DT.address))
+            get_vest = oneSSContract.getvestingAmountSoFar(
+                DT.address
+            ) < oneSSContract.getvestingAmount(DT.address)
             if get_vest:
                 oneSSContract.getVesting(DT.address)

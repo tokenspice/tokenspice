@@ -16,7 +16,6 @@ address1 = account1.address
 
 def test_sideStaking_properties():
     brownie.chain.reset()
-    init_block_height = brownie.chain.height
     OCEAN = OCEANtoken()
 
     OCEAN_base_funding = 10000
@@ -126,7 +125,7 @@ def test_sideStaking_properties():
 def test_swapExactAmountIn():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, _) = _deployBPool(do_extra_funding=True)
 
     tokenInOutMarket = [OCEAN.address, DT.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
@@ -155,7 +154,7 @@ def test_swapExactAmountIn():
 def test_swapExactAmountOut():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, _) = _deployBPool(do_extra_funding=True)
 
     tokenInOutMarket = [
         OCEAN.address,
@@ -326,7 +325,7 @@ def _deployBPool(
     DT_cap=10000,
     DT_vest_amt=1000,
     DT_vest_num_blocks=600,
-):
+):  # pylint: disable=too-many-arguments
 
     fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
 

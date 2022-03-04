@@ -22,7 +22,7 @@ from enforce_typing import enforce_types
 from util import constants
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
-from util.constants import GOD_ACCOUNT, OPF_ACCOUNT, OPF_ADDRESS
+from util.constants import GOD_ACCOUNT, OPF_ADDRESS
 from util.strutil import asCurrency
 
 log = logging.getLogger("wallet")

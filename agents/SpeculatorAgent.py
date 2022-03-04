@@ -149,7 +149,6 @@ class SpeculatorAgentBaseV4(AgentBase.AgentBaseEvm):
         return pool_agents
 
 
-
 class SpeculatorAgentV4(SpeculatorAgentBaseV4):
     """Speculates by buying and selling DT"""
 
