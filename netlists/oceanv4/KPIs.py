@@ -38,25 +38,6 @@ def get_OCEAN_in_DTs(state, agent) -> float:
 
     return value_held
 
-@enforce_types
-def get_DTs(state, agent) -> float:
-    """Value of DT that this agent staked across all pools, denominated in OCEAN
-    Args:
-        state: SimState -- SimState, holds all pool agents (& their pools)
-        agent:  AgentBase -- agent of interest
-    Returns:
-        value_held: float -- value staked, denominated in OCEAN
-    """
-    OCEAN_address = globaltokens.OCEAN_address()
-    datatokens_held = []
-
-    for pool_agent in state.agents.filterToPoolV4().values():
-        pool = pool_agent._pool
-        DT = pool_agent._dt
-        amt_DT = agent.DT(DT)
-        datatokens_held.append(amt_DT)
-
-    return datatokens_held
 
 @enforce_types
 @enforce_types

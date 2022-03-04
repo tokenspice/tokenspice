@@ -1,4 +1,5 @@
 import brownie
+from typing import Any, List
 from enforce_typing import enforce_types
 
 from util.base18 import toBase18
@@ -130,7 +131,7 @@ def createDatatokenFromDataNFT(
         toBase18(DT_cap),
         toBase18(0.0), # pub mkt fee amt
     ]
-    _bytes = []
+    _bytes: List[Any] = []
 
     tx = dataNFT.createERC20(
         erc20_template_index, strings, addresses, uints, _bytes,
