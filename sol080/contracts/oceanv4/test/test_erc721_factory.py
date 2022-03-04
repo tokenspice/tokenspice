@@ -1,4 +1,5 @@
 import brownie
+
 from util.base18 import toBase18
 from util.constants import (
     BROWNIE_PROJECT080,
@@ -6,6 +7,7 @@ from util.constants import (
     ZERO_ADDRESS,
     OPF_ADDRESS,
 )
+from util.globaltokens import fundOCEANFromAbove
 from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
@@ -164,7 +166,7 @@ def test_createBPool_via_util():
         "DT", "DTSymbol", 10000, dataNFT, account0
     )
 
-    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000.0))
+    fundOCEANFromAbove(address0, toBase18(10000.0))
     OCEAN = oceanv4util.OCEANtoken()
 
     OCEAN_init_liquidity = 2000.0

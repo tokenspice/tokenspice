@@ -2,6 +2,7 @@ import brownie
 
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080
+from util.globaltokens import fundOCEANFromAbove
 from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
@@ -16,7 +17,7 @@ address1 = account1.address
 def test_exactAmountIn_fee():
     pool = _deployBPool()
     OCEAN = oceanv4util.OCEANtoken()
-    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
+    fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
@@ -56,7 +57,7 @@ def test_exactAmountIn_fee():
 def _deployBPool():
     brownie.chain.reset()
     router = oceanv4util.deployRouter(account0)
-    oceanv4util.fundOCEANFromAbove(address0, toBase18(100000))
+    fundOCEANFromAbove(address0, toBase18(100000))
 
     (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
         "dataNFT", "DATANFTSYMBOL", account0, router
