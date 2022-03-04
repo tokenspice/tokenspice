@@ -143,13 +143,15 @@ def test_createBPool_via_util():
     OCEAN = oceanv4util.OCEANtoken()
 
     OCEAN_init_liquidity = 2000.0
+    DT_OCEAN_rate = 0.1
     DT_vest_amt = 100
     DT_vest_num_blocks = 600
     LP_swap_fee = 0.03
     mkt_swap_fee = 0.01
     pool = oceanv4util.createBPoolFromDatatoken(
         DT, erc721_factory, account0,
-        OCEAN_init_liquidity, DT_vest_amt, DT_vest_num_blocks,
+        OCEAN_init_liquidity, DT_OCEAN_rate,
+        DT_vest_amt, DT_vest_num_blocks,
         LP_swap_fee, mkt_swap_fee)
     pool_address = pool.address
 

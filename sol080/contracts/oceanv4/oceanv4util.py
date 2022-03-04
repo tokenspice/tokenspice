@@ -150,11 +150,12 @@ def deploySideStaking(from_account, router):
 @enforce_types
 def createBPoolFromDatatoken(
         datatoken, erc721_factory, from_account,
-        OCEAN_init_liquidity,
-        DT_vest_amt, DT_vest_num_blocks = 600,
-        LP_swap_fee = 0.03, mkt_swap_fee = 0.01):
-    
-        
+        OCEAN_init_liquidity=2000, DT_OCEAN_rate=0.1,
+        DT_vest_amt=1000, DT_vest_num_blocks=600,
+        LP_swap_fee=0.03, mkt_swap_fee=0.01,
+):
+
+
     OCEAN = OCEANtoken()
     pool_template = POOLTemplate()
     
@@ -170,8 +171,8 @@ def createBPoolFromDatatoken(
     router.addFactory(erc721_factory.address, {"from": from_account})
 
     ss_params = [
-        toBase18(0.1),  # rate to exchange DT<->baseToken (wei)
-        18,             # OCEAN decimals
+        toBase18(DT_OCEAN_rate),
+        OCEAN.decimals(), 
         toBase18(DT_vest_amt),
         toBase18(DT_vest_num_blocks),
         toBase18(OCEAN_init_liquidity),
