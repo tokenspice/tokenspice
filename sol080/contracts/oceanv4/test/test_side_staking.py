@@ -165,7 +165,7 @@ def test_swapExactAmountOut():
 def test_joinPool_addTokens():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ssbot) = _deployBPool(do_extra_funding=False)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     tokenInOutMarket = [OCEAN.address, DT.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
