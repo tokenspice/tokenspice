@@ -178,8 +178,8 @@ def createBPoolFromDatatoken(
         toBase18(OCEAN_init_liquidity),
         ]
     swap_fees = [
-        toBase18(LP_swap_fee), #LP swap fee
-        toBase18(mkt_swap_fee), #mkt swap fee
+        toBase18(LP_swap_fee),
+        toBase18(mkt_swap_fee),
     ]
     addresses = [
         ss_bot.address, OCEAN.address, from_account.address,
