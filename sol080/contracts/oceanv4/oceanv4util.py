@@ -165,8 +165,8 @@ def createBPoolFromDatatoken(
     OCEAN.approve(
         router.address, toBase18(OCEAN_init_liquidity), {"from": from_account})
     
-    ss_bot = deploySideStaking(from_account, router)
-    router.addSSContract(ss_bot.address, {"from": from_account})
+    ssbot = deploySideStaking(from_account, router)
+    router.addSSContract(ssbot.address, {"from": from_account})
     router.addFactory(erc721_factory.address, {"from": from_account})
 
     ss_params = [
@@ -181,7 +181,7 @@ def createBPoolFromDatatoken(
         toBase18(mkt_swap_fee),
     ]
     addresses = [
-        ss_bot.address, OCEAN.address, from_account.address,
+        ssbot.address, OCEAN.address, from_account.address,
         from_account.address, OPF_ADDRESS, pool_template.address]
 
     tx = datatoken.deployPool(

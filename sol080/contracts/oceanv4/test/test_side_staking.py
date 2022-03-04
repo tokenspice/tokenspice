@@ -22,51 +22,76 @@ def test_sideStaking_properties():
     OCEAN_base_funding = 10000
     do_extra_funding = False
     OCEAN_extra_funding = 10000
-    OCEAN_init_liquidity = 2000
+    
+    OCEAN_init_liquidity = 2000 #initial liquidity in OCEAN on pool creation
+    DT_OCEAN_rate = 0.1
     
     DT_cap = 10000
     DT_vest_amt = 1000
-    DT_vest_num_blocks = 600
-    (DT, pool, ss_bot) = _deployBPool(
+    DT_vest_num_blocks = 6
+    (DT, pool, ssbot) = _deployBPool(
         OCEAN_base_funding, do_extra_funding, OCEAN_extra_funding,
-        OCEAN_init_liquidity,
+        OCEAN_init_liquidity, DT_OCEAN_rate,
         DT_cap, DT_vest_amt, DT_vest_num_blocks)
 
+    #basic tests
     assert pool.getBaseTokenAddress() == OCEAN.address
-    assert ss_bot.getPublisherAddress(DT.address) == address0
-    assert ss_bot.getPoolAddress(DT.address) == pool.address
-    assert ss_bot.getBaseTokenAddress(DT.address) == OCEAN.address
+    assert ssbot.getBaseTokenAddress(DT.address) == OCEAN.address
+    assert ssbot.getBaseTokenBalance(DT.address) == 0
+    
+    assert ssbot.getPublisherAddress(DT.address) == address0
+    assert ssbot.getPoolAddress(DT.address) == pool.address
+    
+    assert fromBase18(ssbot.getvestingAmount(DT.address)) == 1000
 
-    ss_bot_DT_balance = fromBase18(DT.balanceOf(ss_bot.address))
-    assert ss_bot_DT_balance == 9800 #Trang had 9800, why?
+    # ssbot manages DTs in two specific ways:
+    # 1. Linear vesting of DTs to publisher over a fixed # blocks
+    # 2. When OCEAN liquidity is added to the pool, it
+    #    moves DT from its balance into the pool (ultimately, DT circ supply)
+    #    such that DT:OCEAN ratio stays constant
 
-    ss_bot_amt_vested = fromBase18(ss_bot.getvestingAmountSoFar(DT.address))
-    assert ss_bot_amt_vested == 0
+    # Therefore: (DT_vested) + (ssbot_DT_balance + DT_circ_supply) = DT_cap
 
-    # DT circ_supply = (DT cap) - (ss_bot DT balance) - (ss_bot amt vested)
-    #                = 10000    - __??__              - 0
-    #                = __??__
-    expected_DT_circ_supply = DT_cap - ss_bot_DT_balance - ss_bot_amt_vested #Trang had 1200, why?
-    DT_circ_supply = fromBase18(ss_bot.getDatatokenCirculatingSupply(DT.address))
-    assert DT_circ_supply == expected_DT_circ_supply
+    # No blocks have passed since pool creation. Therefore no vesting yet
+    assert ssbot.getvestingAmountSoFar(DT.address) == 0
+    
+    # We start out with a given OCEAN_init_liquidity. And, DT_OCEAN_rate is
+    # the initial DT:OCEAN ratio.
+    # Therefore we know how many DT the bot was supposed to add to the pool:
+    # OCEAN_init_liquidity * DT_OCEAN_rate = 2000*0.1 = 200
+    # Since no one's swapped for DT, then this is also DT circulating supply
+    assert fromBase18(ssbot.getDatatokenCirculatingSupply(DT.address)) == 200
+    
+    # The ssbot holds the rest of the DT. Rerrange formula above to see amt.
+    # So,ssbot_DT_balance = DT_cap - DT_vested - DT_circ_supply
+    #                     = 10000  - 0         - 200
+    #                     = 9800
+    assert fromBase18(DT.balanceOf(ssbot.address)) == 9800
 
-    assert ss_bot.getBaseTokenBalance(DT.address) == 0
-    assert fromBase18(ss_bot.getDatatokenBalance(DT.address)) == 8800
+    # ========================================================
+    # OK, let's pass enough time to make all vesting happen!
+    brownie.chain.mine(blocks=DT_vest_num_blocks)
 
-    assert ss_bot.getDatatokenCurrentCirculatingSupply(DT.address) == \
-        toBase18(2000 * 0.1)  # ss_rate*ss_OCEAN_init_liquidity
-
-    assert ss_bot.getvestingAmountSoFar(DT.address) == 0
-    assert ss_bot.getvestingAmount(DT.address) == toBase18(1000)
-
-    assert ss_bot.getvestingLastBlock(DT.address) == init_block_height
-    assert ss_bot.getvestingEndBlock(DT.address) == (init_block_height+2500000)
-
+    # Recall, DT_vest_amt = 1000
+    # Has it all vested?
+    assert ssbot.getvestingAmountSoFar(DT.address) == 0 #must claim first
+    assert DT.balanceOf(account0) == 0
+    
+    ssbot.getVesting(DT.address, {"from": account0}) #claim!
+    
+    assert fromBase18(DT.balanceOf(account0)) == 1000
+    assert fromBase18(ssbot.getvestingAmountSoFar(DT.address)) == 1000
+     
+    # Then, ssbot_DT_balance = DT_cap - DT_vested - DT_circ_supply
+    #                        = 10000  - 1000      - 200
+    #                        = 8800
+    assert fromBase18(ssbot.getDatatokenBalance(DT.address)) == 8800
+    
 
 def test_swapExactAmountIn():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     tokenInOutMarket = [OCEAN.address, DT.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
@@ -95,7 +120,7 @@ def test_swapExactAmountIn():
 def test_swapExactAmountOut():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     tokenInOutMarket = [
         OCEAN.address,
@@ -112,7 +137,7 @@ def test_swapExactAmountOut():
 def test_joinPool_addTokens():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=False)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=False)
 
     tokenInOutMarket = [OCEAN.address, DT.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
@@ -125,8 +150,8 @@ def test_joinPool_addTokens():
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ss_bot.address)
-    ssContractBPTbalance = pool.balanceOf(ss_bot.address)
+    ssContractDTbalance = DT.balanceOf(ssbot.address)
+    ssContractBPTbalance = pool.balanceOf(ssbot.address)
 
     BPTAmountOut = toBase18(0.01)
     maxAmountsIn = [toBase18(50), toBase18(50)]
@@ -147,18 +172,18 @@ def test_joinPool_addTokens():
     assert account0_BPT_balance + BPTAmountOut == pool.balanceOf(address0)
 
     # check ssContract BPT and DT balance didn't change
-    assert ssContractBPTbalance == pool.balanceOf(ss_bot.address)
-    assert ssContractDTbalance == DT.balanceOf(ss_bot.address)
+    assert ssContractBPTbalance == pool.balanceOf(ssbot.address)
+    assert ssContractDTbalance == DT.balanceOf(ssbot.address)
 
 
 def test_joinswapExternAmountIn_addOCEAN():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=Fales)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=Fales)
 
     account0_DT_balance = DT.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ss_bot.address)
-    ssContractBPTbalance = pool.balanceOf(ss_bot.address)
+    ssContractDTbalance = DT.balanceOf(ssbot.address)
+    ssContractBPTbalance = pool.balanceOf(ssbot.address)
 
     oceanAmountIn = toBase18(100)
     minBPTOut = toBase18(0.1)
@@ -171,16 +196,16 @@ def test_joinswapExternAmountIn_addOCEAN():
     assert tx.events["LOG_JOIN"][0]["tokenAmountIn"] == oceanAmountIn
 
     assert tx.events["LOG_JOIN"][1]["tokenIn"] == DT.address
-    ss_botAmountIn = ssContractDTbalance - DT.balanceOf(ss_bot.address)
-    assert ss_botAmountIn == tx.events["LOG_JOIN"][1]["tokenAmountIn"]
+    ssbotAmountIn = ssContractDTbalance - DT.balanceOf(ssbot.address)
+    assert ssbotAmountIn == tx.events["LOG_JOIN"][1]["tokenAmountIn"]
 
     # we check ssContract actually moved DT and got back BPT
     assert (
-        DT.balanceOf(ss_bot.address)
+        DT.balanceOf(ssbot.address)
         == ssContractDTbalance - tx.events["LOG_JOIN"][1]["tokenAmountIn"]
     )
     assert (
-        pool.balanceOf(ss_bot.address)
+        pool.balanceOf(ssbot.address)
         == ssContractBPTbalance + tx.events["LOG_BPT"]["bptAmount"]
     )
 
@@ -191,13 +216,13 @@ def test_joinswapExternAmountIn_addOCEAN():
 def test_joinswapPoolAmountOut_addOCEAN():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ss_bot.address)
-    ssContractBPTbalance = pool.balanceOf(ss_bot.address)
+    ssContractDTbalance = DT.balanceOf(ssbot.address)
+    ssContractBPTbalance = pool.balanceOf(ssbot.address)
 
     BPTAmountOut = toBase18(0.1)
     maxOceanIn = toBase18(100)
@@ -215,11 +240,11 @@ def test_joinswapPoolAmountOut_addOCEAN():
     assert BPTAmountOut + account0_BPT_balance == pool.balanceOf(address0)
 
     # we check ssContract received the same amount of BPT
-    assert ssContractBPTbalance + BPTAmountOut == pool.balanceOf(ss_bot.address)
+    assert ssContractBPTbalance + BPTAmountOut == pool.balanceOf(ssbot.address)
 
     #  DT balance lowered in the ssContract
     ssContractDTbalance - tx.events["LOG_JOIN"][1]["tokenAmountIn"] == \
-        DT.balanceOf(ss_bot.address)
+        DT.balanceOf(ssbot.address)
 
     # no datatoken where taken from account0
     assert account0_DT_balance == DT.balanceOf(address0)
@@ -228,13 +253,13 @@ def test_joinswapPoolAmountOut_addOCEAN():
 def test_exitPool_receiveTokens():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ss_bot.address)
-    ssContractBPTbalance = pool.balanceOf(ss_bot.address)
+    ssContractDTbalance = DT.balanceOf(ssbot.address)
+    ssContractBPTbalance = pool.balanceOf(ssbot.address)
 
     BPTAmountIn = toBase18(0.5)
     minAmountOut = [toBase18(1), toBase18(1)]
@@ -252,20 +277,20 @@ def test_exitPool_receiveTokens():
     assert pool.balanceOf(address0) + BPTAmountIn == account0_BPT_balance
 
     # check the ssContract BPT and DT balance didn"t change
-    assert ssContractBPTbalance == pool.balanceOf(ss_bot.address)
-    assert ssContractDTbalance == DT.balanceOf(ss_bot.address)
+    assert ssContractBPTbalance == pool.balanceOf(ssbot.address)
+    assert ssContractDTbalance == DT.balanceOf(ssbot.address)
 
 
 def test_exitswapPoolAmountIn_receiveOcean():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ss_bot.address)
-    ssContractBPTbalance = pool.balanceOf(ss_bot.address)
+    ssContractDTbalance = DT.balanceOf(ssbot.address)
+    ssContractBPTbalance = pool.balanceOf(ssbot.address)
 
     BPTAmountIn = toBase18(0.5)
     minOceanOut = toBase18(0.5)
@@ -290,24 +315,24 @@ def test_exitswapPoolAmountIn_receiveOcean():
     assert account0_BPT_balance == pool.balanceOf(address0) + BPTAmountIn
 
     # check the ssContract BPT balance
-    assert ssContractBPTbalance == pool.balanceOf(ss_bot.address) + BPTAmountIn
+    assert ssContractBPTbalance == pool.balanceOf(ssbot.address) + BPTAmountIn
 
     # ssContract got back his dt when redeeeming BPT
     assert ssContractDTbalance + tx.events["LOG_EXIT"][1][
         "tokenAmountOut"
-    ] == DT.balanceOf(ss_bot.address)
+    ] == DT.balanceOf(ssbot.address)
 
 
 def test_exitswapPoolAmountIn_receiveDT():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ss_bot.address)
-    ssContractBPTbalance = pool.balanceOf(ss_bot.address)
+    ssContractDTbalance = DT.balanceOf(ssbot.address)
+    ssContractBPTbalance = pool.balanceOf(ssbot.address)
 
     BPTAmountIn = toBase18(0.5)
     minDTOut = toBase18(0.5)
@@ -335,20 +360,20 @@ def test_exitswapPoolAmountIn_receiveDT():
     assert account0_BPT_balance == pool.balanceOf(address0) + BPTAmountIn
 
     # ssContract BPT and DT balance didn't change
-    assert ssContractBPTbalance == pool.balanceOf(ss_bot.address)
-    assert ssContractDTbalance == DT.balanceOf(ss_bot.address)
+    assert ssContractBPTbalance == pool.balanceOf(ssbot.address)
+    assert ssContractDTbalance == DT.balanceOf(ssbot.address)
 
 
 def test_exitswapExternAmountOut_receiveOcean():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ss_bot.address)
-    ssContractBPTbalance = pool.balanceOf(ss_bot.address)
+    ssContractDTbalance = DT.balanceOf(ssbot.address)
+    ssContractBPTbalance = pool.balanceOf(ssbot.address)
 
     maxBPTIn = toBase18(0.5)
     exactOceanOut = toBase18(1)
@@ -368,22 +393,22 @@ def test_exitswapExternAmountOut_receiveOcean():
     ] + account0_Ocean_balance == OCEAN.balanceOf(address0)
     assert ssContractBPTbalance - tx.events["LOG_BPT"][0][
         "bptAmount"
-    ] == pool.balanceOf(ss_bot.address)
+    ] == pool.balanceOf(ssbot.address)
     assert ssContractDTbalance + tx.events["LOG_EXIT"][1][
         "tokenAmountOut"
-    ] == DT.balanceOf(ss_bot.address)
+    ] == DT.balanceOf(ssbot.address)
 
 
 def test_exitswapExternAmountOut_receiveDT():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
+    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ss_bot.address)
-    ssContractBPTbalance = pool.balanceOf(ss_bot.address)
+    ssContractDTbalance = DT.balanceOf(ssbot.address)
+    ssContractBPTbalance = pool.balanceOf(ssbot.address)
 
     maxBPTIn = toBase18(0.5)
     exacDTOut = toBase18(1)
@@ -400,8 +425,8 @@ def test_exitswapExternAmountOut_receiveDT():
 
     assert tx.events["LOG_EXIT"][0]["tokenAmountOut"] + account0_DT_balance \
         == DT.balanceOf(address0)
-    assert ssContractBPTbalance == pool.balanceOf(ss_bot.address)
-    assert ssContractDTbalance == DT.balanceOf(ss_bot.address)
+    assert ssContractBPTbalance == pool.balanceOf(ssbot.address)
+    assert ssContractDTbalance == DT.balanceOf(ssbot.address)
 
 
 def _deployBPool(
@@ -409,6 +434,7 @@ def _deployBPool(
         do_extra_funding:bool=True,
         OCEAN_extra_funding=10000,
         OCEAN_init_liquidity=2000,
+        DT_OCEAN_rate=0.1,
         DT_cap=10000, 
         DT_vest_amt=1000,
         DT_vest_num_blocks=600,
@@ -424,14 +450,13 @@ def _deployBPool(
     DT = oceanv4util.createDatatokenFromDataNFT(
         "DT", "DTSYMBOL", DT_cap, data_NFT, account0)
 
-    DT_OCEAN_rate = 0.1
     pool = oceanv4util.createBPoolFromDatatoken(
         DT, erc721_factory, account0,
         OCEAN_init_liquidity, DT_OCEAN_rate,
         DT_vest_amt, DT_vest_num_blocks)
     
-    ss_bot_address = pool.getController()
-    ss_bot = BROWNIE_PROJECT080.SideStaking.at(ss_bot_address)
+    ssbot_address = pool.getController()
+    ssbot = BROWNIE_PROJECT080.SideStaking.at(ssbot_address)
 
     if do_extra_funding:
         fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
@@ -439,4 +464,4 @@ def _deployBPool(
         OCEAN.approve(
             pool.address, toBase18(OCEAN_extra_funding), {"from": account0})
     
-    return (DT, pool, ss_bot)
+    return (DT, pool, ssbot)
