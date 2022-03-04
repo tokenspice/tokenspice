@@ -314,47 +314,6 @@ def test_exitswapPoolAmountIn_receiveOcean():
     ] == DT.balanceOf(ssbot.address)
 
 
-def test_exitswapPoolAmountIn_receiveDT():
-    brownie.chain.reset()
-    OCEAN = OCEANtoken()
-    (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
-
-    account0_DT_balance = DT.balanceOf(address0)
-    account0_OCEAN_balance = OCEAN.balanceOf(address0)
-    account0_BPT_balance = pool.balanceOf(address0)
-    ssContractDTbalance = DT.balanceOf(ssbot.address)
-    ssContractBPTbalance = pool.balanceOf(ssbot.address)
-
-    BPTAmountIn = toBase18(0.5)
-    minDTOut = toBase18(0.5)
-
-    tx = pool.exitswapPoolAmountIn(
-        BPTAmountIn, minDTOut, {"from": account0}
-    )
-
-    assert OCEAN.balanceOf(address0) == account0_OCEAN_balance
-    assert (
-        pool.balanceOf(address0)
-        == account0_BPT_balance - tx.events["LOG_BPT"][0]["bptAmount"]
-    )
-
-    # check exit event argument
-    assert tx.events["LOG_EXIT"][0]["caller"] == address0
-    assert tx.events["LOG_EXIT"][0]["tokenOut"] == DT.address
-
-    # check DT balance before and after
-    assert tx.events["LOG_EXIT"][0][
-        "tokenAmountOut"
-    ] + account0_DT_balance == DT.balanceOf(address0)
-
-    # chekc BPT
-    assert account0_BPT_balance == pool.balanceOf(address0) + BPTAmountIn
-
-    # ssContract BPT and DT balance didn't change
-    assert ssContractBPTbalance == pool.balanceOf(ssbot.address)
-    assert ssContractDTbalance == DT.balanceOf(ssbot.address)
-
-
 def test_exitswapExternAmountOut_receiveOcean():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
