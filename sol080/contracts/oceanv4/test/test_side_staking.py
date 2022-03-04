@@ -424,7 +424,6 @@ def _deployBPool(
     DT = oceanv4util.createDatatokenFromDataNFT(
         "DT", "DTSYMBOL", DT_cap, data_NFT, account0)
 
-    DT_vest_num_blocks = 600
     pool = oceanv4util.createBPoolFromDatatoken(
         DT, erc721_factory, account0,
         OCEAN_init_liquidity, DT_vest_amt, DT_vest_num_blocks)
