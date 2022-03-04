@@ -19,16 +19,18 @@ def test_sideStaking_properties():
     init_block_height = brownie.chain.height
     OCEAN = OCEANtoken()
 
-    fund_extra = False
     OCEAN_base_funding = 10000
-    OCEAN_extra_funding = 10000
-    DT_cap = 10000
+    do_extra_funding = False
+    OCEAN_extra_funding=10000
     OCEAN_init_liquidity = 2000
+    
+    DT_cap = 10000
     DT_vest_amt = 1000
     DT_vest_num_blocks = 600
     (DT, pool, ss_bot) = _deployBPool(
-        fund_extra, OCEAN_base_funding, OCEAN_extra_funding,
-        DT_cap, OCEAN_init_liquidity, DT_vest_amt, DT_vest_num_blocks)
+        OCEAN_base_funding, do_extra_funding, OCEAN_extra_funding,
+        OCEAN_init_liquidity,
+        DT_cap, DT_vest_amt, DT_vest_num_blocks)
 
     assert ss_bot.getPoolAddress(DT.address) == pool.address
     assert ss_bot.getBaseTokenAddress(DT.address) == pool.getBaseTokenAddress()
@@ -64,7 +66,7 @@ def test_sideStaking_properties():
 def test_swapExactAmountIn():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=True)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
 
     tokenInOutMarket = [OCEAN.address, DT.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
@@ -93,7 +95,7 @@ def test_swapExactAmountIn():
 def test_swapExactAmountOut():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=True)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
 
     tokenInOutMarket = [
         OCEAN.address,
@@ -110,7 +112,7 @@ def test_swapExactAmountOut():
 def test_joinPool_addTokens():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=False)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=False)
 
     tokenInOutMarket = [OCEAN.address, DT.address, address0]
     # [tokenIn,tokenOut,marketFeeAddress]
@@ -152,7 +154,7 @@ def test_joinPool_addTokens():
 def test_joinswapExternAmountIn_addOCEAN():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=Fales)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=Fales)
 
     account0_DT_balance = DT.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ss_bot.address)
@@ -189,7 +191,7 @@ def test_joinswapExternAmountIn_addOCEAN():
 def test_joinswapPoolAmountOut_addOCEAN():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=True)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -226,7 +228,7 @@ def test_joinswapPoolAmountOut_addOCEAN():
 def test_exitPool_receiveTokens():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=True)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -257,7 +259,7 @@ def test_exitPool_receiveTokens():
 def test_exitswapPoolAmountIn_receiveOcean():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=True)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -299,7 +301,7 @@ def test_exitswapPoolAmountIn_receiveOcean():
 def test_exitswapPoolAmountIn_receiveDT():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=True)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -340,7 +342,7 @@ def test_exitswapPoolAmountIn_receiveDT():
 def test_exitswapExternAmountOut_receiveOcean():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=True)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -375,7 +377,7 @@ def test_exitswapExternAmountOut_receiveOcean():
 def test_exitswapExternAmountOut_receiveDT():
     brownie.chain.reset()
     OCEAN = OCEANtoken()
-    (DT, pool, ss_bot) = _deployBPool(fund_extra=True)
+    (DT, pool, ss_bot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
@@ -403,9 +405,14 @@ def test_exitswapExternAmountOut_receiveDT():
 
 
 def _deployBPool(
-        fund_extra: bool, OCEAN_base_funding=10000, OCEAN_extra_funding=10000,
-        DT_cap=10000, OCEAN_init_liquidity=2000,
-        DT_vest_amt=1000, DT_vest_num_blocks=600):
+        OCEAN_base_funding=10000,
+        do_extra_funding:bool=True,
+        OCEAN_extra_funding=10000,
+        OCEAN_init_liquidity=2000,
+        DT_cap=10000, 
+        DT_vest_amt=1000,
+        DT_vest_num_blocks=600,
+):
 
     fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
     
@@ -425,7 +432,7 @@ def _deployBPool(
     ss_bot_address = pool.getController()
     ss_bot = BROWNIE_PROJECT080.SideStaking.at(ss_bot_address)
 
-    if fund_extra:
+    if do_extra_funding:
         fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
         OCEAN = OCEANtoken()
         OCEAN.approve(
