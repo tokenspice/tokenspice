@@ -8,11 +8,11 @@ import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/token/ERC20/ERC20.so
 import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/utils/math/SafeMath.sol";
 
 /**
-* @title DataTokenTemplate
+* @title DatatokenTemplate
 *  
-* @dev DataTokenTemplate is an ERC20 compliant token template
+* @dev DatatokenTemplate is an ERC20 compliant token template
 *      Used by the factory contract as a bytecode reference to 
-*      deploy new DataTokens.
+*      deploy new Datatokens.
 */
 contract MockOldDT is ERC20('Test','TESTSYMBOL') {
     using SafeMath for uint256;
@@ -62,7 +62,7 @@ contract MockOldDT is ERC20('Test','TESTSYMBOL') {
     modifier onlyNotInitialized() {
         require(
             !initialized,
-            'DataTokenTemplate: token instance already initialized'
+            'DatatokenTemplate: token instance already initialized'
         );
         _;
     }
@@ -70,7 +70,7 @@ contract MockOldDT is ERC20('Test','TESTSYMBOL') {
     modifier onlyMinter() {
         require(
             msg.sender == _minter,
-            'DataTokenTemplate: invalid minter' 
+            'DatatokenTemplate: invalid minter' 
         );
         _;
     }
@@ -125,22 +125,22 @@ contract MockOldDT is ERC20('Test','TESTSYMBOL') {
     {
         require(
             minterAddress != address(0), 
-            'DataTokenTemplate: Invalid minter,  zero address'
+            'DatatokenTemplate: Invalid minter,  zero address'
         );
 
         require(
             _minter == address(0), 
-            'DataTokenTemplate: Invalid minter, zero address'
+            'DatatokenTemplate: Invalid minter, zero address'
         );
 
         require(
             feeCollector != address(0),
-            'DataTokenTemplate: Invalid community fee collector, zero address'
+            'DatatokenTemplate: Invalid community fee collector, zero address'
         );
 
         require(
             cap_ != 0,
-            'DataTokenTemplate: Invalid cap value'
+            'DatatokenTemplate: Invalid cap value'
         );
         _cap = cap_;
         _name = name;
@@ -162,7 +162,7 @@ contract MockOldDT is ERC20('Test','TESTSYMBOL') {
     {
         require(
             totalSupply().add(value) <= _cap, 
-            'DataTokenTemplate: cap exceeded'
+            'DatatokenTemplate: cap exceeded'
         );
         _mint(account, value);
     }
@@ -214,7 +214,7 @@ contract MockOldDT is ERC20('Test','TESTSYMBOL') {
         if ( amount != 0 )  
             require(
                 transfer(consumer, amount),
-                'DataTokenTemplate: failed to finish order'
+                'DatatokenTemplate: failed to finish order'
             );
         
         emit OrderFinished(
@@ -255,7 +255,7 @@ contract MockOldDT is ERC20('Test','TESTSYMBOL') {
     {
         require(
             msg.sender == _proposedMinter,
-            'DataTokenTemplate: invalid proposed minter address'
+            'DatatokenTemplate: invalid proposed minter address'
         );
         emit MinterApproved(
             _minter,
@@ -270,7 +270,7 @@ contract MockOldDT is ERC20('Test','TESTSYMBOL') {
     /**
      * @dev blob
      *      It returns the blob (e.g https://123.com).
-     * @return DataToken blob.
+     * @return Datatoken blob.
      */
     function blob() external view returns(string memory) {
         return _blob;
@@ -280,7 +280,7 @@ contract MockOldDT is ERC20('Test','TESTSYMBOL') {
     /**
      * @dev cap
      *      it returns the capital.
-     * @return DataToken cap.
+     * @return Datatoken cap.
      */
     function cap() external view returns (uint256) {
         return _cap;

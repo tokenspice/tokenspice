@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: Unknown
 pragma solidity 0.8.10;
-
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 import "./IERC721.sol";
 /**
  * @title ERC-721 Non-Fungible Token Standard, optional metadata extension

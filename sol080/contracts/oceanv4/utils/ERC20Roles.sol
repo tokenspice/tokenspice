@@ -1,5 +1,7 @@
-// SPDX-License-Identifier: Unknown
 pragma solidity 0.8.10;
+// Copyright BigchainDB GmbH and Ocean Protocol contributors
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+// Code is Apache-2.0 and docs are CC-BY-4.0
 
 contract ERC20Roles {
     
@@ -25,6 +27,10 @@ contract ERC20Roles {
         uint256 timestamp,
         uint256 blockNumber
     );
+
+    function getPermissions(address user) public view returns (RolesERC20 memory) {
+        return permissions[user];
+    }
 
     function _addMinter(address _minter) internal {
         RolesERC20 storage user = permissions[_minter];

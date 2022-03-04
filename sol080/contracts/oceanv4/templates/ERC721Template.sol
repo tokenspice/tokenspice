@@ -1,11 +1,12 @@
-// SPDX-License-Identifier: Unknown
 pragma solidity 0.8.10;
+// Copyright BigchainDB GmbH and Ocean Protocol contributors
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+// Code is Apache-2.0 and docs are CC-BY-4.0
 
 import "../utils/ERC721/ERC721.sol";
 import "../utils/ERC725/ERC725Ocean.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/utils/Create2.sol";
 import "OpenZeppelin/openzeppelin-contracts@4.2.0/contracts/security/ReentrancyGuard.sol";
-import "GNSPS/solidity-bytes-utils@0.8.0/contracts/BytesLib.sol";
 import "../interfaces/IV3ERC20.sol";
 import "../interfaces/IFactory.sol";
 import "../interfaces/IERC20Template.sol";
@@ -48,7 +49,7 @@ contract ERC721Template is
         string decryptorUrl,
         bytes flags,
         bytes data,
-        bytes metaDataHash,
+        bytes32 metaDataHash,
         uint256 timestamp,
         uint256 blockNumber
     );
@@ -58,9 +59,16 @@ contract ERC721Template is
         string decryptorUrl,
         bytes flags,
         bytes data,
-        bytes metaDataHash,
+        bytes32 metaDataHash,
         uint256 timestamp,
         uint256 blockNumber
+    );
+    event MetadataValidated(
+        address indexed validator,
+        bytes32 metaDataHash,
+        uint8 v, 
+        bytes32 r, 
+        bytes32 s
     );
     event MetadataState(
         address indexed updatedBy,
@@ -100,12 +108,17 @@ contract ERC721Template is
         string calldata symbol_,
         address tokenFactory,
         address additionalERC20Deployer,
+        address additionalMetaDataUpdater,
         string memory tokenURI
     ) external returns (bool) {
         require(
             !initialized,
             "ERC721Template: token instance already initialized"
         );
+        if(additionalERC20Deployer != address(0))
+            _addToCreateERC20List(additionalERC20Deployer);
+        if(additionalMetaDataUpdater != address(0))
+            _addToMetadataList(additionalMetaDataUpdater);
         bool initResult = 
             _initialize(
                 owner,
@@ -114,8 +127,6 @@ contract ERC721Template is
                 tokenFactory,
                 tokenURI
             );
-        if(initResult && additionalERC20Deployer != address(0))
-            _addToCreateERC20List(additionalERC20Deployer);
         return(initResult);
     }
 
@@ -171,13 +182,16 @@ contract ERC721Template is
      * @param tokenId token ID
      * @param tokenURI token URI
      */
-    function setTokenURI(uint256 tokenId, string memory tokenURI) external onlyNFTOwner {
+    function setTokenURI(uint256 tokenId, string memory tokenURI) public {
+        require(msg.sender == ownerOf(tokenId), "ERC721Template: not NFTOwner");
         _setTokenURI(tokenId, tokenURI);
         emit TokenURIUpdate(msg.sender, tokenURI, tokenId,
             /* solium-disable-next-line */
             block.timestamp,
             block.number);
     }
+
+    
 
     /**
      * @dev setMetaDataState
@@ -196,6 +210,12 @@ contract ERC721Template is
             block.number);
     }
 
+    struct metaDataProof {
+        address validatorAddress;
+        uint8 v; // v of validator signed message
+        bytes32 r; // r of validator signed message
+        bytes32 s; // s of validator signed message
+    }
     /**
      * @dev setMetaData
      *     
@@ -206,14 +226,23 @@ contract ERC721Template is
      * @param _metaDataDecryptorAddress decryptor public key
      * @param flags flags used by Aquarius
      * @param data data used by Aquarius
+     * @param _metaDataHash hash of clear data (before the encryption, if any)
+     * @param _metadataProofs optional signatures of entitys who validated data (before the encryption, if any)
      */
     function setMetaData(uint8 _metaDataState, string calldata _metaDataDecryptorUrl
         , string calldata _metaDataDecryptorAddress, bytes calldata flags, 
-        bytes calldata data,bytes calldata _metaDataHash) external {
+        bytes calldata data,bytes32 _metaDataHash, metaDataProof[] memory _metadataProofs) external {
         require(
             permissions[msg.sender].updateMetadata,
             "ERC721Template: NOT METADATA_ROLE"
         );
+        _setMetaData(_metaDataState, _metaDataDecryptorUrl, _metaDataDecryptorAddress,flags, 
+        data,_metaDataHash, _metadataProofs);
+    }
+
+    function _setMetaData(uint8 _metaDataState, string calldata _metaDataDecryptorUrl
+        , string calldata _metaDataDecryptorAddress, bytes calldata flags, 
+        bytes calldata data,bytes32 _metaDataHash, metaDataProof[] memory _metadataProofs) internal {
         metaDataState = _metaDataState;
         metaDataDecryptorUrl = _metaDataDecryptorUrl;
         metaDataDecryptorAddress = _metaDataDecryptorAddress;
@@ -231,8 +260,52 @@ contract ERC721Template is
             /* solium-disable-next-line */
             block.timestamp,
             block.number);
+        //check proofs and emit an event for each proof
+        require(_metadataProofs.length <= 50, 'Too Many Proofs');
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        for (uint256 i = 0; i < _metadataProofs.length; i++) {
+            if(_metadataProofs[i].validatorAddress != address(0)){
+                    bytes32 prefixedHash = keccak256(abi.encodePacked(prefix, _metaDataHash));
+                    address signer = ecrecover(prefixedHash,
+                    _metadataProofs[i].v, _metadataProofs[i].r, _metadataProofs[i].s);
+                    require(signer == _metadataProofs[i].validatorAddress, "Invalid proof signer");
+            }
+            emit MetadataValidated(_metadataProofs[i].validatorAddress, 
+            _metaDataHash, 
+            _metadataProofs[i].v, _metadataProofs[i].r, _metadataProofs[i].s);
+        }
     }
 
+    struct metaDataAndTokenURI {
+        uint8 metaDataState;
+        string metaDataDecryptorUrl;
+        string metaDataDecryptorAddress;
+        bytes flags;
+        bytes data;
+        bytes32 metaDataHash;
+        uint256 tokenId;
+        string tokenURI;
+        metaDataProof[] metadataProofs;
+    }
+
+    /**
+     * @dev setMetaDataAndTokenURI
+     *       Helper function to improve UX
+             Calls setMetaData & setTokenURI
+     * @param _metaDataAndTokenURI   metaDataAndTokenURI struct
+     */
+    function setMetaDataAndTokenURI(metaDataAndTokenURI calldata _metaDataAndTokenURI) external {
+        require(
+            permissions[msg.sender].updateMetadata,
+            "ERC721Template: NOT METADATA_ROLE"
+        );
+        _setMetaData(_metaDataAndTokenURI.metaDataState, _metaDataAndTokenURI.metaDataDecryptorUrl, 
+            _metaDataAndTokenURI.metaDataDecryptorAddress, _metaDataAndTokenURI.flags, 
+            _metaDataAndTokenURI.data, _metaDataAndTokenURI.metaDataHash, _metaDataAndTokenURI.metadataProofs);
+        
+        setTokenURI(_metaDataAndTokenURI.tokenId, _metaDataAndTokenURI.tokenURI);
+        
+    }
     /**
      * @dev getMetaData
      *      Returns metaDataState, metaDataDecryptorUrl, metaDataDecryptorAddress
@@ -303,7 +376,7 @@ contract ERC721Template is
     /**
      * @dev name
      *      It returns the token name.
-     * @return DataToken name.
+     * @return Datatoken name.
      */
     function name() public view override returns (string memory) {
         return _name;
@@ -312,7 +385,7 @@ contract ERC721Template is
     /**
      * @dev symbol
      *      It returns the token symbol.
-     * @return DataToken symbol.
+     * @return Datatoken symbol.
      */
     function symbol() public view override returns (string memory) {
         return _symbol;
@@ -444,7 +517,6 @@ contract ERC721Template is
         require(tokenId == 1, "ERC721Template: Cannot transfer this tokenId");
         _cleanERC20Permissions(getAddressLength(deployedERC20List));
         _cleanPermissions();
-        _transferFrom(from, to, tokenId);
         _addManager(to);
           // we add the nft owner to all other roles (so that doesn't need to make multiple transactions)
         Roles storage user = permissions[to];
@@ -452,6 +524,8 @@ contract ERC721Template is
         user.deployERC20 = true;
         user.store = true;
         // no need to push to auth since it has been already added in _addManager()
+        _transferFrom(from, to, tokenId);
+        
     }
 
     /**
@@ -467,7 +541,6 @@ contract ERC721Template is
         require(tokenId == 1, "ERC721Template: Cannot transfer this tokenId");
         _cleanERC20Permissions(getAddressLength(deployedERC20List));
         _cleanPermissions();
-        safeTransferFrom(from, to, tokenId, "");
         _addManager(to);
         // we add the nft owner to all other roles (so that doesn't need to make multiple transactions)
         Roles storage user = permissions[to];
@@ -475,6 +548,8 @@ contract ERC721Template is
         user.deployERC20 = true;
         user.store = true;
         // no need to push to auth since it has been already added in _addManager()
+        safeTransferFrom(from, to, tokenId, "");
+        
     }
 
       /**
@@ -507,10 +582,11 @@ contract ERC721Template is
 
     /**
      * @dev getId
-     *      Return template id
+     *      Return template id in case we need different ABIs. 
+     *      If you construct your own template, please make sure to change the hardcoded value
      */
-    function getId() external pure returns (uint8) {
-        return templateId;
+    function getId() pure public returns (uint8) {
+        return 1;
     }
      /**
      * @dev fallback function

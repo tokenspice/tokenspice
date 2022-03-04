@@ -1,12 +1,8 @@
 import brownie
 
 from util.base18 import toBase18
-from util.constants import BROWNIE_PROJECT080, OPF_ACCOUNT, GOD_ACCOUNT
-import sol080.contracts.oceanv4.oceanv4util
-from sol080.contracts.oceanv4.oceanv4util import OCEANtoken, fundOCEANFromAbove, ROUTER
-
-GOD_ADDRESS = GOD_ACCOUNT.address
-OPF_ADDRESS = OPF_ACCOUNT.address
+from util.constants import BROWNIE_PROJECT080
+from sol080.contracts.oceanv4 import oceanv4util
 
 accounts = brownie.network.accounts
 
@@ -19,15 +15,14 @@ address1 = account1.address
 
 def test_exactAmountIn_fee():
     pool = _deployBPool()
-    OCEAN = OCEANtoken()
-    fundOCEANFromAbove(address0, toBase18(10000))
+    OCEAN = oceanv4util.OCEANtoken()
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(10000))
     OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDataTokenAddress())
+    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
     assert datatoken.balanceOf(address0) == 0
     account0_DT_balance = datatoken.balanceOf(address0)
     account0_Ocean_balance = OCEAN.balanceOf(address0)
-    oceanMarketFeeBal = pool.publishMarketFees(OCEAN.address)
 
     tokenInOutMarket = [OCEAN.address, datatoken.address, address1]
     # [tokenIn,tokenOut,marketFeeAddress]
@@ -42,10 +37,7 @@ def test_exactAmountIn_fee():
     assert tx.events["SWAP_FEES"][0]["marketFeeAmount"] == toBase18(
         0.01 * 100
     )  # 0.01: mkt_swap_fee in oceanv4util.create_BPool_from_datatoken, 100: exactAmountIn
-    assert tx.events["SWAP_FEES"][0]["tokenFees"] == OCEAN.address
-    assert oceanMarketFeeBal + tx.events["SWAP_FEES"][0][
-        "marketFeeAmount"
-    ] == pool.publishMarketFees(tx.events["SWAP_FEES"][0]["tokenFees"])
+    assert tx.events["SWAP_FEES"][0]["tokenFeeAddress"] == OCEAN.address
 
     # account1 received fee
     assert OCEAN.balanceOf(address1) == toBase18(0.001 * 100)
@@ -53,8 +45,7 @@ def test_exactAmountIn_fee():
     # account0 ocean balance decreased
     assert (
         OCEAN.balanceOf(address0) + tx.events["LOG_SWAP"][0]["tokenAmountIn"]
-        == account0_Ocean_balance
-    )
+    ) == account0_Ocean_balance
 
     # account0 DT balance increased
     assert account0_DT_balance + tx.events["LOG_SWAP"][0][
@@ -64,14 +55,30 @@ def test_exactAmountIn_fee():
 
 def _deployBPool():
     brownie.chain.reset()
-    router = ROUTER()
-    dataNFT = sol080.contracts.oceanv4.oceanv4util.createDataNFT(
+    router = oceanv4util.deployRouter(account0)
+    oceanv4util.fundOCEANFromAbove(address0, toBase18(100000))
+
+    (dataNFT, erc721_factory) = oceanv4util.createDataNFT(
         "dataNFT", "DATANFTSYMBOL", account0, router
     )
-    datatoken = sol080.contracts.oceanv4.oceanv4util.create_datatoken_from_dataNFT(
-        "DT", "DTSYMBOL", 10000, dataNFT, account0
+
+    DT_cap = 10000
+    datatoken = oceanv4util.createDatatokenFromDataNFT(
+        "DT", "DTSYMBOL", DT_cap, dataNFT, account0
     )
-    pool = sol080.contracts.oceanv4.oceanv4util.create_BPool_from_datatoken(
-        datatoken, 1000, 2000, account0
+
+    OCEAN_init_liquidity = 80000
+    DT_OCEAN_rate = 0.1
+    DT_vest_amt = 1000
+    DT_vest_num_blocks = 600
+    pool = oceanv4util.createBPoolFromDatatoken(
+        datatoken,
+        erc721_factory,
+        account0,
+        OCEAN_init_liquidity,
+        DT_OCEAN_rate,
+        DT_vest_amt,
+        DT_vest_num_blocks,
     )
+
     return pool

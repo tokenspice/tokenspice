@@ -1,11 +1,27 @@
-// SPDX-License-Identifier: Unknown
-
 pragma solidity 0.8.10;
+// Copyright BigchainDB GmbH and Ocean Protocol contributors
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+// Code is Apache-2.0 and docs are CC-BY-4.0
 
 interface IERC20Template {
     struct RolesERC20 {
         bool minter;
         bool feeManager;
+    }
+    struct providerFee{
+        address providerFeeAddress;
+        address providerFeeToken; // address of the token marketplace wants to add fee on top
+        uint256 providerFeeAmount; // amount to be transfered to marketFeeCollector
+        uint8 v; // v of provider signed message
+        bytes32 r; // r of provider signed message
+        bytes32 s; // s of provider signed message
+        uint256 validUntil; //validity expresses in unix timestamp
+        bytes providerData; //data encoded by provider
+    }
+    struct consumeMarketFee{
+        address consumeMarketFeeAddress;
+        address consumeMarketFeeToken; // address of the token marketplace wants to add fee on top
+        uint256 consumeMarketFeeAmount; // amount to be transfered to marketFeeCollector
     }
     function initialize(
         string[] calldata strings_,
@@ -94,15 +110,26 @@ interface IERC20Template {
 
      function startOrder(
         address consumer,
-        uint256 amount,
         uint256 serviceId,
-        address providerFeeAddress,
-        address providerFeeToken, 
-        uint256 providerFeeAmount
+        providerFee calldata _providerFee,
+        consumeMarketFee calldata _consumeMarketFee
      ) external;
+
+     function reuseOrder(
+        bytes32 orderTxId,
+        providerFee calldata _providerFee
+    ) external;
   
     function burn(uint256 amount) external;
     function burnFrom(address account, uint256 amount) external;
     function getERC721Address() external view returns (address);
     function isERC20Deployer(address user) external returns(bool);
+    function getPools() external view returns(address[] memory);
+    struct fixedRate{
+        address contractAddress;
+        bytes32 id;
+    }
+    function getFixedRates() external view returns(fixedRate[] memory);
+    function getDispensers() external view returns(address[] memory);
+    function getId() pure external returns (uint8);
 }

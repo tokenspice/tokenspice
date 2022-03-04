@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: Unknown
 pragma solidity 0.8.10;
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
 /**
  * @title ERC721 token receiver interface
  * @dev Interface for any contract that wants to support safeTransfers

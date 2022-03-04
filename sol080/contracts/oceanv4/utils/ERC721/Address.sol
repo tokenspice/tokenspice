@@ -1,5 +1,7 @@
-// SPDX-License-Identifier: Unknown
+
 pragma solidity 0.8.10;
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+
 /**
  * @dev Collection of functions related to the address type
  */

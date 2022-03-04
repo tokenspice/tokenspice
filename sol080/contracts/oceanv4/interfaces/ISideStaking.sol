@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: Unknown
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -8,19 +7,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 pragma solidity 0.8.10;
+// Copyright BigchainDB GmbH and Ocean Protocol contributors
+// SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+// Code is Apache-2.0 and docs are CC-BY-4.0
 
 interface ISideStaking {
 
 
-    function newDataTokenCreated(
+    function newDatatokenCreated(
         address datatokenAddress,
-        address basetokenAddress,
+        address baseTokenAddress,
         address poolAddress,
         address publisherAddress,
         uint256[] calldata ssParams
     ) external returns (bool);
 
-    function getDataTokenCirculatingSupply(address datatokenAddress)
+    function getDatatokenCirculatingSupply(address datatokenAddress)
         external
         view
         returns (uint256);
@@ -40,12 +42,12 @@ interface ISideStaking {
         view
         returns (address);
 
-    function getBaseTokenBalance(address datatokenAddress)
+    function getbBaseTokenBalance(address datatokenAddress)
         external
         view
         returns (uint256);
 
-    function getDataTokenBalance(address datatokenAddress)
+    function getDatatokenBalance(address datatokenAddress)
         external
         view
         returns (uint256);
@@ -74,31 +76,27 @@ interface ISideStaking {
 
     function canStake(
         address datatokenAddress,
-        address stakeToken,
         uint256 amount
     ) external view returns (bool);
 
     function Stake(
         address datatokenAddress,
-        address stakeToken,
         uint256 amount
     ) external;
 
     function canUnStake(
         address datatokenAddress,
-        address stakeToken,
         uint256 amount
     ) external view returns (bool);
 
     function UnStake(
         address datatokenAddress,
-        address stakeToken,
         uint256 amount,
         uint256 poolAmountIn
     ) external;
 
     function notifyFinalize(address datatokenAddress) external;
-
+    function getId() pure external returns (uint8);
 
   
 }
