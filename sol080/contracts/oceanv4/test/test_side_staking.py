@@ -21,7 +21,7 @@ def test_sideStaking_properties():
 
     OCEAN_base_funding = 10000
     do_extra_funding = False
-    OCEAN_extra_funding=10000
+    OCEAN_extra_funding = 10000
     OCEAN_init_liquidity = 2000
     
     DT_cap = 10000
