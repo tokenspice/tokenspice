@@ -49,7 +49,7 @@ def test_sideStaking_properties():
     assert DT_circ_supply == expected_DT_circ_supply
 
     assert ss_bot.getBaseTokenBalance(DT.address) == 0
-    assert ss_bot.getDatatokenBalance(DT.address) == toBase18(8800)
+    assert fromBase18(ss_bot.getDatatokenBalance(DT.address)) == 8800
 
     assert ss_bot.getDatatokenCurrentCirculatingSupply(DT.address) == \
         toBase18(2000 * 0.1)  # ss_rate*ss_OCEAN_init_liquidity
