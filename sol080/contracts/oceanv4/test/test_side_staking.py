@@ -427,6 +427,7 @@ def _deployBPool(
 
     if fund_extra:
         fundOCEANFromAbove(address0, toBase18(OCEAN_base_funding))
+        OCEAN = OCEANtoken()
         OCEAN.approve(
             pool.address, toBase18(OCEAN_extra_funding), {"from": account0})
     
