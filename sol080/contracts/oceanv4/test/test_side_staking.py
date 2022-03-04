@@ -176,7 +176,7 @@ def test_joinPool_addTokens():
     pool.swapExactAmountIn(tokenInOutMarket, amountsInOutMaxFee, {"from": account0})
 
     account0_DT_balance = DT.balanceOf(address0)
-    account0_Ocean_balance = OCEAN.balanceOf(address0)
+    account0_OCEAN_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ssbot.address)
     ssContractBPTbalance = pool.balanceOf(ssbot.address)
@@ -195,7 +195,7 @@ def test_joinPool_addTokens():
     )
     assert (
         tx.events["LOG_JOIN"][1]["tokenAmountIn"] + OCEAN.balanceOf(address0)
-        == account0_Ocean_balance
+        == account0_OCEAN_balance
     )
     assert account0_BPT_balance + BPTAmountOut == pool.balanceOf(address0)
 
@@ -247,7 +247,7 @@ def test_exitPool_receiveTokens():
     (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
-    account0_Ocean_balance = OCEAN.balanceOf(address0)
+    account0_OCEAN_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ssbot.address)
     ssContractBPTbalance = pool.balanceOf(ssbot.address)
@@ -264,7 +264,7 @@ def test_exitPool_receiveTokens():
     ] + account0_DT_balance == DT.balanceOf(address0)
     assert tx.events["LOG_EXIT"][1][
         "tokenAmountOut"
-    ] + account0_Ocean_balance == OCEAN.balanceOf(address0)
+    ] + account0_OCEAN_balance == OCEAN.balanceOf(address0)
     assert pool.balanceOf(address0) + BPTAmountIn == account0_BPT_balance
 
     # check the ssContract BPT and DT balance didn"t change
@@ -278,7 +278,7 @@ def test_exitswapPoolAmountIn_receiveOcean():
     (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
-    account0_Ocean_balance = OCEAN.balanceOf(address0)
+    account0_OCEAN_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ssbot.address)
     ssContractBPTbalance = pool.balanceOf(ssbot.address)
@@ -300,7 +300,7 @@ def test_exitswapPoolAmountIn_receiveOcean():
     # check user ocean balance
     assert tx.events["LOG_EXIT"][0][
         "tokenAmountOut"
-    ] + account0_Ocean_balance == OCEAN.balanceOf(address0)
+    ] + account0_OCEAN_balance == OCEAN.balanceOf(address0)
 
     # check BPT balance
     assert account0_BPT_balance == pool.balanceOf(address0) + BPTAmountIn
@@ -320,7 +320,7 @@ def test_exitswapPoolAmountIn_receiveDT():
     (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
-    account0_Ocean_balance = OCEAN.balanceOf(address0)
+    account0_OCEAN_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ssbot.address)
     ssContractBPTbalance = pool.balanceOf(ssbot.address)
@@ -332,7 +332,7 @@ def test_exitswapPoolAmountIn_receiveDT():
         BPTAmountIn, minDTOut, {"from": account0}
     )
 
-    assert OCEAN.balanceOf(address0) == account0_Ocean_balance
+    assert OCEAN.balanceOf(address0) == account0_OCEAN_balance
     assert (
         pool.balanceOf(address0)
         == account0_BPT_balance - tx.events["LOG_BPT"][0]["bptAmount"]
@@ -361,7 +361,7 @@ def test_exitswapExternAmountOut_receiveOcean():
     (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
-    account0_Ocean_balance = OCEAN.balanceOf(address0)
+    account0_OCEAN_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ssbot.address)
     ssContractBPTbalance = pool.balanceOf(ssbot.address)
@@ -381,7 +381,7 @@ def test_exitswapExternAmountOut_receiveOcean():
 
     assert tx.events["LOG_EXIT"][0][
         "tokenAmountOut"
-    ] + account0_Ocean_balance == OCEAN.balanceOf(address0)
+    ] + account0_OCEAN_balance == OCEAN.balanceOf(address0)
     assert ssContractBPTbalance - tx.events["LOG_BPT"][0][
         "bptAmount"
     ] == pool.balanceOf(ssbot.address)
@@ -396,7 +396,7 @@ def test_exitswapExternAmountOut_receiveDT():
     (DT, pool, ssbot) = _deployBPool(do_extra_funding=True)
 
     account0_DT_balance = DT.balanceOf(address0)
-    account0_Ocean_balance = OCEAN.balanceOf(address0)
+    account0_OCEAN_balance = OCEAN.balanceOf(address0)
     account0_BPT_balance = pool.balanceOf(address0)
     ssContractDTbalance = DT.balanceOf(ssbot.address)
     ssContractBPTbalance = pool.balanceOf(ssbot.address)
@@ -408,7 +408,7 @@ def test_exitswapExternAmountOut_receiveDT():
         DT.address, maxBPTIn, exacDTOut, {"from": account0}
     )
 
-    assert OCEAN.balanceOf(address0) == account0_Ocean_balance
+    assert OCEAN.balanceOf(address0) == account0_OCEAN_balance
     assert (
         pool.balanceOf(address0)
         == account0_BPT_balance - tx.events["LOG_BPT"][0]["bptAmount"]
