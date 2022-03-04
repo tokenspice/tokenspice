@@ -155,7 +155,6 @@ def createBPoolFromDatatoken(
         LP_swap_fee=0.03, mkt_swap_fee=0.01,
 ):
 
-
     OCEAN = OCEANtoken()
     pool_template = POOLTemplate()
     
