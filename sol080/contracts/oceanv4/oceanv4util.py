@@ -173,7 +173,7 @@ def createBPoolFromDatatoken(
         toBase18(DT_OCEAN_rate),
         OCEAN.decimals(), 
         toBase18(DT_vest_amt),
-        toBase18(DT_vest_num_blocks),
+        DT_vest_num_blocks, #do _not_ convert to wei
         toBase18(OCEAN_init_liquidity),
         ]
     swap_fees = [

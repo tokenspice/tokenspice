@@ -28,7 +28,7 @@ def test_sideStaking_properties():
     
     DT_cap = 10000
     DT_vest_amt = 1000
-    DT_vest_num_blocks = 6
+    DT_vest_num_blocks = 600
     (DT, pool, ssbot) = _deployBPool(
         OCEAN_base_funding, do_extra_funding, OCEAN_extra_funding,
         OCEAN_init_liquidity, DT_OCEAN_rate,
@@ -78,10 +78,6 @@ def test_sideStaking_properties():
     # -> emit VestingCreated(datatokenAddress, publisherAddress,
     #                       _datatokens[datatokenAddress].vestingEndBlock,
     #                       _datatokens[datatokenAddress].vestingAmount)
-    #
-    #Observed values:
-    # vestingEndBlock: 6000000000000000015.       FromBase18(.) = 6.0
-    # totalVestingAmount: 1000000000000000000000. FromBase18(.) = 1000.0
     
     assert ssbot.getAvailableVesting(DT.address) == 0
     assert ssbot.getvestingAmountSoFar(DT.address) == 0
@@ -89,32 +85,36 @@ def test_sideStaking_properties():
     # Pass enough time to make all vesting happen!    
     brownie.chain.mine(blocks=DT_vest_num_blocks)
 
-    block_number = len(brownie.chain) #22
-    vesting_end_block_base18 = ssbot.getvestingEndBlock(DT.address) #gives 6000000000000000015
-    vesting_end_block = fromBase18(vesting_end_block_base18) # gives 6
-    vesting_last_block_base18 = ssbot.getvestingLastBlock(DT.address) #gives 15
-    vesting_last_block = fromBase18(vesting_last_block_base18) #gives 1.5e-17
-    blocks_passed_base18 = vesting_end_block_base18 - vesting_last_block_base18
-    blocks_passed = vesting_end_block - vesting_last_block
-    available_vesting = ssbot.getAvailableVesting(DT.address) #gives 1000
-    import pdb; pdb.set_trace()
+    # Test key numbers
+    block_number = len(brownie.chain)
+    vesting_end_block = ssbot.getvestingEndBlock(DT.address)
+    vesting_last_block = ssbot.getvestingLastBlock(DT.address) 
+    blocks_passed = vesting_end_block - vesting_last_block 
+    available_vesting = fromBase18(ssbot.getAvailableVesting(DT.address)) 
 
-    # Has it all vested?
-    assert fromBase18(ssbot.getAvailableVesting(DT.address)) == 1000
-    
-    assert ssbot.getvestingAmountSoFar(DT.address) == 0 #must claim first
+    assert block_number == 616
+    assert vesting_end_block == 615
+    assert vesting_last_block == 15 #last block when tokens were vested
+    assert blocks_passed == 600
+    assert available_vesting == 1000
+
+    # Publisher hasn't claimed yet, so no vesting or DTs
+    assert ssbot.getvestingAmountSoFar(DT.address) == 0
     assert DT.balanceOf(account0) == 0
-    
+
+    # Publisher claims. Now he has vesting and DTs
     ssbot.getVesting(DT.address, {"from": account0}) #claim!
-    
     assert fromBase18(ssbot.getvestingAmountSoFar(DT.address)) == 1000
     assert fromBase18(DT.balanceOf(account0)) == 1000
-     
-    # Then, ssbot_DT_balance = DT_cap - DT_vested - DT_circ_supply
-    #                        = 10000  - 1000      - 200
-    #                        = 8800
+
+    # The ssbot's holdings are updated too
+    # ssbot_DT_balance = DT_cap - DT_vested - DT_circ_supply
+    #                  = 10000  - 1000      - 200
+    #                  = 8800
     assert fromBase18(ssbot.getDatatokenBalance(DT.address)) == 8800
-    
+
+    #
+    assert ssbot.getvestingLastBlock(DT.address) == 616 == block_number
 
 def test_swapExactAmountIn():
     brownie.chain.reset()
