@@ -1,10 +1,11 @@
 from enforce_typing import enforce_types
 
-from agents.VestingWalletAgent import VestingWalletAgent
 from engine import AgentBase
 from util.constants import BROWNIE_PROJECT057
 from util import globaltokens
 from util.base18 import toBase18
+from agents.VestingWalletAgent import VestingWalletAgent
+
 
 
 @enforce_types

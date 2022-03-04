@@ -149,27 +149,6 @@ class SpeculatorAgentBaseV4(AgentBase.AgentBaseEvm):
         return pool_agents
 
 
-class SpeculatorAgentV4(SpeculatorAgentBaseV4):
-    """Speculates by buying and selling DT"""
-
-    def _speculateAction(self, state):
-        pool_agents = self._poolsForSpeculate(state)
-        assert pool_agents, "need pools to be able to speculate"
-
-        pool_agent = random.choice(list(pool_agents))
-        pool = pool_agent.pool
-
-        DT = self.DT(pool_agent.datatoken)
-        datatoken = pool_agent.datatoken
-
-        max_OCEAN_allow = self.OCEAN()
-        if DT > 0.0 and random.random() < 0.50:  # magic number
-            DT_sell_amt = 0.5 * DT  # magic number
-            self._wallet.sellDTV4(pool, datatoken, DT_sell_amt)
-
-        else:
-            DT_buy_amt = 5.0  # magic number
-            self._wallet.buyDTV4(pool, datatoken, DT_buy_amt, max_OCEAN_allow)
 
 class SpeculatorAgentV4(SpeculatorAgentBaseV4):
     """Speculates by buying and selling DT"""

@@ -1,15 +1,17 @@
-import brownie
 import random
-from enforce_typing import enforce_types
 from typing import List
 
-from agents.PoolAgent import PoolAgent, PoolAgentV4
+from enforce_typing import enforce_types
+import brownie
+
 from sol057.contracts.oceanv3 import oceanv3util
 from sol080.contracts.oceanv4 import oceanv4util
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18
 from util.constants import S_PER_DAY, S_PER_HOUR, BROWNIE_PROJECT080
+from agents.PoolAgent import PoolAgent, PoolAgentV4
+
 
 # magic numbers
 DEFAULT_DT_init = 1000.0
@@ -123,7 +125,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         pool = oceanv3util.newBPool(account)
 
         # bind tokens & add initial liquidity
-        OCEAN_bind_amt = max(0, self.OCEAN()-1.0) #magic number: use most OCEAN
+        OCEAN_bind_amt = max(0, self.OCEAN() - 1.0)  # magic number: use most OCEAN
         DT_bind_amt = self.pub_ss.DT_stake
 
         DT.approve(pool.address, toBase18(DT_bind_amt), {"from": account})
@@ -261,7 +263,7 @@ class PublisherStrategyV4:  # pylint: disable=too-many-instance-attributes
         is_malicious: bool = DEFAULT_is_malicious,
         s_wait_to_rug: int = DEFAULT_s_wait_to_rug,
         s_rug_time: int = DEFAULT_s_rug_time,
-        s_between_getVesting = DEFAULT_s_between_getVesting
+        s_between_getVesting=DEFAULT_s_between_getVesting,
     ):  # pylint: disable=too-many-arguments
         self.DT_cap: float = DT_cap
         self.vested_amount: float = vested_amount
@@ -330,8 +332,6 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
 
     def _createPoolAgent(self, state) -> PoolAgentV4:
         assert self.OCEAN() > 0.0, "should not call if no OCEAN"
-        account = self._wallet._account
-        OCEAN = globaltokens.OCEANtoken()
 
         # name
         pool_i = len(state.agents.filterToPoolV4())
@@ -476,21 +476,30 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         account = self._wallet._account
         DT_vest_num_blocks = 600
         pool = oceanv4util.createBPoolFromDatatoken(
-            datatoken, erc721_factory, account,
-            OCEAN_init_liquidity, DT_vest_amount, DT_vest_num_blocks)
+            datatoken,
+            erc721_factory,
+            account,
+            OCEAN_init_liquidity,
+            DT_vest_amount,
+            DT_vest_num_blocks,
+        )
         return pool
 
     def _doGetVesting(self):
-        return (brownie.chain.height >= ss_DT_vested_blocks) & (self._s_since_getVesing == self._s_since_getVesing)
+        return (brownie.chain.height >= ss_DT_vested_blocks) & (
+            self._s_since_getVesing == self._s_since_getVesing
+        )
 
     def _vest(self, state):
-        account = self._wallet._account
         pool_agents = state.agents.filterByNonzeroStakeV4(self).values()
         for pool_agent in pool_agents:
             pool = pool_agent.pool
             DT = pool_agent._dt
             oneSSContractAddress = pool.getController()
-            oneSSContract = BROWNIE_PROJECT080.SideStaking.at(oneSSContractAddress)
+            oneSSContract = BROWNIE_PROJECT080.SideStaking.at(
+                oneSSContractAddress)
 
-            if oneSSContract.getvestingAmountSoFar(DT.address) < oneSSContract.getvestingAmount(DT.address):            
+            get_vest = (oneSSContract.getvestingAmountSoFar(DT.address)
+                        < oneSSContract.getvestingAmount(DT.address))
+            if get_vest:
                 oneSSContract.getVesting(DT.address)

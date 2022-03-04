@@ -4,6 +4,7 @@ from engine import AgentBase
 from util import globaltokens
 from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080
 
+
 @enforce_types
 class PoolAgent(AgentBase.AgentBaseEvm):
     def __init__(self, name: str, pool):
@@ -46,7 +47,7 @@ class PoolAgent(AgentBase.AgentBaseEvm):
     def _controllerAddress(self):
         return self._pool.getController()
 
-    
+
 @enforce_types
 class PoolAgentV4(AgentBase.AgentBaseEvm):
     def __init__(self, name: str, pool):
