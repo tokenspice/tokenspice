@@ -89,6 +89,8 @@ tsp
 
 ## Compile the contracts
 
+NOTE: if you have a directory named `contracts` from before, which is side-by-side with your `tokenspice` directory, you'll get [issues](https://github.com/tokenspice/tokenspice/issues/160). To avoid this, rename or move that contracts directory.
+
 From the same terminal:
 ```console
 #install 3rd party libs, then call "brownie compile" in sol057/ and sol080/
