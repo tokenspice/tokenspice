@@ -19,8 +19,7 @@ class KPIs(KPIsBase.KPIsBase):
     def takeStep(self, state):
         pass
 
-    @staticmethod
-    def tick():
+    def tick(self):
         pass
 
 
