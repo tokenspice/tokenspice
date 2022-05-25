@@ -43,7 +43,7 @@ Usage: tsp run NETLIST OUTPUT_DIR [DO_PROFILE]
 
  NETLIST -- string -- pathname for netlist
  OUTPUT_DIR -- string -- output directory for csv file.
- DO_PROFILE -- bool -- if True, profile. Otherwise don't. Defalt=False.
+ DO_PROFILE -- bool -- if True, profile. Otherwise don't. Default=False.
 """
 
 
