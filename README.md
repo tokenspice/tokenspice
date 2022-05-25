@@ -50,6 +50,7 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 - Python 3.8.5+
 - solc 0.8.0+ [[Instructions](https://docs.soliditylang.org/en/v0.8.9/installing-solidity.html)]
 - ganache. To install: `npm install ganache-cli --global`
+- nvm 16.13.2, _not_ nvm 17. To install: `nvm install 16.13.2; nvm use 16.13.2`. [[Details](https://github.com/tokenspice/tokenspice/issues/165)]
 
 ## Install TokenSPICE
 
