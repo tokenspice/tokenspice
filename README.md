@@ -40,7 +40,6 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 - Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216), [first time](https://discord.gg/FREcbdnUTw). 
 - Twitter: [@tokenspice](https://twitter.com/tokenspice)
 - Medium: [@tokenspice](https://medium.com/tokenspice)
-- TokenSPICE hacking sessions: first Monday of each month at 16.00 UTC (17.00 Berlin). 60 min. [Zoom link](https://us02web.zoom.us/j/7507682928?pwd=Y3NMVXY1RHVyaFZzdjZZVi9XT0RRZz09), Meeting ID 7507682928. Anyone is welcome to drop in! 👋
 
 # 🏗 Initial Setup
 
