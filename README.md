@@ -274,8 +274,8 @@ Here are some existing netlists.
 - [simplepool](netlists/simplepool/about.md) - publisher that periodically creates new pools. EVM.
 - [scheduler](netlists/scheduler/about.md) - scheduled vesting from a wallet. EVM. 
 - [wsloop](netlists/wsloop/about.md) - Web3 Sustainability Loop. No EVM.
-- (WIP) [oceanv3](netlists/oceanv3/about.md) - Ocean Market V3 - initial design. EVM.
-- (WIP) [oceanv4](netlists/oceanv4/about.md) - Ocean Market V4 - solves rug pulls. EVM.
+- [oceanv3](netlists/oceanv3/about.md) - Ocean Market V3 - initial design. EVM.
+- [oceanv4](netlists/oceanv4/about.md) - Ocean Market V4 - solves rug pulls. EVM.
 
 To learn more about how TokenSPICE netlists are structured, we refer you to the [simplegrant](netlists/simplegrant/about.md) (pure Python) and [simplepool](netlists/simplepool/about.md) (Python+EVM) netlists, which each have more thorough explainers. 
 
