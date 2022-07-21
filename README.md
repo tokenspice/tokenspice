@@ -30,7 +30,6 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 - [🦑 Agents and Netlists](#-agents-and-netlists)
 - [🐟 Updating Envt](#-updating-envt)
 - [🐡 Backlog](#-backlog)
-  - [Kanban Board](https://github.com/tokenspice/tokenspice/projects/1)
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
 - [🦈 Resources](#-resources)
 - [🏛 License](#-license)
@@ -281,15 +280,12 @@ To learn more about how TokenSPICE netlists are structured, we refer you to the 
 
 # 🐡 Backlog
 
-**[Kanban Board](https://github.com/oceanprotocol/tokenspice/projects/1?add_cards_query=is%3Aopen)**
-
-Some larger issues include:
-
-- **Finish + verify Ocean V4 agents** #29. AKA: Verification: high-fidelity model of Ocean V4 (w/ Balancer V2) base design, and the efficacy of each proposed mechanism.
-
-In the longer term, we can expect:
-- Improvements to TokenSPICE itself in the form of faster simulation speed, improved UX, and more.
+Larger things we'd like to see:
 - **[Higher-level tools](README-tools.md)** that use TokenSPICE, including design entry, verification, design space exploration, and more. 
+- Improvements to TokenSPICE itself in the form of faster simulation speed, improved UX, and more.
+
+See this board: https://github.com/orgs/tokenspice/projects/1/views/1
+
 
 # 🐋 Benefits of EVM Agent Simulation
 
