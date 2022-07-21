@@ -30,11 +30,16 @@ Advanced tools:
 
 ## Design Space Exploration tools
 
+Base tools:
 - Sensitivity analysis - locally perterb design variables.
 - Sweep analysis - sweep design variables one at a time. Ignore interactions.
+
+Advanced tools:
 - Fast sweep analysis - sweep across all design variables including interactions, but without combinatorial explosion via model-in-the-loop
 - Local optimization - search across design variables to optimize for objectives & constraints
 - Global optimization - search across all design variables, with affordances to not get stuck
+
+Extra-advanced tools:
 - Synthesis - search design variables *and structure*. E.g. Evolve solidity or EVM bytecode. AI DAOs that own themselves. Go nuts:)
 - Variation-aware synthesis - all of the above at once. This isn’t easy! But it’s possible. Example: use MOJITO (http://trent.st/mojito/), but use TokenSPICE (not SPICE) and Solidity building blocks (not circuit ones) 
 
