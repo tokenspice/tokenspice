@@ -24,7 +24,6 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 
 # Contents
 
-- [👪 Community](#-community)
 - [🏗 Initial Setup](#-initial-setup)
 - [🏄 Running, Debugging](#-running-debugging)
 - [🦑 Agents and Netlists](#-agents-and-netlists)
@@ -33,12 +32,6 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 - [🐋 Benefits of EVM Agent Simulation](#-benefits-of-evm-agent-simulation)
 - [🦈 Resources](#-resources)
 - [🏛 License](#-license)
-
-# 👪 Community
-
-- Discord: [te-tokenspice](https://discord.com/channels/701149241107808327/861621607825801216), [first time](https://discord.gg/FREcbdnUTw). 
-- Twitter: [@tokenspice](https://twitter.com/tokenspice)
-- Medium: [@tokenspice](https://medium.com/tokenspice)
 
 # 🏗 Initial Setup
 
@@ -312,6 +305,10 @@ History:
 Art:
 - [TokenSPICE logos](https://github.com/tokenspice/art/blob/main/README.md)
 - Fishnado image sources (CC): [[1](https://www.flickr.com/photos/robinhughes/404457553)] [[2](https://commons.wikimedia.org/wiki/File:Fish_Tornado_(226274841).jpeg)]
+
+Other links:
+- Twitter: [@tokenspice](https://twitter.com/tokenspice)
+- Medium: [@tokenspice](https://medium.com/tokenspice)
 
 # 🏛 License
 
