@@ -12,7 +12,7 @@ Here are some such tools, largely inspired by tools from circuit land.
   - [Circuits](https://www.google.com/search?q=spice+schematic+editor&sxsrf=ALeKk01lEnlL27hPsWzA_sBTOoxQLAlUJg:1626253838940&source=lnms&tbm=isch&sa=X&ved=2ahUKEwinnInTm-LxAhUNnYsKHe0mA1wQ_AUoAXoECAEQAw&biw=1600&bih=721#imgrc=TUv3yDrlTDLNVM)
   - [Videogames: machinations.io](https://machinations.io/)
   - [System Dynamics](https://systemdynamics.org/what-is-system-dynamics/): [stock and flow diagrams](https://www.google.com/search?q=stock+and+flow+diagram&sxsrf=AOaemvK9W36reEyVfw54RGs3JmLiwZbTDQ:1643101186893&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj358v0xMz1AhUXSPEDHZU7CwkQ_AUoAXoECAEQAw&cshid=1643101212647476&biw=1514&bih=934&dpr=1) in [Stella](https://www.iseesystems.com/store/products/stella-professional.aspx) and [Vensim](https://vensim.com/) (commercial); [full sw list](https://en.wikipedia.org/wiki/Comparison_of_system_dynamics_software)
-  - [Data pielines via StreamSets](https://streamsets.com/learn/data-pipelines/)
+  - [Data pipelines via StreamSets](https://streamsets.com/learn/data-pipelines/)
 - Auto schematic import - input a netlist, auto-generate a schematic visually. Uses optimization etc.
 - Waveform viewer - build on `tsp.do_plot` with more a interactive tool. [Examples from circuits](https://www.google.com/search?q=spice+waveform+viewer&sxsrf=ALeKk02nY3U9rkOZuz58PNXWjoFY4MCcUQ:1626255741604&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj9zareouLxAhXm-ioKHW0MCtgQ_AUoAXoECAEQAw&biw=1600&bih=721).
 
