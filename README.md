@@ -64,6 +64,11 @@ pip install -r requirements.txt
 ./brownie-install.sh
 ```
 
+**Potential issues & workarounds**
+
+- Issue: Brownie doesn't support Python 3.11 yet. Workaround: before "install dependencies" step above, run `pip install vyper==0.3.7 --ignore-requires-python` and `sudo apt-get install python3.11-dev`
+- Issue: MacOS might flag "Unsupported architecture". Workaround: install including ARCHFLAGS: `ARCHFLAGS="-arch x86_64" pip install -r requirements.txt`
+
 ## TokenSPICE CLI
 
 `tsp` is the command-line interface for TokenSPICE. From the same terminal:
