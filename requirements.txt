@@ -11,3 +11,4 @@ pylint
 pytest
 click
 tomli
+attrs>=22.2.0
