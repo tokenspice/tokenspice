@@ -10,6 +10,7 @@ from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18
 from util.constants import S_PER_DAY, S_PER_HOUR, BROWNIE_PROJECT080
+from util.tx import txdict
 from agents.PoolAgent import PoolAgent, PoolAgentV4
 
 
@@ -128,23 +129,23 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         OCEAN_bind_amt = max(0, self.OCEAN() - 1.0)  # magic number: use most OCEAN
         DT_bind_amt = self.pub_ss.DT_stake
 
-        DT.approve(pool.address, toBase18(DT_bind_amt), {"from": account})
-        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt), {"from": account})
+        DT.approve(pool.address, toBase18(DT_bind_amt), txdict(account))
+        OCEAN.approve(pool.address, toBase18(OCEAN_bind_amt), txdict(account))
 
         pool.bind(
             DT.address,
             toBase18(DT_bind_amt),
             toBase18(self.pub_ss.pool_weight_DT),
-            {"from": account},
+            txdict(account),
         )
         pool.bind(
             OCEAN.address,
             toBase18(OCEAN_bind_amt),
             toBase18(self.pub_ss.pool_weight_OCEAN),
-            {"from": account},
+            txdict(account),
         )
 
-        pool.finalize({"from": account})
+        pool.finalize(txdict(account))
 
         # create agent
         pool_agent = PoolAgent(pool_agent_name, pool)
@@ -247,7 +248,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         """Create datatoken contract and mint DTs to self."""
         account = self._wallet._account
         DT = oceanv3util.newDatatoken("", dt_name, dt_name, toBase18(mint_amt), account)
-        DT.mint(account.address, toBase18(mint_amt), {"from": account})
+        DT.mint(account.address, toBase18(mint_amt), txdict(account))
         self._wallet.resetCachedInfo()
         return DT
 

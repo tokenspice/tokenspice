@@ -3,6 +3,7 @@ import brownie
 import sol057.contracts.oceanv3.oceanv3util
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT057
+from util.tx import txdict
 
 account0 = brownie.network.accounts[0]
 address0 = account0.address
@@ -16,15 +17,15 @@ def test_direct():
         toBase18(1e3),
         "blob",
         address0,
-        {"from": account0},
+        txdict(account0),
     )
 
     dtfactory = BROWNIE_PROJECT057.DTFactory.deploy(
-        tt.address, account0.address, {"from": account0}
+        tt.address, account0.address, txdict(account0)
     )
 
     tx = dtfactory.createToken(
-        "foo_blob", "DT", "DT", toBase18(100.0), {"from": account0}
+        "foo_blob", "DT", "DT", toBase18(100.0), txdict(account0)
     )
     dt_address = tx.events["TokenCreated"]["newTokenAddress"]
 
@@ -36,7 +37,7 @@ def test_direct():
 def test_via_DTFactory_util():
     dtfactory = sol057.contracts.oceanv3.oceanv3util.DTFactory()
     tx = dtfactory.createToken(
-        "foo_blob", "datatoken1", "DT1", toBase18(100.0), {"from": account0}
+        "foo_blob", "datatoken1", "DT1", toBase18(100.0), txdict(account0)
     )
 
     dt_address = sol057.contracts.oceanv3.oceanv3util.dtAddressFromCreateTokenTx(tx)

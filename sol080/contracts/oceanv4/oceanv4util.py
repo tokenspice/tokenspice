@@ -11,6 +11,7 @@ from util.constants import (
     OPF_ADDRESS,
 )
 from util.globaltokens import OCEANtoken
+from util.tx import txdict
 
 _ERC721_TEMPLATE = None
 
@@ -26,7 +27,7 @@ def ERC721Template():
         erc721_template = None
     if erc721_template is None:
         _ERC721_TEMPLATE = BROWNIE_PROJECT080.ERC721Template.deploy(
-            {"from": GOD_ACCOUNT}
+            txdict(GOD_ACCOUNT)
         )
         erc721_template = _ERC721_TEMPLATE
     return erc721_template
@@ -45,7 +46,7 @@ def ERC20Template():
     except brownie.exceptions.ContractNotFound:
         erc20_template = None
     if erc20_template is None:
-        _ERC20_TEMPLATE = BROWNIE_PROJECT080.ERC20Template.deploy({"from": GOD_ACCOUNT})
+        _ERC20_TEMPLATE = BROWNIE_PROJECT080.ERC20Template.deploy(txdict(GOD_ACCOUNT))
         erc20_template = _ERC20_TEMPLATE
     return erc20_template
 
@@ -63,7 +64,7 @@ def POOLTemplate():
     except brownie.exceptions.ContractNotFound:
         pool_template = None
     if pool_template is None:
-        _POOL_TEMPLATE = BROWNIE_PROJECT080.BPool.deploy({"from": GOD_ACCOUNT})
+        _POOL_TEMPLATE = BROWNIE_PROJECT080.BPool.deploy(txdict(GOD_ACCOUNT))
         pool_template = _POOL_TEMPLATE
 
     return pool_template
@@ -79,7 +80,7 @@ def deployRouter(from_account):
         pool_template,
         OPF_ADDRESS,
         [],
-        {"from": from_account},
+        txdict(from_account),
     )
     return router
 
@@ -93,7 +94,7 @@ def deployERC721Factory(from_account, router):
         erc20_template.address,
         OPF_ADDRESS,
         router.address,
-        {"from": from_account},
+        txdict(from_account),
     )
     return factory
 
@@ -110,7 +111,7 @@ def createDataNFT(name: str, symbol: str, from_account, router):
         router.address,
         ZERO_ADDRESS,  # additionalMetaDataUpdater set to 0x00 for now
         token_URI,
-        {"from": from_account},
+        txdict(from_account),
     )
     data_NFT_address = tx.events["NFTCreated"]["newTokenAddress"]
     data_NFT = BROWNIE_PROJECT080.ERC721Template.at(data_NFT_address)
@@ -140,7 +141,7 @@ def createDatatokenFromDataNFT(
     _bytes: List[Any] = []
 
     tx = dataNFT.createERC20(
-        erc20_template_index, strings, addresses, uints, _bytes, {"from": from_account}
+        erc20_template_index, strings, addresses, uints, _bytes, txdict(from_account)
     )
     DT_address = tx.events["TokenCreated"]["newTokenAddress"]
     DT = BROWNIE_PROJECT080.ERC20Template.at(DT_address)
@@ -150,7 +151,7 @@ def createDatatokenFromDataNFT(
 
 @enforce_types
 def deploySideStaking(from_account, router):
-    return BROWNIE_PROJECT080.SideStaking.deploy(router.address, {"from": from_account})
+    return BROWNIE_PROJECT080.SideStaking.deploy(router.address, txdict(from_account))
 
 
 @enforce_types
@@ -171,15 +172,15 @@ def createBPoolFromDatatoken(
 
     router_address = datatoken.router()
     router = BROWNIE_PROJECT080.FactoryRouter.at(router_address)
-    router.updateMinVestingPeriod(500, {"from": from_account})
+    router.updateMinVestingPeriod(500, txdict(from_account))
 
     OCEAN.approve(
-        router.address, toBase18(OCEAN_init_liquidity), {"from": from_account}
+        router.address, toBase18(OCEAN_init_liquidity), txdict(from_account)
     )
 
     ssbot = deploySideStaking(from_account, router)
-    router.addSSContract(ssbot.address, {"from": from_account})
-    router.addFactory(erc721_factory.address, {"from": from_account})
+    router.addSSContract(ssbot.address, txdict(from_account))
+    router.addFactory(erc721_factory.address, txdict(from_account))
 
     ss_params = [
         toBase18(DT_OCEAN_rate),
@@ -201,7 +202,7 @@ def createBPoolFromDatatoken(
         pool_template.address,
     ]
 
-    tx = datatoken.deployPool(ss_params, swap_fees, addresses, {"from": from_account})
+    tx = datatoken.deployPool(ss_params, swap_fees, addresses, txdict(from_account))
     pool_address = poolAddressFromNewBPoolTx(tx)
     pool = BROWNIE_PROJECT080.BPool.at(pool_address)
 

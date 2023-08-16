@@ -3,6 +3,7 @@ from enforce_typing import enforce_types
 
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT057, GOD_ACCOUNT
+from util.tx import txdict
 
 GOD_ADDRESS = GOD_ACCOUNT.address
 
@@ -17,7 +18,7 @@ def templateDatatoken():
         toBase18(1e3),
         "blob",
         GOD_ADDRESS,
-        {"from": GOD_ACCOUNT},
+        txdict(GOD_ACCOUNT),
     )
 
 
@@ -36,7 +37,7 @@ def DTFactory():
         factory = None
     if factory is None:
         factory = _DTFACTORY = BROWNIE_PROJECT057.DTFactory.deploy(
-            dt.address, GOD_ACCOUNT, {"from": GOD_ACCOUNT}
+            dt.address, GOD_ACCOUNT, txdict(GOD_ACCOUNT)
         )
     return factory
 
@@ -49,7 +50,7 @@ def dtAddressFromCreateTokenTx(tx):
 @enforce_types
 def newDatatoken(blob: str, name: str, symbol: str, cap: int, account):
     f = DTFactory()
-    tx = f.createToken(blob, name, symbol, cap, {"from": account})
+    tx = f.createToken(blob, name, symbol, cap, txdict(account))
     dt_address = dtAddressFromCreateTokenTx(tx)
     dt = BROWNIE_PROJECT057.DataTokenTemplate.at(dt_address)
     return dt
@@ -59,7 +60,7 @@ def newDatatoken(blob: str, name: str, symbol: str, cap: int, account):
 # pools: template, factory, creation
 @enforce_types
 def templatePool():
-    return BROWNIE_PROJECT057.BPool.deploy({"from": GOD_ACCOUNT})
+    return BROWNIE_PROJECT057.BPool.deploy(txdict(GOD_ACCOUNT))
 
 
 _BFACTORY = None
@@ -77,7 +78,7 @@ def BFactory():
         factory = None
     if factory is None:
         factory = _BFACTORY = BROWNIE_PROJECT057.BFactory.deploy(
-            pool.address, {"from": GOD_ACCOUNT}
+            pool.address, txdict(GOD_ACCOUNT)
         )
     return factory
 
@@ -90,7 +91,7 @@ def poolAddressFromNewBPoolTx(tx):
 @enforce_types
 def newBPool(account):
     bfactory = BFactory()
-    tx = bfactory.newBPool({"from": account})
+    tx = bfactory.newBPool(txdict(account))
     pool_address = poolAddressFromNewBPoolTx(tx)
     pool = BROWNIE_PROJECT057.BPool.at(pool_address)
     return pool

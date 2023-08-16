@@ -1,9 +1,10 @@
 import brownie
 
+from sol080.contracts.oceanv4 import oceanv4util
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080
 from util.globaltokens import fundOCEANFromAbove
-from sol080.contracts.oceanv4 import oceanv4util
+from util.tx import txdict
 
 accounts = brownie.network.accounts
 
@@ -18,7 +19,7 @@ def test_exactAmountIn_fee():
     pool = _deployBPool()
     OCEAN = oceanv4util.OCEANtoken()
     fundOCEANFromAbove(address0, toBase18(10000))
-    OCEAN.approve(pool.address, toBase18(10000), {"from": account0})
+    OCEAN.approve(pool.address, toBase18(10000), txdict(account0))
     datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
 
     assert datatoken.balanceOf(address0) == 0
@@ -31,7 +32,7 @@ def test_exactAmountIn_fee():
     # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee=0.1%]
 
     tx = pool.swapExactAmountIn(
-        tokenInOutMarket, amountsInOutMaxFee, {"from": account0}
+        tokenInOutMarket, amountsInOutMaxFee, txdict(account0)
     )
     assert datatoken.balanceOf(address0) > 0
 

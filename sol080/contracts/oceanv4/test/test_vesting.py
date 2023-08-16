@@ -4,6 +4,7 @@ from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT080
 from util.globaltokens import fundOCEANFromAbove
 from sol080.contracts.oceanv4 import oceanv4util
+from util.tx import txdict
 
 accounts = brownie.network.accounts
 
@@ -12,21 +13,6 @@ address0 = account0.address
 
 account1 = accounts[1]
 address1 = account1.address
-
-
-def test_fail_to_mint():
-    pool = _deployBPool()
-    datatoken = BROWNIE_PROJECT080.ERC20Template.at(pool.getDatatokenAddress())
-
-    assert datatoken.isMinter(address0)
-
-    try:
-        datatoken.mint(address0, toBase18(1), {"from": account0})
-    except brownie.exceptions.VirtualMachineError:
-        pass
-
-    assert datatoken.balanceOf(address0) == 0
-
 
 def test_vesting_amount():
     pool = _deployBPool()

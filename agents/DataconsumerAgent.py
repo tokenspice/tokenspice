@@ -3,12 +3,11 @@ from typing import List
 
 from enforce_typing import enforce_types
 
+from agents.PoolAgent import PoolAgent
 from engine import AgentBase
 from util import globaltokens
 from util.base18 import toBase18
 from util import constants
-
-from agents.PoolAgent import PoolAgent
 
 # magic numbers
 DEFAULT_s_between_buys = 3 * constants.S_PER_DAY

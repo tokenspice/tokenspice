@@ -4,6 +4,7 @@ from enforce_typing import enforce_types
 from agents.VestingFunderAgent import VestingFunderAgent
 from util import globaltokens
 from util.base18 import toBase18
+from util.tx import txdict
 
 # don't use account0, it's GOD_ACCOUNT. don't use account9, it's conftest pool
 account1 = brownie.network.accounts[1]
@@ -73,6 +74,6 @@ def test1():
     assert OCEAN.balanceOf(beneficiary_agent.address) == 0
 
     # release OCEAN
-    vw.release(OCEAN.address, {"from": account1})
+    vw.release(OCEAN.address, txdict(account1))
     assert vw.released(OCEAN.address) == toBase18(100.0)
     assert OCEAN.balanceOf(beneficiary_agent.address) == toBase18(100.0)

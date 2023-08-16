@@ -6,11 +6,12 @@ import brownie
 from enforce_typing import enforce_types
 import pytest
 
-from sol057.contracts.oceanv3 import oceanv3util
 from engine import AgentBase
+from sol057.contracts.oceanv3 import oceanv3util
 from util import globaltokens
 from util.base18 import toBase18, fromBase18
 from util.constants import GOD_ACCOUNT
+from util.tx import txdict
 
 accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]
@@ -40,7 +41,7 @@ def _make_info(account):
     #  therefore don't need re-setting
     for a in accounts:
         if a.address != GOD_ACCOUNT.address:
-            OCEAN.transfer(GOD_ACCOUNT, OCEAN.balanceOf(a), {"from": a})
+            OCEAN.transfer(GOD_ACCOUNT, OCEAN.balanceOf(a), txdict(a))
 
     class Info:
         def __init__(self):
@@ -84,7 +85,7 @@ def _make_info(account):
 @enforce_types
 def _createDT(account):
     DT = oceanv3util.newDatatoken("foo", "DT1", "DT1", toBase18(_DT_INIT), account)
-    DT.mint(account.address, toBase18(_DT_INIT), {"from": account})
+    DT.mint(account.address, toBase18(_DT_INIT), txdict(account))
     return DT
 
 
@@ -94,21 +95,21 @@ def _createPool(DT, account):
     OCEAN = globaltokens.OCEANtoken()
     pool = oceanv3util.newBPool(account)
 
-    DT.approve(pool.address, toBase18(_DT_STAKE), {"from": account})
-    OCEAN.approve(pool.address, toBase18(_OCEAN_STAKE), {"from": account})
+    DT.approve(pool.address, toBase18(_DT_STAKE), txdict(account))
+    OCEAN.approve(pool.address, toBase18(_OCEAN_STAKE), txdict(account))
 
     assert OCEAN.balanceOf(account) >= toBase18(_DT_STAKE)
     assert OCEAN.balanceOf(account) >= toBase18(_OCEAN_STAKE)
     pool.bind(
-        DT.address, toBase18(_DT_STAKE), toBase18(_POOL_WEIGHT_DT), {"from": account}
+        DT.address, toBase18(_DT_STAKE), toBase18(_POOL_WEIGHT_DT), txdict(account)
     )
     pool.bind(
         OCEAN.address,
         toBase18(_OCEAN_STAKE),
         toBase18(_POOL_WEIGHT_OCEAN),
-        {"from": account},
+        txdict(account),
     )
 
-    pool.finalize({"from": account})
+    pool.finalize(txdict(account))
 
     return pool

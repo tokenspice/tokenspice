@@ -24,6 +24,7 @@ from util import globaltokens
 from util.base18 import toBase18, fromBase18
 from util.constants import GOD_ACCOUNT, OPF_ADDRESS
 from util.strutil import asCurrency
+from util.tx import txdict, transferETH
 
 log = logging.getLogger("wallet")
 
@@ -224,7 +225,7 @@ class AgentWalletEvm(
             self._account = accounts.add(private_key=private_key)
 
         # Give the new wallet ETH to pay gas fees (but don't track otherwise)
-        GOD_ACCOUNT.transfer(self._account, "0.01 ether")
+        transferETH(GOD_ACCOUNT, self._account, "0.01 ether")
 
         # OCEAN is tracked in EVM, not here. But we cache here for speed
         self._burnOCEAN_nocache()  # ensure 0 OCEAN (eg >1 unit tests)
@@ -257,7 +258,7 @@ class AgentWalletEvm(
         OCEAN_balance_base = OCEAN_token.balanceOf(self._account)
         if OCEAN_balance_base > 0:
             OCEAN_token.transfer(
-                _BURN_WALLET.address, OCEAN_balance_base, {"from": self._account}
+                _BURN_WALLET.address, OCEAN_balance_base, txdict(self._account)
             )
 
     def resetCachedInfo(self):
@@ -319,7 +320,7 @@ class AgentWalletEvm(
             )
 
         globaltokens.OCEANtoken().transfer(
-            dst_address, amt_base, {"from": self._account}
+            dst_address, amt_base, txdict(self._account)
         )
 
         dst_wallet._total_OCEAN_in += amt
@@ -353,7 +354,7 @@ class AgentWalletEvm(
 
     def sellDT(self, pool, DT, DT_sell_amt: float, min_OCEAN_amt: float = 0.0):
         """Swap DT for OCEAN. min_OCEAN_amt>0 protects from slippage."""
-        DT.approve(pool.address, toBase18(DT_sell_amt), {"from": self._account})
+        DT.approve(pool.address, toBase18(DT_sell_amt), txdict(self._account))
 
         tokenIn_address = DT.address  # entering pool
         tokenAmountIn_base = toBase18(DT_sell_amt)  # ""
@@ -366,14 +367,14 @@ class AgentWalletEvm(
             tokenOut_address,
             minAmountOut_base,
             maxPrice_base,
-            {"from": self._account},
+            txdict(self._account),
         )
         self.resetCachedInfo()
 
     def buyDT(self, pool, DT, DT_buy_amt: float, max_OCEAN_allow: float):
         """Swap OCEAN for DT"""
         OCEAN = globaltokens.OCEANtoken()
-        OCEAN.approve(pool.address, toBase18(max_OCEAN_allow), {"from": self._account})
+        OCEAN.approve(pool.address, toBase18(max_OCEAN_allow), txdict(self._account))
 
         tokenIn_address = globaltokens.OCEAN_address()
         maxAmountIn_base = toBase18(max_OCEAN_allow)
@@ -386,14 +387,14 @@ class AgentWalletEvm(
             tokenOut_address,
             tokenAmountOut_base,
             maxPrice_base,
-            {"from": self._account},
+            txdict(self._account),
         )
         self.resetCachedInfo()
 
     def stakeOCEAN(self, OCEAN_stake: float, pool):
         """Convert some OCEAN to DT, then add both as liquidity."""
         OCEAN = globaltokens.OCEANtoken()
-        OCEAN.approve(pool.address, toBase18(OCEAN_stake), {"from": self._account})
+        OCEAN.approve(pool.address, toBase18(OCEAN_stake), txdict(self._account))
         tokenIn_address = globaltokens.OCEAN_address()
         tokenAmountIn_base = toBase18(OCEAN_stake)
         minPoolAmountOut_base = toBase18(0.0)
@@ -401,7 +402,7 @@ class AgentWalletEvm(
             tokenIn_address,
             tokenAmountIn_base,
             minPoolAmountOut_base,
-            {"from": self._account},
+            txdict(self._account),
         )
         self.resetCachedInfo()
 
@@ -413,7 +414,7 @@ class AgentWalletEvm(
             tokenOut_address,
             poolAmountIn_base,
             minAmountOut_base,
-            {"from": self._account},
+            txdict(self._account),
         )
         self.resetCachedInfo()
 
@@ -440,12 +441,12 @@ class AgentWalletEvm(
                 " exceeds DT holdings ({fromBase18(DT_base)})"
             )
 
-        DT.transfer(dst_address, amt_base, {"from": self._account})
+        DT.transfer(dst_address, amt_base, txdict(self._account))
 
     def joinPoolAddOCEAN(self, OCEAN_stake: float, pool):
         """adds more liquidity with joinswapExternAmountIn (only OCEAN), oceanv4 contracts"""
         OCEAN = globaltokens.OCEANtoken()
-        OCEAN.approve(pool.address, toBase18(OCEAN_stake), {"from": self._account})
+        OCEAN.approve(pool.address, toBase18(OCEAN_stake), txdict(self._account))
         tokenAmountIn_base = toBase18(OCEAN_stake)
         minPoolAmountOut_base = toBase18(0.1)
 
@@ -453,14 +454,14 @@ class AgentWalletEvm(
             OCEAN.address,
             tokenAmountIn_base,
             minPoolAmountOut_base,
-            {"from": self._account},
+            txdict(self._account),
         )
         self.resetCachedInfo()
 
     def buyDTV4(self, pool, DT, DT_buy_amt: float, max_OCEAN_allow: float):
         """Swap OCEAN for DT, oceanv4 contracts"""
         OCEAN = globaltokens.OCEANtoken()
-        OCEAN.approve(pool.address, toBase18(max_OCEAN_allow), {"from": self._account})
+        OCEAN.approve(pool.address, toBase18(max_OCEAN_allow), txdict(self._account))
 
         tokenIn_address = globaltokens.OCEAN_address()
         tokenOut_address = DT.address
@@ -482,13 +483,13 @@ class AgentWalletEvm(
             0,
         ]  # [maxAmountIn,exactAmountOut,maxPrice,_swapMarketFee]
         pool.swapExactAmountOut(
-            tokenInOutMarket, amountsInOutMaxFee, {"from": self._account}
+            tokenInOutMarket, amountsInOutMaxFee, txdict(self._account)
         )
         self.resetCachedInfo()
 
     def sellDTV4(self, pool, DT, DT_sell_amt: float, min_OCEAN_amt: float = 0.0):
         """Swap DT for OCEAN. min_OCEAN_amt>0 protects from slippage."""
-        DT.approve(pool.address, toBase18(DT_sell_amt), {"from": self._account})
+        DT.approve(pool.address, toBase18(DT_sell_amt), txdict(self._account))
 
         tokenIn_address = DT.address  # entering pool
         tokenAmountIn_base = toBase18(DT_sell_amt)  # ""
@@ -511,7 +512,7 @@ class AgentWalletEvm(
         pool.swapExactAmountIn(
             tokenInOutMarket,
             amountsInOutMaxFee,
-            {"from": self._account},
+            txdict(self._account),
         )
         self.resetCachedInfo()
 

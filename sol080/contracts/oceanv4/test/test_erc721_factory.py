@@ -1,5 +1,6 @@
 import brownie
 
+from sol080.contracts.oceanv4 import oceanv4util
 from util.base18 import toBase18
 from util.constants import (
     BROWNIE_PROJECT080,
@@ -8,7 +9,7 @@ from util.constants import (
     OPF_ADDRESS,
 )
 from util.globaltokens import fundOCEANFromAbove
-from sol080.contracts.oceanv4 import oceanv4util
+from util.tx import txdict
 
 accounts = brownie.network.accounts
 account0 = accounts[0]
@@ -17,13 +18,13 @@ address0 = account0.address
 
 def test_direct():  # pylint: disable=too-many-statements
     # God deploys fake OCEAN token
-    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address0, {"from": GOD_ACCOUNT})
+    OCEANtoken = BROWNIE_PROJECT080.MockOcean.deploy(address0, txdict(GOD_ACCOUNT))
     OCEAN_address = OCEANtoken.address
 
     # God deploys templates
-    erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy({"from": GOD_ACCOUNT})
-    erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy({"from": GOD_ACCOUNT})
-    pool_template = BROWNIE_PROJECT080.BPool.deploy({"from": GOD_ACCOUNT})
+    erc721_template = BROWNIE_PROJECT080.ERC721Template.deploy(txdict(GOD_ACCOUNT))
+    erc20_template = BROWNIE_PROJECT080.ERC20Template.deploy(txdict(GOD_ACCOUNT))
+    pool_template = BROWNIE_PROJECT080.BPool.deploy(txdict(GOD_ACCOUNT))
 
     # God deploys Factory Router
     router = BROWNIE_PROJECT080.FactoryRouter.deploy(
@@ -32,7 +33,7 @@ def test_direct():  # pylint: disable=too-many-statements
         pool_template.address,
         OPF_ADDRESS,
         [],
-        {"from": GOD_ACCOUNT},
+        txdict(GOD_ACCOUNT),
     )
 
     # God deploys ERC721 Factory, and reports it to the router
@@ -41,7 +42,7 @@ def test_direct():  # pylint: disable=too-many-statements
         erc20_template.address,
         OPF_ADDRESS,
         router.address,
-        {"from": account0},
+        txdict(account0),
     )
     assert erc721_factory.owner() == address0
     current_nft_count = erc721_factory.getCurrentNFTCount()
@@ -54,7 +55,7 @@ def test_direct():  # pylint: disable=too-many-statements
         ZERO_ADDRESS,
         ZERO_ADDRESS,
         "https://mystorage.com/mytoken.png",
-        {"from": account0},
+        txdict(account0),
     )
     assert tx.events["NFTCreated"] is not None
     assert tx.events["NFTCreated"]["admin"] == address0
@@ -75,7 +76,7 @@ def test_direct():  # pylint: disable=too-many-statements
     uints = [toBase18(DT_cap), toBase18(0.0)]
     addresses = [address0] * 4
     _bytes = []
-    tx = dataNFT1.createERC20(1, strings, addresses, uints, _bytes, {"from": account0})
+    tx = dataNFT1.createERC20(1, strings, addresses, uints, _bytes, txdict(account0))
 
     DT_address = tx.events["TokenCreated"]["newTokenAddress"]
     DT = BROWNIE_PROJECT080.ERC20Template.at(DT_address)
@@ -95,15 +96,15 @@ def test_direct():  # pylint: disable=too-many-statements
     # Publisher approves staking OCEAN
     OCEAN_init_liquidity = 2000.0
     OCEANtoken.approve(
-        router.address, toBase18(OCEAN_init_liquidity), {"from": account0}
+        router.address, toBase18(OCEAN_init_liquidity), txdict(account0)
     )
 
     # Publisher deploys 1-sided staking bot, reports info to router.
     ss_bot = BROWNIE_PROJECT080.SideStaking.deploy(
-        router.address, {"from": GOD_ACCOUNT}
+        router.address, txdict(GOD_ACCOUNT)
     )
-    router.addSSContract(ss_bot.address, {"from": account0})
-    router.addFactory(erc721_factory.address, {"from": account0})
+    router.addSSContract(ss_bot.address, txdict(account0))
+    router.addFactory(erc721_factory.address, txdict(account0))
 
     # Publisher deploys pool, which includes a 1-sided staking bot
     ss_params = [
@@ -126,7 +127,7 @@ def test_direct():  # pylint: disable=too-many-statements
         pool_template.address,
     ]
 
-    tx = DT.deployPool(ss_params, swap_fees, addresses, {"from": account0})
+    tx = DT.deployPool(ss_params, swap_fees, addresses, txdict(account0))
     pool_address = oceanv4util.poolAddressFromNewBPoolTx(tx)
     pool = BROWNIE_PROJECT080.BPool.at(pool_address)
 

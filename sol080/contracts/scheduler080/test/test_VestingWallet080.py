@@ -3,6 +3,7 @@ from pytest import approx
 
 from util.base18 import toBase18
 from util.constants import BROWNIE_PROJECT057, BROWNIE_PROJECT080, GOD_ACCOUNT
+from util.tx import txdict, transferETH
 
 accounts = brownie.network.accounts
 account0, account1, account2, account3 = (
@@ -20,6 +21,7 @@ chain = brownie.network.chain
 
 
 def test_basic():
+    print("test_VestingWallet080:test_basic 1")
     n_blocks = len(chain)
     beneficiary = address1
     start_block = n_blocks + 1
@@ -30,9 +32,10 @@ def test_basic():
         beneficiary,
         toBase18(start_block),
         toBase18(num_blocks_duration),
-        {"from": account0},
+        txdict(account0),
     )
 
+    print("test_VestingWallet080:test_basic 2")
     assert vesting_wallet.beneficiary() == beneficiary
     start_block_measured = int(vesting_wallet.startBlock() / 1e18)
     assert start_block_measured in [start_block - 1, start_block, start_block + 1]
@@ -40,23 +43,27 @@ def test_basic():
     assert vesting_wallet.released() == 0
 
     # time passes
+    print("test_VestingWallet080:test_basic 3")
     chain.mine(blocks=15, timedelta=1)
     assert vesting_wallet.released() == 0  # haven't released anything
 
     # call release
-    vesting_wallet.release()
+    print("test_VestingWallet080:test_basic 4")
+    vesting_wallet.release(txdict(account0))
     assert vesting_wallet.released() == 0  # wallet never got funds to release!
+
+    print("test_VestingWallet080:test_basic 5")
 
 
 def test_ethFunding():
     # ensure each account has exactly 30 ETH
     for account in [account0, account1, account2]:
-        account.transfer(GOD_ACCOUNT, account.balance())
-        GOD_ACCOUNT.transfer(account, toBase18(30.0))
+        transferETH(account, GOD_ACCOUNT, account.balance())
+        transferETH(GOD_ACCOUNT, account, toBase18(30.0))
 
     # account0 should be able to freely transfer ETH
-    account0.transfer(account1, toBase18(1.0))
-    account1.transfer(account0, toBase18(1.0))
+    transferETH(account0, account1, toBase18(1.0))
+    transferETH(account1, account0, toBase18(1.0))
     assert account0.balance() / 1e18 == approx(30.0)
     assert account1.balance() / 1e18 == approx(30.0)
 
@@ -68,7 +75,7 @@ def test_ethFunding():
         address1,
         toBase18(start_block),
         toBase18(num_blocks_duration),
-        {"from": account0},
+        txdict(account0),
     )
     assert wallet.balance() == 0
 
@@ -77,7 +84,7 @@ def test_ethFunding():
     # which allows it to receive ETH. It's called for plain ETH transfers,
     # ie every call with empty calldata.
     # https://medium.com/coinmonks/solidity-v0-6-0-is-here-things-you-should-know-7d4ab5bca5f1
-    assert account0.transfer(wallet.address, toBase18(30.0))
+    transferETH(account0, wallet.address, toBase18(30.0))
     assert wallet.balance() / 1e18 == approx(30.0)
     assert account0.balance() / 1e18 == approx(0.0)
     assert account1.balance() / 1e18 == approx(30.0)  # unchanged so far
@@ -104,17 +111,17 @@ def test_ethFunding():
     assert account1.balance() / 1e18 == approx(30.0)  # not released yet!
 
     # release the ETH. Anyone can call it
-    wallet.release({"from": account2})
+    wallet.release(txdict(account2))
     assert wallet.released() / 1e18 == approx(30.0)  # now it's released!
     assert account1.balance() / 1e18 == approx(30.0 + 30.0)  # beneficiary richer
 
     # put some new ETH into wallet. It's immediately vested, but not released
-    account2.transfer(wallet.address, toBase18(10.0))
+    transferETH(account2, wallet.address, toBase18(10.0))
     assert wallet.vestedAmount(toBase18(len(chain))) / 1e18 == approx(30.0 + 10.0)
     assert wallet.released() / 1e18 == approx(30.0 + 0.0)  # not released yet!
 
     # release the new ETH
-    wallet.release({"from": account3})
+    wallet.release(txdict(account3))
     assert wallet.released() / 1e18 == approx(30.0 + 10.0)  # new ETH is released!
     assert account1.balance() / 1e18 == approx(30.0 + 30.0 + 10.0)  # +10 eth to ben
 
@@ -122,10 +129,10 @@ def test_ethFunding():
 def test_tokenFunding():
     # accounts 0, 1, 2 should each start with 100 TOK
     token = BROWNIE_PROJECT057.Simpletoken.deploy(
-        "TOK", "Test Token", 18, toBase18(300.0), {"from": account0}
+        "TOK", "Test Token", 18, toBase18(300.0), txdict(account0)
     )
-    token.transfer(account1, toBase18(100.0), {"from": account0})
-    token.transfer(account2, toBase18(100.0), {"from": account0})
+    token.transfer(account1, toBase18(100.0), txdict(account0))
+    token.transfer(account2, toBase18(100.0), txdict(account0))
     taddress = token.address
 
     assert token.balanceOf(account0) / 1e18 == approx(100.0)
@@ -133,7 +140,7 @@ def test_tokenFunding():
     assert token.balanceOf(account2) / 1e18 == approx(100.0)
 
     # account0 should be able to freely transfer TOK
-    token.transfer(account1, toBase18(10.0), {"from": account0})
+    token.transfer(account1, toBase18(10.0), txdict(account0))
     assert token.balanceOf(account0) / 1e18 == approx(90.0)
     assert token.balanceOf(account1) / 1e18 == approx(110.0)
 
@@ -144,12 +151,12 @@ def test_tokenFunding():
         address1,
         toBase18(start_block),
         toBase18(num_blocks_duration),
-        {"from": account0},
+        txdict(account0),
     )
     assert token.balanceOf(wallet) == 0
 
     # send TOK to the wallet
-    token.transfer(wallet.address, toBase18(30.0), {"from": account0})
+    token.transfer(wallet.address, toBase18(30.0), txdict(account0))
     assert token.balanceOf(wallet) / 1e18 == approx(30.0)
     assert token.balanceOf(account0) / 1e18 == approx(60.0)
     assert token.balanceOf(account1) / 1e18 == approx(110.0)
@@ -176,19 +183,19 @@ def test_tokenFunding():
     assert token.balanceOf(account1) / 1e18 == approx(110.0)  # not released yet
 
     # release the TOK. Anyone can call it
-    wallet.release(taddress, {"from": account2})
+    wallet.release(taddress, txdict(account2))
     assert wallet.released(taddress) / 1e18 == approx(30.0)  # released!
     assert token.balanceOf(account1) / 1e18 == approx(
         110.0 + 30.0
     )  # beneficiary richer
 
     # put some new TOK into wallet. It's immediately vested, but not released
-    token.transfer(wallet.address, toBase18(10.0), {"from": account2})
+    token.transfer(wallet.address, toBase18(10.0), txdict(account2))
     assert wallet.vestedAmount(taddress, toBase18(11)) / 1e18 == approx(30.0 + 10.0)
     assert wallet.released(taddress) / 1e18 == approx(30.0)  # not released yet
 
     # release the new TOK
-    wallet.release(taddress, {"from": account3})
+    wallet.release(taddress, txdict(account3))
     assert wallet.released(taddress) / 1e18 == approx(30.0 + 10.0)  # TOK released!
     assert token.balanceOf(account1) / 1e18 == approx(
         110 + 30 + 10.0

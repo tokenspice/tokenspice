@@ -3,6 +3,7 @@ from enforce_typing import enforce_types
 
 from util.constants import BROWNIE_PROJECT057, GOD_ACCOUNT
 from util.base18 import toBase18
+from util.tx import txdict
 
 _OCEAN_TOKEN = None
 
@@ -18,7 +19,7 @@ def OCEANtoken():
         token = None
     if token is None:
         token = _OCEAN_TOKEN = BROWNIE_PROJECT057.Simpletoken.deploy(
-            "OCEAN", "OCEAN", 18, toBase18(1e9), {"from": GOD_ACCOUNT}
+            "OCEAN", "OCEAN", 18, toBase18(1e9), txdict(GOD_ACCOUNT)
         )
     return token
 
@@ -30,4 +31,4 @@ def OCEAN_address() -> str:
 
 @enforce_types
 def fundOCEANFromAbove(dst_address: str, amount_base: int):
-    OCEANtoken().transfer(dst_address, amount_base, {"from": GOD_ACCOUNT})
+    OCEANtoken().transfer(dst_address, amount_base, txdict(GOD_ACCOUNT))

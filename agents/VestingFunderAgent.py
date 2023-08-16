@@ -1,10 +1,11 @@
 from enforce_typing import enforce_types
 
+from agents.VestingWalletAgent import VestingWalletAgent
 from engine import AgentBase
 from util.constants import BROWNIE_PROJECT057
 from util import globaltokens
 from util.base18 import toBase18
-from agents.VestingWalletAgent import VestingWalletAgent
+from util.tx import txdict
 
 
 @enforce_types
@@ -43,13 +44,13 @@ class VestingFunderAgent(AgentBase.AgentBaseEvm):
             beneficiary_agent.address,
             self._start_timestamp,
             self._duration_seconds,
-            {"from": self.account},
+            txdict(self.account),
         )
 
         # fund the vesting wallet with all of self's OCEAN
         token = globaltokens.OCEANtoken()
         token.transfer(
-            vw_contract.address, toBase18(self.OCEAN()), {"from": self.account}
+            vw_contract.address, toBase18(self.OCEAN()), txdict(self.account)
         )
         self._wallet.resetCachedInfo()
 
