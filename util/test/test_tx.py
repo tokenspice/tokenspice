@@ -3,7 +3,8 @@ import brownie
 from util.tx import txdict
 
 def test_txdict():
-    brownie.network.connect("development")
+    if not brownie.network.is_connected():
+        brownie.network.connect("development")
     
     from_account = "foo_account"
     d = txdict(from_account)
