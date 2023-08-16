@@ -1,5 +1,5 @@
 import brownie
-from brownie.network.gas.strategies import GasNowStrategy
+
 from util.constants import BROWNIE_PROJECT057
 from util.tx import txdict
 
