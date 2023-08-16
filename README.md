@@ -40,7 +40,7 @@ It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-toke
 - Linux/MacOS
 - Python 3.8.5+
 - solc 0.8.0+ [[Instructions](https://docs.soliditylang.org/en/v0.8.9/installing-solidity.html)]
-- ganache. To install: `npm install ganache-cli --global`
+- ganache. To install: `npm install ganache --global`
 - nvm 16.13.2, _not_ nvm 17. To install: `nvm install 16.13.2; nvm use 16.13.2`. [[Details](https://github.com/tokenspice/tokenspice/issues/165)]
 
 ## Install TokenSPICE
@@ -69,10 +69,27 @@ pip install -r requirements.txt
 - Issue: Brownie doesn't support Python 3.11 yet. Workaround: before "install dependencies" step above, run `pip install vyper==0.3.7 --ignore-requires-python` and `sudo apt-get install python3.11-dev`
 - Issue: MacOS might flag "Unsupported architecture". Workaround: install including ARCHFLAGS: `ARCHFLAGS="-arch x86_64" pip install -r requirements.txt`
 
+## Run Ganache
+
+From "Prerequisites", you should have Ganache installed.
+
+Open a new console and go to tokenspice directory. Then:
+```console
+source venv/bin/activate
+./ganache.py
+```
+
+This will start a Ganache chain, and populate 9 accounts.
+
+
 ## TokenSPICE CLI
 
-`tsp` is the command-line interface for TokenSPICE. From the same terminal:
+`tsp` is the command-line interface for TokenSPICE.
+
+Open a new console and go to tokenspice directory. Then:
 ```console
+source venv/bin/activate
+
 #add pwd to bash path
 export PATH=$PATH:.
 
@@ -93,6 +110,7 @@ tsp compile
 TokenSPICE sees smart contracts as classes. How:
 - When it starts, it calls `brownie.project.load('./sol057', name="MyProject")` to load the ABIs in `./sol057/build/`. Similar for `sol080`.
 - That's enough info to treat each contract in `sol057/contracts/` as a _class_. Then, call `deploy()` on it to create a new _object_.
+
 
 # 🏄 Running, Debugging
 
