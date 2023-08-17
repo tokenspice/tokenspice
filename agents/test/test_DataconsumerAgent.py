@@ -11,9 +11,9 @@ from util import constants
 class MockSS:
     def __init__(self):
         # seconds per tick
-        self.time_step: int = constants.S_PER_HOUR
-        self.pool_weight_DT: float = 1.0
-        self.pool_weight_OCEAN: float = 1.0
+        self.time_step: int = constants.S_PER_HOUR  # type:ignore
+        self.pool_weight_DT: float = 1.0  # type:ignore
+        self.pool_weight_OCEAN: float = 1.0  # type:ignore
 
 
 class MockState:

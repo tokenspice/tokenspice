@@ -25,7 +25,7 @@ class SimState(SimStateBase.SimStateBase):
         ss = self.ss  # for convenience as we go forward
 
         # wire up the circuit
-        new_agents: Set[AgentBase.AgentBaseAbstract] = set()
+        new_agents: Set[AgentBase.AgentBaseAbstract] = set()  # type:ignore
 
         pub_ss = PublisherStrategyV4(
             DT_cap=self.ss.publisher_DT_cap,
@@ -101,4 +101,4 @@ class SimState(SimStateBase.SimStateBase):
 
         # pools that were rug-pulled by a malicious publisher. Some agents
         # watch for 'state.rugged_pools' and act accordingly.
-        self.rugged_pools: List[str] = []
+        self.rugged_pools: List[str] = []  # type:ignore

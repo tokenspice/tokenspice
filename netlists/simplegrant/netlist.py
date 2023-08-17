@@ -18,9 +18,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.setMaxTime(10, "days")
 
         # ==attributes specific to this netlist
-        self.granter_init_OCEAN: float = 1.0
-        self.granter_s_between_grants: int = S_PER_DAY * 3
-        self.granter_n_actions: int = 4
+        self.granter_init_OCEAN: float = 1.0  # type:ignore
+        self.granter_s_between_grants: int = S_PER_DAY * 3  # type:ignore
+        self.granter_n_actions: int = 4  # type:ignore
 
 
 @enforce_types

@@ -13,7 +13,7 @@ log = logging.getLogger("simstrategy")
 class SimStrategyBase(StrMixin):
     def __init__(self):
         # seconds per time step (tick)
-        self.time_step: int = S_PER_HOUR
+        self.time_step: int = S_PER_HOUR  # type:ignore
 
         # max # time steps (ticks) to run until
         self.max_ticks = 1

@@ -29,14 +29,14 @@ class KPIs(
         super().__init__(ss.time_step)
         self.ss = ss
 
-        # for these, append a new value with each tick
-        self._granttakers_revenue_per_tick__per_tick: List[float] = []
-        self._consume_sales_per_marketplace_per_s__per_tick: List[float] = []
-        self._n_marketplaces__per_tick: List[int] = []
-        self._total_OCEAN_minted__per_tick: List[float] = []
-        self._total_OCEAN_burned__per_tick: List[float] = []
-        self._total_OCEAN_minted_USD__per_tick: List[float] = []
-        self._total_OCEAN_burned_USD__per_tick: List[float] = []
+        # for these, append a new value with each tick. All List[float]
+        self._granttakers_revenue_per_tick__per_tick = []
+        self._consume_sales_per_marketplace_per_s__per_tick = []
+        self._n_marketplaces__per_tick = []  # this one's List[int]
+        self._total_OCEAN_minted__per_tick = []
+        self._total_OCEAN_burned__per_tick = []
+        self._total_OCEAN_minted_USD__per_tick = []
+        self._total_OCEAN_burned_USD__per_tick = []
 
     def takeStep(self, state):
         super().takeStep(state)  # parent e.g. increments self._tick

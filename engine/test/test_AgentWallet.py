@@ -340,7 +340,7 @@ def test_stakeOCEAN(alice_info):
 def test_unstakeOCEAN(alice_info):
     agent_wallet, pool = alice_info.agent._wallet, alice_info.pool
 
-    BPT_before: float = agent_wallet.BPT(pool)
+    BPT_before: float = agent_wallet.BPT(pool)  # type:ignore
 
     agent_wallet.unstakeOCEAN(BPT_unstake=20.0, pool=pool)
 

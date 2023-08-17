@@ -35,13 +35,13 @@ class SimState(
         self._marketplace_tick_previous_add = 0
 
         # as ecosystem improves, these parameters may change
-        self._total_OCEAN_minted: float = 0.0
-        self._total_OCEAN_burned: float = 0.0
-        self._total_OCEAN_burned_USD: float = 0.0
-        self._speculation_valuation = ss._init_speculation_valuation
+        self._total_OCEAN_minted: float = 0.0  # type:ignore
+        self._total_OCEAN_burned: float = 0.0  # type:ignore
+        self._total_OCEAN_burned_USD: float = 0.0  # type:ignore
+        self._speculation_valuation = ss._init_speculation_valuation  # type:ignore
 
         # Instantiate and connnect agent instances. "Wire up the circuit"
-        new_agents: Set[AgentBase.AgentBaseAbstract] = set()
+        new_agents: Set[AgentBase.AgentBaseAbstract] = set()  # type:ignore
 
         # Note: could replace MarketplacesAgent with DataecosystemAgent, for a
         # higher-fidelity simulation using EVM agents

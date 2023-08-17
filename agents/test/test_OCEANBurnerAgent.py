@@ -8,11 +8,11 @@ from agents.OCEANBurnerAgent import OCEANBurnerAgent
 def test_fixedOCEANprice():
     class DummySimState:
         def __init__(self):
-            self._total_OCEAN_burned: float = 0.0
-            self._total_OCEAN_burned_USD: float = 0.0
+            self._total_OCEAN_burned: float = 0.0  # type:ignore
+            self._total_OCEAN_burned_USD: float = 0.0  # type:ignore
 
-        def OCEANprice(self) -> float:
-            return 2.0
+        def OCEANprice(self) -> float:  # type:ignore
+            return 2.0  # type:ignore
 
     state = DummySimState()
     a = OCEANBurnerAgent("foo", USD=10.0, OCEAN=0.0)
@@ -34,9 +34,9 @@ def test_fixedOCEANprice():
 def test_changingOCEANprice():
     class DummySimState:
         def __init__(self):
-            self._total_OCEAN_burned: float = 0.0
-            self._total_OCEAN_burned_USD: float = 0.0
-            self._initial_OCEAN: float = 100.0
+            self._total_OCEAN_burned: float = 0.0  # type:ignore
+            self._total_OCEAN_burned_USD: float = 0.0  # type:ignore
+            self._initial_OCEAN: float = 100.0  # type:ignore
 
         def OCEANprice(self) -> float:
             return self.overallValuation() / self.OCEANsupply()

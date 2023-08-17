@@ -166,11 +166,17 @@ class StrMixIn:
     def __str__(self) -> str:
         s = []
         s += ["AgentWallet={\n"]
-        s += [f"USD={asCurrency(self.USD())}"]  # pylint: disable=E1101
-        s += [f"; OCEAN={self.OCEAN():.6f}"]  # pylint: disable=E1101
-        totalUSDin = self.totalUSDin()  # pylint: disable=E1101
+
+        USD = self.USD()  # type:ignore # pylint: disable=E1101
+        OCEAN = self.OCEAN()  # type:ignore # pylint: disable=E1101
+        totalUSDin = self.totalUSDin()  # type:ignore # pylint: disable=E1101
+        totalOCEANin = self.totalOCEANin()  # type:ignore # pylint: disable=E1101
+
+        s += [f"USD={asCurrency(USD)}"]
+        s += [f"; OCEAN={OCEAN:.6f}"]
         s += [f"; total_USD_in={asCurrency(totalUSDin)}"]
-        s += [f"; total_OCEAN_in={self.totalOCEANin():.6f}"]  # pylint: disable=E1101
+        s += [f"; total_OCEAN_in={totalOCEANin:.6f}"]
+
         s += [" /AgentWallet}"]
         return "".join(s)
 
@@ -268,7 +274,7 @@ class AgentWalletEvm(
     # ===================================================================
     # USD-related
     def _USD_base(self) -> int:
-        pass
+        return 0
 
     # ===================================================================
     # OCEAN-related
@@ -526,7 +532,7 @@ class BurnWallet:
 
     def __init__(self):
         self.address = constants.BURN_ADDRESS
-        self._total_OCEAN_in: float = 0.0
+        self._total_OCEAN_in: float = 0.0  # type:ignore
 
     def resetCachedInfo(self):
         pass

@@ -24,9 +24,9 @@ class SimStrategy(SimStrategyBase.SimStrategyBase):
         self.setLogInterval(3 * S_PER_MONTH)
 
         # ==attributes specific to this netlist
-        self.OCEAN_funded: float = 5.0
-        self.start_timestamp: int = chain[-1].timestamp + S_PER_YEAR
-        self.duration_seconds: int = 5 * S_PER_YEAR
+        self.OCEAN_funded: float = 5.0  # type:ignore
+        self.start_timestamp: int = chain[-1].timestamp + S_PER_YEAR  # type:ignore
+        self.duration_seconds: int = 5 * S_PER_YEAR  # type:ignore
 
 
 @enforce_types

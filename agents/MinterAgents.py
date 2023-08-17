@@ -55,7 +55,8 @@ class OCEANLinearMinterAgent(AgentBase.AgentBaseNoEvm):
     def _mintAndDisburseFunds(self, state):
         assert self._n_mints_left > 0, "only call if mints are left"
 
-        OCEAN: float = self._OCEAN_per_mint  # mint!
+        # mint!
+        OCEAN: float = self._OCEAN_per_mint  # type:ignore
 
         state._total_OCEAN_minted += OCEAN
         self.receiveOCEAN(OCEAN)
@@ -279,7 +280,7 @@ class OCEANFuncMinterAgent(AgentBase.AgentBaseNoEvm):
         percent_to_mint = G_t - G_tprev
 
         # mint!
-        OCEAN: float = percent_to_mint * self._total_OCEAN_to_mint
+        OCEAN: float = percent_to_mint * self._total_OCEAN_to_mint  # type:ignore
 
         if not self._func.keepMinting(t):
             OCEAN = self._OCEAN_left_to_mint

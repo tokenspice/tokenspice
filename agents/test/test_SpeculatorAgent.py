@@ -11,7 +11,7 @@ from util.constants import S_PER_HOUR
 class MockSS:
     def __init__(self):
         # seconds per tick
-        self.time_step: int = S_PER_HOUR
+        self.time_step: int = S_PER_HOUR  # type:ignore
 
 
 class MockState:

@@ -1,5 +1,5 @@
 import random
-from typing import List
+from typing import List, Optional
 
 from enforce_typing import enforce_types
 import brownie
@@ -69,7 +69,7 @@ class PublisherAgent(AgentBase.AgentBaseEvm):
         name: str,
         USD: float,
         OCEAN: float,
-        pub_ss: PublisherStrategy = None,
+        pub_ss: Optional[PublisherStrategy] = None,  # type:ignore
     ):
         super().__init__(name, USD, OCEAN)
         if pub_ss is None:
@@ -284,7 +284,7 @@ class PublisherAgentV4(AgentBase.AgentBaseEvm):
         name: str,
         USD: float,
         OCEAN: float,
-        pub_ss: PublisherStrategyV4 = None,
+        pub_ss: Optional[PublisherStrategyV4] = None,  # type:ignore
     ):
         super().__init__(name, USD, OCEAN)
         if pub_ss is None:

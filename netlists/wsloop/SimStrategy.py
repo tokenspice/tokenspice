@@ -31,7 +31,7 @@ class SimStrategy(
         self.init_n_marketplaces = 1
 
         # % network revenue to burn, vs to DAO
-        self._percent_burn: float = 0.05
+        self._percent_burn: float = 0.05  # type:ignore
 
         # valuation
         self._p_s_ratio = 30.0
