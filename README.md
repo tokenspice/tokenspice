@@ -225,7 +225,8 @@ brownie console
 
 In brownie console:
 ```python
->>> st = Simpletoken.deploy("DT1", "Simpletoken 1", 18, Wei('100 ether'), {'from': accounts[0]})
+>>> st = Simpletoken.deploy("DT1", "Simpletoken 1", 18, Wei('100 ether'), {'from': accounts[0], "priority_fee": chain.priority_fee, "max_fee": chain.base_fee + 2 *
+ chain.priority_fee})
 Transaction sent: 0x9d20d3239d5c8b8a029f037fe573c343efd9361efd4d99307e0f5be7499367ab
   Gas price: 0.0 gwei   Gas limit: 6721975
   Simpletoken.constructor confirmed - Block: 1   Gas used: 601010 (8.94%)
