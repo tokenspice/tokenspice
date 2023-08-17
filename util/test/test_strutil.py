@@ -1,7 +1,12 @@
 import random
 
 from util import mathutil
-from util.strutil import *  # pylint: disable=wildcard-import
+from util.strutil import (
+    StrMixin,
+    dictStr,
+    asCurrency,
+    prettyBigNum,
+)
 
 
 def testStrMixin():

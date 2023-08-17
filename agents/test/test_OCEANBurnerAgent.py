@@ -11,7 +11,7 @@ def test_fixedOCEANprice():
             self._total_OCEAN_burned: float = 0.0
             self._total_OCEAN_burned_USD: float = 0.0
 
-        def OCEANprice(self) -> float:  # pylint: disable=no-self-use
+        def OCEANprice(self) -> float:
             return 2.0
 
     state = DummySimState()
@@ -38,10 +38,10 @@ def test_changingOCEANprice():
             self._total_OCEAN_burned_USD: float = 0.0
             self._initial_OCEAN: float = 100.0
 
-        def OCEANprice(self) -> float:  # pylint: disable=no-self-use
+        def OCEANprice(self) -> float:
             return self.overallValuation() / self.OCEANsupply()
 
-        def overallValuation(self) -> float:  # pylint: disable=no-self-use
+        def overallValuation(self) -> float:
             return 200.0
 
         def OCEANsupply(self) -> float:

@@ -31,9 +31,7 @@ def test_exactAmountIn_fee():
     amountsInOutMaxFee = [toBase18(100), toBase18(1), toBase18(100), toBase18(0.001)]
     # [exactAmountIn,minAmountOut,maxPrice,_swapMarketFee=0.1%]
 
-    tx = pool.swapExactAmountIn(
-        tokenInOutMarket, amountsInOutMaxFee, txdict(account0)
-    )
+    tx = pool.swapExactAmountIn(tokenInOutMarket, amountsInOutMaxFee, txdict(account0))
     assert datatoken.balanceOf(address0) > 0
 
     assert tx.events["SWAP_FEES"][0]["marketFeeAmount"] == toBase18(

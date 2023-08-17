@@ -41,7 +41,7 @@ class SimState(
         self._speculation_valuation = ss._init_speculation_valuation
 
         # Instantiate and connnect agent instances. "Wire up the circuit"
-        new_agents: Set[AgentBase.AgentBase] = set()
+        new_agents: Set[AgentBase.AgentBaseAbstract] = set()
 
         # Note: could replace MarketplacesAgent with DataecosystemAgent, for a
         # higher-fidelity simulation using EVM agents

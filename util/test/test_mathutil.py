@@ -2,7 +2,13 @@ from enforce_typing import enforce_types
 
 import pytest
 
-from util.mathutil import *  # pylint: disable=wildcard-import
+from util.mathutil import (
+    isNumber,
+    intInStr,
+    Range,
+    randunif,
+    round_sig,
+)
 
 
 @enforce_types

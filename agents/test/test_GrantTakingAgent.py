@@ -9,7 +9,7 @@ def test1():
         def __init__(self):
             pass
 
-        def OCEANprice(self) -> float:  # pylint: disable=no-self-use
+        def OCEANprice(self) -> float:
             return 3.0
 
     state = DummySimState()

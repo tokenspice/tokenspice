@@ -43,7 +43,7 @@ CONFIG.argv["silent"] = SILENT  # brownie config
 # big numbers
 
 INF = math.inf
-HUGEINT = 2 ** 255  # biggest int that can be passed into contracts
+HUGEINT = 2**255  # biggest int that can be passed into contracts
 
 # number of seconds in an hour, etc.
 S_PER_MIN = 60

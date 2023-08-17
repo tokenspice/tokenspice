@@ -34,7 +34,7 @@ def test_ethFunding():
             transferETH(accounts[i], GOD_ACCOUNT, toWei(bal_before - 30.0))
         elif bal_before < 30.0:
             transferETH(GOD_ACCOUNT, accounts[i], toWei(30.0 - bal_before))
-        transferETH(GOD_ACCOUNT, accounts[i], toWei(1e-4)) # safety margin
+        transferETH(GOD_ACCOUNT, accounts[i], toWei(1e-4))  # safety margin
 
     assert fromWei(accounts[0].balance()) == approx(30.0, abs=1e-3)
     assert fromWei(accounts[1].balance()) == approx(30.0, abs=1e-3)
@@ -54,7 +54,7 @@ def test_ethFunding():
     # https://medium.com/coinmonks/solidity-v0-6-0-is-here-things-you-should-know-7d4ab5bca5f1
     transferETH(accounts[0], wallet.address, "30 ether")
     assert fromWei(accounts[0].balance()) == approx(0.0, abs=1e-3)
-    assert fromWei(accounts[1].balance()) == approx(30.0, abs=1e-3) # unchanged so far
+    assert fromWei(accounts[1].balance()) == approx(30.0, abs=1e-3)  # unchanged so far
     assert wallet.vestedAmount(chain[1].timestamp) == 0
     assert wallet.released() == 0
 
@@ -63,7 +63,7 @@ def test_ethFunding():
         vested_amt = fromWei(wallet.vestedAmount(chain[-1].timestamp))
         if vested_amt >= 29.9:
             break
-    assert vested_amt == approx(30.0, abs=1e-3)    
+    assert vested_amt == approx(30.0, abs=1e-3)
     assert wallet.released() == 0
     assert fromWei(accounts[1].balance()) == approx(30.0, abs=1e-3)  # not released yet!
 
@@ -75,7 +75,9 @@ def test_ethFunding():
         if released_amt > 29.9:
             break
     assert released_amt == approx(30.0, abs=1e-3)  # now it's released!
-    assert fromWei(accounts[1].balance()) == approx(30.0 + 30.0, abs=1e-3)  # beneficiary is richer
+    assert fromWei(accounts[1].balance()) == approx(
+        30.0 + 30.0, abs=1e-3
+    )  # beneficiary is richer
 
     # put some new ETH into wallet. It's immediately vested, but not released
     transferETH(accounts[2], wallet.address, "10 ether")
@@ -84,8 +86,10 @@ def test_ethFunding():
         vested_amt = fromWei(wallet.vestedAmount(chain[-1].timestamp))
         if vested_amt >= 29.9:
             break
-    assert vested_amt == approx(40.0, abs=1e-3)    
-    assert fromWei(wallet.released()) == approx(30.0 + 0.0, abs=1e-3)  # not released yet!
+    assert vested_amt == approx(40.0, abs=1e-3)
+    assert fromWei(wallet.released()) == approx(
+        30.0 + 0.0, abs=1e-3
+    )  # not released yet!
 
     # release the new ETH
     wallet.release(txdict(accounts[3]))
@@ -95,7 +99,7 @@ def test_ethFunding():
         if released_amt > 29.9:
             break
     assert released_amt == approx(30.0, abs=1e-3)  # now it's released!
-    assert fromWei(accounts[1].balance()) == approx(30.0 + 30.0, abs=1e-3)  # beneficiary got +10 ETH
+    assert fromWei(accounts[1].balance()) == approx(60.0, abs=1e-3)
 
 
 def test_tokenFunding():

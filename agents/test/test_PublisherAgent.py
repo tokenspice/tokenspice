@@ -74,7 +74,7 @@ def test_constructor():
     assert agent._s_since_unstake == 0
     assert agent._s_since_sellDT == 0
 
-    assert agent.pools == []
+    assert not agent.pools
 
 
 @enforce_types

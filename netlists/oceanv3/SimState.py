@@ -23,7 +23,7 @@ class SimState(SimStateBase.SimStateBase):
         ss = self.ss  # for convenience as we go forward
 
         # wire up the circuit
-        new_agents: Set[AgentBase.AgentBase] = set()
+        new_agents: Set[AgentBase.AgentBaseAbstract] = set()
 
         pub_ss = PublisherStrategy(
             DT_init=self.ss.publisher_DT_init,

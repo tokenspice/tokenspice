@@ -26,9 +26,7 @@ def ERC721Template():
     except brownie.exceptions.ContractNotFound:
         erc721_template = None
     if erc721_template is None:
-        _ERC721_TEMPLATE = BROWNIE_PROJECT080.ERC721Template.deploy(
-            txdict(GOD_ACCOUNT)
-        )
+        _ERC721_TEMPLATE = BROWNIE_PROJECT080.ERC721Template.deploy(txdict(GOD_ACCOUNT))
         erc721_template = _ERC721_TEMPLATE
     return erc721_template
 
@@ -165,7 +163,7 @@ def createBPoolFromDatatoken(
     DT_vest_num_blocks=600,
     LP_swap_fee=0.03,
     mkt_swap_fee=0.01,
-): #pylint: disable=too-many-arguments
+):  # pylint: disable=too-many-arguments
 
     OCEAN = OCEANtoken()
     pool_template = POOLTemplate()
@@ -174,9 +172,7 @@ def createBPoolFromDatatoken(
     router = BROWNIE_PROJECT080.FactoryRouter.at(router_address)
     router.updateMinVestingPeriod(500, txdict(from_account))
 
-    OCEAN.approve(
-        router.address, toBase18(OCEAN_init_liquidity), txdict(from_account)
-    )
+    OCEAN.approve(router.address, toBase18(OCEAN_init_liquidity), txdict(from_account))
 
     ssbot = deploySideStaking(from_account, router)
     router.addSSContract(ssbot.address, txdict(from_account))

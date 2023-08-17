@@ -66,6 +66,7 @@ def dictStr(d: dict, newline=False) -> str:
     return "".join(s)
 
 
+@enforce_types
 def asCurrency(amount, decimals: bool = True) -> str:
     """Ref: https://stackoverflow.com/questions/21208376/converting-float-to-dollars-and-cents"""
     if decimals:
@@ -79,6 +80,7 @@ def asCurrency(amount, decimals: bool = True) -> str:
     return f"-${-amount:,.0f}"
 
 
+@enforce_types
 def prettyBigNum(amount, remove_zeroes: bool = True) -> str:
     """Prints, for example:
     1.23e12, 123.4B, 1.23B, 123M, 1.23M, 123K, 1.23K, 123,

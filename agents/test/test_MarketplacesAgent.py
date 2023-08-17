@@ -38,7 +38,7 @@ def test4_takeStep():
             self.USD += USD
 
     class DummyKpis:
-        def mktsRNDToSalesRatio(self):  # pylint: disable=no-self-use
+        def mktsRNDToSalesRatio(self):
             return 0.0
 
     class DummySS:
@@ -46,9 +46,7 @@ def test4_takeStep():
             self.time_step = S_PER_DAY
             self._percent_consume_sales_for_network = 0.05
 
-        def annualMktsGrowthRate(
-            self, dummy_ratio
-        ):  # pylint: disable=no-self-use, unused-argument
+        def annualMktsGrowthRate(self, dummy_ratio):  # pylint: disable=unused-argument
             return 0.25
 
         def networkRevenue(self, consume_sales: float) -> float:

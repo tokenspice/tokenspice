@@ -95,14 +95,10 @@ def test_direct():  # pylint: disable=too-many-statements
 
     # Publisher approves staking OCEAN
     OCEAN_init_liquidity = 2000.0
-    OCEANtoken.approve(
-        router.address, toBase18(OCEAN_init_liquidity), txdict(account0)
-    )
+    OCEANtoken.approve(router.address, toBase18(OCEAN_init_liquidity), txdict(account0))
 
     # Publisher deploys 1-sided staking bot, reports info to router.
-    ss_bot = BROWNIE_PROJECT080.SideStaking.deploy(
-        router.address, txdict(GOD_ACCOUNT)
-    )
+    ss_bot = BROWNIE_PROJECT080.SideStaking.deploy(router.address, txdict(GOD_ACCOUNT))
     router.addSSContract(ss_bot.address, txdict(account0))
     router.addFactory(erc721_factory.address, txdict(account0))
 

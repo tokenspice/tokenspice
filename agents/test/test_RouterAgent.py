@@ -29,8 +29,8 @@ def test_RouterAgent():
 
     am = RouterAgent("moneyrouter", 1.0, 10.0, {"a1": perc_f1, "a2": perc_f2})
 
-    assert am._USD_per_tick == ([])
-    assert am._OCEAN_per_tick == ([])
+    assert not am._USD_per_tick
+    assert not am._OCEAN_per_tick
     assert am._tickOneMonthAgo(state) == (0)
     assert am.monthlyUSDreceived(state) == (0.0)
     assert am.monthlyOCEANreceived(state) == (0.0)

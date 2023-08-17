@@ -10,7 +10,7 @@ accounts = brownie.network.accounts
 account0, account1 = accounts[0], accounts[1]
 address0, address1 = account0.address, account1.address
 OCEAN_address = globaltokens.OCEAN_address()
-HUGEINT = 2 ** 255
+HUGEINT = 2**255
 
 
 def test_notokens_basic():

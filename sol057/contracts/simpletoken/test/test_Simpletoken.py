@@ -37,4 +37,5 @@ def test_transferFrom():
 
 def _deployToken():
     return BROWNIE_PROJECT057.Simpletoken.deploy(
-        "TST", "Test Token", 18, 1e21, txdict(accounts[0]))
+        "TST", "Test Token", 18, 1e21, txdict(accounts[0])
+    )

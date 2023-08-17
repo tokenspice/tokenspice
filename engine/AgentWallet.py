@@ -166,10 +166,11 @@ class StrMixIn:
     def __str__(self) -> str:
         s = []
         s += ["AgentWallet={\n"]
-        s += [f"USD={asCurrency(self.USD())}"]  # type:ignore
-        s += [f"; OCEAN={self.OCEAN():.6f}"]  # type:ignore
-        s += [f"; total_USD_in={asCurrency(self.totalUSDin())}"]  # type:ignore
-        s += [f"; total_OCEAN_in={self.totalOCEANin():.6f}"]  # type:ignore
+        s += [f"USD={asCurrency(self.USD())}"]  # pylint: disable=E1101
+        s += [f"; OCEAN={self.OCEAN():.6f}"]  # pylint: disable=E1101
+        totalUSDin = self.totalUSDin()  # pylint: disable=E1101
+        s += [f"; total_USD_in={asCurrency(totalUSDin)}"]
+        s += [f"; total_OCEAN_in={self.totalOCEANin():.6f}"]  # pylint: disable=E1101
         s += [" /AgentWallet}"]
         return "".join(s)
 
@@ -319,9 +320,7 @@ class AgentWalletEvm(
                 " exceeds OCEAN holdings ({fromBase18(OCEAN_base)})"
             )
 
-        globaltokens.OCEANtoken().transfer(
-            dst_address, amt_base, txdict(self._account)
-        )
+        globaltokens.OCEANtoken().transfer(dst_address, amt_base, txdict(self._account))
 
         dst_wallet._total_OCEAN_in += amt
         self.resetCachedInfo()
@@ -360,7 +359,7 @@ class AgentWalletEvm(
         tokenAmountIn_base = toBase18(DT_sell_amt)  # ""
         tokenOut_address = globaltokens.OCEAN_address()  # leaving pool
         minAmountOut_base = toBase18(min_OCEAN_amt)  # ""
-        maxPrice_base = 2 ** 255  # limit by min_OCEAN_amt, not price
+        maxPrice_base = 2**255  # limit by min_OCEAN_amt, not price
         pool.swapExactAmountIn(
             tokenIn_address,
             tokenAmountIn_base,
@@ -380,7 +379,7 @@ class AgentWalletEvm(
         maxAmountIn_base = toBase18(max_OCEAN_allow)
         tokenOut_address = DT.address
         tokenAmountOut_base = toBase18(DT_buy_amt)
-        maxPrice_base = 2 ** 255
+        maxPrice_base = 2**255
         pool.swapExactAmountOut(
             tokenIn_address,
             maxAmountIn_base,
@@ -469,7 +468,7 @@ class AgentWalletEvm(
 
         maxAmountIn_base = toBase18(max_OCEAN_allow)
         tokenAmountOut_base = toBase18(DT_buy_amt)
-        maxPrice_base = 2 ** 255
+        maxPrice_base = 2**255
 
         tokenInOutMarket = [
             tokenIn_address,
@@ -495,7 +494,7 @@ class AgentWalletEvm(
         tokenAmountIn_base = toBase18(DT_sell_amt)  # ""
         tokenOut_address = globaltokens.OCEAN_address()  # leaving pool
         minAmountOut_base = toBase18(min_OCEAN_amt)  # ""
-        maxPrice_base = 2 ** 255  # limit by min_OCEAN_amt, not price
+        maxPrice_base = 2**255  # limit by min_OCEAN_amt, not price
         marketFeeAddress = OPF_ADDRESS
         tokenInOutMarket = [
             tokenIn_address,

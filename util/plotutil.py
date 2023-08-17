@@ -193,7 +193,7 @@ def _xyToPngs(  # pylint: disable=too-many-branches, too-many-locals, too-many-a
             ax.get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
 
         ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.2g"))
-        max_y = max([max(y) for y in ys])
+        max_y = max([max(y) for y in ys])  # pylint: disable=consider-using-generator
         if max_y < 1000.0:
             ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.2f"))
 

@@ -73,7 +73,7 @@ def get_OCEAN_in_BPTs(state, agent):
 
 
 @enforce_types
-def netlist_createLogData(state): #pylint: disable=too-many-statements
+def netlist_createLogData(state):  # pylint: disable=too-many-statements
     """SimEngine constructor uses this"""
     s = []  # for console logging
     dataheader = []  # for csv logging: list of string

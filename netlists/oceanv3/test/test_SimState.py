@@ -20,4 +20,4 @@ def test1():
 
     assert isinstance(state.kpis, KPIs)
 
-    assert state.rugged_pools == []
+    assert not state.rugged_pools
