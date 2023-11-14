@@ -14,6 +14,8 @@
   
 </div>
 
+⚠ _Note: as of mid 2023, this codebase is not being maintained. It might work, it might not. If you find a bug, feel free to report it, but do not expect it to be fixed. If you do a PR where tests pass, we're happy to merge it. And feel free to fork this repo and change it as you wish (including bug fixes)._
+
 TokenSPICE simulates tokenized ecosystems via an agent-based approach, with EVM in-the-loop.
 
 It can help in [Token](https://blog.oceanprotocol.com/towards-a-practice-of-token-engineering-b02feeeff7ca) [Engineering](https://www.tokenengineering.org) flows, to design, tune, and verify tokenized ecosystems. It's young but promising. We welcome you to contribute! 👋
